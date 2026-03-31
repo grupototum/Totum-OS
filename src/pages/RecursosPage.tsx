@@ -6,8 +6,6 @@ import { Badge } from "@/components/ui/badge";
 import { Notebook } from "lucide-react";
 
 export default function RecursosPage() {
-  const navigate = useNavigate();
-
   return (
     <AppLayout>
       <div className="p-6 max-w-4xl mx-auto">

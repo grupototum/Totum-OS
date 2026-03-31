@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { mainAgents } from "@/data/agentHierarchy";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
-import { MessageSquare, ArrowLeft, Settings2, Activity } from "lucide-react";
+import { MessageSquare, Settings2, Activity } from "lucide-react";
 
 export default function SubAgentPage() {
   const { agentId, subId } = useParams<{ agentId: string; subId: string }>();

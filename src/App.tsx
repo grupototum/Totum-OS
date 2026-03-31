@@ -25,6 +25,11 @@ import OfficeView from "./pages/OfficeView";
 import TeamStructure from "./pages/TeamStructure";
 import ClaudeCode from "./pages/ClaudeCode";
 import SettingsPage from "./pages/Settings";
+import AgentParentPage from "./pages/AgentParentPage";
+import SubAgentPage from "./pages/SubAgentPage";
+import PopSlaPage from "./pages/PopSla";
+import DicasPage from "./pages/DicasPage";
+import RecursosPage from "./pages/RecursosPage";
 
 const queryClient = new QueryClient();
 
@@ -57,6 +62,14 @@ const App = () => (
             <Route path="/team" element={<TeamStructure />} />
             <Route path="/claude-code" element={<ClaudeCode />} />
             <Route path="/settings" element={<SettingsPage />} />
+            {/* Agent hierarchy */}
+            <Route path="/agentes/:agentId" element={<AgentParentPage />} />
+            <Route path="/agentes/:agentId/:subId" element={<SubAgentPage />} />
+            {/* New pages */}
+            <Route path="/pop-sla" element={<PopSlaPage />} />
+            <Route path="/dicas" element={<DicasPage />} />
+            <Route path="/recursos" element={<RecursosPage />} />
+            <Route path="/recursos/:resourceId" element={<RecursosPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

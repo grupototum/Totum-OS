@@ -2,7 +2,7 @@ import AppLayout from "@/components/layout/AppLayout";
 import { useParams, useNavigate } from "react-router-dom";
 import { mainAgents } from "@/data/agentHierarchy";
 import { motion } from "framer-motion";
-import { Badge } from "@/components/ui/badge";
+import { ArrowRight } from "lucide-react";
 import { ArrowRight } from "lucide-react";
 
 export default function AgentParentPage() {
