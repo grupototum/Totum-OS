@@ -307,17 +307,6 @@ function VLine({ className = "" }: { className?: string }) {
   );
 }
 
-/* ─── Horizontal connector spanning children ─── */
-function HLine() {
-  return (
-    <motion.div
-      initial={{ scaleX: 0 }}
-      animate={{ scaleX: 1 }}
-      transition={{ duration: 0.4, ease: "easeOut" }}
-      className="h-px bg-border/60 w-full origin-left"
-    />
-  );
-}
 
 /* ─── Profile Dialog ─── */
 function ProfileDialog({
