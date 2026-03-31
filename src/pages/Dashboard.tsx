@@ -33,6 +33,7 @@ export default function Dashboard() {
   }
 
   return (
+    <DashboardProvider value={dashboardData}>
     <div className="min-h-screen bg-background">
       {/* Ambient bg */}
       <div className="fixed inset-0 pointer-events-none">
@@ -92,13 +93,10 @@ export default function Dashboard() {
 
         {/* ─── MAIN GRID ─── */}
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-6">
-          {/* Left column 60% */}
           <div className="lg:col-span-3 space-y-6">
             <AppStatusList />
             <ActivityLog />
           </div>
-
-          {/* Right column 40% */}
           <div className="lg:col-span-2 space-y-6">
             <ResourceUsage />
             <CostEstimate />
@@ -132,5 +130,6 @@ export default function Dashboard() {
         </motion.footer>
       </div>
     </div>
+    </DashboardProvider>
   );
 }
