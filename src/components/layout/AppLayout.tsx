@@ -16,6 +16,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     if (!loading && !user) navigate("/login");
