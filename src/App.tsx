@@ -50,6 +50,7 @@ const App = () => (
             <Route path="/tasks" element={<TasksBoard />} />
             <Route path="/content" element={<ContentPipeline />} />
             <Route path="/office" element={<OfficeView />} />
+            <Route path="/team" element={<TeamStructure />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
