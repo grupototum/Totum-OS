@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { toast } from "@/hooks/use-toast";
 
 export interface VpsServer {
   id: string;
@@ -67,6 +68,16 @@ export interface DashboardData {
   loading: boolean;
 }
 
+const notifyLabels: Record<string, string> = {
+  vps_servers: "VPS",
+  dashboard_apps: "Apps",
+  agents: "Agentes",
+  dashboard_costs: "Custos",
+  dashboard_activities: "Atividades",
+  mex_sync: "MEX Sync",
+  github_config: "GitHub",
+};
+
 export function useDashboardData(): DashboardData {
   const [vps, setVps] = useState<VpsServer[]>([]);
   const [apps, setApps] = useState<DashboardApp[]>([]);
@@ -77,31 +88,90 @@ export function useDashboardData(): DashboardData {
   const [github, setGitHub] = useState<GitHubConfig | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const refetchVps = useCallback(async () => {
+    const { data } = await supabase.from("vps_servers").select("*");
+    if (data) setVps(data as VpsServer[]);
+  }, []);
+
+  const refetchApps = useCallback(async () => {
+    const { data } = await supabase.from("dashboard_apps").select("*").order("sort_order");
+    if (data) setApps(data as DashboardApp[]);
+  }, []);
+
+  const refetchAgents = useCallback(async () => {
+    const { data } = await supabase.from("agents").select("*");
+    if (data) setAgents(data as Agent[]);
+  }, []);
+
+  const refetchCosts = useCallback(async () => {
+    const { data } = await supabase.from("dashboard_costs").select("*");
+    if (data) setCosts(data as DashboardCost[]);
+  }, []);
+
+  const refetchActivities = useCallback(async () => {
+    const { data } = await supabase.from("dashboard_activities").select("*").order("created_at", { ascending: false }).limit(20);
+    if (data) setActivities(data as DashboardActivity[]);
+  }, []);
+
+  const refetchMex = useCallback(async () => {
+    const { data } = await supabase.from("mex_sync").select("*");
+    if (data) setMex(data as MexSyncEntry[]);
+  }, []);
+
+  const refetchGithub = useCallback(async () => {
+    const { data } = await supabase.from("github_config").select("*").limit(1).single();
+    if (data) setGitHub(data as GitHubConfig);
+  }, []);
+
   useEffect(() => {
     async function fetchAll() {
-      const [vpsRes, appsRes, agentsRes, costsRes, activitiesRes, mexRes, ghRes] =
-        await Promise.all([
-          supabase.from("vps_servers").select("*"),
-          supabase.from("dashboard_apps").select("*").order("sort_order"),
-          supabase.from("agents").select("*"),
-          supabase.from("dashboard_costs").select("*"),
-          supabase.from("dashboard_activities").select("*").order("created_at", { ascending: false }).limit(20),
-          supabase.from("mex_sync").select("*"),
-          supabase.from("github_config").select("*").limit(1).single(),
-        ]);
-
-      setVps((vpsRes.data as VpsServer[]) ?? []);
-      setApps((appsRes.data as DashboardApp[]) ?? []);
-      setAgents((agentsRes.data as Agent[]) ?? []);
-      setCosts((costsRes.data as DashboardCost[]) ?? []);
-      setActivities((activitiesRes.data as DashboardActivity[]) ?? []);
-      setMex((mexRes.data as MexSyncEntry[]) ?? []);
-      setGitHub(ghRes.data as GitHubConfig | null);
+      await Promise.all([
+        refetchVps(), refetchApps(), refetchAgents(),
+        refetchCosts(), refetchActivities(), refetchMex(), refetchGithub(),
+      ]);
       setLoading(false);
     }
-
     fetchAll();
-  }, []);
+  }, [refetchVps, refetchApps, refetchAgents, refetchCosts, refetchActivities, refetchMex, refetchGithub]);
+
+  // Realtime subscriptions
+  useEffect(() => {
+    const refetchMap: Record<string, () => Promise<void>> = {
+      vps_servers: refetchVps,
+      dashboard_apps: refetchApps,
+      agents: refetchAgents,
+      dashboard_costs: refetchCosts,
+      dashboard_activities: refetchActivities,
+      mex_sync: refetchMex,
+      github_config: refetchGithub,
+    };
+
+    const tables = Object.keys(refetchMap);
+
+    const channel = supabase.channel("dashboard-realtime");
+
+    tables.forEach((table) => {
+      channel.on(
+        "postgres_changes" as any,
+        { event: "*", schema: "public", table },
+        (payload: any) => {
+          refetchMap[table]();
+          const eventLabel = payload.eventType === "INSERT" ? "adicionado" :
+            payload.eventType === "UPDATE" ? "atualizado" : "removido";
+          toast({
+            title: `🔔 ${notifyLabels[table] ?? table}`,
+            description: `Dado ${eventLabel} em tempo real`,
+          });
+        }
+      );
+    });
+
+    channel.subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [refetchVps, refetchApps, refetchAgents, refetchCosts, refetchActivities, refetchMex, refetchGithub]);
 
   return { vps, apps, agents, costs, activities, mex, github, loading };
 }
