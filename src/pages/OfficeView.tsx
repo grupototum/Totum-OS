@@ -212,5 +212,6 @@ export default function OfficeView() {
         </motion.div>
       </div>
     </div>
+    </AppLayout>
   );
 }
