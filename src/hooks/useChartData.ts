@@ -91,12 +91,15 @@ export function useChartData(vpsName: string) {
 
   // Realtime
   useEffect(() => {
-    const channel = supabase
-      .channel("charts-realtime")
+    const channelName = `charts-realtime-${Date.now()}`;
+    const channel = supabase.channel(channelName);
+
+    channel
       .on("postgres_changes" as any, { event: "*", schema: "public", table: "vps_usage_history" }, () => fetchVps())
       .on("postgres_changes" as any, { event: "*", schema: "public", table: "cost_history" }, () => fetchCosts())
-      .on("postgres_changes" as any, { event: "*", schema: "public", table: "activity_stats" }, () => fetchActivity())
-      .subscribe();
+      .on("postgres_changes" as any, { event: "*", schema: "public", table: "activity_stats" }, () => fetchActivity());
+
+    channel.subscribe();
 
     return () => { supabase.removeChannel(channel); };
   }, [fetchVps, fetchCosts, fetchActivity]);
