@@ -11,6 +11,13 @@ import Dashboard from "./pages/Dashboard";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
+import RadarInsightsChat from "./pages/agents/RadarInsightsChat";
+import GestorTrafegoChat from "./pages/agents/GestorTrafegoChat";
+import PlanejamentoSocialChat from "./pages/agents/PlanejamentoSocialChat";
+import AtendenteTotumChat from "./pages/agents/AtendenteTotumChat";
+import SdrComercialChat from "./pages/agents/SdrComercialChat";
+import KimiChat from "./pages/agents/KimiChat";
+import RadarAnunciosChat from "./pages/agents/RadarAnunciosChat";
 
 const queryClient = new QueryClient();
 
