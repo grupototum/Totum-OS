@@ -15,6 +15,7 @@ export default function Login() {
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
+  const { theme, toggleTheme } = useTheme();
 
   const handleGoogleSignIn = async () => {
     setGoogleLoading(true);
