@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import AppLayout from "@/components/layout/AppLayout";
 import { motion } from "framer-motion";
 import {
   ArrowLeft,
