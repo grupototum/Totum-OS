@@ -158,6 +158,13 @@ export default function Hub() {
           </div>
         </motion.div>
 
+        {/* Admin Panel */}
+        {isAdmin && (
+          <div className="mb-6">
+            <AdminPanel />
+          </div>
+        )}
+
         {/* Agent Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {agents.map((agent, index) => (
