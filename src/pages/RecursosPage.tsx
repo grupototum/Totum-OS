@@ -1,5 +1,4 @@
 import AppLayout from "@/components/layout/AppLayout";
-import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { centralResources } from "@/data/agentHierarchy";
 import { Badge } from "@/components/ui/badge";

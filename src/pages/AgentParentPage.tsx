@@ -3,7 +3,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import { mainAgents } from "@/data/agentHierarchy";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
-import { ArrowRight } from "lucide-react";
 
 export default function AgentParentPage() {
   const { agentId } = useParams<{ agentId: string }>();
