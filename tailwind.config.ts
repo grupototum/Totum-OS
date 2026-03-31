@@ -14,9 +14,11 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ["Inter", "sans-serif"],
-        heading: ["Plus Jakarta Sans", "sans-serif"],
-        display: ["Plus Jakarta Sans", "sans-serif"],
+        sans: ["Space Grotesk", "sans-serif"],
+        heading: ["Oswald", "sans-serif"],
+        display: ["Oswald", "sans-serif"],
+        mono: ["Space Mono", "monospace"],
+        body: ["Space Grotesk", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",

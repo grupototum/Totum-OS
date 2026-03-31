@@ -3,93 +3,93 @@
 @tailwind utilities;
 
 /* ============================================================
-   APPS TOTUM — DESIGN SYSTEM v2
-   Cor primária: #f76926 (laranja vibrante)
-   Fontes: Plus Jakarta Sans (headlines) + Inter (body)
+   APPS TOTUM — DESIGN SYSTEM v3 (Industrial)
+   Inspired by Future UI — Space Grotesk + Oswald
+   Primary accent: orange-400
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Oswald:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap');
 
 @layer base {
   :root {
-    /* Dark mode (padrão) */
-    --background: 0 0% 5.5%;
-    --foreground: 0 0% 100%;
+    /* Industrial Dark (default) */
+    --background: 0 0% 7%;
+    --foreground: 0 0% 96%;
     --card: 0 0% 10%;
-    --card-foreground: 0 0% 100%;
+    --card-foreground: 0 0% 96%;
     --popover: 0 0% 10%;
-    --popover-foreground: 0 0% 100%;
-    --primary: 22 93% 56%;
+    --popover-foreground: 0 0% 96%;
+    --primary: 28 90% 56%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 0 0% 13%;
-    --secondary-foreground: 0 0% 68%;
-    --muted: 0 0% 15%;
-    --muted-foreground: 0 0% 68%;
-    --accent: 22 93% 56%;
-    --accent-foreground: 0 0% 100%;
-    --destructive: 3 90% 71%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 0 0% 17%;
-    --input: 0 0% 15%;
-    --ring: 22 93% 56%;
-    --radius: 0.5rem;
-
-    /* Tokens extras */
-    --surface: 0 0% 5.5%;
-    --surface-container: 0 0% 10%;
-    --surface-container-high: 0 0% 12.5%;
-    --on-surface: 0 0% 100%;
-    --on-surface-variant: 0 0% 68%;
-    --outline: 0 0% 47%;
-    --outline-variant: 0 0% 28%;
-
-    --sidebar-background: 0 0% 7%;
-    --sidebar-foreground: 0 0% 90%;
-    --sidebar-primary: 22 93% 56%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 0 0% 12%;
-    --sidebar-accent-foreground: 0 0% 90%;
-    --sidebar-border: 0 0% 15%;
-    --sidebar-ring: 22 93% 56%;
-  }
-
-  .light {
-    --background: 20 100% 98.5%;
-    --foreground: 0 0% 11%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 11%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 11%;
-    --primary: 22 93% 56%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 20 20% 95%;
-    --secondary-foreground: 0 0% 11%;
-    --muted: 20 20% 95%;
-    --muted-foreground: 15 10% 37%;
-    --accent: 22 93% 56%;
+    --secondary: 0 0% 14%;
+    --secondary-foreground: 0 0% 70%;
+    --muted: 0 0% 16%;
+    --muted-foreground: 0 0% 55%;
+    --accent: 28 90% 56%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
-    --border: 15 30% 90%;
-    --input: 20 20% 97%;
-    --ring: 22 93% 56%;
+    --border: 0 0% 18%;
+    --input: 0 0% 14%;
+    --ring: 28 90% 56%;
+    --radius: 1rem;
 
-    --surface: 20 100% 98.5%;
-    --surface-container: 20 20% 95%;
-    --surface-container-high: 20 20% 93%;
-    --on-surface: 0 0% 11%;
-    --on-surface-variant: 15 10% 37%;
-    --outline: 15 15% 57%;
-    --outline-variant: 15 30% 90%;
+    /* Industrial tokens */
+    --surface: 0 0% 7%;
+    --surface-container: 0 0% 10%;
+    --surface-container-high: 0 0% 13%;
+    --on-surface: 0 0% 96%;
+    --on-surface-variant: 0 0% 55%;
+    --outline: 0 0% 30%;
+    --outline-variant: 0 0% 18%;
 
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 0 0% 20%;
-    --sidebar-primary: 22 93% 56%;
+    --sidebar-background: 0 0% 5%;
+    --sidebar-foreground: 0 0% 90%;
+    --sidebar-primary: 28 90% 56%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 20 20% 95%;
+    --sidebar-accent: 0 0% 12%;
+    --sidebar-accent-foreground: 0 0% 96%;
+    --sidebar-border: 0 0% 14%;
+    --sidebar-ring: 28 90% 56%;
+  }
+
+  .light {
+    --background: 0 0% 90%;
+    --foreground: 0 0% 4%;
+    --card: 0 0% 96%;
+    --card-foreground: 0 0% 4%;
+    --popover: 0 0% 96%;
+    --popover-foreground: 0 0% 4%;
+    --primary: 28 90% 56%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 88%;
+    --secondary-foreground: 0 0% 20%;
+    --muted: 0 0% 88%;
+    --muted-foreground: 0 0% 40%;
+    --accent: 28 90% 56%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 82%;
+    --input: 0 0% 92%;
+    --ring: 28 90% 56%;
+
+    --surface: 0 0% 90%;
+    --surface-container: 0 0% 88%;
+    --surface-container-high: 0 0% 85%;
+    --on-surface: 0 0% 4%;
+    --on-surface-variant: 0 0% 40%;
+    --outline: 0 0% 60%;
+    --outline-variant: 0 0% 82%;
+
+    --sidebar-background: 0 0% 96%;
+    --sidebar-foreground: 0 0% 20%;
+    --sidebar-primary: 28 90% 56%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 92%;
     --sidebar-accent-foreground: 0 0% 20%;
-    --sidebar-border: 15 30% 90%;
-    --sidebar-ring: 22 93% 56%;
+    --sidebar-border: 0 0% 88%;
+    --sidebar-ring: 28 90% 56%;
   }
 
   * {
@@ -98,26 +98,27 @@
   }
 
   html {
-    font-family: "Inter", sans-serif;
+    font-family: "Space Grotesk", sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
   }
 
   body {
     @apply bg-background text-foreground;
-    font-family: "Inter", sans-serif;
+    font-family: "Space Grotesk", sans-serif;
     font-size: 14px;
     line-height: 1.5;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: "Plus Jakarta Sans", sans-serif;
-    font-weight: 700;
-    letter-spacing: -0.02em;
+    font-family: "Oswald", sans-serif;
+    font-weight: 500;
+    letter-spacing: -0.01em;
   }
 
   ::selection {
-    background: rgba(247, 105, 38, 0.3);
+    background: rgba(251, 146, 60, 0.3);
     color: #fff;
   }
 
@@ -127,10 +128,20 @@
   ::-webkit-scrollbar-thumb:hover { background: hsl(var(--primary)); }
 }
 
+/* Industrial utility classes */
+.label-industrial {
+  @apply text-xs font-semibold uppercase tracking-widest;
+  font-family: "Space Grotesk", sans-serif;
+}
+
+.font-mono-industrial {
+  font-family: "Space Mono", monospace;
+}
+
 /* Totum glow animation */
 @keyframes totum-glow {
-  0%, 100% { box-shadow: 0 0 20px rgba(247, 105, 38, 0.4); }
-  50% { box-shadow: 0 0 35px rgba(247, 105, 38, 0.6); }
+  0%, 100% { box-shadow: 0 0 20px rgba(251, 146, 60, 0.3); }
+  50% { box-shadow: 0 0 35px rgba(251, 146, 60, 0.5); }
 }
 
 @keyframes grid-line-pulse {
@@ -138,6 +149,15 @@
   50% { opacity: 0.08; }
 }
 
+@keyframes industrial-pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
 .animate-totum-glow {
   animation: totum-glow 3s ease-in-out infinite;
+}
+
+.animate-industrial-pulse {
+  animation: industrial-pulse 2s ease-in-out infinite;
 }

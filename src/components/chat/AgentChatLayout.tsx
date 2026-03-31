@@ -1,11 +1,12 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Send, Plus, MessageSquare, Trash2, Menu } from "lucide-react";
+import { Send, Plus, MessageSquare, Trash2, Menu } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
+import AppLayout from "@/components/layout/AppLayout";
 
 export interface AgentConfig {
   id: string;
@@ -127,7 +128,8 @@ export default function AgentChatLayout({ agent }: { agent: AgentConfig }) {
   const Icon = agent.icon;
 
   return (
-    <div className="h-screen flex bg-background overflow-hidden">
+    <AppLayout>
+    <div className="h-[calc(100vh)] flex overflow-hidden">
       {/* Mobile overlay */}
       <AnimatePresence>
         {sidebarOpen && (
@@ -190,7 +192,7 @@ export default function AgentChatLayout({ agent }: { agent: AgentConfig }) {
             className="w-full justify-start text-muted-foreground hover:text-foreground text-xs"
             onClick={() => navigate("/hub")}
           >
-            <ArrowLeft className="w-3.5 h-3.5 mr-2" />
+            <MessageSquare className="w-3.5 h-3.5 mr-2" />
             Voltar ao Hub
           </Button>
         </div>
@@ -306,5 +308,6 @@ export default function AgentChatLayout({ agent }: { agent: AgentConfig }) {
         </motion.div>
       </div>
     </div>
+    </AppLayout>
   );
 }

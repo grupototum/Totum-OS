@@ -1,6 +1,6 @@
-import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import AppLayout from "@/components/layout/AppLayout";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
 import {
@@ -402,14 +402,9 @@ function ProfileDialog({
 
 /* ─── Main Page ─── */
 export default function TeamStructure() {
-  const { user, loading } = useAuth();
   const navigate = useNavigate();
   const [selectedAgent, setSelectedAgent] = useState<AgentNode | null>(null);
   const [dbStatuses, setDbStatuses] = useState<Record<string, string>>({});
-
-  useEffect(() => {
-    if (!loading && !user) navigate("/login");
-  }, [loading, user, navigate]);
 
   // Realtime agent statuses
   useEffect(() => {
@@ -446,7 +441,6 @@ export default function TeamStructure() {
     return "offline";
   };
 
-  // Apply live statuses to tree
   const applyStatuses = (node: AgentNode): AgentNode => ({
     ...node,
     status: resolveStatus(node.name, node.status),
@@ -454,39 +448,25 @@ export default function TeamStructure() {
   });
 
   const liveTree = applyStatuses(orgTree);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
-  }
-
   const trindade = liveTree.children || [];
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* BG effects */}
-      <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-primary/3 rounded-full blur-3xl" />
-      </div>
-
-      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
+    <AppLayout>
+    <div className="min-h-screen">
+      <div className="p-6 max-w-6xl mx-auto">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
+          initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           className="flex items-center justify-between mb-10"
         >
           <div className="flex items-center gap-3">
-            <button onClick={() => navigate("/hub")} className="p-2 rounded-lg hover:bg-secondary transition-colors">
-              <ArrowLeft className="w-5 h-5 text-muted-foreground" />
-            </button>
+            <div className="w-10 h-10 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center">
+              <Users className="w-5 h-5 text-primary" />
+            </div>
             <div>
-              <h1 className="font-heading text-2xl font-bold text-foreground">Team Structure</h1>
-              <p className="text-xs text-muted-foreground">Organograma dos agentes IA</p>
+              <h1 className="font-heading text-2xl font-medium text-foreground tracking-tight">TEAM STRUCTURE</h1>
+              <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Organograma dos agentes IA</p>
             </div>
           </div>
           <Badge variant="outline" className="text-xs">
@@ -582,5 +562,6 @@ export default function TeamStructure() {
 
       <ProfileDialog agent={selectedAgent} open={!!selectedAgent} onClose={() => setSelectedAgent(null)} />
     </div>
+    </AppLayout>
   );
 }

@@ -1,7 +1,6 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
-import { useEffect } from "react";
+import AppLayout from "@/components/layout/AppLayout";
 import {
   DragDropContext,
   Droppable,
@@ -113,7 +112,6 @@ const avatarColor = (name: string) => {
 
 // ── Component ──────────────────────────────────────────
 export default function TasksBoard() {
-  const { user, loading } = useAuth();
   const navigate = useNavigate();
   const [board, setBoard] = useState<Board>(SEED_TASKS);
   const [search, setSearch] = useState("");
@@ -121,17 +119,11 @@ export default function TasksBoard() {
   const [filterLabel, setFilterLabel] = useState("all");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogColumn, setDialogColumn] = useState<ColumnId>("backlog");
-
-  // New task form
   const [newTitle, setNewTitle] = useState("");
   const [newDesc, setNewDesc] = useState("");
   const [newAssignee, setNewAssignee] = useState("Miguel");
   const [newAgent, setNewAgent] = useState(AGENTS[0]);
   const [newLabels, setNewLabels] = useState<TaskLabel[]>([]);
-
-  useEffect(() => {
-    if (!loading && !user) navigate("/login");
-  }, [user, loading, navigate]);
 
   // Drag handler
   const onDragEnd = (result: DropResult) => {
@@ -189,28 +181,18 @@ export default function TasksBoard() {
 
   const totalTasks = useMemo(() => Object.values(board).flat().length, [board]);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
-  }
-
   return (
-    <div className="h-screen flex flex-col bg-background overflow-hidden">
+    <AppLayout>
+    <div className="h-[calc(100vh)] flex flex-col overflow-hidden">
       {/* Header */}
       <motion.header
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         className="shrink-0 border-b border-border px-4 sm:px-6 py-3 flex items-center gap-4"
       >
-        <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground" onClick={() => navigate("/hub")}>
-          <ArrowLeft className="w-4 h-4" />
-        </Button>
         <div className="flex-1 min-w-0">
-          <h1 className="font-heading text-lg font-bold text-foreground">Tasks Board</h1>
-          <p className="text-xs text-muted-foreground">{totalTasks} tarefas</p>
+          <h1 className="font-heading text-xl font-medium text-foreground tracking-tight">TASKS BOARD</h1>
+          <p className="text-[10px] text-muted-foreground uppercase tracking-widest">{totalTasks} tarefas</p>
         </div>
 
         {/* Search */}
@@ -462,5 +444,6 @@ export default function TasksBoard() {
         </DialogContent>
       </Dialog>
     </div>
+    </AppLayout>
   );
 }

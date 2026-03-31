@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import AppLayout from "@/components/layout/AppLayout";
 import { motion } from "framer-motion";
 import {
   ArrowLeft,
@@ -133,64 +133,32 @@ function DeskCard({ agent, index, onClick }: { agent: AgentDesk; index: number; 
 
 // ── Page ────────────────────────────────────────────────
 export default function OfficeView() {
-  const { user, loading } = useAuth();
   const navigate = useNavigate();
   const [filter, setFilter] = useState<"all" | "online" | "idle" | "offline">("all");
 
-  useEffect(() => {
-    if (!loading && !user) navigate("/login");
-  }, [user, loading, navigate]);
-
   const filtered = filter === "all" ? agents : agents.filter((a) => a.status === filter);
-
   const onlineCount = agents.filter((a) => a.status === "online").length;
   const idleCount = agents.filter((a) => a.status === "idle").length;
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen bg-background">
-      {/* Background effects */}
-      <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-1/4 left-1/3 w-80 h-80 bg-primary/3 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-violet-500/3 rounded-full blur-3xl" />
-        {/* Floor grid */}
-        <div
-          className="absolute inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage: "linear-gradient(hsl(var(--border)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--border)) 1px, transparent 1px)",
-            backgroundSize: "60px 60px",
-          }}
-        />
-      </div>
-
-      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
+    <AppLayout>
+    <div className="min-h-screen">
+      <div className="relative z-10 p-6 max-w-6xl mx-auto">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
+          initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           className="flex items-center justify-between mb-8"
         >
           <div className="flex items-center gap-3">
-            <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground" onClick={() => navigate("/hub")}>
-              <ArrowLeft className="w-4 h-4" />
-            </Button>
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-orange-400 flex items-center justify-center shadow-lg shadow-primary/25">
-              <Sparkles className="w-5 h-5 text-primary-foreground" />
+            <div className="w-10 h-10 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center">
+              <Sparkles className="w-5 h-5 text-primary" />
             </div>
             <div>
-              <h1 className="font-heading text-2xl font-bold text-foreground">Escritório Digital</h1>
-              <p className="text-xs text-muted-foreground">Visão geral dos agentes</p>
+              <h1 className="font-heading text-2xl font-medium text-foreground tracking-tight">ESCRITÓRIO DIGITAL</h1>
+              <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Visão geral dos agentes</p>
             </div>
           </div>
-
-          {/* Status summary */}
           <div className="hidden sm:flex items-center gap-4 text-xs text-muted-foreground">
             <span className="flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
@@ -244,5 +212,6 @@ export default function OfficeView() {
         </motion.div>
       </div>
     </div>
+    </AppLayout>
   );
 }
