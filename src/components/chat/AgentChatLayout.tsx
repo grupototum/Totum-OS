@@ -192,7 +192,7 @@ export default function AgentChatLayout({ agent }: { agent: AgentConfig }) {
             className="w-full justify-start text-muted-foreground hover:text-foreground text-xs"
             onClick={() => navigate("/hub")}
           >
-            <ArrowLeft className="w-3.5 h-3.5 mr-2" />
+            <MessageSquare className="w-3.5 h-3.5 mr-2" />
             Voltar ao Hub
           </Button>
         </div>
