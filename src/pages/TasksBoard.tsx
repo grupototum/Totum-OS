@@ -433,5 +433,6 @@ export default function TasksBoard() {
         </DialogContent>
       </Dialog>
     </div>
+    </AppLayout>
   );
 }
