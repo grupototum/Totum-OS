@@ -308,5 +308,6 @@ export default function AgentChatLayout({ agent }: { agent: AgentConfig }) {
         </motion.div>
       </div>
     </div>
+    </AppLayout>
   );
 }
