@@ -105,7 +105,23 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* ─── AGENTS (TRINDADE) ─── */}
+        {/* ─── CHARTS ─── */}
+        <section className="mb-6">
+          <motion.h2
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            className="font-heading font-bold text-sm text-muted-foreground uppercase tracking-wider mb-4"
+          >
+            Métricas ao Longo do Tempo
+          </motion.h2>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <VpsResourceChart />
+            <ActivityVolumeChart />
+          </div>
+          <CostHistoryChart />
+        </section>
+
         <section className="mb-8">
           <motion.h2
             initial={{ opacity: 0 }}
