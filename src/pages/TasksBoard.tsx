@@ -113,6 +113,17 @@ const avatarColor = (name: string) => {
 // ── Component ──────────────────────────────────────────
 export default function TasksBoard() {
   const navigate = useNavigate();
+  const [board, setBoard] = useState<Board>(SEED_TASKS);
+  const [search, setSearch] = useState("");
+  const [filterAgent, setFilterAgent] = useState("all");
+  const [filterLabel, setFilterLabel] = useState("all");
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogColumn, setDialogColumn] = useState<ColumnId>("backlog");
+  const [newTitle, setNewTitle] = useState("");
+  const [newDesc, setNewDesc] = useState("");
+  const [newAssignee, setNewAssignee] = useState("Miguel");
+  const [newAgent, setNewAgent] = useState(AGENTS[0]);
+  const [newLabels, setNewLabels] = useState<TaskLabel[]>([]);
 
   // Drag handler
   const onDragEnd = (result: DropResult) => {
