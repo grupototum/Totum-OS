@@ -6,11 +6,13 @@ import { useAuth } from "@/contexts/AuthContext";
 import { lovable } from "@/integrations/lovable/index";
 import { motion } from "framer-motion";
 
-export default function Login() {
+export default function SignUp() {
   const navigate = useNavigate();
-  const { signIn } = useAuth();
+  const { signUp } = useAuth();
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
@@ -30,21 +32,32 @@ export default function Login() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !password) {
-      toast.error("Preencha todos os campos.");
+    if (!email || !password || !confirmPassword) {
+      toast.error("Preencha todos os campos obrigatórios.");
+      return;
+    }
+    if (password.length < 6) {
+      toast.error("A senha deve ter pelo menos 6 caracteres.");
+      return;
+    }
+    if (password !== confirmPassword) {
+      toast.error("As senhas não coincidem.");
       return;
     }
     setLoading(true);
     try {
-      await signIn(email, password);
-      toast.success("Bem-vindo à Totum!");
+      await signUp(email, password, name || undefined);
+      toast.success("Conta criada com sucesso!");
       navigate("/hub");
     } catch (err: any) {
-      toast.error(err.message || "Credenciais inválidas.");
+      toast.error(err.message || "Erro ao criar conta.");
     } finally {
       setLoading(false);
     }
   };
+
+  const inputClass =
+    "w-full px-3.5 py-2.5 text-sm rounded-xl bg-input border border-border text-foreground placeholder:text-muted-foreground/50 outline-none transition-all duration-200 focus:border-primary/50 focus:ring-2 focus:ring-primary/10";
 
   return (
     <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background">
@@ -113,31 +126,48 @@ export default function Login() {
         {/* Heading */}
         <div className="text-center mb-8">
           <h1 className="font-heading text-3xl font-bold text-foreground mb-2">
-            Bem-vindo de volta.
+            Criar conta
           </h1>
           <p className="text-sm text-muted-foreground">
-            Acesse a central de agentes de IA da Totum
+            Cadastre-se para acessar os agentes de IA da Totum
           </p>
         </div>
 
         {/* Form card */}
         <form onSubmit={handleSubmit} className="space-y-5">
-          <div className="rounded-2xl border border-border/60 p-6 space-y-4"
+          <div
+            className="rounded-2xl border border-border/60 p-6 space-y-4"
             style={{ background: "hsl(var(--card) / 0.6)", backdropFilter: "blur(12px)" }}
           >
-            {/* Email */}
+            {/* Name */}
             <div className="space-y-1.5">
               <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                Usuário ou E-mail
+                Nome completo
               </label>
               <input
                 type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Seu nome"
+                disabled={loading}
+                autoComplete="name"
+                className={inputClass}
+              />
+            </div>
+
+            {/* Email */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                E-mail
+              </label>
+              <input
+                type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Totum ou seu@email.com"
+                placeholder="seu@email.com"
                 disabled={loading}
-                autoComplete="username"
-                className="w-full px-3.5 py-2.5 text-sm rounded-xl bg-input border border-border text-foreground placeholder:text-muted-foreground/50 outline-none transition-all duration-200 focus:border-primary/50 focus:ring-2 focus:ring-primary/10"
+                autoComplete="email"
+                className={inputClass}
               />
             </div>
 
@@ -151,10 +181,10 @@ export default function Login() {
                   type={showPass ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
+                  placeholder="Mínimo 6 caracteres"
                   disabled={loading}
-                  autoComplete="current-password"
-                  className="w-full px-3.5 py-2.5 pr-11 text-sm rounded-xl bg-input border border-border text-foreground placeholder:text-muted-foreground/50 outline-none transition-all duration-200 focus:border-primary/50 focus:ring-2 focus:ring-primary/10"
+                  autoComplete="new-password"
+                  className={`${inputClass} pr-11`}
                 />
                 <button
                   type="button"
@@ -163,6 +193,24 @@ export default function Login() {
                 >
                   {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
+              </div>
+            </div>
+
+            {/* Confirm Password */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                Confirmar senha
+              </label>
+              <div className="relative">
+                <input
+                  type={showPass ? "text" : "password"}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="Repita a senha"
+                  disabled={loading}
+                  autoComplete="new-password"
+                  className={`${inputClass} pr-11`}
+                />
               </div>
             </div>
 
@@ -190,7 +238,7 @@ export default function Login() {
                   <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 6.29C4.672 4.163 6.656 3.58 9 3.58Z" fill="#EA4335"/>
                 </svg>
               )}
-              {googleLoading ? "Entrando..." : "Entrar com Google"}
+              {googleLoading ? "Entrando..." : "Cadastrar com Google"}
             </button>
           </div>
 
@@ -200,30 +248,17 @@ export default function Login() {
             disabled={loading}
             className="relative w-full py-3 rounded-xl font-heading font-semibold text-sm text-primary-foreground bg-primary overflow-hidden transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed animate-totum-glow"
           >
-            {/* Particle dots */}
-            <div className="absolute inset-0 pointer-events-none">
-              {[1, 2, 3, 4, 5].map((i) => (
-                <div
-                  key={i}
-                  className="absolute w-0.5 h-0.5 rounded-full bg-primary-foreground/20"
-                  style={{
-                    left: `${15 + i * 14}%`,
-                    top: `${30 + (i % 3) * 20}%`,
-                  }}
-                />
-              ))}
-            </div>
             {loading && <Loader2 className="inline-block w-4 h-4 mr-2 animate-spin" />}
-            {loading ? "Entrando..." : "Entrar"}
+            {loading ? "Criando conta..." : "Criar conta"}
           </button>
         </form>
 
         {/* Footer */}
         <div className="mt-6 space-y-3 text-center">
           <p className="text-sm text-muted-foreground">
-            Não tem conta?{" "}
-            <Link to="/signup" className="text-primary hover:underline font-medium">
-              Cadastre-se
+            Já tem conta?{" "}
+            <Link to="/login" className="text-primary hover:underline font-medium">
+              Entrar
             </Link>
           </p>
           <p className="text-xs text-muted-foreground/40">
