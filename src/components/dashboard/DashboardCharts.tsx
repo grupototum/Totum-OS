@@ -45,6 +45,7 @@ export function VpsResourceChart() {
             <h3 className="font-heading font-bold text-sm text-foreground flex items-center gap-2">
               <Server className="w-4 h-4 text-primary" />
               Uso de Recursos (24h)
+              <span className="text-[10px] bg-orange-500/20 text-orange-400 px-2 py-0.5 rounded">DADOS DE DEMONSTRAÇÃO</span>
             </h3>
             <div className="flex gap-1">
               {["VPS 7GB", "VPS KVM4"].map((name) => (
