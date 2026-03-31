@@ -16,6 +16,7 @@ import {
   LogOut,
   Sparkles,
   LayoutDashboard,
+  Users,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import AdminPanel from "@/components/AdminPanel";
