@@ -50,6 +50,14 @@ export default function Login() {
 
   return (
     <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background">
+      {/* Theme toggle */}
+      <button
+        onClick={toggleTheme}
+        className="absolute top-4 right-4 z-20 p-2.5 rounded-xl bg-card/60 border border-border/40 backdrop-blur-sm text-muted-foreground hover:text-foreground transition-colors"
+        title={theme === "dark" ? "Modo Claro" : "Modo Escuro"}
+      >
+        {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+      </button>
       {/* Grid lines background */}
       <div className="absolute inset-0 pointer-events-none">
         {[1, 2, 3, 4, 5].map((i) => (
