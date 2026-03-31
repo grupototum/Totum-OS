@@ -124,14 +124,19 @@ export function AppStatusList() {
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className={`inline-flex items-center gap-1.5 text-[10px] uppercase tracking-wider font-medium px-2 py-0.5 rounded-full border ${
-                    app.status === "online" ? "border-emerald-500/30 text-emerald-400 bg-emerald-500/10" :
-                    app.status === "standby" ? "border-amber-500/30 text-amber-400 bg-amber-500/10" :
-                    "border-red-500/30 text-red-400 bg-red-500/10"
-                  }`}>
-                    <div className={`w-1.5 h-1.5 rounded-full ${statusColor(app.status)}`} />
-                    {statusLabel(app.status)}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className={`inline-flex items-center gap-1.5 text-[10px] uppercase tracking-wider font-medium px-2 py-0.5 rounded-full border ${
+                      app.status === "online" ? "border-emerald-500/30 text-emerald-400 bg-emerald-500/10" :
+                      app.status === "standby" ? "border-amber-500/30 text-amber-400 bg-amber-500/10" :
+                      "border-red-500/30 text-red-400 bg-red-500/10"
+                    }`}>
+                      <div className={`w-1.5 h-1.5 rounded-full ${statusColor(app.status)}`} />
+                      {statusLabel(app.status)}
+                    </span>
+                    {app.status === "standby" && (
+                      <span className="text-[10px] bg-orange-500/20 text-orange-400 px-2 py-0.5 rounded">EM BREVE</span>
+                    )}
+                  </div>
                   <ChevronRight className="w-3.5 h-3.5 text-muted-foreground/30 group-hover:text-muted-foreground transition-colors" />
                 </div>
               </div>

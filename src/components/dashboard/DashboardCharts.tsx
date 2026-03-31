@@ -137,6 +137,7 @@ export function ActivityVolumeChart() {
           <h3 className="font-heading font-bold text-sm text-foreground mb-4 flex items-center gap-2">
             <Activity className="w-4 h-4 text-primary" />
             Atividades (Últimos 7 dias)
+            <span className="text-[10px] bg-orange-500/20 text-orange-400 px-2 py-0.5 rounded">DADOS DE DEMONSTRAÇÃO</span>
           </h3>
           <ResponsiveContainer width="100%" height={220}>
             <LineChart data={activityStats} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
