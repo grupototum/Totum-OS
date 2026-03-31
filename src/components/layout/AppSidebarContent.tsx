@@ -64,6 +64,7 @@ interface Props {
 
 export default function AppSidebarContent({ onNavigate }: Props) {
   const { user, signOut } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
 
