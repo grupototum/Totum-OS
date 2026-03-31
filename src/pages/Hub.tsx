@@ -1,6 +1,6 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useAdmin } from "@/hooks/useAdmin";
 import { motion } from "framer-motion";
 import {
   Search,
@@ -15,6 +15,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import AdminPanel from "@/components/AdminPanel";
 
 const agents = [
   {
@@ -79,11 +80,7 @@ export default function Hub() {
   const { user, loading, signOut } = useAuth();
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   if (!loading && !user) {
-  //     navigate("/login");
-  //   }
-  // }, [user, loading, navigate]);
+  const { isAdmin } = useAdmin();
 
   if (loading) {
     return (
@@ -160,6 +157,13 @@ export default function Hub() {
             </span>
           </div>
         </motion.div>
+
+        {/* Admin Panel */}
+        {isAdmin && (
+          <div className="mb-6">
+            <AdminPanel />
+          </div>
+        )}
 
         {/* Agent Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
