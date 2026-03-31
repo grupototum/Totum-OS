@@ -133,6 +133,13 @@ export default function Hub() {
               {user?.email}
             </span>
             <Link
+              to="/tasks"
+              className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5 rounded-lg hover:bg-secondary"
+            >
+              <BarChart3 className="w-3.5 h-3.5" />
+              Tasks
+            </Link>
+            <Link
               to="/dashboard"
               className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5 rounded-lg hover:bg-secondary"
             >
