@@ -1,0 +1,103 @@
+# MEX - Memory EXtraction Scaffold
+# Apps Totum - Configuração de Contexto
+
+project:
+  name: "Apps Totum"
+  version: "1.0.0"
+  description: "Hub Central de Agentes de IA - Sistema Totum"
+
+# Níveis de Contexto
+context_levels:
+  global:
+    path: ".mex/global/"
+    description: "Contexto compartilhado entre todos os apps"
+    priority: "critical"
+    
+  app_specific:
+    path: "apps/{app_name}/.mex/"
+    description: "Contexto específico de cada aplicação"
+    priority: "high"
+    
+  session:
+    path: ".mex/session/"
+    description: "Contexto temporário da sessão atual"
+    priority: "medium"
+    ephemeral: true
+
+# Apps Registrados
+apps:
+  atendente:
+    name: "Atendente Totum"
+    description: "Bot de atendimento via Telegram"
+    icon: "💬"
+    status: "online"
+    
+  gestor-trafego:
+    name: "Gestor de Tráfego"
+    description: "Gestão de anúncios e campanhas"
+    icon: "📊"
+    status: "standby"
+    
+  radar-estrategico:
+    name: "Radar Estratégico"
+    description: "Inteligência e análise de mercado"
+    icon: "🎯"
+    status: "standby"
+
+# Agentes (Trindade Totum)
+agents:
+  miguel:
+    name: "Miguel"
+    role: "Arquiteto"
+    description: "Visionário, define arquitetura e estratégia técnica"
+    personality: "Estratégico, pensador de longo prazo"
+    
+  liz:
+    name: "Liz"
+    role: "Guardiã"
+    description: "Operações, analítica, eficiente, humor seco"
+    personality: "Prática, direta, focada em resultados"
+    
+  jarvis:
+    name: "Jarvis"
+    role: "Executor"
+    description: "Implementa, executa, automatiza"
+    personality: "Rápido, preciso, sempre disponível"
+
+# Configuração de Sync
+sync:
+  auto_sync: true
+  interval_minutes: 30
+  on_context_load: true
+  on_context_save: true
+
+# Drift Detection
+drift_detection:
+  enabled: true
+  checkers:
+    - stale_context
+    - token_inflation
+    - scope_creep
+    - duplicate_knowledge
+    - broken_links
+    - version_mismatch
+    - orphaned_sections
+    - cross_reference_integrity
+
+# Integrações
+integrations:
+  context_hub:
+    enabled: true
+    url: "http://localhost:8000"
+    
+  opik:
+    enabled: true
+    project: "totum-atendente-bot"
+
+# Design System
+design:
+  primary_color: "#f76926"
+  dark_background: "#050505"
+  secondary_background: "#0a0a0a"
+  text_primary: "#ffffff"
+  text_secondary: "#a3a3a3"
