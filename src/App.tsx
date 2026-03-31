@@ -18,6 +18,7 @@ import AtendenteTotumChat from "./pages/agents/AtendenteTotumChat";
 import SdrComercialChat from "./pages/agents/SdrComercialChat";
 import KimiChat from "./pages/agents/KimiChat";
 import RadarAnunciosChat from "./pages/agents/RadarAnunciosChat";
+import TasksBoard from "./pages/TasksBoard";
 
 const queryClient = new QueryClient();
 
