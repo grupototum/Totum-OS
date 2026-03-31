@@ -20,6 +20,7 @@ import KimiChat from "./pages/agents/KimiChat";
 import RadarAnunciosChat from "./pages/agents/RadarAnunciosChat";
 import TasksBoard from "./pages/TasksBoard";
 import ContentPipeline from "./pages/ContentPipeline";
+import OfficeView from "./pages/OfficeView";
 
 const queryClient = new QueryClient();
 
@@ -47,6 +48,7 @@ const App = () => (
             <Route path="/agent/ads-extractor" element={<RadarAnunciosChat />} />
             <Route path="/tasks" element={<TasksBoard />} />
             <Route path="/content" element={<ContentPipeline />} />
+            <Route path="/office" element={<OfficeView />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
