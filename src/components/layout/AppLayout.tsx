@@ -2,6 +2,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { Sun, Moon } from "lucide-react";
+import { useTheme } from "@/contexts/ThemeContext";
 import AppSidebar from "./AppSidebar";
 import MobileSidebar, { MobileTrigger } from "./MobileSidebar";
 
