@@ -14,6 +14,159 @@ export type Database = {
   }
   public: {
     Tables: {
+      agents: {
+        Row: {
+          created_at: string | null
+          emoji: string | null
+          id: string
+          name: string
+          role: string
+          status: string
+          tasks: number
+        }
+        Insert: {
+          created_at?: string | null
+          emoji?: string | null
+          id?: string
+          name: string
+          role: string
+          status?: string
+          tasks?: number
+        }
+        Update: {
+          created_at?: string | null
+          emoji?: string | null
+          id?: string
+          name?: string
+          role?: string
+          status?: string
+          tasks?: number
+        }
+        Relationships: []
+      }
+      dashboard_activities: {
+        Row: {
+          created_at: string | null
+          id: string
+          message: string
+          time: string
+          type: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          message: string
+          time: string
+          type?: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          message?: string
+          time?: string
+          type?: string
+        }
+        Relationships: []
+      }
+      dashboard_apps: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          icon: string | null
+          id: string
+          name: string
+          sort_order: number | null
+          status: string
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name: string
+          sort_order?: number | null
+          status?: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name?: string
+          sort_order?: number | null
+          status?: string
+        }
+        Relationships: []
+      }
+      dashboard_costs: {
+        Row: {
+          created_at: string | null
+          id: string
+          label: string
+          month: string
+          value: number
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          label: string
+          month?: string
+          value?: number
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          label?: string
+          month?: string
+          value?: number
+        }
+        Relationships: []
+      }
+      github_config: {
+        Row: {
+          created_at: string | null
+          id: string
+          repo: string
+          status: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          repo: string
+          status?: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          repo?: string
+          status?: string
+        }
+        Relationships: []
+      }
+      mex_sync: {
+        Row: {
+          created_at: string | null
+          id: string
+          label: string
+          last_sync: string | null
+          status: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          label: string
+          last_sync?: string | null
+          status?: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          label?: string
+          last_sync?: string | null
+          status?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string | null
@@ -32,6 +185,39 @@ export type Database = {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
+        }
+        Relationships: []
+      }
+      vps_servers: {
+        Row: {
+          cpu: number
+          created_at: string | null
+          description: string | null
+          disk: number
+          id: string
+          name: string
+          ram: number
+          status: string
+        }
+        Insert: {
+          cpu?: number
+          created_at?: string | null
+          description?: string | null
+          disk?: number
+          id?: string
+          name: string
+          ram?: number
+          status?: string
+        }
+        Update: {
+          cpu?: number
+          created_at?: string | null
+          description?: string | null
+          disk?: number
+          id?: string
+          name?: string
+          ram?: number
+          status?: string
         }
         Relationships: []
       }
