@@ -15,6 +15,7 @@ import {
   Megaphone,
   LogOut,
   Sparkles,
+  LayoutDashboard,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import AdminPanel from "@/components/AdminPanel";
