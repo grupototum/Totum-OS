@@ -79,11 +79,11 @@ export default function Hub() {
   const { user, loading, signOut } = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!loading && !user) {
-      navigate("/login");
-    }
-  }, [user, loading, navigate]);
+  // useEffect(() => {
+  //   if (!loading && !user) {
+  //     navigate("/login");
+  //   }
+  // }, [user, loading, navigate]);
 
   if (loading) {
     return (
