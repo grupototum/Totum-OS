@@ -85,7 +85,7 @@ export default function AdminPanel() {
     try {
       const { error } = await supabase
         .from("user_roles")
-        .insert({ user_id: userId, role });
+        .insert({ user_id: userId, role: role as any });
       if (error) throw error;
       toast.success(`Role "${role}" adicionada com sucesso.`);
       fetchUsers();
