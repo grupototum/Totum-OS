@@ -147,8 +147,8 @@ export function useDashboardData(): DashboardData {
     };
 
     const tables = Object.keys(refetchMap);
-
-    const channel = supabase.channel("dashboard-realtime");
+    const channelName = `dashboard-realtime-${Date.now()}`;
+    const channel = supabase.channel(channelName);
 
     tables.forEach((table) => {
       channel.on(
