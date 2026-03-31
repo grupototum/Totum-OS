@@ -562,5 +562,6 @@ export default function TeamStructure() {
 
       <ProfileDialog agent={selectedAgent} open={!!selectedAgent} onClose={() => setSelectedAgent(null)} />
     </div>
+    </AppLayout>
   );
 }
