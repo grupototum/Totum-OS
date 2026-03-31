@@ -71,6 +71,45 @@ export type Database = {
         }
         Relationships: []
       }
+      content_pipeline: {
+        Row: {
+          approval_status: string
+          assignee: string | null
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string | null
+          sort_order: number
+          stage: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          approval_status?: string
+          assignee?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          sort_order?: number
+          stage?: string
+          title: string
+          user_id: string
+        }
+        Update: {
+          approval_status?: string
+          assignee?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          sort_order?: number
+          stage?: string
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       cost_history: {
         Row: {
           created_at: string | null
