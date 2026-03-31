@@ -124,14 +124,19 @@ export function AppStatusList() {
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className={`inline-flex items-center gap-1.5 text-[10px] uppercase tracking-wider font-medium px-2 py-0.5 rounded-full border ${
-                    app.status === "online" ? "border-emerald-500/30 text-emerald-400 bg-emerald-500/10" :
-                    app.status === "standby" ? "border-amber-500/30 text-amber-400 bg-amber-500/10" :
-                    "border-red-500/30 text-red-400 bg-red-500/10"
-                  }`}>
-                    <div className={`w-1.5 h-1.5 rounded-full ${statusColor(app.status)}`} />
-                    {statusLabel(app.status)}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className={`inline-flex items-center gap-1.5 text-[10px] uppercase tracking-wider font-medium px-2 py-0.5 rounded-full border ${
+                      app.status === "online" ? "border-emerald-500/30 text-emerald-400 bg-emerald-500/10" :
+                      app.status === "standby" ? "border-amber-500/30 text-amber-400 bg-amber-500/10" :
+                      "border-red-500/30 text-red-400 bg-red-500/10"
+                    }`}>
+                      <div className={`w-1.5 h-1.5 rounded-full ${statusColor(app.status)}`} />
+                      {statusLabel(app.status)}
+                    </span>
+                    {app.status === "standby" && (
+                      <span className="text-[10px] bg-orange-500/20 text-orange-400 px-2 py-0.5 rounded">EM BREVE</span>
+                    )}
+                  </div>
                   <ChevronRight className="w-3.5 h-3.5 text-muted-foreground/30 group-hover:text-muted-foreground transition-colors" />
                 </div>
               </div>
@@ -259,8 +264,9 @@ export function CostEstimate() {
             <span className="text-xs font-medium text-foreground">Total mensal</span>
             <span className="text-sm font-heading font-bold text-primary">~R$ {total}</span>
           </div>
-          <button className="mt-2 text-[11px] text-primary hover:underline flex items-center gap-1">
+          <button className="mt-2 text-[11px] text-primary/50 cursor-not-allowed flex items-center gap-1">
             Ver detalhes <ExternalLink className="w-3 h-3" />
+            <span className="text-[10px] bg-orange-500/20 text-orange-400 px-2 py-0.5 rounded ml-1">EM BREVE</span>
           </button>
         </CardContent>
       </Card>
@@ -296,9 +302,10 @@ export function MexSync() {
               Último sync: {mex[0].last_sync}
             </p>
           )}
-          <button className="mt-3 w-full py-2 rounded-lg text-xs font-medium border border-border/50 text-muted-foreground hover:text-foreground hover:border-border transition-colors flex items-center justify-center gap-1.5">
+          <button disabled className="mt-3 w-full py-2 rounded-lg text-xs font-medium border border-border/50 text-muted-foreground/50 cursor-not-allowed flex items-center justify-center gap-2 opacity-60">
             <RefreshCw className="w-3 h-3" />
             Forçar Sync
+            <span className="text-[10px] bg-orange-500/20 text-orange-400 px-2 py-0.5 rounded">EM BREVE</span>
           </button>
         </CardContent>
       </Card>
@@ -330,8 +337,9 @@ export function AgentCards() {
               <p className="text-[11px] text-muted-foreground">
                 {agent.tasks} tarefa{agent.tasks !== 1 ? "s" : ""} ativa{agent.tasks !== 1 ? "s" : ""}
               </p>
-              <button className="mt-3 text-[11px] text-primary hover:underline opacity-0 group-hover:opacity-100 transition-opacity">
+              <button className="mt-3 text-[11px] text-primary/50 cursor-not-allowed opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1 mx-auto">
                 Ver detalhes →
+                <span className="text-[10px] bg-orange-500/20 text-orange-400 px-2 py-0.5 rounded">EM BREVE</span>
               </button>
             </CardContent>
           </Card>

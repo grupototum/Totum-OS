@@ -45,6 +45,7 @@ export function VpsResourceChart() {
             <h3 className="font-heading font-bold text-sm text-foreground flex items-center gap-2">
               <Server className="w-4 h-4 text-primary" />
               Uso de Recursos (24h)
+              <span className="text-[10px] bg-orange-500/20 text-orange-400 px-2 py-0.5 rounded">DADOS DE DEMONSTRAÇÃO</span>
             </h3>
             <div className="flex gap-1">
               {["VPS 7GB", "VPS KVM4"].map((name) => (
@@ -103,6 +104,7 @@ export function CostHistoryChart() {
           <h3 className="font-heading font-bold text-sm text-foreground mb-4 flex items-center gap-2">
             <DollarSign className="w-4 h-4 text-primary" />
             Evolução de Custos (6 meses)
+            <span className="text-[10px] bg-orange-500/20 text-orange-400 px-2 py-0.5 rounded">DADOS DE DEMONSTRAÇÃO</span>
           </h3>
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={costHistory} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
@@ -135,6 +137,7 @@ export function ActivityVolumeChart() {
           <h3 className="font-heading font-bold text-sm text-foreground mb-4 flex items-center gap-2">
             <Activity className="w-4 h-4 text-primary" />
             Atividades (Últimos 7 dias)
+            <span className="text-[10px] bg-orange-500/20 text-orange-400 px-2 py-0.5 rounded">DADOS DE DEMONSTRAÇÃO</span>
           </h3>
           <ResponsiveContainer width="100%" height={220}>
             <LineChart data={activityStats} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
