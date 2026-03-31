@@ -19,6 +19,7 @@ import SdrComercialChat from "./pages/agents/SdrComercialChat";
 import KimiChat from "./pages/agents/KimiChat";
 import RadarAnunciosChat from "./pages/agents/RadarAnunciosChat";
 import TasksBoard from "./pages/TasksBoard";
+import ContentPipeline from "./pages/ContentPipeline";
 
 const queryClient = new QueryClient();
 
@@ -45,6 +46,7 @@ const App = () => (
             <Route path="/agent/kimi" element={<KimiChat />} />
             <Route path="/agent/ads-extractor" element={<RadarAnunciosChat />} />
             <Route path="/tasks" element={<TasksBoard />} />
+            <Route path="/content" element={<ContentPipeline />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

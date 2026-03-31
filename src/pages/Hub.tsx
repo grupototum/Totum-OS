@@ -133,6 +133,13 @@ export default function Hub() {
               {user?.email}
             </span>
             <Link
+              to="/content"
+              className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5 rounded-lg hover:bg-secondary"
+            >
+              <Share2 className="w-3.5 h-3.5" />
+              Content
+            </Link>
+            <Link
               to="/tasks"
               className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5 rounded-lg hover:bg-secondary"
             >
