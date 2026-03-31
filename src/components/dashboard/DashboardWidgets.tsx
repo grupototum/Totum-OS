@@ -141,7 +141,6 @@ export function ActivityLog() {
                 <div className={`w-1.5 h-1.5 rounded-full mt-1.5 shrink-0 ${
                   a.type === "success" ? "bg-emerald-500" :
                   a.type === "warning" ? "bg-amber-400" :
-                  a.type === "error" ? "bg-red-500" :
                   "bg-blue-400"
                 }`} />
                 <p className="text-xs text-muted-foreground leading-relaxed">{a.message}</p>
