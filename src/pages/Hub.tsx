@@ -80,13 +80,7 @@ export default function Hub() {
   const { user, loading, signOut } = useAuth();
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   if (!loading && !user) {
-  //     navigate("/login");
-  //   }
-  // }, [user, loading, navigate]);
-
-  if (loading) {
+  const { isAdmin } = useAdmin();
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
