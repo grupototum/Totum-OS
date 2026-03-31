@@ -22,6 +22,8 @@ import TasksBoard from "./pages/TasksBoard";
 import ContentPipeline from "./pages/ContentPipeline";
 import OfficeView from "./pages/OfficeView";
 import TeamStructure from "./pages/TeamStructure";
+import ClaudeCode from "./pages/ClaudeCode";
+import SettingsPage from "./pages/Settings";
 
 const queryClient = new QueryClient();
 
@@ -51,6 +53,8 @@ const App = () => (
             <Route path="/content" element={<ContentPipeline />} />
             <Route path="/office" element={<OfficeView />} />
             <Route path="/team" element={<TeamStructure />} />
+            <Route path="/claude-code" element={<ClaudeCode />} />
+            <Route path="/settings" element={<SettingsPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
