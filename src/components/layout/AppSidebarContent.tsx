@@ -23,25 +23,25 @@ interface NavSection {
 
 const staticSections: NavSection[] = [
   {
-    title: "MAIN",
+    title: "PRINCIPAL",
     items: [
       { label: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },
       { label: "Hub de Agentes", icon: Bot, path: "/hub" },
     ],
   },
   {
-    title: "WORKSPACE",
+    title: "ÁREA DE TRABALHO",
     items: [
-      { label: "Tasks Board", icon: KanbanSquare, path: "/tasks" },
-      { label: "Content Pipeline", icon: GitBranch, path: "/content" },
-      { label: "Office View", icon: Building2, path: "/office" },
+      { label: "Quadro de Tarefas", icon: KanbanSquare, path: "/tasks" },
+      { label: "Pipeline de Conteúdo", icon: GitBranch, path: "/content" },
+      { label: "Visão do Escritório", icon: Building2, path: "/office" },
     ],
   },
   {
-    title: "AI TOOLS",
+    title: "FERRAMENTAS IA",
     items: [
-      { label: "Claude Code", icon: Terminal, path: "/claude-code" },
-      { label: "Team Structure", icon: Users, path: "/team" },
+      { label: "Claudio Code", icon: Terminal, path: "/claude-code" },
+      { label: "Estrutura do Time", icon: Users, path: "/team" },
     ],
   },
 ];
