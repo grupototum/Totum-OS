@@ -11,7 +11,9 @@ import {
   CostEstimate,
   MexSync,
   AgentCards,
+  DashboardProvider,
 } from "@/components/dashboard/DashboardWidgets";
+import { useDashboardData } from "@/hooks/useDashboardData";
 
 export default function Dashboard() {
   const { user, loading, signOut } = useAuth();
