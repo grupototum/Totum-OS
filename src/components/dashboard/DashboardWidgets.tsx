@@ -259,8 +259,9 @@ export function CostEstimate() {
             <span className="text-xs font-medium text-foreground">Total mensal</span>
             <span className="text-sm font-heading font-bold text-primary">~R$ {total}</span>
           </div>
-          <button className="mt-2 text-[11px] text-primary hover:underline flex items-center gap-1">
+          <button className="mt-2 text-[11px] text-primary/50 cursor-not-allowed flex items-center gap-1">
             Ver detalhes <ExternalLink className="w-3 h-3" />
+            <span className="text-[10px] bg-orange-500/20 text-orange-400 px-2 py-0.5 rounded ml-1">EM BREVE</span>
           </button>
         </CardContent>
       </Card>
