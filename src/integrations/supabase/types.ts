@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      activity_stats: {
+        Row: {
+          created_at: string | null
+          date: string
+          deployments: number
+          id: string
+          messages: number
+          requests: number
+        }
+        Insert: {
+          created_at?: string | null
+          date: string
+          deployments?: number
+          id?: string
+          messages?: number
+          requests?: number
+        }
+        Update: {
+          created_at?: string | null
+          date?: string
+          deployments?: number
+          id?: string
+          messages?: number
+          requests?: number
+        }
+        Relationships: []
+      }
       agents: {
         Row: {
           created_at: string | null
@@ -41,6 +68,33 @@ export type Database = {
           role?: string
           status?: string
           tasks?: number
+        }
+        Relationships: []
+      }
+      cost_history: {
+        Row: {
+          created_at: string | null
+          hosting: number
+          ia: number
+          id: string
+          month: string
+          tools: number
+        }
+        Insert: {
+          created_at?: string | null
+          hosting?: number
+          ia?: number
+          id?: string
+          month: string
+          tools?: number
+        }
+        Update: {
+          created_at?: string | null
+          hosting?: number
+          ia?: number
+          id?: string
+          month?: string
+          tools?: number
         }
         Relationships: []
       }
@@ -218,6 +272,33 @@ export type Database = {
           name?: string
           ram?: number
           status?: string
+        }
+        Relationships: []
+      }
+      vps_usage_history: {
+        Row: {
+          cpu: number
+          disk: number
+          id: string
+          ram: number
+          recorded_at: string
+          vps_name: string
+        }
+        Insert: {
+          cpu?: number
+          disk?: number
+          id?: string
+          ram?: number
+          recorded_at?: string
+          vps_name: string
+        }
+        Update: {
+          cpu?: number
+          disk?: number
+          id?: string
+          ram?: number
+          recorded_at?: string
+          vps_name?: string
         }
         Relationships: []
       }
