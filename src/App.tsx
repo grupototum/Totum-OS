@@ -20,6 +20,7 @@ import KimiChat from "./pages/agents/KimiChat";
 import RadarAnunciosChat from "./pages/agents/RadarAnunciosChat";
 import TasksBoard from "./pages/TasksBoard";
 import ContentPipeline from "./pages/ContentPipeline";
+import OfficeView from "./pages/OfficeView";
 
 const queryClient = new QueryClient();
 
