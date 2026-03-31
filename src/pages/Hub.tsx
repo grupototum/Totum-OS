@@ -16,6 +16,7 @@ import {
   LogOut,
   Sparkles,
   LayoutDashboard,
+  Users,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import AdminPanel from "@/components/AdminPanel";
@@ -132,6 +133,13 @@ export default function Hub() {
             <span className="text-xs text-muted-foreground hidden sm:block">
               {user?.email}
             </span>
+            <Link
+              to="/team"
+              className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5 rounded-lg hover:bg-secondary"
+            >
+              <Users className="w-3.5 h-3.5" />
+              Team
+            </Link>
             <Link
               to="/office"
               className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5 rounded-lg hover:bg-secondary"
