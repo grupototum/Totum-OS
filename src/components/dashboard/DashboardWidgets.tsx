@@ -1,3 +1,4 @@
+import { createContext, useContext } from "react";
 import { motion } from "framer-motion";
 import {
   Server,
@@ -17,7 +18,17 @@ import {
   MemoryStick,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { mockData } from "@/data/dashboardMock";
+import { Skeleton } from "@/components/ui/skeleton";
+import type { DashboardData } from "@/hooks/useDashboardData";
+
+/* ─── Context for shared data ─── */
+const DashboardCtx = createContext<DashboardData | null>(null);
+export const DashboardProvider = DashboardCtx.Provider;
+function useData() {
+  const ctx = useContext(DashboardCtx);
+  if (!ctx) throw new Error("DashboardProvider missing");
+  return ctx;
+}
 
 /* ─── Helpers ─── */
 const statusColor = (s: string) =>
@@ -44,14 +55,27 @@ const anim = (i: number) => ({
   transition: { delay: 0.08 * i, duration: 0.4 },
 });
 
+function CardSkeleton() {
+  return <Skeleton className="h-24 w-full rounded-xl" />;
+}
+
 /* ─── Overview Cards ─── */
 export function OverviewCards() {
+  const { vps, github, agents, loading } = useData();
+  if (loading) return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {[0,1,2,3].map(i => <CardSkeleton key={i} />)}
+    </div>
+  );
+
+  const activeAgents = agents.filter(a => a.status === "online").length;
   const cards = [
-    { label: "VPS 7GB", value: "Online", sub: mockData.vps[0].description, icon: Server, accent: "border-l-blue-500", dot: "online" },
-    { label: "VPS KVM4", value: "Online", sub: mockData.vps[1].description, icon: Cpu, accent: "border-l-emerald-500", dot: "online" },
-    { label: "GitHub Sync", value: "Conectado", sub: mockData.github.repo, icon: GitBranch, accent: "border-l-violet-500", dot: "connected" },
-    { label: "IAs Ativas", value: `${mockData.ias.active}/${mockData.ias.total}`, sub: mockData.ias.names, icon: Brain, accent: "border-l-primary", dot: "online" },
+    { label: "VPS 7GB", value: "Online", sub: vps[0]?.description ?? "", icon: Server, accent: "border-l-blue-500", dot: vps[0]?.status ?? "offline" },
+    { label: "VPS KVM4", value: "Online", sub: vps[1]?.description ?? "", icon: Cpu, accent: "border-l-emerald-500", dot: vps[1]?.status ?? "offline" },
+    { label: "GitHub Sync", value: github ? "Conectado" : "—", sub: github?.repo ?? "", icon: GitBranch, accent: "border-l-violet-500", dot: github?.status ?? "offline" },
+    { label: "IAs Ativas", value: `${activeAgents}/${agents.length}`, sub: agents.map(a => a.name).join(", "), icon: Brain, accent: "border-l-primary", dot: "online" },
   ];
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       {cards.map((c, i) => (
@@ -79,6 +103,8 @@ export function OverviewCards() {
 
 /* ─── App Status List ─── */
 export function AppStatusList() {
+  const { apps, loading } = useData();
+  if (loading) return <CardSkeleton />;
   return (
     <motion.div {...anim(5)}>
       <Card className="bg-card/50 backdrop-blur-sm border-border/40">
@@ -88,11 +114,8 @@ export function AppStatusList() {
             Status dos Apps
           </h3>
           <div className="space-y-2">
-            {mockData.apps.map((app) => (
-              <div
-                key={app.name}
-                className="flex items-center justify-between p-3 rounded-xl bg-secondary/30 border border-border/30 hover:border-border/60 transition-colors group"
-              >
+            {apps.map((app) => (
+              <div key={app.id} className="flex items-center justify-between p-3 rounded-xl bg-secondary/30 border border-border/30 hover:border-border/60 transition-colors group">
                 <div className="flex items-center gap-3">
                   <span className="text-lg">{app.icon}</span>
                   <div>
@@ -102,11 +125,9 @@ export function AppStatusList() {
                 </div>
                 <div className="flex items-center gap-3">
                   <span className={`inline-flex items-center gap-1.5 text-[10px] uppercase tracking-wider font-medium px-2 py-0.5 rounded-full border ${
-                    app.status === "online"
-                      ? "border-emerald-500/30 text-emerald-400 bg-emerald-500/10"
-                      : app.status === "standby"
-                      ? "border-amber-500/30 text-amber-400 bg-amber-500/10"
-                      : "border-red-500/30 text-red-400 bg-red-500/10"
+                    app.status === "online" ? "border-emerald-500/30 text-emerald-400 bg-emerald-500/10" :
+                    app.status === "standby" ? "border-amber-500/30 text-amber-400 bg-amber-500/10" :
+                    "border-red-500/30 text-red-400 bg-red-500/10"
                   }`}>
                     <div className={`w-1.5 h-1.5 rounded-full ${statusColor(app.status)}`} />
                     {statusLabel(app.status)}
@@ -124,6 +145,8 @@ export function AppStatusList() {
 
 /* ─── Activity Log ─── */
 export function ActivityLog() {
+  const { activities, loading } = useData();
+  if (loading) return <CardSkeleton />;
   return (
     <motion.div {...anim(6)}>
       <Card className="bg-card/50 backdrop-blur-sm border-border/40">
@@ -133,11 +156,9 @@ export function ActivityLog() {
             Log de Atividades
           </h3>
           <div className="space-y-1 max-h-[300px] overflow-y-auto custom-scrollbar">
-            {mockData.activities.map((a, i) => (
-              <div key={i} className="flex items-start gap-3 py-2 border-b border-border/20 last:border-0">
-                <span className="text-[11px] font-mono text-muted-foreground/60 mt-0.5 shrink-0 w-10">
-                  {a.time}
-                </span>
+            {activities.map((a) => (
+              <div key={a.id} className="flex items-start gap-3 py-2 border-b border-border/20 last:border-0">
+                <span className="text-[11px] font-mono text-muted-foreground/60 mt-0.5 shrink-0 w-10">{a.time}</span>
                 <div className={`w-1.5 h-1.5 rounded-full mt-1.5 shrink-0 ${
                   a.type === "success" ? "bg-emerald-500" :
                   a.type === "warning" ? "bg-amber-400" :
@@ -166,18 +187,15 @@ function ResourceBar({ label, value, icon: Icon }: { label: string; value: numbe
         <span className="font-mono font-medium text-foreground">{value}%</span>
       </div>
       <div className="h-2 rounded-full bg-secondary/60 overflow-hidden">
-        <motion.div
-          className={`h-full rounded-full ${color}`}
-          initial={{ width: 0 }}
-          animate={{ width: `${value}%` }}
-          transition={{ duration: 1, delay: 0.3 }}
-        />
+        <motion.div className={`h-full rounded-full ${color}`} initial={{ width: 0 }} animate={{ width: `${value}%` }} transition={{ duration: 1, delay: 0.3 }} />
       </div>
     </div>
   );
 }
 
 export function ResourceUsage() {
+  const { vps, loading } = useData();
+  if (loading) return <CardSkeleton />;
   return (
     <motion.div {...anim(7)}>
       <Card className="bg-card/50 backdrop-blur-sm border-border/40">
@@ -186,19 +204,19 @@ export function ResourceUsage() {
             <Server className="w-4 h-4 text-primary" />
             Uso de Recursos
           </h3>
-          {mockData.vps.map((vps) => (
-            <div key={vps.name}>
+          {vps.map((v) => (
+            <div key={v.id}>
               <div className="flex items-center justify-between mb-3">
-                <p className="text-xs font-medium text-foreground">{vps.name}</p>
+                <p className="text-xs font-medium text-foreground">{v.name}</p>
                 <div className="flex items-center gap-1.5">
-                  <div className={`w-1.5 h-1.5 rounded-full ${statusColor(vps.status)}`} />
-                  <span className="text-[10px] text-muted-foreground uppercase">{statusLabel(vps.status)}</span>
+                  <div className={`w-1.5 h-1.5 rounded-full ${statusColor(v.status)}`} />
+                  <span className="text-[10px] text-muted-foreground uppercase">{statusLabel(v.status)}</span>
                 </div>
               </div>
               <div className="space-y-3 pl-1">
-                <ResourceBar label="RAM" value={vps.ram} icon={MemoryStick} />
-                <ResourceBar label="CPU" value={vps.cpu} icon={Cpu} />
-                <ResourceBar label="Disco" value={vps.disk} icon={HardDrive} />
+                <ResourceBar label="RAM" value={v.ram} icon={MemoryStick} />
+                <ResourceBar label="CPU" value={v.cpu} icon={Cpu} />
+                <ResourceBar label="Disco" value={v.disk} icon={HardDrive} />
               </div>
             </div>
           ))}
@@ -210,12 +228,9 @@ export function ResourceUsage() {
 
 /* ─── Costs ─── */
 export function CostEstimate() {
-  const { costs } = mockData;
-  const items = [
-    { label: "IAs Cloud", value: costs.ia, pct: Math.round((costs.ia / costs.total) * 100) },
-    { label: "Ferramentas", value: costs.tools, pct: Math.round((costs.tools / costs.total) * 100) },
-    { label: "Hospedagem", value: costs.hosting, pct: Math.round((costs.hosting / costs.total) * 100) },
-  ];
+  const { costs, loading } = useData();
+  if (loading) return <CardSkeleton />;
+  const total = costs.reduce((sum, c) => sum + Number(c.value), 0);
   return (
     <motion.div {...anim(8)}>
       <Card className="bg-card/50 backdrop-blur-sm border-border/40">
@@ -225,26 +240,24 @@ export function CostEstimate() {
             Custos Estimados
           </h3>
           <div className="space-y-3">
-            {items.map((item) => (
-              <div key={item.label} className="space-y-1">
-                <div className="flex justify-between text-xs">
-                  <span className="text-muted-foreground">{item.label}</span>
-                  <span className="font-mono font-medium text-foreground">R$ {item.value}</span>
+            {costs.map((item) => {
+              const pct = total > 0 ? Math.round((Number(item.value) / total) * 100) : 0;
+              return (
+                <div key={item.id} className="space-y-1">
+                  <div className="flex justify-between text-xs">
+                    <span className="text-muted-foreground">{item.label}</span>
+                    <span className="font-mono font-medium text-foreground">R$ {Number(item.value)}</span>
+                  </div>
+                  <div className="h-1.5 rounded-full bg-secondary/60 overflow-hidden">
+                    <motion.div className="h-full rounded-full bg-primary/80" initial={{ width: 0 }} animate={{ width: `${pct}%` }} transition={{ duration: 0.8, delay: 0.5 }} />
+                  </div>
                 </div>
-                <div className="h-1.5 rounded-full bg-secondary/60 overflow-hidden">
-                  <motion.div
-                    className="h-full rounded-full bg-primary/80"
-                    initial={{ width: 0 }}
-                    animate={{ width: `${item.pct}%` }}
-                    transition={{ duration: 0.8, delay: 0.5 }}
-                  />
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
           <div className="mt-4 pt-3 border-t border-border/30 flex justify-between items-center">
             <span className="text-xs font-medium text-foreground">Total mensal</span>
-            <span className="text-sm font-heading font-bold text-primary">~R$ {costs.total}</span>
+            <span className="text-sm font-heading font-bold text-primary">~R$ {total}</span>
           </div>
           <button className="mt-2 text-[11px] text-primary hover:underline flex items-center gap-1">
             Ver detalhes <ExternalLink className="w-3 h-3" />
@@ -257,12 +270,8 @@ export function CostEstimate() {
 
 /* ─── MEX Sync ─── */
 export function MexSync() {
-  const { mex } = mockData;
-  const entries = [
-    { label: "Global", status: mex.global },
-    { label: "Atendente", status: mex.atendente },
-    { label: "Context Hub", status: mex.contextHub },
-  ];
+  const { mex, loading } = useData();
+  if (loading) return <CardSkeleton />;
   return (
     <motion.div {...anim(9)}>
       <Card className="bg-card/50 backdrop-blur-sm border-border/40">
@@ -272,8 +281,8 @@ export function MexSync() {
             MEX Status
           </h3>
           <div className="space-y-2.5">
-            {entries.map((e) => (
-              <div key={e.label} className="flex items-center justify-between">
+            {mex.map((e) => (
+              <div key={e.id} className="flex items-center justify-between">
                 <span className="text-xs text-muted-foreground">{e.label}</span>
                 <span className="flex items-center gap-1.5 text-xs font-medium text-foreground">
                   {statusIcon(e.status)}
@@ -282,9 +291,11 @@ export function MexSync() {
               </div>
             ))}
           </div>
-          <p className="text-[11px] text-muted-foreground/50 mt-3">
-            Último sync: {mex.lastSync}
-          </p>
+          {mex[0]?.last_sync && (
+            <p className="text-[11px] text-muted-foreground/50 mt-3">
+              Último sync: {mex[0].last_sync}
+            </p>
+          )}
           <button className="mt-3 w-full py-2 rounded-lg text-xs font-medium border border-border/50 text-muted-foreground hover:text-foreground hover:border-border transition-colors flex items-center justify-center gap-1.5">
             <RefreshCw className="w-3 h-3" />
             Forçar Sync
@@ -297,10 +308,16 @@ export function MexSync() {
 
 /* ─── Agent Cards (Trindade) ─── */
 export function AgentCards() {
+  const { agents, loading } = useData();
+  if (loading) return (
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      {[0,1,2].map(i => <CardSkeleton key={i} />)}
+    </div>
+  );
   return (
     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-      {mockData.agents.map((agent, i) => (
-        <motion.div key={agent.name} {...anim(10 + i)}>
+      {agents.map((agent, i) => (
+        <motion.div key={agent.id} {...anim(10 + i)}>
           <Card className="bg-card/50 backdrop-blur-sm border-border/40 hover:border-primary/30 transition-all hover:shadow-lg hover:shadow-primary/5 group">
             <CardContent className="p-5 text-center">
               <span className="text-3xl block mb-2">{agent.emoji}</span>
