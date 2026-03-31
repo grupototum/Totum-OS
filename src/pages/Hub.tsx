@@ -128,10 +128,17 @@ export default function Hub() {
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             <span className="text-xs text-muted-foreground hidden sm:block">
               {user?.email}
             </span>
+            <Link
+              to="/dashboard"
+              className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5 rounded-lg hover:bg-secondary"
+            >
+              <LayoutDashboard className="w-3.5 h-3.5" />
+              Dashboard
+            </Link>
             <button
               onClick={() => {
                 signOut();
