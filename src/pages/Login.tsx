@@ -165,6 +165,11 @@ export default function Login() {
                 </button>
               </div>
             </div>
+            <div className="flex justify-end">
+              <Link to="/forgot-password" className="text-xs text-primary hover:underline">
+                Esqueci minha senha
+              </Link>
+            </div>
 
             {/* Divider */}
             <div className="flex items-center gap-3">
