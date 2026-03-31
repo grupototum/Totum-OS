@@ -297,9 +297,10 @@ export function MexSync() {
               Último sync: {mex[0].last_sync}
             </p>
           )}
-          <button className="mt-3 w-full py-2 rounded-lg text-xs font-medium border border-border/50 text-muted-foreground hover:text-foreground hover:border-border transition-colors flex items-center justify-center gap-1.5">
+          <button disabled className="mt-3 w-full py-2 rounded-lg text-xs font-medium border border-border/50 text-muted-foreground/50 cursor-not-allowed flex items-center justify-center gap-2 opacity-60">
             <RefreshCw className="w-3 h-3" />
             Forçar Sync
+            <span className="text-[10px] bg-orange-500/20 text-orange-400 px-2 py-0.5 rounded">EM BREVE</span>
           </button>
         </CardContent>
       </Card>
