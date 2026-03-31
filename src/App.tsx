@@ -11,6 +11,13 @@ import Dashboard from "./pages/Dashboard";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
+import RadarInsightsChat from "./pages/agents/RadarInsightsChat";
+import GestorTrafegoChat from "./pages/agents/GestorTrafegoChat";
+import PlanejamentoSocialChat from "./pages/agents/PlanejamentoSocialChat";
+import AtendenteTotumChat from "./pages/agents/AtendenteTotumChat";
+import SdrComercialChat from "./pages/agents/SdrComercialChat";
+import KimiChat from "./pages/agents/KimiChat";
+import RadarAnunciosChat from "./pages/agents/RadarAnunciosChat";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +36,13 @@ const App = () => (
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/agent/radar" element={<RadarInsightsChat />} />
+            <Route path="/agent/gestor" element={<GestorTrafegoChat />} />
+            <Route path="/agent/social" element={<PlanejamentoSocialChat />} />
+            <Route path="/agent/atendente" element={<AtendenteTotumChat />} />
+            <Route path="/agent/sdr" element={<SdrComercialChat />} />
+            <Route path="/agent/kimi" element={<KimiChat />} />
+            <Route path="/agent/ads-extractor" element={<RadarAnunciosChat />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

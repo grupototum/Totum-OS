@@ -190,7 +190,9 @@ export default function Hub() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.15 + index * 0.05 }}
             >
-              <Card className="group cursor-pointer border-border/50 bg-card/50 backdrop-blur-sm hover:border-primary/30 hover:bg-card/80 transition-all duration-300 hover:shadow-lg hover:shadow-primary/5">
+              <Card
+                onClick={() => navigate(`/agent/${agent.id}`)}
+                className="group cursor-pointer border-border/50 bg-card/50 backdrop-blur-sm hover:border-primary/30 hover:bg-card/80 transition-all duration-300 hover:shadow-lg hover:shadow-primary/5">
                 <CardContent className="p-5">
                   <div className="flex items-start gap-4">
                     <div
