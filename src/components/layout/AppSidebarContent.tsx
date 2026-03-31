@@ -133,7 +133,19 @@ export default function AppSidebarContent({ onNavigate }: Props) {
       </nav>
 
       {/* Footer */}
-      <div className="border-t border-sidebar-border p-3 shrink-0">
+      <div className="border-t border-sidebar-border p-3 shrink-0 space-y-2">
+        {/* Theme toggle */}
+        <button
+          onClick={toggleTheme}
+          className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent/50 transition-colors"
+        >
+          {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+          <span className="text-[12px] font-medium">
+            {theme === "dark" ? "Modo Claro" : "Modo Escuro"}
+          </span>
+        </button>
+
+        {/* User */}
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-full bg-primary/20 flex items-center justify-center text-primary text-sm font-semibold uppercase shrink-0">
             {user?.email?.[0] || "U"}
