@@ -133,29 +133,16 @@ function DeskCard({ agent, index, onClick }: { agent: AgentDesk; index: number; 
 
 // ── Page ────────────────────────────────────────────────
 export default function OfficeView() {
-  const { user, loading } = useAuth();
   const navigate = useNavigate();
   const [filter, setFilter] = useState<"all" | "online" | "idle" | "offline">("all");
 
-  useEffect(() => {
-    if (!loading && !user) navigate("/login");
-  }, [user, loading, navigate]);
-
   const filtered = filter === "all" ? agents : agents.filter((a) => a.status === filter);
-
   const onlineCount = agents.filter((a) => a.status === "online").length;
   const idleCount = agents.filter((a) => a.status === "idle").length;
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen bg-background">
+    <AppLayout>
+    <div className="min-h-screen">
       {/* Background effects */}
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute top-1/4 left-1/3 w-80 h-80 bg-primary/3 rounded-full blur-3xl" />
