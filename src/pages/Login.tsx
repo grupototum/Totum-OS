@@ -193,8 +193,6 @@ export default function Login() {
               {googleLoading ? "Entrando..." : "Entrar com Google"}
             </button>
           </div>
-            </div>
-          </div>
 
           {/* Submit */}
           <button
