@@ -48,6 +48,7 @@ const App = () => (
             <Route path="/agent/ads-extractor" element={<RadarAnunciosChat />} />
             <Route path="/tasks" element={<TasksBoard />} />
             <Route path="/content" element={<ContentPipeline />} />
+            <Route path="/office" element={<OfficeView />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
