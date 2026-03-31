@@ -128,7 +128,8 @@ export default function AgentChatLayout({ agent }: { agent: AgentConfig }) {
   const Icon = agent.icon;
 
   return (
-    <div className="h-screen flex bg-background overflow-hidden">
+    <AppLayout>
+    <div className="h-[calc(100vh)] flex overflow-hidden">
       {/* Mobile overlay */}
       <AnimatePresence>
         {sidebarOpen && (
