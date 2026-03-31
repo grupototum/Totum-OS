@@ -104,6 +104,7 @@ export function CostHistoryChart() {
           <h3 className="font-heading font-bold text-sm text-foreground mb-4 flex items-center gap-2">
             <DollarSign className="w-4 h-4 text-primary" />
             Evolução de Custos (6 meses)
+            <span className="text-[10px] bg-orange-500/20 text-orange-400 px-2 py-0.5 rounded">DADOS DE DEMONSTRAÇÃO</span>
           </h3>
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={costHistory} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
