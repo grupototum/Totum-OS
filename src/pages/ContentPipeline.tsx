@@ -480,5 +480,6 @@ export default function ContentPipeline() {
         </DialogContent>
       </Dialog>
     </div>
+    </AppLayout>
   );
 }
