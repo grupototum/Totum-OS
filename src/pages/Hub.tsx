@@ -1,6 +1,7 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
 import { useAdmin } from "@/hooks/useAdmin";
 import { motion } from "framer-motion";
 import {
