@@ -2,7 +2,6 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Search,
@@ -16,10 +15,8 @@ import {
   Shield,
   Zap,
   Brain,
+  Crown,
   Users,
-  ChevronDown,
-  ChevronRight,
-  
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -32,10 +29,9 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 
-interface Agent {
+interface AgentNode {
   id: string;
   name: string;
-  role: string;
   roleLabel: string;
   icon: React.ElementType;
   color: string;
@@ -44,186 +40,181 @@ interface Agent {
   status: "online" | "idle" | "offline";
   responsibilities: string[];
   description: string;
-  subAgents?: { name: string; role: string }[];
   chatRoute: string;
+  children?: AgentNode[];
 }
 
-const trindade: Agent[] = [
-  {
-    id: "miguel",
-    name: "Miguel",
-    role: "architect",
-    roleLabel: "Arquiteto",
-    icon: Brain,
-    color: "text-orange-400",
-    colorBg: "from-orange-500/20 to-amber-500/20",
-    emoji: "🏗️",
-    status: "online",
-    description: "Visão estratégica, arquitetura técnica, decisões de longo prazo.",
-    responsibilities: [
-      "Planejamento de novas features",
-      "Refactor arquitetural",
-      "Escolha de tecnologias",
-      "Decisões de infraestrutura",
-      "Design de APIs",
-    ],
-    subAgents: [
-      { name: "Radar de Insights", role: "Análise estratégica" },
-      { name: "Gestor de Tráfego", role: "Gestão de tráfego" },
-    ],
-    chatRoute: "/agent/radar",
-  },
-  {
-    id: "liz",
-    name: "Liz",
-    role: "guardian",
-    roleLabel: "Guardiã",
-    icon: Shield,
-    color: "text-purple-400",
-    colorBg: "from-purple-500/20 to-fuchsia-500/20",
-    emoji: "🛡️",
-    status: "online",
-    description: "Operações, qualidade, eficiência e manutenção do código.",
-    responsibilities: [
-      "Code review",
-      "Debugging complexo",
-      "Otimização de performance",
-      "Documentação técnica",
-      "Auditoria de código",
-    ],
-    subAgents: [
-      { name: "Planejamento Social", role: "Estratégia de conteúdo" },
-      { name: "Atendente Totum", role: "Atendimento ao cliente" },
-    ],
-    chatRoute: "/agent/social",
-  },
-  {
-    id: "jarvis",
-    name: "Jarvis",
-    role: "executor",
-    roleLabel: "Executor",
-    icon: Zap,
-    color: "text-cyan-400",
-    colorBg: "from-cyan-500/20 to-blue-500/20",
-    emoji: "⚡",
-    status: "idle",
-    description: "Implementação, automação, scripts e deploy rápido.",
-    responsibilities: [
-      "CRUDs e operações básicas",
-      "Scripts de automação",
-      "Configurações e setups",
-      "Migrações de dados",
-      "Deploy e CI/CD",
-    ],
-    subAgents: [
-      { name: "SDR Comercial", role: "Prospecção" },
-      { name: "Kimi", role: "Assistente IA" },
-      { name: "Radar de Anúncios", role: "Extração de anúncios" },
-    ],
-    chatRoute: "/agent/sdr",
-  },
-];
-
-const operationalAgents: Agent[] = [
-  {
-    id: "radar",
-    name: "Radar de Insights",
-    role: "analyst",
-    roleLabel: "Analista",
-    icon: Search,
-    color: "text-orange-400",
-    colorBg: "from-orange-500/20 to-amber-500/20",
-    emoji: "🔍",
-    status: "online",
-    description: "Analisa conteúdos e extrai insights estratégicos por departamento.",
-    responsibilities: ["Análise de mercado", "Monitoramento de tendências", "Relatórios estratégicos"],
-    chatRoute: "/agent/radar",
-  },
-  {
-    id: "gestor",
-    name: "Gestor de Tráfego",
-    role: "manager",
-    roleLabel: "Gestor",
-    icon: TrendingUp,
-    color: "text-green-400",
-    colorBg: "from-green-500/20 to-emerald-500/20",
-    emoji: "📈",
-    status: "online",
-    description: "Gestão e otimização de campanhas de tráfego pago.",
-    responsibilities: ["Gestão de campanhas", "Otimização de ROI", "Análise de métricas"],
-    chatRoute: "/agent/gestor",
-  },
-  {
-    id: "social",
-    name: "Planejamento Social",
-    role: "planner",
-    roleLabel: "Planejador",
-    icon: Share2,
-    color: "text-purple-400",
-    colorBg: "from-purple-500/20 to-fuchsia-500/20",
-    emoji: "📱",
-    status: "online",
-    description: "Planeja e cria estratégias de conteúdo para redes sociais.",
-    responsibilities: ["Calendário editorial", "Estratégia de conteúdo", "Análise de engajamento"],
-    chatRoute: "/agent/social",
-  },
-  {
-    id: "atendente",
-    name: "Atendente Totum",
-    role: "support",
-    roleLabel: "Suporte",
-    icon: Headphones,
-    color: "text-blue-400",
-    colorBg: "from-blue-500/20 to-indigo-500/20",
-    emoji: "🎧",
-    status: "idle",
-    description: "Atendimento ao cliente e suporte técnico automatizado.",
-    responsibilities: ["Atendimento ao cliente", "FAQ automatizado", "Escalação inteligente"],
-    chatRoute: "/agent/atendente",
-  },
-  {
-    id: "sdr",
-    name: "SDR Comercial",
-    role: "sales",
-    roleLabel: "Vendas",
-    icon: UserCheck,
-    color: "text-pink-400",
-    colorBg: "from-pink-500/20 to-rose-500/20",
-    emoji: "🤝",
-    status: "online",
-    description: "Prospecção ativa e qualificação de leads.",
-    responsibilities: ["Prospecção de leads", "Qualificação", "Follow-up automatizado"],
-    chatRoute: "/agent/sdr",
-  },
-  {
-    id: "kimi",
-    name: "Kimi",
-    role: "assistant",
-    roleLabel: "Assistente",
-    icon: Bot,
-    color: "text-cyan-400",
-    colorBg: "from-cyan-500/20 to-teal-500/20",
-    emoji: "🤖",
-    status: "online",
-    description: "Assistente IA para tarefas gerais e automação.",
-    responsibilities: ["Tarefas gerais", "Automação", "Integração entre agentes"],
-    chatRoute: "/agent/kimi",
-  },
-  {
-    id: "ads-extractor",
-    name: "Radar de Anúncios",
-    role: "extractor",
-    roleLabel: "Extrator",
-    icon: Megaphone,
-    color: "text-yellow-400",
-    colorBg: "from-yellow-500/20 to-amber-500/20",
-    emoji: "📢",
-    status: "offline",
-    description: "Extrai e analisa anúncios de concorrentes.",
-    responsibilities: ["Extração de anúncios", "Análise competitiva", "Benchmarking"],
-    chatRoute: "/agent/ads-extractor",
-  },
-];
+const orgTree: AgentNode = {
+  id: "chief",
+  name: "Chief of Staff",
+  roleLabel: "Líder",
+  icon: Crown,
+  color: "text-primary",
+  colorBg: "from-primary/30 to-orange-400/30",
+  emoji: "👑",
+  status: "online",
+  description: "Coordenação geral do ecossistema de agentes IA da Totum.",
+  responsibilities: [
+    "Orquestração da Trindade",
+    "Decisões estratégicas finais",
+    "Alocação de recursos entre agentes",
+    "Visão macro do sistema",
+  ],
+  chatRoute: "/agent/radar",
+  children: [
+    {
+      id: "miguel",
+      name: "Miguel",
+      roleLabel: "Arquiteto",
+      icon: Brain,
+      color: "text-orange-400",
+      colorBg: "from-orange-500/20 to-amber-500/20",
+      emoji: "🏗️",
+      status: "online",
+      description: "Visão estratégica, arquitetura técnica, decisões de longo prazo.",
+      responsibilities: [
+        "Planejamento de features",
+        "Refactor arquitetural",
+        "Escolha de tecnologias",
+        "Design de APIs",
+      ],
+      chatRoute: "/agent/radar",
+      children: [
+        {
+          id: "radar",
+          name: "Radar de Insights",
+          roleLabel: "Analista",
+          icon: Search,
+          color: "text-orange-400",
+          colorBg: "from-orange-500/15 to-amber-500/15",
+          emoji: "🔍",
+          status: "online",
+          description: "Análise de conteúdos e extração de insights estratégicos.",
+          responsibilities: ["Análise de mercado", "Monitoramento de tendências", "Relatórios"],
+          chatRoute: "/agent/radar",
+        },
+        {
+          id: "gestor",
+          name: "Gestor de Tráfego",
+          roleLabel: "Gestor",
+          icon: TrendingUp,
+          color: "text-green-400",
+          colorBg: "from-green-500/15 to-emerald-500/15",
+          emoji: "📈",
+          status: "online",
+          description: "Gestão e otimização de campanhas de tráfego pago.",
+          responsibilities: ["Gestão de campanhas", "Otimização de ROI", "Métricas"],
+          chatRoute: "/agent/gestor",
+        },
+      ],
+    },
+    {
+      id: "liz",
+      name: "Liz",
+      roleLabel: "Guardiã",
+      icon: Shield,
+      color: "text-purple-400",
+      colorBg: "from-purple-500/20 to-fuchsia-500/20",
+      emoji: "🛡️",
+      status: "online",
+      description: "Operações, qualidade, eficiência e manutenção.",
+      responsibilities: [
+        "Code review",
+        "Debugging complexo",
+        "Performance",
+        "Documentação técnica",
+      ],
+      chatRoute: "/agent/social",
+      children: [
+        {
+          id: "social",
+          name: "Planejamento Social",
+          roleLabel: "Planejador",
+          icon: Share2,
+          color: "text-purple-400",
+          colorBg: "from-purple-500/15 to-fuchsia-500/15",
+          emoji: "📱",
+          status: "online",
+          description: "Estratégias de conteúdo para redes sociais.",
+          responsibilities: ["Calendário editorial", "Estratégia de conteúdo", "Engajamento"],
+          chatRoute: "/agent/social",
+        },
+        {
+          id: "atendente",
+          name: "Atendente Totum",
+          roleLabel: "Suporte",
+          icon: Headphones,
+          color: "text-blue-400",
+          colorBg: "from-blue-500/15 to-indigo-500/15",
+          emoji: "🎧",
+          status: "idle",
+          description: "Atendimento ao cliente e suporte automatizado.",
+          responsibilities: ["Atendimento", "FAQ automatizado", "Escalação"],
+          chatRoute: "/agent/atendente",
+        },
+      ],
+    },
+    {
+      id: "jarvis",
+      name: "Jarvis",
+      roleLabel: "Executor",
+      icon: Zap,
+      color: "text-cyan-400",
+      colorBg: "from-cyan-500/20 to-blue-500/20",
+      emoji: "⚡",
+      status: "idle",
+      description: "Implementação rápida, automação, scripts e deploy.",
+      responsibilities: [
+        "CRUDs e automação",
+        "Scripts e setups",
+        "Migrações de dados",
+        "Deploy e CI/CD",
+      ],
+      chatRoute: "/agent/sdr",
+      children: [
+        {
+          id: "sdr",
+          name: "SDR Comercial",
+          roleLabel: "Vendas",
+          icon: UserCheck,
+          color: "text-pink-400",
+          colorBg: "from-pink-500/15 to-rose-500/15",
+          emoji: "🤝",
+          status: "online",
+          description: "Prospecção ativa e qualificação de leads.",
+          responsibilities: ["Prospecção", "Qualificação", "Follow-up"],
+          chatRoute: "/agent/sdr",
+        },
+        {
+          id: "kimi",
+          name: "Kimi",
+          roleLabel: "Assistente",
+          icon: Bot,
+          color: "text-cyan-400",
+          colorBg: "from-cyan-500/15 to-teal-500/15",
+          emoji: "🤖",
+          status: "online",
+          description: "Assistente IA para tarefas gerais.",
+          responsibilities: ["Tarefas gerais", "Automação", "Integração"],
+          chatRoute: "/agent/kimi",
+        },
+        {
+          id: "ads-extractor",
+          name: "Radar de Anúncios",
+          roleLabel: "Extrator",
+          icon: Megaphone,
+          color: "text-yellow-400",
+          colorBg: "from-yellow-500/15 to-amber-500/15",
+          emoji: "📢",
+          status: "offline",
+          description: "Extrai e analisa anúncios de concorrentes.",
+          responsibilities: ["Extração de ads", "Análise competitiva", "Benchmarking"],
+          chatRoute: "/agent/ads-extractor",
+        },
+      ],
+    },
+  ],
+};
 
 const statusConfig = {
   online: { label: "Online", dot: "bg-green-500", ring: "ring-green-500/30" },
@@ -231,64 +222,115 @@ const statusConfig = {
   offline: { label: "Offline", dot: "bg-red-500", ring: "ring-red-500/30" },
 };
 
-function AgentCard({ agent, onClick, index }: { agent: Agent; onClick: () => void; index: number }) {
-  const Icon = agent.icon;
+/* ─── Org Card ─── */
+function OrgCard({
+  agent,
+  onClick,
+  tier,
+  delay,
+}: {
+  agent: AgentNode;
+  onClick: () => void;
+  tier: number;
+  delay: number;
+}) {
   const status = statusConfig[agent.status];
+  const sizeClass = tier === 0 ? "w-48" : tier === 1 ? "w-44" : "w-40";
+  const avatarSize = tier === 0 ? "h-16 w-16 text-2xl" : tier === 1 ? "h-14 w-14 text-xl" : "h-11 w-11 text-base";
+  const nameSize = tier === 0 ? "text-base" : tier === 1 ? "text-sm" : "text-xs";
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.05 }}
+      transition={{ delay, duration: 0.4, ease: "easeOut" }}
+      className={`${sizeClass} flex flex-col items-center`}
     >
       <Card
         onClick={onClick}
-        className="cursor-pointer border-border/50 bg-card/80 backdrop-blur-sm hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 group"
+        className="cursor-pointer w-full border-border/50 bg-card/90 backdrop-blur-sm hover:border-primary/40 hover:shadow-xl hover:shadow-primary/10 transition-all duration-300 group"
       >
-        <CardContent className="p-5">
-          <div className="flex items-start gap-4">
-            <div className="relative">
-              <Avatar className="h-12 w-12">
-                <AvatarFallback className={`bg-gradient-to-br ${agent.colorBg} text-lg`}>
-                  {agent.emoji}
-                </AvatarFallback>
-              </Avatar>
-              <span className={`absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 ${status.dot} rounded-full ring-2 ${status.ring} ring-offset-2 ring-offset-card`} />
-            </div>
-
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-1">
-                <h3 className="font-semibold text-foreground text-sm group-hover:text-primary transition-colors truncate">
-                  {agent.name}
-                </h3>
-                <Badge variant="outline" className={`text-[10px] ${agent.color} border-current/20 shrink-0`}>
-                  {agent.roleLabel}
-                </Badge>
-              </div>
-              <p className="text-xs text-muted-foreground line-clamp-2">{agent.description}</p>
-
-              {agent.subAgents && agent.subAgents.length > 0 && (
-                <div className="flex items-center gap-1 mt-2">
-                  <Users className="w-3 h-3 text-muted-foreground" />
-                  <span className="text-[10px] text-muted-foreground">
-                    {agent.subAgents.length} sub-agente{agent.subAgents.length > 1 ? "s" : ""}
-                  </span>
-                </div>
-              )}
-            </div>
-
-            <Icon className={`w-5 h-5 ${agent.color} opacity-50 group-hover:opacity-100 transition-opacity shrink-0`} />
+        <CardContent className="p-4 flex flex-col items-center text-center gap-2">
+          {/* Avatar */}
+          <div className="relative">
+            <Avatar className={avatarSize}>
+              <AvatarFallback className={`bg-gradient-to-br ${agent.colorBg}`}>
+                {agent.emoji}
+              </AvatarFallback>
+            </Avatar>
+            <span
+              className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 ${status.dot} rounded-full ring-2 ${status.ring} ring-offset-2 ring-offset-card`}
+            />
           </div>
+
+          {/* Name */}
+          <h3 className={`font-bold text-foreground ${nameSize} group-hover:text-primary transition-colors leading-tight`}>
+            {agent.name}
+          </h3>
+
+          {/* Role badge */}
+          <Badge
+            variant="outline"
+            className={`text-[10px] ${agent.color} border-current/20`}
+          >
+            {agent.roleLabel}
+          </Badge>
+
+          {/* Responsibilities (condensed) */}
+          <ul className="space-y-0.5 w-full mt-1">
+            {agent.responsibilities.slice(0, 3).map((r) => (
+              <li
+                key={r}
+                className="text-[10px] text-muted-foreground flex items-start gap-1"
+              >
+                <span className={`mt-1 w-1 h-1 rounded-full shrink-0 ${agent.color.replace("text-", "bg-")}`} />
+                <span className="line-clamp-1">{r}</span>
+              </li>
+            ))}
+          </ul>
         </CardContent>
       </Card>
     </motion.div>
   );
 }
 
-function ProfileDialog({ agent, open, onClose }: { agent: Agent | null; open: boolean; onClose: () => void }) {
+/* ─── Vertical connector line ─── */
+function VLine({ className = "" }: { className?: string }) {
+  return (
+    <motion.div
+      initial={{ scaleY: 0 }}
+      animate={{ scaleY: 1 }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
+      className={`w-px bg-border/60 origin-top ${className}`}
+      style={{ height: 32 }}
+    />
+  );
+}
+
+/* ─── Horizontal connector spanning children ─── */
+function HLine() {
+  return (
+    <motion.div
+      initial={{ scaleX: 0 }}
+      animate={{ scaleX: 1 }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
+      className="h-px bg-border/60 w-full origin-left"
+    />
+  );
+}
+
+/* ─── Profile Dialog ─── */
+function ProfileDialog({
+  agent,
+  open,
+  onClose,
+}: {
+  agent: AgentNode | null;
+  open: boolean;
+  onClose: () => void;
+}) {
   const navigate = useNavigate();
   if (!agent) return null;
-  const Icon = agent.icon;
   const status = statusConfig[agent.status];
 
   return (
@@ -302,7 +344,9 @@ function ProfileDialog({ agent, open, onClose }: { agent: Agent | null; open: bo
                   {agent.emoji}
                 </AvatarFallback>
               </Avatar>
-              <span className={`absolute -bottom-0.5 -right-0.5 w-4 h-4 ${status.dot} rounded-full ring-2 ${status.ring} ring-offset-2 ring-offset-card`} />
+              <span
+                className={`absolute -bottom-0.5 -right-0.5 w-4 h-4 ${status.dot} rounded-full ring-2 ${status.ring} ring-offset-2 ring-offset-card`}
+              />
             </div>
             <div>
               <DialogTitle className="text-foreground flex items-center gap-2">
@@ -317,13 +361,11 @@ function ProfileDialog({ agent, open, onClose }: { agent: Agent | null; open: bo
         </DialogHeader>
 
         <div className="space-y-5 mt-4">
-          {/* Status */}
           <div className="flex items-center gap-2">
             <span className={`w-2.5 h-2.5 ${status.dot} rounded-full`} />
             <span className="text-sm text-muted-foreground">{status.label}</span>
           </div>
 
-          {/* Responsibilities */}
           <div>
             <h4 className="text-xs font-semibold text-foreground uppercase tracking-wider mb-2">
               Responsabilidades
@@ -338,19 +380,18 @@ function ProfileDialog({ agent, open, onClose }: { agent: Agent | null; open: bo
             </ul>
           </div>
 
-          {/* Sub-agents */}
-          {agent.subAgents && agent.subAgents.length > 0 && (
+          {agent.children && agent.children.length > 0 && (
             <div>
               <h4 className="text-xs font-semibold text-foreground uppercase tracking-wider mb-2">
                 Sub-agentes
               </h4>
               <div className="grid gap-2">
-                {agent.subAgents.map((sa) => (
-                  <div key={sa.name} className="flex items-center gap-3 p-2 rounded-lg bg-secondary/50">
+                {agent.children.map((sa) => (
+                  <div key={sa.id} className="flex items-center gap-3 p-2 rounded-lg bg-secondary/50">
                     <Users className="w-4 h-4 text-muted-foreground" />
                     <div>
                       <span className="text-sm text-foreground">{sa.name}</span>
-                      <span className="text-xs text-muted-foreground ml-2">— {sa.role}</span>
+                      <span className="text-xs text-muted-foreground ml-2">— {sa.roleLabel}</span>
                     </div>
                   </div>
                 ))}
@@ -358,7 +399,6 @@ function ProfileDialog({ agent, open, onClose }: { agent: Agent | null; open: bo
             </div>
           )}
 
-          {/* Chat button */}
           <button
             onClick={() => navigate(agent.chatRoute)}
             className="w-full py-2.5 rounded-lg bg-gradient-to-r from-primary to-orange-400 text-primary-foreground text-sm font-medium hover:opacity-90 transition-opacity"
@@ -371,24 +411,26 @@ function ProfileDialog({ agent, open, onClose }: { agent: Agent | null; open: bo
   );
 }
 
+/* ─── Main Page ─── */
 export default function TeamStructure() {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
-  const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
-  const [expandedSection, setExpandedSection] = useState<string | null>("trindade");
+  const [selectedAgent, setSelectedAgent] = useState<AgentNode | null>(null);
   const [dbStatuses, setDbStatuses] = useState<Record<string, string>>({});
 
   useEffect(() => {
     if (!loading && !user) navigate("/login");
   }, [loading, user, navigate]);
 
-  // Fetch agent statuses from DB + realtime
+  // Realtime agent statuses
   useEffect(() => {
     const fetchStatuses = async () => {
       const { data } = await supabase.from("agents").select("name, status");
       if (data) {
         const map: Record<string, string> = {};
-        data.forEach((a) => { map[a.name.toLowerCase()] = a.status; });
+        data.forEach((a) => {
+          map[a.name.toLowerCase()] = a.status;
+        });
         setDbStatuses(map);
       }
     };
@@ -402,21 +444,27 @@ export default function TeamStructure() {
       })
       .subscribe();
 
-    return () => { supabase.removeChannel(channel); };
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
-  // Map DB status to agent status type
-  const resolveStatus = (agentName: string, fallback: "online" | "idle" | "offline"): "online" | "idle" | "offline" => {
-    const key = agentName.toLowerCase();
-    const dbStatus = dbStatuses[key];
+  const resolveStatus = (name: string, fallback: "online" | "idle" | "offline"): "online" | "idle" | "offline" => {
+    const dbStatus = dbStatuses[name.toLowerCase()];
     if (!dbStatus) return fallback;
     if (dbStatus === "ativo" || dbStatus === "online") return "online";
     if (dbStatus === "standby" || dbStatus === "idle") return "idle";
     return "offline";
   };
 
-  const liveTrindade = trindade.map((a) => ({ ...a, status: resolveStatus(a.name, a.status) }));
-  const liveOperational = operationalAgents.map((a) => ({ ...a, status: resolveStatus(a.name, a.status) }));
+  // Apply live statuses to tree
+  const applyStatuses = (node: AgentNode): AgentNode => ({
+    ...node,
+    status: resolveStatus(node.name, node.status),
+    children: node.children?.map(applyStatuses),
+  });
+
+  const liveTree = applyStatuses(orgTree);
 
   if (loading) {
     return (
@@ -426,90 +474,116 @@ export default function TeamStructure() {
     );
   }
 
-  const sections = [
-    { id: "trindade", label: "A Trindade", subtitle: "Núcleo central de orquestração", agents: liveTrindade },
-    { id: "operational", label: "Agentes Operacionais", subtitle: "Execução e tarefas específicas", agents: liveOperational },
-  ];
+  const trindade = liveTree.children || [];
 
   return (
     <div className="min-h-screen bg-background">
+      {/* BG effects */}
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-primary/3 rounded-full blur-3xl" />
       </div>
 
-      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
+      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
         {/* Header */}
-        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex items-center justify-between mb-8">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex items-center justify-between mb-10"
+        >
           <div className="flex items-center gap-3">
             <button onClick={() => navigate("/hub")} className="p-2 rounded-lg hover:bg-secondary transition-colors">
               <ArrowLeft className="w-5 h-5 text-muted-foreground" />
             </button>
             <div>
               <h1 className="font-heading text-2xl font-bold text-foreground">Team Structure</h1>
-              <p className="text-xs text-muted-foreground">Hierarquia e organização dos agentes</p>
+              <p className="text-xs text-muted-foreground">Organograma dos agentes IA</p>
             </div>
           </div>
-
-          <div className="flex items-center gap-2">
-            <Badge variant="outline" className="text-xs">
-              {trindade.length + operationalAgents.length} agentes
-            </Badge>
-          </div>
+          <Badge variant="outline" className="text-xs">
+            10 agentes
+          </Badge>
         </motion.div>
 
-        {/* Sections */}
-        <div className="space-y-6">
-          {sections.map((section) => {
-            const isExpanded = expandedSection === section.id;
-            return (
-              <motion.div key={section.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-                <button
-                  onClick={() => setExpandedSection(isExpanded ? null : section.id)}
-                  className="w-full flex items-center justify-between p-4 rounded-xl bg-card/60 border border-border/50 hover:border-primary/20 transition-colors mb-3"
-                >
-                  <div className="text-left">
-                    <h2 className="text-lg font-semibold text-foreground">{section.label}</h2>
-                    <p className="text-xs text-muted-foreground">{section.subtitle}</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Badge variant="secondary" className="text-xs">{section.agents.length}</Badge>
-                    {isExpanded ? <ChevronDown className="w-4 h-4 text-muted-foreground" /> : <ChevronRight className="w-4 h-4 text-muted-foreground" />}
-                  </div>
-                </button>
+        {/* ─── ORG CHART ─── */}
+        <div className="flex flex-col items-center overflow-x-auto pb-10">
+          {/* TIER 0 — Chief of Staff */}
+          <OrgCard agent={liveTree} onClick={() => setSelectedAgent(liveTree)} tier={0} delay={0} />
 
-                <AnimatePresence>
-                  {isExpanded && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: "auto" }}
-                      exit={{ opacity: 0, height: 0 }}
-                      transition={{ duration: 0.25 }}
-                      className="overflow-hidden"
-                    >
-                      <div className={`grid gap-3 ${section.id === "trindade" ? "sm:grid-cols-3" : "sm:grid-cols-2 lg:grid-cols-3"}`}>
-                        {section.agents.map((agent, i) => (
-                          <AgentCard key={agent.id} agent={agent} onClick={() => setSelectedAgent(agent)} index={i} />
+          {/* Line down from Chief */}
+          <VLine />
+
+          {/* Horizontal rail spanning all 3 Trindade */}
+          <div className="flex items-start">
+            <div className="flex items-start gap-0">
+              {trindade.map((node, i) => (
+                <div key={node.id} className="flex flex-col items-center">
+                  {/* short vertical stub above each trindade card */}
+                  <div className="flex items-center">
+                    {/* horizontal segment: left half for non-first, right half for non-last */}
+                    <div className={`h-px ${i === 0 ? "bg-transparent" : "bg-border/60"}`} style={{ width: 60 }} />
+                    <div className="w-px h-6 bg-border/60" />
+                    <div className={`h-px ${i === trindade.length - 1 ? "bg-transparent" : "bg-border/60"}`} style={{ width: 60 }} />
+                  </div>
+
+                  {/* TIER 1 — Trindade card */}
+                  <OrgCard agent={node} onClick={() => setSelectedAgent(node)} tier={1} delay={0.15 + i * 0.1} />
+
+                  {/* Children of trindade */}
+                  {node.children && node.children.length > 0 && (
+                    <>
+                      <VLine />
+                      <div className="flex items-start">
+                        {node.children.map((child, ci) => (
+                          <div key={child.id} className="flex flex-col items-center">
+                            <div className="flex items-center">
+                              <div
+                                className={`h-px ${ci === 0 ? "bg-transparent" : "bg-border/60"}`}
+                                style={{ width: 40 }}
+                              />
+                              <div className="w-px h-5 bg-border/60" />
+                              <div
+                                className={`h-px ${ci === (node.children!.length - 1) ? "bg-transparent" : "bg-border/60"}`}
+                                style={{ width: 40 }}
+                              />
+                            </div>
+
+                            {/* TIER 2 — Sub-agent card */}
+                            <OrgCard
+                              agent={child}
+                              onClick={() => setSelectedAgent(child)}
+                              tier={2}
+                              delay={0.3 + i * 0.1 + ci * 0.05}
+                            />
+                          </div>
                         ))}
                       </div>
-                    </motion.div>
+                    </>
                   )}
-                </AnimatePresence>
-              </motion.div>
-            );
-          })}
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
 
-        {/* Connection lines visualization */}
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} className="mt-10 p-6 rounded-xl bg-card/40 border border-border/30">
+        {/* Delegation flow */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
+          className="p-6 rounded-xl bg-card/40 border border-border/30"
+        >
           <h3 className="text-sm font-semibold text-foreground mb-4">Fluxo de Delegação</h3>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 text-xs text-muted-foreground">
-            <span className="px-3 py-1.5 rounded-lg bg-secondary">📋 Recebe Tarefa</span>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 text-xs text-muted-foreground flex-wrap">
+            <span className="px-3 py-1.5 rounded-lg bg-secondary">📋 Tarefa</span>
             <span className="hidden sm:block">→</span>
             <span className="sm:hidden">↓</span>
-            <span className="px-3 py-1.5 rounded-lg bg-orange-500/10 text-orange-400">🏗️ Estratégica → Miguel</span>
-            <span className="px-3 py-1.5 rounded-lg bg-purple-500/10 text-purple-400">🛡️ Qualidade → Liz</span>
-            <span className="px-3 py-1.5 rounded-lg bg-cyan-500/10 text-cyan-400">⚡ Execução → Jarvis</span>
+            <span className="px-3 py-1.5 rounded-lg bg-primary/10 text-primary">👑 Chief</span>
+            <span className="hidden sm:block">→</span>
+            <span className="sm:hidden">↓</span>
+            <span className="px-3 py-1.5 rounded-lg bg-orange-500/10 text-orange-400">🏗️ Miguel</span>
+            <span className="px-3 py-1.5 rounded-lg bg-purple-500/10 text-purple-400">🛡️ Liz</span>
+            <span className="px-3 py-1.5 rounded-lg bg-cyan-500/10 text-cyan-400">⚡ Jarvis</span>
             <span className="hidden sm:block">→</span>
             <span className="sm:hidden">↓</span>
             <span className="px-3 py-1.5 rounded-lg bg-secondary">✅ Deploy</span>
