@@ -376,10 +376,47 @@ export default function TeamStructure() {
   const navigate = useNavigate();
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
   const [expandedSection, setExpandedSection] = useState<string | null>("trindade");
+  const [dbStatuses, setDbStatuses] = useState<Record<string, string>>({});
 
   useEffect(() => {
     if (!loading && !user) navigate("/login");
   }, [loading, user, navigate]);
+
+  // Fetch agent statuses from DB + realtime
+  useEffect(() => {
+    const fetchStatuses = async () => {
+      const { data } = await supabase.from("agents").select("name, status");
+      if (data) {
+        const map: Record<string, string> = {};
+        data.forEach((a) => { map[a.name.toLowerCase()] = a.status; });
+        setDbStatuses(map);
+      }
+    };
+    fetchStatuses();
+
+    const channelId = `team-agents-${Date.now()}`;
+    const channel = supabase
+      .channel(channelId)
+      .on("postgres_changes", { event: "*", schema: "public", table: "agents" }, () => {
+        fetchStatuses();
+      })
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
+  }, []);
+
+  // Map DB status to agent status type
+  const resolveStatus = (agentName: string, fallback: "online" | "idle" | "offline"): "online" | "idle" | "offline" => {
+    const key = agentName.toLowerCase();
+    const dbStatus = dbStatuses[key];
+    if (!dbStatus) return fallback;
+    if (dbStatus === "ativo" || dbStatus === "online") return "online";
+    if (dbStatus === "standby" || dbStatus === "idle") return "idle";
+    return "offline";
+  };
+
+  const liveTrindade = trindade.map((a) => ({ ...a, status: resolveStatus(a.name, a.status) }));
+  const liveOperational = operationalAgents.map((a) => ({ ...a, status: resolveStatus(a.name, a.status) }));
 
   if (loading) {
     return (
@@ -390,8 +427,8 @@ export default function TeamStructure() {
   }
 
   const sections = [
-    { id: "trindade", label: "A Trindade", subtitle: "Núcleo central de orquestração", agents: trindade },
-    { id: "operational", label: "Agentes Operacionais", subtitle: "Execução e tarefas específicas", agents: operationalAgents },
+    { id: "trindade", label: "A Trindade", subtitle: "Núcleo central de orquestração", agents: liveTrindade },
+    { id: "operational", label: "Agentes Operacionais", subtitle: "Execução e tarefas específicas", agents: liveOperational },
   ];
 
   return (
