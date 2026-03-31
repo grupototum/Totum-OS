@@ -16,6 +16,7 @@ import {
 import { useDashboardData } from "@/hooks/useDashboardData";
 
 export default function Dashboard() {
+  const dashboardData = useDashboardData();
   const { user, loading, signOut } = useAuth();
   const navigate = useNavigate();
 
