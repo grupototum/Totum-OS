@@ -332,8 +332,9 @@ export function AgentCards() {
               <p className="text-[11px] text-muted-foreground">
                 {agent.tasks} tarefa{agent.tasks !== 1 ? "s" : ""} ativa{agent.tasks !== 1 ? "s" : ""}
               </p>
-              <button className="mt-3 text-[11px] text-primary hover:underline opacity-0 group-hover:opacity-100 transition-opacity">
+              <button className="mt-3 text-[11px] text-primary/50 cursor-not-allowed opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1 mx-auto">
                 Ver detalhes →
+                <span className="text-[10px] bg-orange-500/20 text-orange-400 px-2 py-0.5 rounded">EM BREVE</span>
               </button>
             </CardContent>
           </Card>
