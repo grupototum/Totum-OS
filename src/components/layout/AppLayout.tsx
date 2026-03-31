@@ -38,6 +38,15 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Theme toggle - fixed top-right */}
+      <button
+        onClick={toggleTheme}
+        className="fixed top-4 right-4 z-50 p-2.5 rounded-xl bg-card/60 border border-border/40 backdrop-blur-sm text-muted-foreground hover:text-foreground transition-colors"
+        title={theme === "dark" ? "Modo Claro" : "Modo Escuro"}
+      >
+        {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+      </button>
+
       {/* Desktop sidebar */}
       {!isMobile && <AppSidebar />}
 
