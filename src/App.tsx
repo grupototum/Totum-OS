@@ -21,6 +21,7 @@ import RadarAnunciosChat from "./pages/agents/RadarAnunciosChat";
 import TasksBoard from "./pages/TasksBoard";
 import ContentPipeline from "./pages/ContentPipeline";
 import OfficeView from "./pages/OfficeView";
+import TeamStructure from "./pages/TeamStructure";
 
 const queryClient = new QueryClient();
 
