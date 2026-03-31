@@ -112,25 +112,7 @@ const avatarColor = (name: string) => {
 
 // ── Component ──────────────────────────────────────────
 export default function TasksBoard() {
-  const { user, loading } = useAuth();
   const navigate = useNavigate();
-  const [board, setBoard] = useState<Board>(SEED_TASKS);
-  const [search, setSearch] = useState("");
-  const [filterAgent, setFilterAgent] = useState("all");
-  const [filterLabel, setFilterLabel] = useState("all");
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [dialogColumn, setDialogColumn] = useState<ColumnId>("backlog");
-
-  // New task form
-  const [newTitle, setNewTitle] = useState("");
-  const [newDesc, setNewDesc] = useState("");
-  const [newAssignee, setNewAssignee] = useState("Miguel");
-  const [newAgent, setNewAgent] = useState(AGENTS[0]);
-  const [newLabels, setNewLabels] = useState<TaskLabel[]>([]);
-
-  useEffect(() => {
-    if (!loading && !user) navigate("/login");
-  }, [user, loading, navigate]);
 
   // Drag handler
   const onDragEnd = (result: DropResult) => {
