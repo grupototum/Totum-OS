@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { toast } from "sonner";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { lovable } from "@/integrations/lovable/index";
 import { motion } from "framer-motion";
 
 export default function Login() {
