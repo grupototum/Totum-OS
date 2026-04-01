@@ -12,8 +12,9 @@ import { Slider } from "@/components/ui/slider";
 import { toast } from "@/hooks/use-toast";
 import {
   CheckCircle2, Clock, Circle, Target, Zap, TrendingUp,
-  User, Bot, Users, Filter, ChevronDown, ChevronUp,
+  User, Bot, Users, Filter, ChevronDown, ChevronUp, Lock,
 } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
 /* ─── types ─── */
 interface Task {
@@ -67,8 +68,12 @@ const anim = (i: number) => ({
   transition: { delay: i * 0.05, duration: 0.3 },
 });
 
-/* ─── page ─── */
+const ACTION_PLAN_KEY = "actionPlanUnlocked";
+
 export default function ActionPlan() {
+  const [unlocked, setUnlocked] = useState(() => sessionStorage.getItem(ACTION_PLAN_KEY) === "true");
+  const [passInput, setPassInput] = useState("");
+  const [passError, setPassError] = useState(false);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
   const [filterResp, setFilterResp] = useState("all");
@@ -86,13 +91,14 @@ export default function ActionPlan() {
   }, []);
 
   useEffect(() => {
+    if (!unlocked) return;
     fetchTasks();
     const ch = supabase
       .channel("action-plan-rt")
       .on("postgres_changes" as any, { event: "*", schema: "public", table: "action_plan_tasks" }, () => fetchTasks())
       .subscribe();
     return () => { supabase.removeChannel(ch); };
-  }, [fetchTasks]);
+  }, [fetchTasks, unlocked]);
 
   /* derived */
   const phases = useMemo<Phase[]>(() => {
@@ -110,6 +116,53 @@ export default function ActionPlan() {
     if (filterResp === "all") return phases;
     return phases.map((p) => ({ ...p, tasks: p.tasks.filter((t) => t.responsible === filterResp) })).filter((p) => p.tasks.length > 0);
   }, [phases, filterResp]);
+
+  const handleUnlock = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (passInput === "Totum@SupremoIsrael") {
+      setUnlocked(true);
+      sessionStorage.setItem(ACTION_PLAN_KEY, "true");
+    } else {
+      setPassError(true);
+      setTimeout(() => setPassError(false), 2000);
+    }
+  };
+
+  if (!unlocked) {
+    return (
+      <AppLayout>
+        <div className="flex items-center justify-center min-h-[70vh]">
+          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.3 }}>
+            <Card className="w-full max-w-sm border-border/40 bg-card/80">
+              <CardContent className="p-8 text-center space-y-5">
+                <div className="w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto">
+                  <Lock className="w-8 h-8 text-primary" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-heading font-semibold text-foreground">Acesso Restrito</h2>
+                  <p className="text-xs text-muted-foreground mt-1">Digite a senha para acessar o Plano de Ação</p>
+                </div>
+                <form onSubmit={handleUnlock} className="space-y-3">
+                  <Input
+                    type="password"
+                    placeholder="Senha de acesso"
+                    value={passInput}
+                    onChange={(e) => setPassInput(e.target.value)}
+                    className={`bg-secondary border-border/40 text-center ${passError ? "border-destructive animate-pulse" : ""}`}
+                    autoFocus
+                  />
+                  {passError && <p className="text-xs text-destructive">Senha incorreta</p>}
+                  <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
+                    Desbloquear
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </div>
+      </AppLayout>
+    );
+  }
 
   const totalTasks = tasks.length;
   const doneTasks = tasks.filter((t) => t.status === "done").length;
