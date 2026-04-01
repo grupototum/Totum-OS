@@ -12,8 +12,9 @@ import { Slider } from "@/components/ui/slider";
 import { toast } from "@/hooks/use-toast";
 import {
   CheckCircle2, Clock, Circle, Target, Zap, TrendingUp,
-  User, Bot, Users, Filter, ChevronDown, ChevronUp,
+  User, Bot, Users, Filter, ChevronDown, ChevronUp, Lock,
 } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
 /* ─── types ─── */
 interface Task {
