@@ -31,6 +31,7 @@ import PopSlaPage from "./pages/PopSla";
 import DicasPage from "./pages/DicasPage";
 import RecursosPage from "./pages/RecursosPage";
 import AgentsDashboard from "./pages/AgentsDashboard";
+import ActionPlan from "./pages/ActionPlan";
 
 const queryClient = new QueryClient();
 
