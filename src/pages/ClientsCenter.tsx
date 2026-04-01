@@ -124,7 +124,7 @@ export default function ClientsCenter() {
   }, [clients, search, statusFilter, industryFilter]);
 
   const toggleSelect = (id: string) => {
-    setSelected((prev) => { const n = new Set(prev); n.has(id) ? n.delete(id) : n.add(id); return n; });
+    setSelected((prev) => { const n = new Set(prev); if (n.has(id)) n.delete(id); else n.add(id); return n; });
   };
   const toggleAll = () => {
     if (selected.size === filtered.length) setSelected(new Set());
