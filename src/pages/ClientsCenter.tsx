@@ -319,44 +319,70 @@ export default function ClientsCenter() {
 
         {/* ─── KANBAN VIEW ─── */}
         {viewMode === "kanban" && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {KANBAN_COLS.map((col) => {
-              const colClients = filtered.filter((c) => c.status === col.key);
-              return (
-                <motion.div key={col.key} {...anim(2)}>
-                  <Card className={`border-t-2 ${col.color} border-border/40 bg-card/60`}>
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-sm flex items-center justify-between">
-                        {col.label}
-                        <Badge variant="outline" className="text-[10px] bg-muted text-muted-foreground">{colClients.length}</Badge>
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-3 min-h-[200px]">
-                      {colClients.length === 0 && (
-                        <div className="text-center py-8 text-xs text-muted-foreground/50">Vazio</div>
-                      )}
-                      <AnimatePresence>
-                        {colClients.map((c) => (
-                          <motion.div key={c.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-3 rounded-lg bg-secondary/40 hover:bg-secondary/60 cursor-pointer transition-colors" onClick={() => setDetailClient(c)}>
-                            <div className="flex items-center gap-2 mb-2">
-                              <div className="w-7 h-7 rounded-md flex items-center justify-center text-xs font-bold shrink-0" style={{ backgroundColor: (c.primary_color ?? "#f76926") + "20", color: c.primary_color ?? "#f76926" }}>
-                                {c.company_name.charAt(0)}
-                              </div>
-                              <div className="min-w-0">
-                                <p className="text-sm font-medium text-foreground truncate">{c.company_name}</p>
-                                <p className="text-[10px] text-muted-foreground">{c.contact_name}</p>
-                              </div>
-                            </div>
-                            {c.industry && <Badge variant="outline" className={`text-[9px] ${INDUSTRY_COLORS[c.industry] ?? ""}`}>{c.industry}</Badge>}
-                          </motion.div>
-                        ))}
-                      </AnimatePresence>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              );
-            })}
-          </div>
+          <DragDropContext onDragEnd={(result: DropResult) => {
+            if (!result.destination) return;
+            const newStatus = result.destination.droppableId;
+            const clientId = result.draggableId;
+            if (newStatus !== result.source.droppableId) {
+              updateStatus(clientId, newStatus);
+            }
+          }}>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {KANBAN_COLS.map((col) => {
+                const colClients = filtered.filter((c) => c.status === col.key);
+                return (
+                  <div key={col.key}>
+                    <Card className={`border-t-2 ${col.color} border-border/40 bg-card/60`}>
+                      <CardHeader className="pb-2">
+                        <CardTitle className="text-sm flex items-center justify-between">
+                          {col.label}
+                          <Badge variant="outline" className="text-[10px] bg-muted text-muted-foreground">{colClients.length}</Badge>
+                        </CardTitle>
+                      </CardHeader>
+                      <Droppable droppableId={col.key}>
+                        {(provided, snapshot) => (
+                          <CardContent
+                            ref={provided.innerRef}
+                            {...provided.droppableProps}
+                            className={`space-y-3 min-h-[200px] transition-colors ${snapshot.isDraggingOver ? "bg-primary/5 rounded-b-lg" : ""}`}
+                          >
+                            {colClients.length === 0 && !snapshot.isDraggingOver && (
+                              <div className="text-center py-8 text-xs text-muted-foreground/50">Vazio</div>
+                            )}
+                            {colClients.map((c, index) => (
+                              <Draggable key={c.id} draggableId={c.id} index={index}>
+                                {(dragProvided, dragSnapshot) => (
+                                  <div
+                                    ref={dragProvided.innerRef}
+                                    {...dragProvided.draggableProps}
+                                    {...dragProvided.dragHandleProps}
+                                    className={`p-3 rounded-lg bg-secondary/40 hover:bg-secondary/60 cursor-grab active:cursor-grabbing transition-colors ${dragSnapshot.isDragging ? "shadow-lg ring-2 ring-primary/30" : ""}`}
+                                    onClick={() => setDetailClient(c)}
+                                  >
+                                    <div className="flex items-center gap-2 mb-2">
+                                      <div className="w-7 h-7 rounded-md flex items-center justify-center text-xs font-bold shrink-0" style={{ backgroundColor: (c.primary_color ?? "#f76926") + "20", color: c.primary_color ?? "#f76926" }}>
+                                        {c.company_name.charAt(0)}
+                                      </div>
+                                      <div className="min-w-0">
+                                        <p className="text-sm font-medium text-foreground truncate">{c.company_name}</p>
+                                        <p className="text-[10px] text-muted-foreground">{c.contact_name}</p>
+                                      </div>
+                                    </div>
+                                    {c.industry && <Badge variant="outline" className={`text-[9px] ${INDUSTRY_COLORS[c.industry] ?? ""}`}>{c.industry}</Badge>}
+                                  </div>
+                                )}
+                              </Draggable>
+                            ))}
+                            {provided.placeholder}
+                          </CardContent>
+                        )}
+                      </Droppable>
+                    </Card>
+                  </div>
+                );
+              })}
+            </div>
+          </DragDropContext>
         )}
 
         {/* ─── DETAIL DIALOG ─── */}
