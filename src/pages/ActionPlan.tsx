@@ -80,6 +80,26 @@ export default function ActionPlan() {
   const [expandedPhases, setExpandedPhases] = useState<Record<number, boolean>>({});
   const [activePhase, setActivePhase] = useState<number | null>(null);
 
+  const fetchTasks = useCallback(async () => {
+    const { data } = await supabase
+      .from("action_plan_tasks")
+      .select("*")
+      .order("phase")
+      .order("code");
+    if (data) setTasks(data as Task[]);
+    setLoading(false);
+  }, []);
+
+  useEffect(() => {
+    if (!unlocked) return;
+    fetchTasks();
+    const ch = supabase
+      .channel("action-plan-rt")
+      .on("postgres_changes" as any, { event: "*", schema: "public", table: "action_plan_tasks" }, () => fetchTasks())
+      .subscribe();
+    return () => { supabase.removeChannel(ch); };
+  }, [fetchTasks, unlocked]);
+
   const handleUnlock = (e: React.FormEvent) => {
     e.preventDefault();
     if (passInput === "Totum@SupremoIsrael") {
@@ -126,25 +146,6 @@ export default function ActionPlan() {
       </AppLayout>
     );
   }
-
-  const fetchTasks = useCallback(async () => {
-    const { data } = await supabase
-      .from("action_plan_tasks")
-      .select("*")
-      .order("phase")
-      .order("code");
-    if (data) setTasks(data as Task[]);
-    setLoading(false);
-  }, []);
-
-  useEffect(() => {
-    fetchTasks();
-    const ch = supabase
-      .channel("action-plan-rt")
-      .on("postgres_changes" as any, { event: "*", schema: "public", table: "action_plan_tasks" }, () => fetchTasks())
-      .subscribe();
-    return () => { supabase.removeChannel(ch); };
-  }, [fetchTasks]);
 
   /* derived */
   const phases = useMemo<Phase[]>(() => {
