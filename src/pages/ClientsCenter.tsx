@@ -48,7 +48,7 @@ interface Client {
 }
 
 type ViewMode = "list" | "grid" | "kanban";
-const STATUS_OPTIONS = ["all", "active", "pending", "inactive"];
+const _STATUS_OPTIONS = ["all", "active", "pending", "inactive"];
 const KANBAN_COLS: { key: string; label: string; color: string }[] = [
   { key: "pending", label: "Novos / Pendentes", color: "border-amber-500/40" },
   { key: "active", label: "Ativos", color: "border-emerald-500/40" },
