@@ -34,6 +34,7 @@ import AgentsDashboard from "./pages/AgentsDashboard";
 import ActionPlan from "./pages/ActionPlan";
 import NewClient from "./pages/NewClient";
 import ClientsCenter from "./pages/ClientsCenter";
+import AgentProfile from "./pages/AgentProfile";
 
 const queryClient = new QueryClient();
 
