@@ -149,6 +149,135 @@ export type Database = {
         }
         Relationships: []
       }
+      clients: {
+        Row: {
+          additional_info: string | null
+          age_max: number | null
+          age_min: number | null
+          brand_tone: string | null
+          business_description: string | null
+          business_hours_end: string | null
+          business_hours_start: string | null
+          cnpj: string | null
+          company_name: string
+          company_size: string | null
+          contact_name: string | null
+          created_at: string | null
+          crm_used: string | null
+          desires: string | null
+          email: string | null
+          fonts: string | null
+          gender: string | null
+          id: string
+          industry: string | null
+          location: string | null
+          logo_url: string | null
+          main_niche: string | null
+          main_pains: string | null
+          monthly_revenue: string | null
+          phone: string | null
+          primary_color: string | null
+          products_services: string | null
+          secondary_color: string | null
+          sla_response: string | null
+          social_class: string | null
+          status: string
+          support_channels: string[] | null
+          terms_accepted: boolean | null
+          time_in_market: string | null
+          updated_at: string | null
+          user_id: string
+          visual_elements: string | null
+          visual_personality: string | null
+          website: string | null
+          working_days: string[] | null
+        }
+        Insert: {
+          additional_info?: string | null
+          age_max?: number | null
+          age_min?: number | null
+          brand_tone?: string | null
+          business_description?: string | null
+          business_hours_end?: string | null
+          business_hours_start?: string | null
+          cnpj?: string | null
+          company_name: string
+          company_size?: string | null
+          contact_name?: string | null
+          created_at?: string | null
+          crm_used?: string | null
+          desires?: string | null
+          email?: string | null
+          fonts?: string | null
+          gender?: string | null
+          id?: string
+          industry?: string | null
+          location?: string | null
+          logo_url?: string | null
+          main_niche?: string | null
+          main_pains?: string | null
+          monthly_revenue?: string | null
+          phone?: string | null
+          primary_color?: string | null
+          products_services?: string | null
+          secondary_color?: string | null
+          sla_response?: string | null
+          social_class?: string | null
+          status?: string
+          support_channels?: string[] | null
+          terms_accepted?: boolean | null
+          time_in_market?: string | null
+          updated_at?: string | null
+          user_id: string
+          visual_elements?: string | null
+          visual_personality?: string | null
+          website?: string | null
+          working_days?: string[] | null
+        }
+        Update: {
+          additional_info?: string | null
+          age_max?: number | null
+          age_min?: number | null
+          brand_tone?: string | null
+          business_description?: string | null
+          business_hours_end?: string | null
+          business_hours_start?: string | null
+          cnpj?: string | null
+          company_name?: string
+          company_size?: string | null
+          contact_name?: string | null
+          created_at?: string | null
+          crm_used?: string | null
+          desires?: string | null
+          email?: string | null
+          fonts?: string | null
+          gender?: string | null
+          id?: string
+          industry?: string | null
+          location?: string | null
+          logo_url?: string | null
+          main_niche?: string | null
+          main_pains?: string | null
+          monthly_revenue?: string | null
+          phone?: string | null
+          primary_color?: string | null
+          products_services?: string | null
+          secondary_color?: string | null
+          sla_response?: string | null
+          social_class?: string | null
+          status?: string
+          support_channels?: string[] | null
+          terms_accepted?: boolean | null
+          time_in_market?: string | null
+          updated_at?: string | null
+          user_id?: string
+          visual_elements?: string | null
+          visual_personality?: string | null
+          website?: string | null
+          working_days?: string[] | null
+        }
+        Relationships: []
+      }
       content_pipeline: {
         Row: {
           approval_status: string
