@@ -12,6 +12,7 @@ import {
   LogOut,
   ChevronLeft,
   Menu,
+  ClipboardList,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
