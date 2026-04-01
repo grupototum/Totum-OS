@@ -35,6 +35,7 @@ import ActionPlan from "./pages/ActionPlan";
 import NewClient from "./pages/NewClient";
 import ClientsCenter from "./pages/ClientsCenter";
 import AgentProfile from "./pages/AgentProfile";
+import EditClient from "./pages/EditClient";
 
 const queryClient = new QueryClient();
 
@@ -80,6 +81,7 @@ const App = () => (
             <Route path="/new-client" element={<NewClient />} />
             <Route path="/clients" element={<ClientsCenter />} />
             <Route path="/agent-profile/:agentId" element={<AgentProfile />} />
+            <Route path="/edit-client/:clientId" element={<EditClient />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

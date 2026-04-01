@@ -443,7 +443,7 @@ export default function ClientsCenter() {
                   </div>
 
                   <div className="flex gap-2 pt-2">
-                    <Button variant="outline" className="flex-1 text-xs border-border/40" onClick={() => { setDetailClient(null); }}>
+                    <Button variant="outline" className="flex-1 text-xs border-border/40" onClick={() => { setDetailClient(null); navigate(`/edit-client/${detailClient.id}`); }}>
                       <Pencil className="w-3 h-3 mr-1" /> Editar
                     </Button>
                     <Button variant="outline" className="flex-1 text-xs border-border/40 text-destructive hover:text-destructive" onClick={() => { deleteClient(detailClient.id); setDetailClient(null); }}>
