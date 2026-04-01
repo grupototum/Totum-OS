@@ -11,7 +11,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Slider } from "@/components/ui/slider";
 import { toast } from "@/hooks/use-toast";
 import {
-  CheckCircle2, Clock, Circle, Target, Calendar, Zap, TrendingUp,
+  CheckCircle2, Clock, Circle, Target, Zap, TrendingUp,
   User, Bot, Users, Filter, ChevronDown, ChevronUp,
 } from "lucide-react";
 
