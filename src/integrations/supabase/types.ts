@@ -14,6 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
+      action_plan_tasks: {
+        Row: {
+          code: string
+          created_at: string | null
+          day_end: number
+          day_start: number
+          id: string
+          phase: number
+          phase_name: string
+          progress: number
+          responsible: string
+          status: string
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          code: string
+          created_at?: string | null
+          day_end?: number
+          day_start?: number
+          id?: string
+          phase?: number
+          phase_name: string
+          progress?: number
+          responsible?: string
+          status?: string
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          code?: string
+          created_at?: string | null
+          day_end?: number
+          day_start?: number
+          id?: string
+          phase?: number
+          phase_name?: string
+          progress?: number
+          responsible?: string
+          status?: string
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       activity_stats: {
         Row: {
           created_at: string | null
