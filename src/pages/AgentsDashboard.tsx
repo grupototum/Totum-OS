@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Bot, Zap, Users, TrendingUp, Search, LayoutGrid, List,
-  Eye, ArrowRight, Plus, FileText, ChevronRight,
+  Eye, Plus, FileText, ChevronRight,
 } from "lucide-react";
 import {
   LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend,
