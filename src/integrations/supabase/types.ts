@@ -41,32 +41,65 @@ export type Database = {
         }
         Relationships: []
       }
+      agent_interactions: {
+        Row: {
+          agent_name: string
+          created_at: string | null
+          date: string
+          id: string
+          interactions: number
+        }
+        Insert: {
+          agent_name: string
+          created_at?: string | null
+          date?: string
+          id?: string
+          interactions?: number
+        }
+        Update: {
+          agent_name?: string
+          created_at?: string | null
+          date?: string
+          id?: string
+          interactions?: number
+        }
+        Relationships: []
+      }
       agents: {
         Row: {
+          category: string | null
           created_at: string | null
+          daily_tasks: number | null
           emoji: string | null
           id: string
           name: string
           role: string
           status: string
+          success_rate: number | null
           tasks: number
         }
         Insert: {
+          category?: string | null
           created_at?: string | null
+          daily_tasks?: number | null
           emoji?: string | null
           id?: string
           name: string
           role: string
           status?: string
+          success_rate?: number | null
           tasks?: number
         }
         Update: {
+          category?: string | null
           created_at?: string | null
+          daily_tasks?: number | null
           emoji?: string | null
           id?: string
           name?: string
           role?: string
           status?: string
+          success_rate?: number | null
           tasks?: number
         }
         Relationships: []
