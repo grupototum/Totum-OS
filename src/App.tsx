@@ -34,6 +34,7 @@ import AgentsDashboard from "./pages/AgentsDashboard";
 import ActionPlan from "./pages/ActionPlan";
 import NewClient from "./pages/NewClient";
 import ClientsCenter from "./pages/ClientsCenter";
+import AgentProfile from "./pages/AgentProfile";
 
 const queryClient = new QueryClient();
 
@@ -78,6 +79,7 @@ const App = () => (
             <Route path="/action-plan" element={<ActionPlan />} />
             <Route path="/new-client" element={<NewClient />} />
             <Route path="/clients" element={<ClientsCenter />} />
+            <Route path="/agent-profile/:agentId" element={<AgentProfile />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
