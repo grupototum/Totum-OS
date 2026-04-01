@@ -30,6 +30,7 @@ import SubAgentPage from "./pages/SubAgentPage";
 import PopSlaPage from "./pages/PopSla";
 import DicasPage from "./pages/DicasPage";
 import RecursosPage from "./pages/RecursosPage";
+import AgentsDashboard from "./pages/AgentsDashboard";
 
 const queryClient = new QueryClient();
 
@@ -70,6 +71,7 @@ const App = () => (
             <Route path="/dicas" element={<DicasPage />} />
             <Route path="/recursos" element={<RecursosPage />} />
             <Route path="/recursos/:resourceId" element={<RecursosPage />} />
+            <Route path="/agents-dashboard" element={<AgentsDashboard />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
