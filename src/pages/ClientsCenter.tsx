@@ -244,7 +244,7 @@ export default function ClientsCenter() {
                     </tr>
                   </thead>
                   <tbody>
-                    {filtered.map((c, i) => (
+                    {filtered.map((c) => (
                       <tr key={c.id} className="border-b border-border/20 hover:bg-secondary/30 transition-colors cursor-pointer" onClick={() => setDetailClient(c)}>
                         <td className="p-3" onClick={(e) => e.stopPropagation()}><Checkbox checked={selected.has(c.id)} onCheckedChange={() => toggleSelect(c.id)} /></td>
                         <td className="p-3">
