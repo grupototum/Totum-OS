@@ -27,6 +27,7 @@ const staticSections: NavSection[] = [
     items: [
       { label: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },
       { label: "Hub de Agentes", icon: Bot, path: "/hub" },
+      { label: "Painel de Agentes", icon: Bot, path: "/agents-dashboard" },
     ],
   },
   {
