@@ -35,6 +35,7 @@ const staticSections: NavSection[] = [
     items: [
       { label: "Quadro de Tarefas", icon: KanbanSquare, path: "/tasks" },
       { label: "Pipeline de Conteúdo", icon: GitBranch, path: "/content" },
+      { label: "Plano de Ação", icon: ClipboardList, path: "/action-plan" },
       { label: "Visão do Escritório", icon: Building2, path: "/office" },
     ],
   },
