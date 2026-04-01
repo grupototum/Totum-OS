@@ -32,6 +32,7 @@ import DicasPage from "./pages/DicasPage";
 import RecursosPage from "./pages/RecursosPage";
 import AgentsDashboard from "./pages/AgentsDashboard";
 import ActionPlan from "./pages/ActionPlan";
+import NewClient from "./pages/NewClient";
 
 const queryClient = new QueryClient();
 
