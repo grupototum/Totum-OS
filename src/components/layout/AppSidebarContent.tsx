@@ -4,7 +4,7 @@ import { useState } from "react";
 import {
   LayoutDashboard, Bot, KanbanSquare, GitBranch, Building2,
   Terminal, Users, Settings, LogOut, Sun, Moon,
-  ChevronDown, ChevronRight, Notebook, FileCheck, Lightbulb, ClipboardList,
+  ChevronDown, ChevronRight, Notebook, FileCheck, Lightbulb, ClipboardList, UserPlus,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/contexts/ThemeContext";

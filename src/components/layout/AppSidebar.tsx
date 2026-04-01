@@ -44,6 +44,7 @@ const sections: NavSection[] = [
       { label: "Quadro de Tarefas", icon: KanbanSquare, path: "/tasks" },
       { label: "Pipeline de Conteúdo", icon: GitBranch, path: "/content" },
       { label: "Plano de Ação", icon: ClipboardList, path: "/action-plan" },
+      { label: "Novo Cliente", icon: UserPlus, path: "/new-client" },
       { label: "Visão do Escritório", icon: Building2, path: "/office" },
     ],
   },
