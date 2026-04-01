@@ -100,6 +100,23 @@ export default function ActionPlan() {
     return () => { supabase.removeChannel(ch); };
   }, [fetchTasks, unlocked]);
 
+  /* derived */
+  const phases = useMemo<Phase[]>(() => {
+    const map = new Map<number, Phase>();
+    tasks.forEach((t) => {
+      if (!map.has(t.phase)) {
+        map.set(t.phase, { num: t.phase, name: t.phase_name, dayStart: t.day_start, dayEnd: t.day_end, tasks: [] });
+      }
+      map.get(t.phase)!.tasks.push(t);
+    });
+    return Array.from(map.values()).sort((a, b) => a.num - b.num);
+  }, [tasks]);
+
+  const filteredPhases = useMemo(() => {
+    if (filterResp === "all") return phases;
+    return phases.map((p) => ({ ...p, tasks: p.tasks.filter((t) => t.responsible === filterResp) })).filter((p) => p.tasks.length > 0);
+  }, [phases, filterResp]);
+
   const handleUnlock = (e: React.FormEvent) => {
     e.preventDefault();
     if (passInput === "Totum@SupremoIsrael") {
@@ -146,23 +163,6 @@ export default function ActionPlan() {
       </AppLayout>
     );
   }
-
-  /* derived */
-  const phases = useMemo<Phase[]>(() => {
-    const map = new Map<number, Phase>();
-    tasks.forEach((t) => {
-      if (!map.has(t.phase)) {
-        map.set(t.phase, { num: t.phase, name: t.phase_name, dayStart: t.day_start, dayEnd: t.day_end, tasks: [] });
-      }
-      map.get(t.phase)!.tasks.push(t);
-    });
-    return Array.from(map.values()).sort((a, b) => a.num - b.num);
-  }, [tasks]);
-
-  const filteredPhases = useMemo(() => {
-    if (filterResp === "all") return phases;
-    return phases.map((p) => ({ ...p, tasks: p.tasks.filter((t) => t.responsible === filterResp) })).filter((p) => p.tasks.length > 0);
-  }, [phases, filterResp]);
 
   const totalTasks = tasks.length;
   const doneTasks = tasks.filter((t) => t.status === "done").length;
