@@ -11,8 +11,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Progress } from "@/components/ui/progress";
 import {
-  ArrowLeft, MessageSquare, Zap, Shield, Target, Users, Brain,
-  Activity, TrendingUp, Clock, AlertTriangle, CheckCircle2,
+  ArrowLeft, MessageSquare, Zap, Users, Brain,
+  Activity, TrendingUp, AlertTriangle, CheckCircle2,
   BarChart3, Workflow, Settings2, Sparkles, Eye, Heart,
 } from "lucide-react";
 
