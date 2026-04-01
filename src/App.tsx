@@ -33,6 +33,7 @@ import RecursosPage from "./pages/RecursosPage";
 import AgentsDashboard from "./pages/AgentsDashboard";
 import ActionPlan from "./pages/ActionPlan";
 import NewClient from "./pages/NewClient";
+import ClientsCenter from "./pages/ClientsCenter";
 
 const queryClient = new QueryClient();
 
