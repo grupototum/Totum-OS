@@ -36,6 +36,7 @@ import NewClient from "./pages/NewClient";
 import ClientsCenter from "./pages/ClientsCenter";
 import AgentProfile from "./pages/AgentProfile";
 import EditClient from "./pages/EditClient";
+import AdaPage from "./pages/ada";
 
 const queryClient = new QueryClient();
 
@@ -82,6 +83,7 @@ const App = () => (
             <Route path="/clients" element={<ClientsCenter />} />
             <Route path="/agent-profile/:agentId" element={<AgentProfile />} />
             <Route path="/edit-client/:clientId" element={<EditClient />} />
+            <Route path="/ada" element={<AdaPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
