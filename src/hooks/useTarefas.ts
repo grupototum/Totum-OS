@@ -190,7 +190,7 @@ export function useTarefas() {
   // Deletar tarefa
   const deletarTarefa = useCallback(async (id: string): Promise<boolean> => {
     try {
-      const { error: supabaseError } = await supabase
+      const { error: supabaseError } = await (supabase as any)
         .from('tarefas')
         .delete()
         .eq('id', id);
