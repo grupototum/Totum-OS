@@ -14,65 +14,6 @@ export type Database = {
   }
   public: {
     Tables: {
-      projetos: {
-        Row: {
-          id: string
-          nome: string
-          descricao: string | null
-          cor: string
-          criado_em: string
-          atualizado_em: string
-        }
-        Insert: {
-          id?: string
-          nome: string
-          descricao?: string | null
-          cor?: string
-          criado_em?: string
-          atualizado_em?: string
-        }
-        Update: {
-          id?: string
-          nome?: string
-          descricao?: string | null
-          cor?: string
-          criado_em?: string
-          atualizado_em?: string
-        }
-        Relationships: []
-      }
-      comentarios_tarefa: {
-        Row: {
-          id: string
-          tarefa_id: string
-          autor: string
-          conteudo: string
-          criado_em: string
-        }
-        Insert: {
-          id?: string
-          tarefa_id: string
-          autor?: string
-          conteudo: string
-          criado_em?: string
-        }
-        Update: {
-          id?: string
-          tarefa_id?: string
-          autor?: string
-          conteudo?: string
-          criado_em?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "comentarios_tarefa_tarefa_id_fkey"
-            columns: ["tarefa_id"]
-            isOneToOne: false
-            referencedRelation: "tarefas"
-            referencedColumns: ["id"]
-          }
-        ]
-      }
       action_plan_tasks: {
         Row: {
           code: string
@@ -528,65 +469,39 @@ export type Database = {
       }
       tarefas: {
         Row: {
-          id: string
-          titulo: string
-          descricao: string | null
-          status: string
-          responsavel: string | null
-          prioridade: string
-          data_limite: string | null
-          projeto_id: string | null
-          tipo: string
-          tags: Json
-          subtarefas: Json
-          posicao: number
-          criado_por: string | null
           created_at: string
+          deadline: string | null
+          descricao: string | null
+          id: string
+          prioridade: string
+          responsavel: string | null
+          status: string
+          titulo: string
           updated_at: string
         }
         Insert: {
-          id?: string
-          titulo: string
-          descricao?: string | null
-          status?: string
-          responsavel?: string | null
-          prioridade?: string
-          data_limite?: string | null
-          projeto_id?: string | null
-          tipo?: string
-          tags?: Json
-          subtarefas?: Json
-          posicao?: number
-          criado_por?: string | null
           created_at?: string
+          deadline?: string | null
+          descricao?: string | null
+          id?: string
+          prioridade?: string
+          responsavel?: string | null
+          status?: string
+          titulo: string
           updated_at?: string
         }
         Update: {
-          id?: string
-          titulo?: string
-          descricao?: string | null
-          status?: string
-          responsavel?: string | null
-          prioridade?: string
-          data_limite?: string | null
-          projeto_id?: string | null
-          tipo?: string
-          tags?: Json
-          subtarefas?: Json
-          posicao?: number
-          criado_por?: string | null
           created_at?: string
+          deadline?: string | null
+          descricao?: string | null
+          id?: string
+          prioridade?: string
+          responsavel?: string | null
+          status?: string
+          titulo?: string
           updated_at?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "tarefas_projeto_id_fkey"
-            columns: ["projeto_id"]
-            isOneToOne: false
-            referencedRelation: "projetos"
-            referencedColumns: ["id"]
-          }
-        ]
+        Relationships: []
       }
       user_roles: {
         Row: {
