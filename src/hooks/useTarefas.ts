@@ -68,7 +68,7 @@ export function useTarefas() {
       setLoading(true);
       setError(null);
 
-      let query = supabase
+      let query = (supabase as any)
         .from('tarefas')
         .select('*')
         .order('created_at', { ascending: false });
