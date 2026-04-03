@@ -170,7 +170,7 @@ export function useTarefas() {
         throw supabaseError;
       }
 
-      setTarefas(prev => prev.map(t => t.id === id ? data : t));
+      setTarefas(prev => prev.map(t => t.id === id ? data as Tarefa : t));
       toast({
         title: 'Sucesso',
         description: 'Tarefa atualizada com sucesso',
