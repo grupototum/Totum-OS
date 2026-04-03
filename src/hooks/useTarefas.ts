@@ -130,7 +130,7 @@ export function useTarefas() {
         throw supabaseError;
       }
 
-      setTarefas(prev => [data, ...prev]);
+      setTarefas(prev => [data as Tarefa, ...prev]);
       toast({
         title: 'Sucesso',
         description: 'Tarefa criada com sucesso',
