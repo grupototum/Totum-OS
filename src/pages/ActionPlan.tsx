@@ -272,25 +272,25 @@ export default function Implantação() {
         {/* Current Phase Highlight */}
         {currentPhase && (
           <motion.div {...anim(2)}>
-            <Card className="border-stone-300 bg-stone-900 text-white overflow-hidden">
+            <Card className="border-stone-300 bg-gradient-to-br from-stone-800 to-stone-900 text-white overflow-hidden">
               <CardContent className="p-6">
                 <div className="flex items-start justify-between">
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
                       <span className="text-3xl">{PHASE_ICONS[currentPhase.num] || "📋"}</span>
                       <div>
-                        <p className="text-xs text-stone-400 uppercase tracking-wider">Fase Atual</p>
-                        <h2 className="text-xl font-semibold">Fase {currentPhase.num}: {currentPhase.name}</h2>
+                        <p className="text-xs text-stone-300 uppercase tracking-wider font-medium">Fase Atual</p>
+                        <h2 className="text-xl font-semibold text-white">Fase {currentPhase.num}: {currentPhase.name}</h2>
                       </div>
                     </div>
-                    <p className="text-sm text-stone-300">
+                    <p className="text-sm text-stone-200">
                       {PHASE_DESCRIPTIONS[currentPhase.num] || "Em andamento"}
                     </p>
                   </div>
                   
                   <div className="text-right">
-                    <p className="text-3xl font-semibold">{currentPhase.progress}%</p>
-                    <p className="text-xs text-stone-400">
+                    <p className="text-3xl font-semibold text-white">{currentPhase.progress}%</p>
+                    <p className="text-xs text-stone-300">
                       {currentPhase.completedCount}/{currentPhase.taskCount} tarefas
                     </p>
                   </div>
@@ -299,7 +299,7 @@ export default function Implantação() {
                 <div className="mt-4">
                   <Progress 
                     value={currentPhase.progress} 
-                    className="h-2 bg-stone-700"
+                    className="h-2 bg-stone-600"
                   />
                 </div>
               </CardContent>

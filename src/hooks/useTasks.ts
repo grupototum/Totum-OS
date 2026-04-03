@@ -79,7 +79,11 @@ export function useTasks() {
         .order('posicao', { ascending: true })
         .order('criado_em', { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.warn('Erro ao buscar tarefas:', error.message);
+        setTarefas([]);
+        return;
+      }
 
       // Parse JSON fields
       const parsedData: Tarefa[] = (data || []).map((t: any) => ({
@@ -90,8 +94,8 @@ export function useTasks() {
 
       setTarefas(parsedData);
     } catch (err: any) {
-      console.error('Erro ao buscar tarefas:', err);
-      setError(err.message);
+      console.warn('Erro ao buscar tarefas:', err?.message || err);
+      setTarefas([]);
     }
   }, []);
 
@@ -103,10 +107,15 @@ export function useTasks() {
         .select('*')
         .order('criado_em', { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.warn('Erro ao buscar projetos:', error.message);
+        setProjetos([]);
+        return;
+      }
       setProjetos(data || []);
     } catch (err: any) {
-      console.error('Erro ao buscar projetos:', err);
+      console.warn('Erro ao buscar projetos:', err?.message || err);
+      setProjetos([]);
     }
   }, []);
 

@@ -17,7 +17,7 @@ import {
   Contact,
   Rocket,
   Network,
-  Network,
+  Sparkles,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
@@ -38,14 +38,13 @@ const sections: NavSection[] = [
     title: "PRINCIPAL",
     items: [
       { label: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },
-      { label: "Hub de Agentes", icon: Bot, path: "/hub" },
+      { label: "Hub de Agentes", icon: Sparkles, path: "/hub" },
     ],
   },
   {
     title: "CENTRAL DE AGENTES",
     items: [
       { label: "Painel", icon: Bot, path: "/painel-agentes" },
-      { label: "Hub Visual", icon: Network, path: "/hub-agentes" },
       { label: "Estrutura", icon: Network, path: "/estrutura-time" },
     ],
   },

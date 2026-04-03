@@ -4,6 +4,7 @@ import AppLayout from '@/components/layout/AppLayout';
 import { KanbanColumn } from '@/components/kanban';
 import { TaskModal } from '@/components/tasks';
 import { useTasks, Tarefa, StatusTarefa, COLUNAS_KANBAN, PRIORIDADES } from '@/hooks/useTasks';
+import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -14,6 +15,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 type ViewType = 'kanban' | 'lista';
 
 export default function QuadroTarefas() {
+  const { user } = useAuth();
   const {
     tarefas,
     projetos,
@@ -474,7 +476,7 @@ export default function QuadroTarefas() {
           onAddSubtarefa={adicionarSubtarefa}
           onRemoveSubtarefa={removerSubtarefa}
           onAddComentario={adicionarComentario}
-          currentUser={currentUser}
+          currentUser={user?.email || 'Sistema'}
           mode={modalMode}
         />
       </div>
