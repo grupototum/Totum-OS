@@ -1,203 +1,133 @@
-# Design System - Totum
-## Upixel/Totum Design Language
+# Design System - Totum v3 (Industrial)
+
+## Upixel/Totum Design Language — Industrial Edition
 
 ---
 
-## 🎨 Paleta de Cores
+## 🎨 Paleta de Cores (via CSS Tokens)
 
-### Cores Primárias
-| Nome | Hex | Uso |
-|------|-----|-----|
-| **Totum Orange** | `#f76926` | Botões primários, CTAs, destaques |
-| **Totum Dark** | `#050505` | Fundo principal |
-| **Totum Card** | `#0a0a0a` | Cards, containers |
-| **Totum Border** | `#1a1a1a` | Bordas sutis |
+### Cores Primárias (HSL em index.css)
+| Token | Dark Mode | Light Mode | Uso |
+|-------|-----------|------------|-----|
+| `--primary` | `28 90% 56%` | `28 90% 56%` | Botões primários, CTAs, destaques (orange) |
+| `--background` | `0 0% 7%` | `0 0% 90%` | Fundo principal |
+| `--card` | `0 0% 10%` | `0 0% 96%` | Cards, containers |
+| `--border` | `0 0% 18%` | `0 0% 82%` | Bordas sutis |
+| `--muted` | `0 0% 16%` | `0 0% 88%` | Fundos secundários |
+| `--foreground` | `0 0% 96%` | `0 0% 4%` | Texto principal |
 
-### Cores de Status
-| Nome | Hex | Uso |
-|------|-----|-----|
-| **Success** | `#22c55e` | Online, sucesso, positivo |
-| **Warning** | `#eab308` | Aviso, standby, atenção |
-| **Error** | `#ef4444` | Erro, offline, crítico |
-| **Info** | `#3b82f6` | Informação, links |
+### Tokens Industriais
+| Token | Dark Mode | Uso |
+|-------|-----------|-----|
+| `--surface` | `0 0% 7%` | Superfície base |
+| `--surface-container` | `0 0% 10%` | Container |
+| `--surface-container-high` | `0 0% 13%` | Container elevado |
+| `--outline` | `0 0% 30%` | Contorno |
+| `--outline-variant` | `0 0% 18%` | Contorno sutil |
 
-### Cores de Texto
-| Nome | Hex | Uso |
-|------|-----|-----|
-| **Text Primary** | `#ffffff` | Títulos, texto principal |
-| **Text Secondary** | `#a3a3a3` | Descrições, labels |
-| **Text Muted** | `#737373` | Placeholders, desabilitado |
+### Cores de Status (diretas no Tailwind — intencionais)
+| Nome | Classe | Uso |
+|------|--------|-----|
+| **Success** | `emerald-500` | Online, sucesso, positivo |
+| **Warning** | `amber-500` | Aviso, standby, atenção |
+| **Error** | `red-500` / `destructive` | Erro, offline, crítico |
+| **Info** | `blue-500` | Informação, links |
+
+### ⚠️ Regra de Cores
+- **SEMPRE** usar tokens semânticos: `bg-background`, `text-foreground`, `bg-card`, `text-primary`, `bg-muted`, etc.
+- **NUNCA** usar: `bg-white`, `bg-black`, `text-white`, `text-black`, `bg-neutral-*`, `bg-gray-*`
+- **Exceções permitidas**: cores de status (emerald, amber, red, blue) e overlays (`bg-black/80` em modais do shadcn)
 
 ---
 
 ## 🔤 Tipografia
 
-### Fontes
-- **Headings:** `Inter` ou `Bricolage Grotesque`
-- **Body:** `Inter`
-- **Monospace:** `JetBrains Mono` (código, métricas)
+### Fontes (Google Fonts)
+| Uso | Fonte | Classe Tailwind |
+|-----|-------|-----------------|
+| **Corpo** | Space Grotesk (300-700) | `font-sans` / `font-body` |
+| **Títulos** | Oswald (400-700) | `font-heading` / `font-display` |
+| **Código/Dados** | Space Mono (400, 700) | `font-mono` |
 
-### Tamanhos
-```css
---text-xs: 0.75rem;      /* 12px - Labels, tags */
---text-sm: 0.875rem;     /* 14px - Descrições */
---text-base: 1rem;       /* 16px - Corpo */
---text-lg: 1.125rem;     /* 18px - Subtítulos */
---text-xl: 1.25rem;      /* 20px - Títulos pequenos */
---text-2xl: 1.5rem;      /* 24px - Títulos */
---text-3xl: 1.875rem;    /* 30px - Títulos grandes */
---text-4xl: 2.25rem;     /* 36px - Display */
-```
+### Aplicação automática
+- `html, body` → Space Grotesk
+- `h1-h6` → Oswald, weight 500, letter-spacing -0.01em
+- `.label-industrial` → Space Grotesk, uppercase, tracking-widest
+- `.font-mono-industrial` → Space Mono
 
 ---
 
-## 📐 Espaçamento
+## 🎭 Modo Claro / Escuro
 
-### Scale
-```css
---space-1: 0.25rem;   /* 4px */
---space-2: 0.5rem;    /* 8px */
---space-3: 0.75rem;   /* 12px */
---space-4: 1rem;      /* 16px */
---space-5: 1.25rem;   /* 20px */
---space-6: 1.5rem;    /* 24px */
---space-8: 2rem;      /* 32px */
---space-10: 2.5rem;   /* 40px */
---space-12: 3rem;     /* 48px */
-```
+- Gerenciado via `ThemeContext` (localStorage)
+- Classe `.light` no `<html>` para modo claro
+- Dark mode é o padrão (`:root`)
+- Transição suave: `0.3s ease` em background-color, color, border-color, box-shadow
+- Toggle flutuante: `fixed top-4 right-4 z-50`
 
 ---
 
-## 🎯 Componentes
+## 📐 Componentes
 
-### Cards
+### Cards (usar tokens)
 ```tsx
-// Card Base
-<div className="rounded-xl ring-1 ring-white/10 bg-white/[0.02] p-6">
+// Card Base — usa tokens
+<Card className="bg-card border-border">
+  <CardContent>{/* ... */}</CardContent>
+</Card>
+
+// Card com glow industrial
+<div className="animate-totum-glow rounded-xl bg-card border border-border p-6">
   {/* Conteúdo */}
 </div>
-
-// Card com Glow (destaque)
-<div className="relative bg-neutral-900 rounded-[20px] p-[1.5px] overflow-hidden">
-  <div className="absolute inset-0 bg-gradient-to-b from-orange-400 to-transparent opacity-40" />
-  <div className="relative bg-[#0A0A0A] rounded-[18px] p-6">
-    {/* Conteúdo */}
-  </div>
-</div>
-
-// Card com borda colorida
-<div className="rounded-xl ring-1 ring-white/10 bg-white/[0.02] overflow-hidden">
-  <div className="px-4 py-2 bg-purple-500/10 border-b border-purple-500/20">
-    {/* Header */}
-  </div>
-  <div className="p-5">
-    {/* Body */}
-  </div>
-</div>
 ```
 
-### Botões
+### Botões (usar tokens)
 ```tsx
-// Primário (Orange)
-<button className="bg-[#f76926] hover:bg-[#e55a1b] text-white px-4 py-2 rounded-lg transition-colors">
-  Ação
-</button>
+// Primário (usa --primary automaticamente)
+<Button>Ação</Button>
 
-// Secundário (Outline)
-<button className="ring-1 ring-white/20 hover:ring-white/40 text-white px-4 py-2 rounded-lg transition-all">
-  Ação
-</button>
+// Outline
+<Button variant="outline">Ação</Button>
 
 // Ghost
-<button className="text-neutral-400 hover:text-white transition-colors">
-  Ação
-</button>
+<Button variant="ghost">Ação</Button>
 ```
 
 ### Status Indicators
 ```tsx
-// Online
+// Badge EM BREVE / DADOS DE DEMONSTRAÇÃO
+<Badge className="bg-orange-500/20 text-orange-400">EM BREVE</Badge>
+
+// Status Online
 <span className="relative flex h-2 w-2">
-  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
-  <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
+  <span className="animate-ping absolute h-full w-full rounded-full bg-emerald-400 opacity-75" />
+  <span className="relative rounded-full h-2 w-2 bg-emerald-500" />
 </span>
-
-// Status Badge
-<span className="text-[10px] rounded-md bg-green-500/10 text-green-400 ring-1 ring-green-500/20 px-2 py-0.5 uppercase">
-  Online
-</span>
-```
-
-### Progress Bars
-```tsx
-<div className="flex-1 bg-white/5 rounded-full h-2">
-  <div className="bg-orange-500 rounded-full h-2" style={{ width: '80%' }} />
-</div>
-```
-
----
-
-## 🌙 Dark Mode (Padrão)
-
-O sistema usa dark mode por padrão:
-
-```css
-body {
-  background-color: #050505;
-  color: #ffffff;
-}
 ```
 
 ---
 
 ## ✨ Animações
 
-### Fade In Up
-```css
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fadeInUp {
-  animation: fadeInUp 0.6s ease-out;
-}
-```
-
-### Pulse (Status)
-```css
-.animate-ping {
-  animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
-}
-```
-
-### Hover Lift
-```css
-.hover-lift {
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-.hover-lift:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
-```
+| Nome | Classe | Efeito |
+|------|--------|--------|
+| Totum Glow | `animate-totum-glow` | Pulsação de sombra laranja |
+| Industrial Pulse | `animate-industrial-pulse` | Fade in/out 2s |
+| Grid Line Pulse | (keyframe) | Linhas de grid pulsantes |
 
 ---
 
-## 📱 Breakpoints
+## 📱 Sidebar
 
-```css
---sm: 640px;   /* Mobile landscape */
---md: 768px;   /* Tablet */
---lg: 1024px;  /* Desktop */
---xl: 1280px;  /* Large desktop */
-```
+| Token | Dark | Light |
+|-------|------|-------|
+| `--sidebar-background` | `0 0% 5%` | `0 0% 96%` |
+| `--sidebar-foreground` | `0 0% 90%` | `0 0% 20%` |
+| `--sidebar-primary` | `28 90% 56%` | `28 90% 56%` |
+| `--sidebar-border` | `0 0% 14%` | `0 0% 88%` |
+
+Largura: 280px (desktop) | Drawer com overlay (mobile)
 
 ---
 
@@ -205,8 +135,9 @@ body {
 
 - **Ícones:** Lucide React
 - **UI Components:** shadcn/ui + Radix
-- **Tailwind Config:** Extensão das cores acima
+- **Animações:** Framer Motion
+- **Border Radius:** `--radius: 1rem`
 
 ---
 
-*Design System Totum v1.0*
+*Design System Totum v3.0 — Industrial Edition*
