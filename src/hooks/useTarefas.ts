@@ -159,7 +159,7 @@ export function useTarefas() {
       if (dto.prioridade !== undefined) atualizacao.prioridade = dto.prioridade;
       if (dto.deadline !== undefined) atualizacao.deadline = dto.deadline || null;
 
-      const { data, error: supabaseError } = await supabase
+      const { data, error: supabaseError } = await (supabase as any)
         .from('tarefas')
         .update(atualizacao)
         .eq('id', id)
