@@ -91,14 +91,23 @@ export function useChartData(vpsName: string) {
 
   // Realtime
   useEffect(() => {
-    const channel = supabase
-      .channel("charts-realtime")
-      .on("postgres_changes" as any, { event: "*", schema: "public", table: "vps_usage_history" }, () => fetchVps())
-      .on("postgres_changes" as any, { event: "*", schema: "public", table: "cost_history" }, () => fetchCosts())
-      .on("postgres_changes" as any, { event: "*", schema: "public", table: "activity_stats" }, () => fetchActivity())
-      .subscribe();
+    const id = Math.random().toString(36).slice(2);
+    const ch1 = supabase.channel(`chart-vps-${id}`)
+      .on("postgres_changes" as any, { event: "*", schema: "public", table: "vps_usage_history" }, () => fetchVps());
+    const ch2 = supabase.channel(`chart-cost-${id}`)
+      .on("postgres_changes" as any, { event: "*", schema: "public", table: "cost_history" }, () => fetchCosts());
+    const ch3 = supabase.channel(`chart-activity-${id}`)
+      .on("postgres_changes" as any, { event: "*", schema: "public", table: "activity_stats" }, () => fetchActivity());
 
-    return () => { supabase.removeChannel(channel); };
+    ch1.subscribe();
+    ch2.subscribe();
+    ch3.subscribe();
+
+    return () => {
+      supabase.removeChannel(ch1);
+      supabase.removeChannel(ch2);
+      supabase.removeChannel(ch3);
+    };
   }, [fetchVps, fetchCosts, fetchActivity]);
 
   return { vpsUsage, costHistory, activityStats, loading };

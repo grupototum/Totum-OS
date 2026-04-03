@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
+import { validateResetPasswordForm, type ValidationErrors } from "@/lib/validation";
 
 export default function ResetPassword() {
   const navigate = useNavigate();
@@ -12,6 +13,7 @@ export default function ResetPassword() {
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
   const [ready, setReady] = useState(false);
+  const [errors, setErrors] = useState<ValidationErrors>({});
 
   useEffect(() => {
     // Check for recovery event from the URL hash
@@ -32,18 +34,18 @@ export default function ResetPassword() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!password || !confirmPassword) {
-      toast.error("Preencha todos os campos.");
+    
+    // Validação client-side
+    const validationErrors = validateResetPasswordForm(password, confirmPassword);
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      // Mostra o primeiro erro
+      const firstError = Object.values(validationErrors)[0];
+      toast.error(firstError);
       return;
     }
-    if (password.length < 6) {
-      toast.error("A senha deve ter pelo menos 6 caracteres.");
-      return;
-    }
-    if (password !== confirmPassword) {
-      toast.error("As senhas não coincidem.");
-      return;
-    }
+    
+    setErrors({});
     setLoading(true);
     try {
       const { error } = await supabase.auth.updateUser({ password });
@@ -57,8 +59,10 @@ export default function ResetPassword() {
     }
   };
 
-  const inputClass =
-    "w-full px-3.5 py-2.5 text-sm rounded-xl bg-input border border-border text-foreground placeholder:text-muted-foreground/50 outline-none transition-all duration-200 focus:border-primary/50 focus:ring-2 focus:ring-primary/10";
+  const inputClass = (hasError?: boolean) =>
+    `w-full px-3.5 py-2.5 text-sm rounded-xl bg-input border text-foreground placeholder:text-muted-foreground/50 outline-none transition-all duration-200 focus:border-primary/50 focus:ring-2 focus:ring-primary/10 ${
+      hasError ? "border-destructive focus:border-destructive focus:ring-destructive/10" : "border-border"
+    }`;
 
   return (
     <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background">
@@ -142,11 +146,14 @@ export default function ResetPassword() {
                   <input
                     type={showPass ? "text" : "password"}
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                      if (errors.password) setErrors((prev) => ({ ...prev, password: "" }));
+                    }}
                     placeholder="Mínimo 6 caracteres"
                     disabled={loading}
                     autoComplete="new-password"
-                    className={`${inputClass} pr-11`}
+                    className={`${inputClass(!!errors.password)} pr-11`}
                   />
                   <button
                     type="button"
@@ -156,6 +163,9 @@ export default function ResetPassword() {
                     {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
                   </button>
                 </div>
+                {errors.password && (
+                  <p className="text-xs text-destructive mt-1">{errors.password}</p>
+                )}
               </div>
 
               <div className="space-y-1.5">
@@ -165,12 +175,18 @@ export default function ResetPassword() {
                 <input
                   type={showPass ? "text" : "password"}
                   value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  onChange={(e) => {
+                    setConfirmPassword(e.target.value);
+                    if (errors.confirmPassword) setErrors((prev) => ({ ...prev, confirmPassword: "" }));
+                  }}
                   placeholder="Repita a senha"
                   disabled={loading}
                   autoComplete="new-password"
-                  className={inputClass}
+                  className={inputClass(!!errors.confirmPassword)}
                 />
+                {errors.confirmPassword && (
+                  <p className="text-xs text-destructive mt-1">{errors.confirmPassword}</p>
+                )}
               </div>
             </div>
 

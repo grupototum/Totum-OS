@@ -146,30 +146,28 @@ export function useDashboardData(): DashboardData {
       github_config: refetchGithub,
     };
 
-    const tables = Object.keys(refetchMap);
-
-    const channel = supabase.channel("dashboard-realtime");
-
-    tables.forEach((table) => {
-      channel.on(
-        "postgres_changes" as any,
-        { event: "*", schema: "public", table },
-        (payload: any) => {
-          refetchMap[table]();
-          const eventLabel = payload.eventType === "INSERT" ? "adicionado" :
-            payload.eventType === "UPDATE" ? "atualizado" : "removido";
-          toast({
-            title: `🔔 ${notifyLabels[table] ?? table}`,
-            description: `Dado ${eventLabel} em tempo real`,
-          });
-        }
-      );
+    const id = Math.random().toString(36).slice(2);
+    const channels = Object.entries(refetchMap).map(([table, refetch]) => {
+      const ch = supabase.channel(`dash-${table}-${id}`)
+        .on(
+          "postgres_changes" as any,
+          { event: "*", schema: "public", table },
+          (payload: any) => {
+            refetch();
+            const eventLabel = payload.eventType === "INSERT" ? "adicionado" :
+              payload.eventType === "UPDATE" ? "atualizado" : "removido";
+            toast({
+              title: `🔔 ${notifyLabels[table] ?? table}`,
+              description: `Dado ${eventLabel} em tempo real`,
+            });
+          }
+        );
+      ch.subscribe();
+      return ch;
     });
 
-    channel.subscribe();
-
     return () => {
-      supabase.removeChannel(channel);
+      channels.forEach((ch) => supabase.removeChannel(ch));
     };
   }, [refetchVps, refetchApps, refetchAgents, refetchCosts, refetchActivities, refetchMex, refetchGithub]);
 

@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "sonner";
-import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { Eye, EyeOff, Loader2, Sun, Moon } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { lovable } from "@/integrations/lovable/index";
 import { motion } from "framer-motion";
+import { useTheme } from "@/contexts/ThemeContext";
+import { validateLoginForm, type ValidationErrors } from "@/lib/validation";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -14,6 +16,8 @@ export default function Login() {
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
+  const [errors, setErrors] = useState<ValidationErrors>({});
+  const { theme, toggleTheme } = useTheme();
 
   const handleGoogleSignIn = async () => {
     setGoogleLoading(true);
@@ -30,10 +34,18 @@ export default function Login() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !password) {
-      toast.error("Preencha todos os campos.");
+    
+    // Validação client-side
+    const validationErrors = validateLoginForm(email, password);
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      // Mostra o primeiro erro
+      const firstError = Object.values(validationErrors)[0];
+      toast.error(firstError);
       return;
     }
+    
+    setErrors({});
     setLoading(true);
     try {
       await signIn(email, password);
@@ -48,6 +60,14 @@ export default function Login() {
 
   return (
     <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background">
+      {/* Theme toggle */}
+      <button
+        onClick={toggleTheme}
+        className="absolute top-4 right-4 z-20 p-2.5 rounded-xl bg-card/60 border border-border/40 backdrop-blur-sm text-muted-foreground hover:text-foreground transition-colors"
+        title={theme === "dark" ? "Modo Claro" : "Modo Escuro"}
+      >
+        {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+      </button>
       {/* Grid lines background */}
       <div className="absolute inset-0 pointer-events-none">
         {[1, 2, 3, 4, 5].map((i) => (
@@ -133,12 +153,20 @@ export default function Login() {
               <input
                 type="text"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (errors.email) setErrors((prev) => ({ ...prev, email: "" }));
+                }}
                 placeholder="Totum ou seu@email.com"
                 disabled={loading}
                 autoComplete="username"
-                className="w-full px-3.5 py-2.5 text-sm rounded-xl bg-input border border-border text-foreground placeholder:text-muted-foreground/50 outline-none transition-all duration-200 focus:border-primary/50 focus:ring-2 focus:ring-primary/10"
+                className={`w-full px-3.5 py-2.5 text-sm rounded-xl bg-input border text-foreground placeholder:text-muted-foreground/50 outline-none transition-all duration-200 focus:border-primary/50 focus:ring-2 focus:ring-primary/10 ${
+                  errors.email ? "border-destructive focus:border-destructive focus:ring-destructive/10" : "border-border"
+                }`}
               />
+              {errors.email && (
+                <p className="text-xs text-destructive mt-1">{errors.email}</p>
+              )}
             </div>
 
             {/* Password */}
@@ -150,11 +178,16 @@ export default function Login() {
                 <input
                   type={showPass ? "text" : "password"}
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    if (errors.password) setErrors((prev) => ({ ...prev, password: "" }));
+                  }}
                   placeholder="••••••••"
                   disabled={loading}
                   autoComplete="current-password"
-                  className="w-full px-3.5 py-2.5 pr-11 text-sm rounded-xl bg-input border border-border text-foreground placeholder:text-muted-foreground/50 outline-none transition-all duration-200 focus:border-primary/50 focus:ring-2 focus:ring-primary/10"
+                  className={`w-full px-3.5 py-2.5 pr-11 text-sm rounded-xl bg-input border text-foreground placeholder:text-muted-foreground/50 outline-none transition-all duration-200 focus:border-primary/50 focus:ring-2 focus:ring-primary/10 ${
+                    errors.password ? "border-destructive focus:border-destructive focus:ring-destructive/10" : "border-border"
+                  }`}
                 />
                 <button
                   type="button"
@@ -164,6 +197,9 @@ export default function Login() {
                   {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
+              {errors.password && (
+                <p className="text-xs text-destructive mt-1">{errors.password}</p>
+              )}
             </div>
             <div className="flex justify-end">
               <Link to="/forgot-password" className="text-xs text-primary hover:underline">
