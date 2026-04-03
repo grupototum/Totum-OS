@@ -60,7 +60,7 @@ export default function SignUp() {
     }
   };
 
-  const inputClass = (hasError?: boolean) =
+  const inputClass = (hasError?: boolean) =>
     `w-full px-3.5 py-2.5 text-sm rounded-xl bg-input border text-foreground placeholder:text-muted-foreground/50 outline-none transition-all duration-200 focus:border-primary/50 focus:ring-2 focus:ring-primary/10 ${
       hasError ? "border-destructive focus:border-destructive focus:ring-destructive/10" : "border-border"
     }`;

@@ -68,7 +68,7 @@ export function useTarefas() {
       setLoading(true);
       setError(null);
 
-      let query = supabase
+      let query = (supabase as any)
         .from('tarefas')
         .select('*')
         .order('created_at', { ascending: false });
@@ -113,7 +113,7 @@ export function useTarefas() {
         return false;
       }
 
-      const { data, error: supabaseError } = await supabase
+      const { data, error: supabaseError } = await (supabase as any)
         .from('tarefas')
         .insert([{
           titulo: dto.titulo.trim(),
@@ -130,7 +130,7 @@ export function useTarefas() {
         throw supabaseError;
       }
 
-      setTarefas(prev => [data, ...prev]);
+      setTarefas(prev => [data as Tarefa, ...prev]);
       toast({
         title: 'Sucesso',
         description: 'Tarefa criada com sucesso',
@@ -159,7 +159,7 @@ export function useTarefas() {
       if (dto.prioridade !== undefined) atualizacao.prioridade = dto.prioridade;
       if (dto.deadline !== undefined) atualizacao.deadline = dto.deadline || null;
 
-      const { data, error: supabaseError } = await supabase
+      const { data, error: supabaseError } = await (supabase as any)
         .from('tarefas')
         .update(atualizacao)
         .eq('id', id)
@@ -170,7 +170,7 @@ export function useTarefas() {
         throw supabaseError;
       }
 
-      setTarefas(prev => prev.map(t => t.id === id ? data : t));
+      setTarefas(prev => prev.map(t => t.id === id ? data as Tarefa : t));
       toast({
         title: 'Sucesso',
         description: 'Tarefa atualizada com sucesso',
@@ -190,7 +190,7 @@ export function useTarefas() {
   // Deletar tarefa
   const deletarTarefa = useCallback(async (id: string): Promise<boolean> => {
     try {
-      const { error: supabaseError } = await supabase
+      const { error: supabaseError } = await (supabase as any)
         .from('tarefas')
         .delete()
         .eq('id', id);
