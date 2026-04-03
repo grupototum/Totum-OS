@@ -6,6 +6,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { lovable } from "@/integrations/lovable/index";
 import { motion } from "framer-motion";
 import { useTheme } from "@/contexts/ThemeContext";
+import { validateLoginForm, type ValidationErrors } from "@/lib/validation";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ export default function Login() {
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
+  const [errors, setErrors] = useState<ValidationErrors>({});
   const { theme, toggleTheme } = useTheme();
 
   const handleGoogleSignIn = async () => {
@@ -32,10 +34,18 @@ export default function Login() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !password) {
-      toast.error("Preencha todos os campos.");
+    
+    // Validação client-side
+    const validationErrors = validateLoginForm(email, password);
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      // Mostra o primeiro erro
+      const firstError = Object.values(validationErrors)[0];
+      toast.error(firstError);
       return;
     }
+    
+    setErrors({});
     setLoading(true);
     try {
       await signIn(email, password);
@@ -143,12 +153,20 @@ export default function Login() {
               <input
                 type="text"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (errors.email) setErrors((prev) => ({ ...prev, email: "" }));
+                }}
                 placeholder="Totum ou seu@email.com"
                 disabled={loading}
                 autoComplete="username"
-                className="w-full px-3.5 py-2.5 text-sm rounded-xl bg-input border border-border text-foreground placeholder:text-muted-foreground/50 outline-none transition-all duration-200 focus:border-primary/50 focus:ring-2 focus:ring-primary/10"
+                className={`w-full px-3.5 py-2.5 text-sm rounded-xl bg-input border text-foreground placeholder:text-muted-foreground/50 outline-none transition-all duration-200 focus:border-primary/50 focus:ring-2 focus:ring-primary/10 ${
+                  errors.email ? "border-destructive focus:border-destructive focus:ring-destructive/10" : "border-border"
+                }`}
               />
+              {errors.email && (
+                <p className="text-xs text-destructive mt-1">{errors.email}</p>
+              )}
             </div>
 
             {/* Password */}
@@ -160,11 +178,16 @@ export default function Login() {
                 <input
                   type={showPass ? "text" : "password"}
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    if (errors.password) setErrors((prev) => ({ ...prev, password: "" }));
+                  }}
                   placeholder="••••••••"
                   disabled={loading}
                   autoComplete="current-password"
-                  className="w-full px-3.5 py-2.5 pr-11 text-sm rounded-xl bg-input border border-border text-foreground placeholder:text-muted-foreground/50 outline-none transition-all duration-200 focus:border-primary/50 focus:ring-2 focus:ring-primary/10"
+                  className={`w-full px-3.5 py-2.5 pr-11 text-sm rounded-xl bg-input border text-foreground placeholder:text-muted-foreground/50 outline-none transition-all duration-200 focus:border-primary/50 focus:ring-2 focus:ring-primary/10 ${
+                    errors.password ? "border-destructive focus:border-destructive focus:ring-destructive/10" : "border-border"
+                  }`}
                 />
                 <button
                   type="button"
@@ -174,6 +197,9 @@ export default function Login() {
                   {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
+              {errors.password && (
+                <p className="text-xs text-destructive mt-1">{errors.password}</p>
+              )}
             </div>
             <div className="flex justify-end">
               <Link to="/forgot-password" className="text-xs text-primary hover:underline">

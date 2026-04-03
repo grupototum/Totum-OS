@@ -6,6 +6,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { lovable } from "@/integrations/lovable/index";
 import { motion } from "framer-motion";
 import { useTheme } from "@/contexts/ThemeContext";
+import { validateSignUpForm, type ValidationErrors } from "@/lib/validation";
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ export default function SignUp() {
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
+  const [errors, setErrors] = useState<ValidationErrors>({});
   const { theme, toggleTheme } = useTheme();
 
   const handleGoogleSignIn = async () => {
@@ -34,18 +36,18 @@ export default function SignUp() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !password || !confirmPassword) {
-      toast.error("Preencha todos os campos obrigatórios.");
+    
+    // Validação client-side
+    const validationErrors = validateSignUpForm(email, password, confirmPassword, name);
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      // Mostra o primeiro erro
+      const firstError = Object.values(validationErrors)[0];
+      toast.error(firstError);
       return;
     }
-    if (password.length < 6) {
-      toast.error("A senha deve ter pelo menos 6 caracteres.");
-      return;
-    }
-    if (password !== confirmPassword) {
-      toast.error("As senhas não coincidem.");
-      return;
-    }
+    
+    setErrors({});
     setLoading(true);
     try {
       await signUp(email, password, name || undefined);
@@ -58,8 +60,10 @@ export default function SignUp() {
     }
   };
 
-  const inputClass =
-    "w-full px-3.5 py-2.5 text-sm rounded-xl bg-input border border-border text-foreground placeholder:text-muted-foreground/50 outline-none transition-all duration-200 focus:border-primary/50 focus:ring-2 focus:ring-primary/10";
+  const inputClass = (hasError?: boolean) =
+    `w-full px-3.5 py-2.5 text-sm rounded-xl bg-input border text-foreground placeholder:text-muted-foreground/50 outline-none transition-all duration-200 focus:border-primary/50 focus:ring-2 focus:ring-primary/10 ${
+      hasError ? "border-destructive focus:border-destructive focus:ring-destructive/10" : "border-border"
+    }`;
 
   return (
     <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background">
@@ -157,12 +161,18 @@ export default function SignUp() {
               <input
                 type="text"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => {
+                  setName(e.target.value);
+                  if (errors.name) setErrors((prev) => ({ ...prev, name: "" }));
+                }}
                 placeholder="Seu nome"
                 disabled={loading}
                 autoComplete="name"
-                className={inputClass}
+                className={inputClass(!!errors.name)}
               />
+              {errors.name && (
+                <p className="text-xs text-destructive mt-1">{errors.name}</p>
+              )}
             </div>
 
             {/* Email */}
@@ -173,12 +183,18 @@ export default function SignUp() {
               <input
                 type="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (errors.email) setErrors((prev) => ({ ...prev, email: "" }));
+                }}
                 placeholder="seu@email.com"
                 disabled={loading}
                 autoComplete="email"
-                className={inputClass}
+                className={inputClass(!!errors.email)}
               />
+              {errors.email && (
+                <p className="text-xs text-destructive mt-1">{errors.email}</p>
+              )}
             </div>
 
             {/* Password */}
@@ -190,11 +206,14 @@ export default function SignUp() {
                 <input
                   type={showPass ? "text" : "password"}
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    if (errors.password) setErrors((prev) => ({ ...prev, password: "" }));
+                  }}
                   placeholder="Mínimo 6 caracteres"
                   disabled={loading}
                   autoComplete="new-password"
-                  className={`${inputClass} pr-11`}
+                  className={`${inputClass(!!errors.password)} pr-11`}
                 />
                 <button
                   type="button"
@@ -204,6 +223,9 @@ export default function SignUp() {
                   {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
+              {errors.password && (
+                <p className="text-xs text-destructive mt-1">{errors.password}</p>
+              )}
             </div>
 
             {/* Confirm Password */}
@@ -215,13 +237,19 @@ export default function SignUp() {
                 <input
                   type={showPass ? "text" : "password"}
                   value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  onChange={(e) => {
+                    setConfirmPassword(e.target.value);
+                    if (errors.confirmPassword) setErrors((prev) => ({ ...prev, confirmPassword: "" }));
+                  }}
                   placeholder="Repita a senha"
                   disabled={loading}
                   autoComplete="new-password"
-                  className={`${inputClass} pr-11`}
+                  className={`${inputClass(!!errors.confirmPassword)} pr-11`}
                 />
               </div>
+              {errors.confirmPassword && (
+                <p className="text-xs text-destructive mt-1">{errors.confirmPassword}</p>
+              )}
             </div>
 
             {/* Divider */}

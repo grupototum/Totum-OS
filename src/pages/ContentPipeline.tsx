@@ -45,6 +45,7 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import { validateContentCard, type ValidationErrors } from "@/lib/validation";
 
 // ── Types ──────────────────────────────────────────────
 type StageId = "ideas" | "script" | "thumbnail" | "filming" | "editing";
@@ -110,6 +111,7 @@ export default function ContentPipeline() {
   const [uploadingImage, setUploadingImage] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [uploadedUrl, setUploadedUrl] = useState<string | null>(null);
+  const [errors, setErrors] = useState<ValidationErrors>({});
 
   useEffect(() => {
     if (!authLoading && !user) navigate("/login");
@@ -188,7 +190,16 @@ export default function ContentPipeline() {
 
   // Create card
   const createCard = async () => {
-    if (!newTitle.trim() || !user) return;
+    if (!user) return;
+    
+    // Validação
+    const validationErrors = validateContentCard(newTitle);
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+    
+    setErrors({});
     const maxOrder = board[dialogStage].length;
     const { data, error } = await supabase
       .from("content_pipeline")
@@ -408,8 +419,19 @@ export default function ContentPipeline() {
           </DialogHeader>
           <div className="space-y-4 pt-2">
             <div>
-              <Label className="text-xs text-muted-foreground">Título</Label>
-              <Input value={newTitle} onChange={(e) => setNewTitle(e.target.value)} placeholder="Ex: Review do produto X" className="mt-1 bg-secondary border-border" />
+              <Label className="text-xs text-muted-foreground">Título *</Label>
+              <Input 
+                value={newTitle} 
+                onChange={(e) => {
+                  setNewTitle(e.target.value);
+                  if (errors.title) setErrors((prev) => ({ ...prev, title: "" }));
+                }} 
+                placeholder="Ex: Review do produto X" 
+                className={`mt-1 bg-secondary border ${errors.title ? "border-destructive focus-visible:ring-destructive" : "border-border"}`}
+              />
+              {errors.title && (
+                <p className="text-xs text-destructive mt-1">{errors.title}</p>
+              )}
             </div>
             <div>
               <Label className="text-xs text-muted-foreground">Descrição / Roteiro</Label>

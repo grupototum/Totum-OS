@@ -17,12 +17,20 @@ export default function AppLayout({ children }: AppLayoutProps) {
   const isMobile = useIsMobile();
   const [mobileOpen, setMobileOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    if (!loading && !user) navigate("/login");
+    if (!loading) {
+      if (!user) {
+        navigate("/login");
+      } else {
+        setIsReady(true);
+      }
+    }
   }, [user, loading, navigate]);
 
-  if (loading) {
+  // Mostra loading enquanto verifica autenticação
+  if (loading || !isReady) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="flex gap-[3px] items-end animate-industrial-pulse">
@@ -34,6 +42,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
     );
   }
 
+  // Se não há usuário, não renderiza nada (já vai redirecionar)
   if (!user) return null;
 
   return (

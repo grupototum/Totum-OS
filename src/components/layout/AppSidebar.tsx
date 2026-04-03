@@ -70,8 +70,20 @@ export default function AppSidebar() {
   const navigate = useNavigate();
   const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
+  const [isNavigating, setIsNavigating] = useState(false);
 
   const isActive = (path: string) => location.pathname === path;
+
+  const handleNav = (path: string) => {
+    // Previne navegação se já estiver navegando
+    if (isNavigating) return;
+    
+    setIsNavigating(true);
+    navigate(path);
+    
+    // Libera o estado após a transição
+    setTimeout(() => setIsNavigating(false), 300);
+  };
 
   const handleLogout = () => {
     signOut();
@@ -122,7 +134,7 @@ export default function AppSidebar() {
                 return (
                   <li key={item.path}>
                     <button
-                      onClick={() => navigate(item.path)}
+                      onClick={() => handleNav(item.path)}
                       className={cn(
                         "w-full flex items-center gap-3 rounded-lg transition-all duration-200 group relative",
                         collapsed ? "justify-center px-2 py-2.5" : "px-3 py-2.5",

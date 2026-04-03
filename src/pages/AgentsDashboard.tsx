@@ -1,5 +1,5 @@
 import AppLayout from "@/components/layout/AppLayout";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { useState, useEffect, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -73,27 +73,49 @@ export default function AgentsDashboard() {
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
 
   useEffect(() => {
+    let isMounted = true;
+    let channel: ReturnType<typeof supabase.channel> | null = null;
+
     async function load() {
-      const [agRes, intRes] = await Promise.all([
-        supabase.from("agents").select("*"),
-        supabase.from("agent_interactions").select("*").order("date"),
-      ]);
-      if (agRes.data) setAgents(agRes.data as Agent[]);
-      if (intRes.data) setInteractions(intRes.data as Interaction[]);
-      setLoading(false);
+      try {
+        const [agRes, intRes] = await Promise.all([
+          supabase.from("agents").select("*"),
+          supabase.from("agent_interactions").select("*").order("date"),
+        ]);
+        
+        if (!isMounted) return;
+        
+        if (agRes.data) setAgents(agRes.data as Agent[]);
+        if (intRes.data) setInteractions(intRes.data as Interaction[]);
+      } catch (error) {
+        console.error("Erro ao carregar dados dos agentes:", error);
+      } finally {
+        if (isMounted) setLoading(false);
+      }
     }
+    
     load();
 
-    const ch = supabase
+    channel = supabase
       .channel("agents-dash")
       .on("postgres_changes" as any, { event: "*", schema: "public", table: "agents" }, () => {
-        supabase.from("agents").select("*").then(({ data }) => { if (data) setAgents(data as Agent[]); });
+        if (!isMounted) return;
+        supabase.from("agents").select("*").then(({ data }) => { 
+          if (data && isMounted) setAgents(data as Agent[]); 
+        });
       })
       .on("postgres_changes" as any, { event: "*", schema: "public", table: "agent_interactions" }, () => {
-        supabase.from("agent_interactions").select("*").order("date").then(({ data }) => { if (data) setInteractions(data as Interaction[]); });
+        if (!isMounted) return;
+        supabase.from("agent_interactions").select("*").order("date").then(({ data }) => { 
+          if (data && isMounted) setInteractions(data as Interaction[]); 
+        });
       });
-    ch.subscribe();
-    return () => { supabase.removeChannel(ch); };
+    channel.subscribe();
+    
+    return () => { 
+      isMounted = false;
+      if (channel) supabase.removeChannel(channel); 
+    };
   }, []);
 
   /* derived */
@@ -232,18 +254,17 @@ export default function AgentsDashboard() {
               </Card>
             ) : viewMode === "grid" ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <AnimatePresence mode="popLayout">
-                  {filtered.map((agent, i) => (
-                    <motion.div
-                      key={agent.id}
-                      layout
-                      {...anim(i)}
-                      exit={{ opacity: 0, scale: 0.95 }}
+                {filtered.map((agent, i) => (
+                  <motion.div
+                    key={agent.id}
+                    layout
+                    {...anim(i)}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                  >
+                    <Card
+                      className="border-border/40 bg-card/80 backdrop-blur-sm cursor-pointer hover:shadow-lg hover:scale-[1.02] transition-all duration-300 group"
+                      onClick={() => setSelectedAgent(agent)}
                     >
-                      <Card
-                        className="border-border/40 bg-card/80 backdrop-blur-sm cursor-pointer hover:shadow-lg hover:scale-[1.02] transition-all duration-300 group"
-                        onClick={() => setSelectedAgent(agent)}
-                      >
                         <CardContent className="p-5">
                           <div className="flex items-start justify-between mb-3">
                             <div className="flex items-center gap-3">
@@ -281,7 +302,6 @@ export default function AgentsDashboard() {
                       </Card>
                     </motion.div>
                   ))}
-                </AnimatePresence>
               </div>
             ) : (
               <Card className="border-border/40 bg-card/80">

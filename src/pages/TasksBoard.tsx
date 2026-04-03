@@ -35,6 +35,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
+import { validateTask, type ValidationErrors } from "@/lib/validation";
 
 // ── Types ──────────────────────────────────────────────
 type ColumnId = "backlog" | "todo" | "doing" | "done";
@@ -124,6 +125,7 @@ export default function TasksBoard() {
   const [newAssignee, setNewAssignee] = useState("Miguel");
   const [newAgent, setNewAgent] = useState(AGENTS[0]);
   const [newLabels, setNewLabels] = useState<TaskLabel[]>([]);
+  const [errors, setErrors] = useState<ValidationErrors>({});
 
   // Drag handler
   const onDragEnd = (result: DropResult) => {
@@ -156,7 +158,14 @@ export default function TasksBoard() {
 
   // Create task
   const createTask = () => {
-    if (!newTitle.trim()) return;
+    // Validação
+    const validationErrors = validateTask(newTitle);
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+    
+    setErrors({});
     const task: Task = {
       id: crypto.randomUUID(),
       title: newTitle.trim(),
@@ -370,13 +379,19 @@ export default function TasksBoard() {
           </DialogHeader>
           <div className="space-y-4 pt-2">
             <div>
-              <Label className="text-xs text-muted-foreground">Título</Label>
+              <Label className="text-xs text-muted-foreground">Título *</Label>
               <Input
                 value={newTitle}
-                onChange={(e) => setNewTitle(e.target.value)}
+                onChange={(e) => {
+                  setNewTitle(e.target.value);
+                  if (errors.title) setErrors((prev) => ({ ...prev, title: "" }));
+                }}
                 placeholder="Ex: Criar campanha de ads"
-                className="mt-1 bg-secondary border-border"
+                className={`mt-1 bg-secondary border ${errors.title ? "border-destructive focus-visible:ring-destructive" : "border-border"}`}
               />
+              {errors.title && (
+                <p className="text-xs text-destructive mt-1">{errors.title}</p>
+              )}
             </div>
             <div>
               <Label className="text-xs text-muted-foreground">Descrição</Label>

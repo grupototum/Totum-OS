@@ -69,6 +69,31 @@ const anim = (i: number) => ({
 });
 
 const ACTION_PLAN_KEY = "actionPlanUnlocked";
+const STORAGE_KEY = "totum:actionPlan:state";
+
+// Estado persistido
+interface PersistedState {
+  filterResp: string;
+  expandedPhases: Record<number, boolean>;
+  activePhase: number | null;
+}
+
+// Carregar estado salvo
+const carregarEstadoSalvo = (): PersistedState => {
+  try {
+    const salvos = localStorage.getItem(STORAGE_KEY);
+    if (salvos) {
+      return JSON.parse(salvos);
+    }
+  } catch (err) {
+    console.error('Erro ao carregar estado do Plano de Ação:', err);
+  }
+  return {
+    filterResp: "all",
+    expandedPhases: {},
+    activePhase: null,
+  };
+};
 
 export default function ActionPlan() {
   const [unlocked, setUnlocked] = useState(() => sessionStorage.getItem(ACTION_PLAN_KEY) === "true");
@@ -76,9 +101,12 @@ export default function ActionPlan() {
   const [passError, setPassError] = useState(false);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
-  const [filterResp, setFilterResp] = useState("all");
-  const [expandedPhases, setExpandedPhases] = useState<Record<number, boolean>>({});
-  const [activePhase, setActivePhase] = useState<number | null>(null);
+  
+  // Carregar estados persistidos
+  const estadoInicial = carregarEstadoSalvo();
+  const [filterResp, setFilterResp] = useState(estadoInicial.filterResp);
+  const [expandedPhases, setExpandedPhases] = useState<Record<number, boolean>>(estadoInicial.expandedPhases);
+  const [activePhase, setActivePhase] = useState<number | null>(estadoInicial.activePhase);
 
   const fetchTasks = useCallback(async () => {
     const { data } = await supabase
@@ -99,6 +127,20 @@ export default function ActionPlan() {
       .subscribe();
     return () => { supabase.removeChannel(ch); };
   }, [fetchTasks, unlocked]);
+
+  // Persistir estado no localStorage
+  useEffect(() => {
+    try {
+      const estado: PersistedState = {
+        filterResp,
+        expandedPhases,
+        activePhase,
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(estado));
+    } catch (err) {
+      console.error('Erro ao salvar estado do Plano de Ação:', err);
+    }
+  }, [filterResp, expandedPhases, activePhase]);
 
   /* derived */
   const phases = useMemo<Phase[]>(() => {

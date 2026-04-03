@@ -41,11 +41,26 @@ export interface FiltrosTarefa {
   prioridade?: PrioridadeTarefa;
 }
 
+const STORAGE_KEY = 'totum:tarefas:filtros';
+
+// Carregar filtros salvos do localStorage
+const carregarFiltrosSalvos = (): FiltrosTarefa => {
+  try {
+    const salvos = localStorage.getItem(STORAGE_KEY);
+    if (salvos) {
+      return JSON.parse(salvos);
+    }
+  } catch (err) {
+    console.error('Erro ao carregar filtros salvos:', err);
+  }
+  return {};
+};
+
 export function useTarefas() {
   const [tarefas, setTarefas] = useState<Tarefa[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [filtros, setFiltros] = useState<FiltrosTarefa>({});
+  const [filtros, setFiltros] = useState<FiltrosTarefa>(carregarFiltrosSalvos);
 
   // Listar tarefas
   const listarTarefas = useCallback(async (filtrosQuery?: FiltrosTarefa) => {
@@ -217,6 +232,15 @@ export function useTarefas() {
   useEffect(() => {
     listarTarefas();
   }, [listarTarefas]);
+
+  // Persistir filtros no localStorage sempre que mudarem
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(filtros));
+    } catch (err) {
+      console.error('Erro ao salvar filtros:', err);
+    }
+  }, [filtros]);
 
   // Realtime subscription
   useEffect(() => {

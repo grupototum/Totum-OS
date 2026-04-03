@@ -19,6 +19,7 @@ import {
   Building2, Briefcase, Target, Palette, Settings2,
   ChevronLeft, ChevronRight, Check, Loader2, User,
 } from "lucide-react";
+import { validateClientBasicInfo, isValidEmail, isValidCNPJ, isValidPhone, isValidURL, sanitizeURL, type ValidationErrors } from "@/lib/validation";
 
 /* ─── types ─── */
 interface FormData {
@@ -70,13 +71,13 @@ export default function NewClient() {
   const [step, setStep] = useState(0);
   const [form, setForm] = useState<FormData>(INITIAL);
   const [saving, setSaving] = useState(false);
-  const [errors, setErrors] = useState<Record<string, boolean>>({});
+  const [errors, setErrors] = useState<ValidationErrors>({});
   const { user } = useAuth();
   const navigate = useNavigate();
 
   const set = <K extends keyof FormData>(key: K, value: FormData[K]) => {
     setForm((f) => ({ ...f, [key]: value }));
-    setErrors((e) => ({ ...e, [key]: false }));
+    setErrors((e) => ({ ...e, [key]: "" }));
   };
 
   const toggleArray = (key: "support_channels" | "working_days", value: string) => {
@@ -87,12 +88,28 @@ export default function NewClient() {
   };
 
   const validate = (): boolean => {
+    // Limpa erros anteriores
+    setErrors({});
+    
     if (step === 0) {
-      const required = ["company_name", "cnpj", "contact_name", "email", "phone"] as const;
-      const errs: Record<string, boolean> = {};
-      required.forEach((k) => { if (!form[k].trim()) errs[k] = true; });
-      setErrors(errs);
-      if (Object.keys(errs).length) { toast({ title: "⚠️ Campos obrigatórios", description: "Preencha todos os campos marcados", variant: "destructive" }); return false; }
+      const validationErrors = validateClientBasicInfo(
+        form.company_name,
+        form.cnpj,
+        form.contact_name,
+        form.email,
+        form.phone,
+        form.website
+      );
+      
+      if (Object.keys(validationErrors).length > 0) {
+        setErrors(validationErrors);
+        toast({ 
+          title: "⚠️ Campos inválidos", 
+          description: Object.values(validationErrors)[0], 
+          variant: "destructive" 
+        });
+        return false;
+      }
     }
     return true;
   };
@@ -103,10 +120,34 @@ export default function NewClient() {
   const submit = async () => {
     if (!user) return;
     if (!form.terms_accepted) { toast({ title: "⚠️ Termos", description: "Aceite os termos para continuar", variant: "destructive" }); return; }
+    
+    // Validação final antes de enviar
+    const validationErrors = validateClientBasicInfo(
+      form.company_name,
+      form.cnpj,
+      form.contact_name,
+      form.email,
+      form.phone,
+      form.website
+    );
+    
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      toast({ 
+        title: "⚠️ Campos inválidos", 
+        description: Object.values(validationErrors)[0], 
+        variant: "destructive" 
+      });
+      return;
+    }
+    
+    // Sanitiza a URL do website
+    const sanitizedWebsite = form.website ? sanitizeURL(form.website) : null;
+    
     setSaving(true);
     const { error } = await supabase.from("clients").insert({
       user_id: user.id,
-      company_name: form.company_name, cnpj: form.cnpj, contact_name: form.contact_name, email: form.email, phone: form.phone, website: form.website || null,
+      company_name: form.company_name, cnpj: form.cnpj, contact_name: form.contact_name, email: form.email, phone: form.phone, website: sanitizedWebsite,
       industry: form.industry || null, business_description: form.business_description || null, products_services: form.products_services || null, time_in_market: form.time_in_market || null, company_size: form.company_size || null, monthly_revenue: form.monthly_revenue || null,
       main_niche: form.main_niche || null, main_pains: form.main_pains || null, desires: form.desires || null, age_min: form.age_min, age_max: form.age_max, gender: form.gender, location: form.location || null, social_class: form.social_class || null, brand_tone: form.brand_tone || null,
       primary_color: form.primary_color, secondary_color: form.secondary_color, fonts: form.fonts || null, visual_elements: form.visual_elements || null, visual_personality: form.visual_personality || null,
@@ -121,8 +162,13 @@ export default function NewClient() {
 
   const progress = ((step + 1) / 5) * 100;
 
-  const inputCls = (key: string) => `bg-secondary border-border/40 h-10 text-sm ${errors[key] ? "border-destructive" : ""}`;
-  const textareaCls = (key: string) => `bg-secondary border-border/40 text-sm min-h-[80px] resize-none ${errors[key] ? "border-destructive" : ""}`;
+  const inputCls = (key: string) => `bg-secondary border-border/40 h-10 text-sm ${errors[key] ? "border-destructive focus-visible:ring-destructive" : ""}`;
+  const textareaCls = (key: string) => `bg-secondary border-border/40 text-sm min-h-[80px] resize-none ${errors[key] ? "border-destructive focus-visible:ring-destructive" : ""}`;
+  
+  // Helper para mostrar mensagem de erro
+  const ErrorMessage = ({ field }: { field: string }) => {
+    return errors[field] ? <p className="text-xs text-destructive mt-1">{errors[field]}</p> : null;
+  };
 
   return (
     <AppLayout>
@@ -190,15 +236,39 @@ export default function NewClient() {
                     {step === 0 && (
                       <>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          <div><FieldLabel required>Nome da empresa</FieldLabel><Input value={form.company_name} onChange={(e) => set("company_name", e.target.value)} className={inputCls("company_name")} placeholder="Ex: Totum Digital" /></div>
-                          <div><FieldLabel required>CNPJ</FieldLabel><Input value={form.cnpj} onChange={(e) => set("cnpj", cnpjMask(e.target.value))} className={inputCls("cnpj")} placeholder="00.000.000/0000-00" /></div>
+                          <div>
+                            <FieldLabel required>Nome da empresa</FieldLabel>
+                            <Input value={form.company_name} onChange={(e) => set("company_name", e.target.value)} className={inputCls("company_name")} placeholder="Ex: Totum Digital" />
+                            <ErrorMessage field="company_name" />
+                          </div>
+                          <div>
+                            <FieldLabel required>CNPJ</FieldLabel>
+                            <Input value={form.cnpj} onChange={(e) => set("cnpj", cnpjMask(e.target.value))} className={inputCls("cnpj")} placeholder="00.000.000/0000-00" />
+                            <ErrorMessage field="cnpj" />
+                          </div>
                         </div>
-                        <div><FieldLabel required>Nome do responsável</FieldLabel><Input value={form.contact_name} onChange={(e) => set("contact_name", e.target.value)} className={inputCls("contact_name")} placeholder="Nome completo" /></div>
+                        <div>
+                          <FieldLabel required>Nome do responsável</FieldLabel>
+                          <Input value={form.contact_name} onChange={(e) => set("contact_name", e.target.value)} className={inputCls("contact_name")} placeholder="Nome completo" />
+                          <ErrorMessage field="contact_name" />
+                        </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          <div><FieldLabel required>Email corporativo</FieldLabel><Input type="email" value={form.email} onChange={(e) => set("email", e.target.value)} className={inputCls("email")} placeholder="email@empresa.com" /></div>
-                          <div><FieldLabel required>Telefone</FieldLabel><Input value={form.phone} onChange={(e) => set("phone", phoneMask(e.target.value))} className={inputCls("phone")} placeholder="(00) 00000-0000" /></div>
+                          <div>
+                            <FieldLabel required>Email corporativo</FieldLabel>
+                            <Input type="email" value={form.email} onChange={(e) => set("email", e.target.value)} className={inputCls("email")} placeholder="email@empresa.com" />
+                            <ErrorMessage field="email" />
+                          </div>
+                          <div>
+                            <FieldLabel required>Telefone</FieldLabel>
+                            <Input value={form.phone} onChange={(e) => set("phone", phoneMask(e.target.value))} className={inputCls("phone")} placeholder="(00) 00000-0000" />
+                            <ErrorMessage field="phone" />
+                          </div>
                         </div>
-                        <div><FieldLabel>Site</FieldLabel><Input value={form.website} onChange={(e) => set("website", e.target.value)} className={inputCls("")} placeholder="https://www.empresa.com" /></div>
+                        <div>
+                          <FieldLabel>Site</FieldLabel>
+                          <Input value={form.website} onChange={(e) => set("website", e.target.value)} className={inputCls("website")} placeholder="https://www.empresa.com" />
+                          <ErrorMessage field="website" />
+                        </div>
                       </>
                     )}
 

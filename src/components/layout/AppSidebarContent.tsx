@@ -62,13 +62,21 @@ export default function AppSidebarContent({ onNavigate }: Props) {
 
   const [expandedAgents, setExpandedAgents] = useState<Record<string, boolean>>({});
   const [expandedResources, setExpandedResources] = useState(false);
+  const [isNavigating, setIsNavigating] = useState(false);
 
   const isActive = (path: string) => location.pathname === path;
   const isChildActive = (parentId: string) => location.pathname.startsWith(`/agentes/${parentId}/`);
 
   const handleNav = (path: string) => {
+    // Previne navegação se já estiver navegando
+    if (isNavigating) return;
+    
+    setIsNavigating(true);
     navigate(path);
     onNavigate?.();
+    
+    // Libera o estado após a transição
+    setTimeout(() => setIsNavigating(false), 300);
   };
 
   const handleLogout = () => {
