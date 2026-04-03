@@ -17,7 +17,7 @@ import {
   Contact,
   Rocket,
   Network,
-  Sitemap,
+  Network,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
@@ -46,7 +46,7 @@ const sections: NavSection[] = [
     items: [
       { label: "Painel", icon: Bot, path: "/painel-agentes" },
       { label: "Hub Visual", icon: Network, path: "/hub-agentes" },
-      { label: "Estrutura", icon: Sitemap, path: "/estrutura-time" },
+      { label: "Estrutura", icon: Network, path: "/estrutura-time" },
     ],
   },
   {
