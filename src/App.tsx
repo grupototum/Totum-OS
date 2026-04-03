@@ -20,6 +20,7 @@ import SdrComercialChat from "./pages/agents/SdrComercialChat";
 import KimiChat from "./pages/agents/KimiChat";
 import RadarAnunciosChat from "./pages/agents/RadarAnunciosChat";
 import TasksBoard from "./pages/TasksBoard";
+import QuadroTarefas from "./pages/QuadroTarefas";
 import ContentPipeline from "./pages/ContentPipeline";
 import OfficeView from "./pages/OfficeView";
 import TeamStructure from "./pages/TeamStructure";
@@ -37,6 +38,11 @@ import ClientsCenter from "./pages/ClientsCenter";
 import AgentProfile from "./pages/AgentProfile";
 import EditClient from "./pages/EditClient";
 import AdaPage from "./pages/ada";
+// Central de Agentes - Novas páginas
+import PainelAgentes from "./pages/PainelAgentes";
+import HubAgentes from "./pages/HubAgentes";
+import EstruturaTime from "./pages/EstruturaTime";
+import AgenteDetail from "./pages/AgenteDetail";
 
 const queryClient = new QueryClient();
 
@@ -64,6 +70,7 @@ const App = () => (
             <Route path="/agent/kimi" element={<KimiChat />} />
             <Route path="/agent/ads-extractor" element={<RadarAnunciosChat />} />
             <Route path="/tasks" element={<TasksBoard />} />
+            <Route path="/quadro-tarefas" element={<QuadroTarefas />} />
             <Route path="/content" element={<ContentPipeline />} />
             <Route path="/office" element={<OfficeView />} />
             <Route path="/team" element={<TeamStructure />} />
@@ -84,6 +91,11 @@ const App = () => (
             <Route path="/agent-profile/:agentId" element={<AgentProfile />} />
             <Route path="/edit-client/:clientId" element={<EditClient />} />
             <Route path="/ada" element={<AdaPage />} />
+            {/* Central de Agentes - Novas rotas */}
+            <Route path="/painel-agentes" element={<PainelAgentes />} />
+            <Route path="/hub-agentes" element={<HubAgentes />} />
+            <Route path="/estrutura-time" element={<EstruturaTime />} />
+            <Route path="/agente/:agenteId" element={<AgenteDetail />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

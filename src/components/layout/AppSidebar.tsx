@@ -15,6 +15,9 @@ import {
   ClipboardList,
   UserPlus,
   Contact,
+  Rocket,
+  Network,
+  Sitemap,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
@@ -36,15 +39,22 @@ const sections: NavSection[] = [
     items: [
       { label: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },
       { label: "Hub de Agentes", icon: Bot, path: "/hub" },
-      { label: "Painel de Agentes", icon: Bot, path: "/agents-dashboard" },
+    ],
+  },
+  {
+    title: "CENTRAL DE AGENTES",
+    items: [
+      { label: "Painel", icon: Bot, path: "/painel-agentes" },
+      { label: "Hub Visual", icon: Network, path: "/hub-agentes" },
+      { label: "Estrutura", icon: Sitemap, path: "/estrutura-time" },
     ],
   },
   {
     title: "ÁREA DE TRABALHO",
     items: [
-      { label: "Quadro de Tarefas", icon: KanbanSquare, path: "/tasks" },
+      { label: "Quadro de Tarefas", icon: KanbanSquare, path: "/quadro-tarefas" },
       { label: "Pipeline de Conteúdo", icon: GitBranch, path: "/content" },
-      { label: "Plano de Ação", icon: ClipboardList, path: "/action-plan" },
+      { label: "Implantação", icon: Rocket, path: "/action-plan" },
       { label: "Novo Cliente", icon: UserPlus, path: "/new-client" },
       { label: "Central de Clientes", icon: Contact, path: "/clients" },
       { label: "Visão do Escritório", icon: Building2, path: "/office" },

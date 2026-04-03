@@ -1,20 +1,15 @@
 import AppLayout from "@/components/layout/AppLayout";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Slider } from "@/components/ui/slider";
-import { toast } from "@/hooks/use-toast";
-import {
-  CheckCircle2, Clock, Circle, Target, Zap, TrendingUp,
-  User, Bot, Users, Filter, ChevronDown, ChevronUp, Lock,
-} from "lucide-react";
+import { Rocket, CheckCircle2, Clock, Circle, TrendingUp, Lock, Target, Zap, Calendar } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { toast } from "@/hooks/use-toast";
 
 /* ─── types ─── */
 interface Task {
@@ -35,32 +30,27 @@ interface Phase {
   name: string;
   dayStart: number;
   dayEnd: number;
-  tasks: Task[];
+  progress: number;
+  taskCount: number;
+  completedCount: number;
 }
 
 /* ─── constants ─── */
-const RESPONSIBLE_OPTIONS = [
-  { value: "all", label: "Todos", icon: Users },
-  { value: "user", label: "Usuário", icon: User },
-  { value: "claude", label: "Claude", icon: Bot },
-  { value: "both", label: "Ambos", icon: Users },
-];
-
 const PHASE_ICONS: Record<number, string> = {
   1: "⚙️", 2: "🎨", 3: "🔧", 4: "🤖", 5: "🔍", 6: "🚀", 7: "🏁",
 };
 
-const STATUS_CONFIG: Record<string, { color: string; icon: React.ElementType; label: string }> = {
-  done: { color: "text-emerald-400", icon: CheckCircle2, label: "Concluído" },
-  in_progress: { color: "text-primary", icon: Clock, label: "Em andamento" },
-  pending: { color: "text-muted-foreground", icon: Circle, label: "Pendente" },
+const PHASE_DESCRIPTIONS: Record<number, string> = {
+  1: "Fundação técnica e configurações iniciais",
+  2: "Design system e identidade visual",
+  3: "Desenvolvimento de features",
+  4: "Configuração de agentes IA",
+  5: "Testes e qualidade",
+  6: "Deploy e lançamento",
+  7: "Entrega final",
 };
 
-const RESPONSIBLE_BADGE: Record<string, string> = {
-  user: "bg-sky-500/20 text-sky-400 border-sky-500/30",
-  claude: "bg-violet-500/20 text-violet-400 border-violet-500/30",
-  both: "bg-amber-500/20 text-amber-400 border-amber-500/30",
-};
+const ACTION_PLAN_KEY = "actionPlanUnlocked";
 
 const anim = (i: number) => ({
   initial: { opacity: 0, y: 12 },
@@ -68,45 +58,12 @@ const anim = (i: number) => ({
   transition: { delay: i * 0.05, duration: 0.3 },
 });
 
-const ACTION_PLAN_KEY = "actionPlanUnlocked";
-const STORAGE_KEY = "totum:actionPlan:state";
-
-// Estado persistido
-interface PersistedState {
-  filterResp: string;
-  expandedPhases: Record<number, boolean>;
-  activePhase: number | null;
-}
-
-// Carregar estado salvo
-const carregarEstadoSalvo = (): PersistedState => {
-  try {
-    const salvos = localStorage.getItem(STORAGE_KEY);
-    if (salvos) {
-      return JSON.parse(salvos);
-    }
-  } catch (err) {
-    console.error('Erro ao carregar estado do Plano de Ação:', err);
-  }
-  return {
-    filterResp: "all",
-    expandedPhases: {},
-    activePhase: null,
-  };
-};
-
-export default function ActionPlan() {
+export default function Implantação() {
   const [unlocked, setUnlocked] = useState(() => sessionStorage.getItem(ACTION_PLAN_KEY) === "true");
   const [passInput, setPassInput] = useState("");
   const [passError, setPassError] = useState(false);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
-  
-  // Carregar estados persistidos
-  const estadoInicial = carregarEstadoSalvo();
-  const [filterResp, setFilterResp] = useState(estadoInicial.filterResp);
-  const [expandedPhases, setExpandedPhases] = useState<Record<number, boolean>>(estadoInicial.expandedPhases);
-  const [activePhase, setActivePhase] = useState<number | null>(estadoInicial.activePhase);
 
   const fetchTasks = useCallback(async () => {
     const { data } = await supabase
@@ -128,36 +85,35 @@ export default function ActionPlan() {
     return () => { supabase.removeChannel(ch); };
   }, [fetchTasks, unlocked]);
 
-  // Persistir estado no localStorage
-  useEffect(() => {
-    try {
-      const estado: PersistedState = {
-        filterResp,
-        expandedPhases,
-        activePhase,
-      };
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(estado));
-    } catch (err) {
-      console.error('Erro ao salvar estado do Plano de Ação:', err);
-    }
-  }, [filterResp, expandedPhases, activePhase]);
-
   /* derived */
   const phases = useMemo<Phase[]>(() => {
     const map = new Map<number, Phase>();
     tasks.forEach((t) => {
       if (!map.has(t.phase)) {
-        map.set(t.phase, { num: t.phase, name: t.phase_name, dayStart: t.day_start, dayEnd: t.day_end, tasks: [] });
+        map.set(t.phase, { 
+          num: t.phase, 
+          name: t.phase_name, 
+          dayStart: t.day_start, 
+          dayEnd: t.day_end, 
+          progress: 0,
+          taskCount: 0,
+          completedCount: 0
+        });
       }
-      map.get(t.phase)!.tasks.push(t);
+      const phase = map.get(t.phase)!;
+      phase.taskCount++;
+      if (t.status === 'done') phase.completedCount++;
     });
+    
+    // Calculate progress for each phase
+    map.forEach((phase) => {
+      phase.progress = phase.taskCount > 0 
+        ? Math.round((phase.completedCount / phase.taskCount) * 100) 
+        : 0;
+    });
+    
     return Array.from(map.values()).sort((a, b) => a.num - b.num);
   }, [tasks]);
-
-  const filteredPhases = useMemo(() => {
-    if (filterResp === "all") return phases;
-    return phases.map((p) => ({ ...p, tasks: p.tasks.filter((t) => t.responsible === filterResp) })).filter((p) => p.tasks.length > 0);
-  }, [phases, filterResp]);
 
   const handleUnlock = (e: React.FormEvent) => {
     e.preventDefault();
@@ -170,31 +126,54 @@ export default function ActionPlan() {
     }
   };
 
+  // Stats
+  const totalTasks = tasks.length;
+  const doneTasks = tasks.filter((t) => t.status === "done").length;
+  const inProgressTasks = tasks.filter((t) => t.status === "in_progress").length;
+  const pendingTasks = tasks.filter((t) => t.status === "pending").length;
+  const overallProgress = totalTasks ? Math.round(tasks.reduce((s, t) => s + t.progress, 0) / totalTasks) : 0;
+  const velocity = totalTasks ? +(doneTasks / 30).toFixed(1) : 0;
+  
+  // Current phase
+  const currentPhase = phases.find(p => p.progress > 0 && p.progress < 100) || phases[0];
+
   if (!unlocked) {
     return (
       <AppLayout>
         <div className="flex items-center justify-center min-h-[70vh]">
-          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.3 }}>
-            <Card className="w-full max-w-sm border-border/40 bg-card/80">
-              <CardContent className="p-8 text-center space-y-5">
-                <div className="w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto">
-                  <Lock className="w-8 h-8 text-primary" />
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }} 
+            animate={{ opacity: 1, scale: 1 }} 
+            transition={{ duration: 0.3 }}
+            className="w-full max-w-md mx-4"
+          >
+            <Card className="border-stone-300 bg-white/80">
+              <CardContent className="p-8 text-center space-y-6">
+                <div className="w-20 h-20 rounded-2xl bg-stone-100 border border-stone-200 flex items-center justify-center mx-auto">
+                  <Rocket className="w-10 h-10 text-stone-600" />
                 </div>
+                
                 <div>
-                  <h2 className="text-lg font-heading font-semibold text-foreground">Acesso Restrito</h2>
-                  <p className="text-xs text-muted-foreground mt-1">Digite a senha para acessar o Plano de Ação</p>
+                  <h2 className="text-xl font-semibold text-stone-900">Implantação</h2>
+                  <p className="text-sm text-stone-500 mt-2">
+                    Dashboard de acompanhamento do projeto
+                  </p>
                 </div>
-                <form onSubmit={handleUnlock} className="space-y-3">
+
+                <form onSubmit={handleUnlock} className="space-y-4">
                   <Input
                     type="password"
                     placeholder="Senha de acesso"
                     value={passInput}
                     onChange={(e) => setPassInput(e.target.value)}
-                    className={`bg-secondary border-border/40 text-center ${passError ? "border-destructive animate-pulse" : ""}`}
+                    className={`bg-white border-stone-300 text-center h-12 ${passError ? "border-red-400 animate-pulse" : ""}`}
                     autoFocus
                   />
-                  {passError && <p className="text-xs text-destructive">Senha incorreta</p>}
-                  <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
+                  {passError && <p className="text-sm text-red-500">Senha incorreta</p>}
+                  <Button 
+                    type="submit" 
+                    className="w-full bg-stone-900 hover:bg-stone-800 h-12"
+                  >
                     Desbloquear
                   </Button>
                 </form>
@@ -206,56 +185,15 @@ export default function ActionPlan() {
     );
   }
 
-  const totalTasks = tasks.length;
-  const doneTasks = tasks.filter((t) => t.status === "done").length;
-  const inProgressTasks = tasks.filter((t) => t.status === "in_progress").length;
-  const pendingTasks = tasks.filter((t) => t.status === "pending").length;
-  const overallProgress = totalTasks ? Math.round(tasks.reduce((s, t) => s + t.progress, 0) / totalTasks) : 0;
-  const velocity = totalTasks ? +(doneTasks / 7).toFixed(1) : 0;
-
-  /* actions */
-  const toggleTask = async (task: Task) => {
-    const newStatus = task.status === "done" ? "pending" : "done";
-    const newProgress = newStatus === "done" ? 100 : 0;
-    await supabase.from("action_plan_tasks").update({ status: newStatus, progress: newProgress, updated_at: new Date().toISOString() }).eq("id", task.id);
-    toast({ title: newStatus === "done" ? "✅ Tarefa concluída" : "↩️ Tarefa reaberta", description: task.title });
-  };
-
-  const updateProgress = async (taskId: string, value: number) => {
-    const status = value === 100 ? "done" : value > 0 ? "in_progress" : "pending";
-    await supabase.from("action_plan_tasks").update({ progress: value, status, updated_at: new Date().toISOString() }).eq("id", taskId);
-  };
-
-  const markAllPhase = async (phase: Phase) => {
-    const allDone = phase.tasks.every((t) => t.status === "done");
-    const newStatus = allDone ? "pending" : "done";
-    const newProgress = allDone ? 0 : 100;
-    const ids = phase.tasks.map((t) => t.id);
-    for (const id of ids) {
-      await supabase.from("action_plan_tasks").update({ status: newStatus, progress: newProgress, updated_at: new Date().toISOString() }).eq("id", id);
-    }
-    toast({ title: allDone ? "↩️ Fase reaberta" : "✅ Fase completa", description: phase.name });
-  };
-
-  const togglePhase = (num: number) => setExpandedPhases((p) => ({ ...p, [num]: !p[num] }));
-
-  const phaseProgress = (p: Phase) => p.tasks.length ? Math.round(p.tasks.reduce((s, t) => s + t.progress, 0) / p.tasks.length) : 0;
-
-  const phaseStatus = (p: Phase) => {
-    const prog = phaseProgress(p);
-    if (prog === 100) return "done";
-    if (prog > 0) return "in_progress";
-    return "pending";
-  };
-
   if (loading) {
     return (
       <AppLayout>
-        <div className="p-6 max-w-7xl mx-auto space-y-6">
-          <Skeleton className="h-12 w-80" />
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">{[...Array(4)].map((_, i) => <Skeleton key={i} className="h-24 rounded-xl" />)}</div>
-          <Skeleton className="h-20 rounded-xl" />
-          {[...Array(3)].map((_, i) => <Skeleton key={i} className="h-48 rounded-xl" />)}
+        <div className="max-w-[1400px] mx-auto p-6 space-y-6">
+          <Skeleton className="h-12 w-64" />
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            {[...Array(4)].map((_, i) => <Skeleton key={i} className="h-32 rounded-lg" />)}
+          </div>
+          <Skeleton className="h-64 rounded-lg" />
         </div>
       </AppLayout>
     );
@@ -263,243 +201,194 @@ export default function ActionPlan() {
 
   return (
     <AppLayout>
-      <div className="p-6 max-w-7xl mx-auto space-y-8">
+      <div className="max-w-[1400px] mx-auto p-6 space-y-8">
         {/* Header */}
-        <motion.div {...anim(0)} className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+        <motion.div {...anim(0)} className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
           <div>
-            <h1 className="font-heading text-2xl font-semibold text-foreground tracking-tight">
-              PLANO DE AÇÃO
-            </h1>
-            <p className="text-xs text-muted-foreground uppercase tracking-widest mt-1">
-              Implementação Totum Agents · 30 dias
+            <div className="flex items-center gap-3 mb-2">
+              <Rocket className="w-6 h-6 text-stone-900" />
+              <h1 className="text-2xl font-semibold text-stone-900 tracking-tight">
+                Implantação
+              </h1>
+            </div>
+            <p className="text-sm text-stone-500">
+              Acompanhamento das fases do projeto
             </p>
           </div>
-          <div className="flex items-center gap-4 flex-wrap">
-            {/* Circular progress */}
-            <div className="relative w-16 h-16">
+
+          <div className="flex items-center gap-4">
+            {/* Progress Circle */}
+            <div className="relative w-20 h-20">
               <svg viewBox="0 0 36 36" className="w-full h-full -rotate-90">
-                <circle cx="18" cy="18" r="15.5" fill="none" stroke="hsl(var(--border))" strokeWidth="3" />
+                <circle cx="18" cy="18" r="15.5" fill="none" stroke="#E7E5E4" strokeWidth="3" />
                 <circle
                   cx="18" cy="18" r="15.5" fill="none"
-                  stroke="hsl(var(--primary))" strokeWidth="3"
+                  stroke="#1C1917" strokeWidth="3"
                   strokeDasharray={`${overallProgress} ${100 - overallProgress}`}
                   strokeLinecap="round"
                   className="transition-all duration-700"
                 />
               </svg>
-              <span className="absolute inset-0 flex items-center justify-center text-sm font-heading font-semibold text-foreground">
+              <span className="absolute inset-0 flex items-center justify-center text-lg font-semibold text-stone-900">
                 {overallProgress}%
               </span>
             </div>
+
             <div className="flex gap-3">
-              <div className="bg-card border border-border/40 rounded-xl px-4 py-2 text-center">
-                <p className="text-[10px] text-muted-foreground uppercase">Dias Restantes</p>
-                <p className="text-xl font-heading font-semibold text-foreground">23</p>
+              <div className="bg-white border border-stone-300 rounded-lg px-4 py-3 text-center">
+                <p className="text-[10px] text-stone-500 uppercase tracking-wider">Dias</p>
+                <p className="text-xl font-semibold text-stone-900">30</p>
               </div>
-              <div className="bg-card border border-border/40 rounded-xl px-4 py-2 text-center">
-                <p className="text-[10px] text-muted-foreground uppercase">Status</p>
-                <p className="text-lg">🟡 Em andamento</p>
+              <div className="bg-white border border-stone-300 rounded-lg px-4 py-3 text-center">
+                <p className="text-[10px] text-stone-500 uppercase tracking-wider">Status</p>
+                <p className="text-lg">{overallProgress === 100 ? '🏁' : '🚀'}</p>
               </div>
             </div>
           </div>
         </motion.div>
 
-        {/* Metrics */}
-        <motion.div {...anim(1)} className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+        {/* Quick Stats */}
+        <motion.div {...anim(1)} className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
-            { label: "Total", value: totalTasks, icon: Target, cls: "text-foreground" },
-            { label: "Concluídas", value: doneTasks, icon: CheckCircle2, cls: "text-emerald-400" },
-            { label: "Em Andamento", value: inProgressTasks, icon: Clock, cls: "text-primary" },
-            { label: "Pendentes", value: pendingTasks, icon: Circle, cls: "text-muted-foreground" },
-            { label: "Velocidade", value: `${velocity}/dia`, icon: Zap, cls: "text-amber-400" },
-            { label: "Progresso", value: `${overallProgress}%`, icon: TrendingUp, cls: "text-primary" },
-          ].map((m) => (
-            <Card key={m.label} className="border-border/40 bg-card/80">
-              <CardContent className="p-3 flex items-center gap-3">
-                <m.icon className={`w-5 h-5 ${m.cls} shrink-0`} />
+            { label: "Total", value: totalTasks, icon: Target, color: "text-stone-900" },
+            { label: "Concluídas", value: doneTasks, icon: CheckCircle2, color: "text-emerald-600" },
+            { label: "Em Andamento", value: inProgressTasks, icon: Clock, color: "text-blue-600" },
+            { label: "Pendentes", value: pendingTasks, icon: Circle, color: "text-stone-400" },
+          ].map((stat) => (
+            <Card key={stat.label} className="border-stone-300 bg-white/80">
+              <CardContent className="p-4 flex items-center gap-4">
+                <div className="w-12 h-12 rounded-lg bg-stone-100 flex items-center justify-center">
+                  <stat.icon className={`w-6 h-6 ${stat.color}`} />
+                </div>
                 <div>
-                  <p className="text-[10px] text-muted-foreground uppercase">{m.label}</p>
-                  <p className={`text-lg font-heading font-semibold ${m.cls}`}>{m.value}</p>
+                  <p className="text-2xl font-semibold text-stone-900">{stat.value}</p>
+                  <p className="text-xs text-stone-500 uppercase tracking-wider">{stat.label}</p>
                 </div>
               </CardContent>
             </Card>
           ))}
         </motion.div>
 
-        {/* Timeline */}
-        <motion.div {...anim(2)}>
-          <Card className="border-border/40 bg-card/80 overflow-x-auto">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-1 min-w-[700px]">
-                {phases.map((p, i) => {
-                  const ps = phaseStatus(p);
-                  const pp = phaseProgress(p);
-                  return (
-                    <button
-                      key={p.num}
-                      onClick={() => { setActivePhase(p.num); setExpandedPhases((prev) => ({ ...prev, [p.num]: true })); }}
-                      className={`flex-1 relative group transition-all ${activePhase === p.num ? "scale-105" : ""}`}
-                    >
-                      <div className={`h-2 rounded-full transition-colors ${
-                        ps === "done" ? "bg-emerald-500" : ps === "in_progress" ? "bg-primary" : "bg-muted"
-                      }`}>
-                        <div
-                          className="h-full rounded-full bg-emerald-400 transition-all duration-500"
-                          style={{ width: `${pp}%` }}
-                        />
+        {/* Current Phase Highlight */}
+        {currentPhase && (
+          <motion.div {...anim(2)}>
+            <Card className="border-stone-300 bg-stone-900 text-white overflow-hidden">
+              <CardContent className="p-6">
+                <div className="flex items-start justify-between">
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-3xl">{PHASE_ICONS[currentPhase.num] || "📋"}</span>
+                      <div>
+                        <p className="text-xs text-stone-400 uppercase tracking-wider">Fase Atual</p>
+                        <h2 className="text-xl font-semibold">Fase {currentPhase.num}: {currentPhase.name}</h2>
                       </div>
-                      <div className="mt-2 text-center">
-                        <p className="text-lg">{PHASE_ICONS[p.num] ?? "📋"}</p>
-                        <p className="text-[10px] font-medium text-foreground">{p.name}</p>
-                        <p className="text-[9px] text-muted-foreground">Dias {p.dayStart}-{p.dayEnd}</p>
-                        <p className={`text-[10px] font-mono ${ps === "done" ? "text-emerald-400" : ps === "in_progress" ? "text-primary" : "text-muted-foreground"}`}>
-                          {pp}%
-                        </p>
+                    </div>
+                    <p className="text-sm text-stone-300">
+                      {PHASE_DESCRIPTIONS[currentPhase.num] || "Em andamento"}
+                    </p>
+                  </div>
+                  
+                  <div className="text-right">
+                    <p className="text-3xl font-semibold">{currentPhase.progress}%</p>
+                    <p className="text-xs text-stone-400">
+                      {currentPhase.completedCount}/{currentPhase.taskCount} tarefas
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="mt-4">
+                  <Progress 
+                    value={currentPhase.progress} 
+                    className="h-2 bg-stone-700"
+                  />
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
+
+        {/* All Phases */}
+        <motion.div {...anim(3)} className="space-y-4">
+          <h2 className="text-lg font-semibold text-stone-900">Todas as Fases</h2>
+          
+          <div className="grid gap-3">
+            {phases.map((phase, index) => (
+              <motion.div
+                key={phase.num}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: index * 0.1 }}
+              >
+                <Card className="border-stone-300 bg-white/80 hover:bg-white transition-colors">
+                  <CardContent className="p-4">
+                    <div className="flex items-center gap-4">
+                      <div className="text-2xl">{PHASE_ICONS[phase.num] || "📋"}</div>
+                      
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between mb-2">
+                          <h3 className="font-medium text-stone-900">
+                            Fase {phase.num}: {phase.name}
+                          </h3>
+                          
+                          <div className="flex items-center gap-3">
+                            <Badge 
+                              variant="outline"
+                              className={`
+                                ${phase.progress === 100 
+                                  ? 'bg-emerald-100 text-emerald-700 border-emerald-200' 
+                                  : phase.progress > 0 
+                                    ? 'bg-blue-100 text-blue-700 border-blue-200'
+                                    : 'bg-stone-100 text-stone-600 border-stone-200'}
+                              `}
+                            >
+                              {phase.progress === 100 ? 'Concluída' : phase.progress > 0 ? 'Em andamento' : 'Pendente'}
+                            </Badge>
+                            
+                            <span className="text-sm font-medium text-stone-900 w-12 text-right">
+                              {phase.progress}%
+                            </span>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center gap-4">
+                          <div className="flex-1">
+                            <Progress 
+                              value={phase.progress} 
+                              className="h-2"
+                            />
+                          </div>
+                          
+                          <p className="text-xs text-stone-500">
+                            {phase.completedCount}/{phase.taskCount} tarefas
+                          </p>
+                        </div>
                       </div>
-                      {i < phases.length - 1 && (
-                        <div className="absolute top-1 -right-1 w-2 h-0.5 bg-border/60" />
-                      )}
-                    </button>
-                  );
-                })}
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Velocity */}
+        <motion.div {...anim(4)}>
+          <Card className="border-stone-300 bg-white/80">
+            <CardContent className="p-4 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-stone-100 flex items-center justify-center">
+                  <Zap className="w-5 h-5 text-amber-500" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-stone-900">Velocidade do Projeto</p>
+                  <p className="text-xs text-stone-500">Tarefas concluídas por dia</p>
+                </div>
               </div>
+              
+              <p className="text-2xl font-semibold text-stone-900">{velocity}</p>
             </CardContent>
           </Card>
         </motion.div>
-
-        {/* Filter */}
-        <motion.div {...anim(3)} className="flex items-center gap-2 flex-wrap">
-          <Filter className="w-4 h-4 text-muted-foreground" />
-          <span className="text-xs text-muted-foreground mr-1">Responsável:</span>
-          {RESPONSIBLE_OPTIONS.map((opt) => (
-            <button
-              key={opt.value}
-              onClick={() => setFilterResp(opt.value)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                filterResp === opt.value
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
-              }`}
-            >
-              <opt.icon className="w-3 h-3" />
-              {opt.label}
-            </button>
-          ))}
-        </motion.div>
-
-        {/* Phase cards */}
-        <div className="space-y-4">
-          <AnimatePresence mode="popLayout">
-            {filteredPhases.map((phase, pi) => {
-              const isExpanded = expandedPhases[phase.num] ?? (activePhase === phase.num);
-              const pp = phaseProgress(phase);
-              const ps = phaseStatus(phase);
-
-              return (
-                <motion.div key={phase.num} layout {...anim(pi + 4)} exit={{ opacity: 0, scale: 0.97 }}>
-                  <Card className="border-border/40 bg-card/80 overflow-hidden">
-                    <button
-                      className="w-full text-left"
-                      onClick={() => togglePhase(phase.num)}
-                    >
-                      <CardHeader className="pb-3">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <span className="text-2xl">{PHASE_ICONS[phase.num] ?? "📋"}</span>
-                            <div>
-                              <CardTitle className="text-base flex items-center gap-2">
-                                Fase {phase.num}: {phase.name}
-                                <Badge variant="outline" className={`text-[10px] ml-1 ${
-                                  ps === "done" ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/30"
-                                    : ps === "in_progress" ? "bg-primary/20 text-primary border-primary/30"
-                                    : "bg-muted text-muted-foreground border-border/40"
-                                }`}>
-                                  {STATUS_CONFIG[ps]?.label}
-                                </Badge>
-                              </CardTitle>
-                              <p className="text-xs text-muted-foreground">Dias {phase.dayStart}-{phase.dayEnd} · {phase.tasks.length} tarefas</p>
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <div className="w-32 hidden sm:block">
-                              <Progress value={pp} className="h-2" />
-                            </div>
-                            <span className="text-sm font-mono text-muted-foreground w-10 text-right">{pp}%</span>
-                            {isExpanded ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
-                          </div>
-                        </div>
-                      </CardHeader>
-                    </button>
-
-                    <AnimatePresence>
-                      {isExpanded && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: "auto", opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.25 }}
-                          className="overflow-hidden"
-                        >
-                          <CardContent className="pt-0 pb-4">
-                            <div className="space-y-2">
-                              {phase.tasks.map((task) => {
-                                const sc = STATUS_CONFIG[task.status] ?? STATUS_CONFIG.pending;
-                                return (
-                                  <div key={task.id} className="flex items-center gap-3 p-3 rounded-lg bg-secondary/30 hover:bg-secondary/50 transition-colors group">
-                                    <Checkbox
-                                      checked={task.status === "done"}
-                                      onCheckedChange={() => toggleTask(task)}
-                                      className="data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500"
-                                    />
-                                    <div className="flex-1 min-w-0">
-                                      <div className="flex items-center gap-2 mb-1">
-                                        <span className="text-[10px] font-mono text-muted-foreground bg-muted px-1.5 py-0.5 rounded">{task.code}</span>
-                                        <span className={`text-sm ${task.status === "done" ? "line-through text-muted-foreground" : "text-foreground"}`}>
-                                          {task.title}
-                                        </span>
-                                      </div>
-                                      <div className="flex items-center gap-3">
-                                        <div className="w-24 sm:w-40">
-                                          <Slider
-                                            value={[task.progress]}
-                                            min={0}
-                                            max={100}
-                                            step={5}
-                                            onValueCommit={(v) => updateProgress(task.id, v[0])}
-                                            className="cursor-pointer"
-                                          />
-                                        </div>
-                                        <span className={`text-[10px] font-mono w-8 ${sc.color}`}>{task.progress}%</span>
-                                      </div>
-                                    </div>
-                                    <Badge variant="outline" className={`text-[9px] shrink-0 ${RESPONSIBLE_BADGE[task.responsible] ?? ""}`}>
-                                      {task.responsible === "user" ? "Usuário" : task.responsible === "claude" ? "Claude" : "Ambos"}
-                                    </Badge>
-                                  </div>
-                                );
-                              })}
-                            </div>
-
-                            <div className="mt-3 flex justify-end">
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                className="text-xs"
-                                onClick={() => markAllPhase(phase)}
-                              >
-                                {phase.tasks.every((t) => t.status === "done") ? "Reabrir Tudo" : "Marcar Tudo ✓"}
-                              </Button>
-                            </div>
-                          </CardContent>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </Card>
-                </motion.div>
-              );
-            })}
-          </AnimatePresence>
-        </div>
       </div>
     </AppLayout>
   );

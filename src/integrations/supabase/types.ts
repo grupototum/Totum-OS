@@ -14,6 +14,65 @@ export type Database = {
   }
   public: {
     Tables: {
+      projetos: {
+        Row: {
+          id: string
+          nome: string
+          descricao: string | null
+          cor: string
+          criado_em: string
+          atualizado_em: string
+        }
+        Insert: {
+          id?: string
+          nome: string
+          descricao?: string | null
+          cor?: string
+          criado_em?: string
+          atualizado_em?: string
+        }
+        Update: {
+          id?: string
+          nome?: string
+          descricao?: string | null
+          cor?: string
+          criado_em?: string
+          atualizado_em?: string
+        }
+        Relationships: []
+      }
+      comentarios_tarefa: {
+        Row: {
+          id: string
+          tarefa_id: string
+          autor: string
+          conteudo: string
+          criado_em: string
+        }
+        Insert: {
+          id?: string
+          tarefa_id: string
+          autor?: string
+          conteudo: string
+          criado_em?: string
+        }
+        Update: {
+          id?: string
+          tarefa_id?: string
+          autor?: string
+          conteudo?: string
+          criado_em?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comentarios_tarefa_tarefa_id_fkey"
+            columns: ["tarefa_id"]
+            isOneToOne: false
+            referencedRelation: "tarefas"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       action_plan_tasks: {
         Row: {
           code: string
@@ -475,7 +534,13 @@ export type Database = {
           status: string
           responsavel: string | null
           prioridade: string
-          deadline: string | null
+          data_limite: string | null
+          projeto_id: string | null
+          tipo: string
+          tags: Json
+          subtarefas: Json
+          posicao: number
+          criado_por: string | null
           created_at: string
           updated_at: string
         }
@@ -486,7 +551,13 @@ export type Database = {
           status?: string
           responsavel?: string | null
           prioridade?: string
-          deadline?: string | null
+          data_limite?: string | null
+          projeto_id?: string | null
+          tipo?: string
+          tags?: Json
+          subtarefas?: Json
+          posicao?: number
+          criado_por?: string | null
           created_at?: string
           updated_at?: string
         }
@@ -497,11 +568,25 @@ export type Database = {
           status?: string
           responsavel?: string | null
           prioridade?: string
-          deadline?: string | null
+          data_limite?: string | null
+          projeto_id?: string | null
+          tipo?: string
+          tags?: Json
+          subtarefas?: Json
+          posicao?: number
+          criado_por?: string | null
           created_at?: string
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "tarefas_projeto_id_fkey"
+            columns: ["projeto_id"]
+            isOneToOne: false
+            referencedRelation: "projetos"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       user_roles: {
         Row: {
