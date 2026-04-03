@@ -113,7 +113,7 @@ export function useTarefas() {
         return false;
       }
 
-      const { data, error: supabaseError } = await supabase
+      const { data, error: supabaseError } = await (supabase as any)
         .from('tarefas')
         .insert([{
           titulo: dto.titulo.trim(),
