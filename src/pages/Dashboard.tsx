@@ -14,6 +14,7 @@ import {
   AgentCards,
   DashboardProvider,
 } from "@/components/dashboard/DashboardWidgets";
+import { TarefasWidget } from "@/components/tarefas/TarefasWidget";
 import { useDashboardData } from "@/hooks/useDashboardData";
 
 export default function Dashboard() {
@@ -99,6 +100,7 @@ export default function Dashboard() {
             <ActivityLog />
           </div>
           <div className="lg:col-span-2 space-y-6">
+            <TarefasWidget />
             <ResourceUsage />
             <CostEstimate />
             <MexSync />
