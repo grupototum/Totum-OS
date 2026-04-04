@@ -117,7 +117,9 @@ export default function Implantação() {
 
   const handleUnlock = (e: React.FormEvent) => {
     e.preventDefault();
-    if (passInput === "Totum@SupremoIsrael") {
+    // Senha movida para variável de ambiente VITE_ACTION_PLAN_PASSWORD
+    const correctPassword = import.meta.env.VITE_ACTION_PLAN_PASSWORD || '';
+    if (passInput === correctPassword) {
       setUnlocked(true);
       sessionStorage.setItem(ACTION_PLAN_KEY, "true");
     } else {

@@ -1,12 +1,19 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Send, Plus, MessageSquare, Trash2, Menu } from "lucide-react";
+import { Send, Plus, MessageSquare, Trash2, Menu, Loader2 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import AppLayout from "@/components/layout/AppLayout";
+import { 
+  sendMessageToAI, 
+  streamMessageFromAI, 
+  hasAIConfig, 
+  getDefaultProvider,
+  type AIMessage 
+} from "@/services/aiService";
 
 export interface AgentConfig {
   id: string;
@@ -15,6 +22,7 @@ export interface AgentConfig {
   gradient: string;
   accentColor: string;
   description: string;
+  systemPrompt?: string;
 }
 
 interface Message {
@@ -22,6 +30,7 @@ interface Message {
   role: "user" | "assistant";
   content: string;
   timestamp: Date;
+  isStreaming?: boolean;
 }
 
 interface Conversation {
@@ -30,6 +39,18 @@ interface Conversation {
   messages: Message[];
   createdAt: Date;
 }
+
+// System prompt padrão para agentes
+const getSystemPrompt = (agent: AgentConfig): string => {
+  return agent.systemPrompt || `Você é ${agent.name}, ${agent.description}. 
+
+Diretrizes:
+- Seja prestativo, profissional e direto
+- Responda em português do Brasil
+- Se não souber algo, admita honestamente
+- Mantenha respostas concisas mas completas
+- Use formatação markdown quando apropriado`;
+};
 
 export default function AgentChatLayout({ agent }: { agent: AgentConfig }) {
   const navigate = useNavigate();
@@ -51,18 +72,25 @@ export default function AgentChatLayout({ agent }: { agent: AgentConfig }) {
   const [activeConvoId, setActiveConvoId] = useState("default");
   const [input, setInput] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
+  const [aiEnabled, setAiEnabled] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const activeConvo = conversations.find((c) => c.id === activeConvoId)!;
 
+  // Verifica se IA está configurada
+  useEffect(() => {
+    setAiEnabled(hasAIConfig());
+  }, []);
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [activeConvo.messages.length]);
+  }, [activeConvo.messages.length, activeConvo.messages]);
 
-  const handleSend = () => {
+  const handleSend = useCallback(async () => {
     const text = input.trim();
-    if (!text) return;
+    if (!text || isTyping) return;
 
     const userMsg: Message = {
       id: crypto.randomUUID(),
@@ -71,17 +99,11 @@ export default function AgentChatLayout({ agent }: { agent: AgentConfig }) {
       timestamp: new Date(),
     };
 
-    const botMsg: Message = {
-      id: crypto.randomUUID(),
-      role: "assistant",
-      content: `Recebi sua mensagem. A integração com IA será conectada em breve.\n\n> "${text.slice(0, 80)}${text.length > 80 ? "..." : ""}"`,
-      timestamp: new Date(),
-    };
-
+    // Adiciona mensagem do usuário
     setConversations((prev) =>
       prev.map((c) => {
         if (c.id !== activeConvoId) return c;
-        const updated = { ...c, messages: [...c.messages, userMsg, botMsg] };
+        const updated = { ...c, messages: [...c.messages, userMsg] };
         if (c.title === "Nova conversa" && text.length > 0) {
           updated.title = text.slice(0, 40) + (text.length > 40 ? "..." : "");
         }
@@ -89,7 +111,109 @@ export default function AgentChatLayout({ agent }: { agent: AgentConfig }) {
       })
     );
     setInput("");
-  };
+    setIsTyping(true);
+
+    // Se IA não está configurada, mostra mensagem de fallback
+    if (!aiEnabled) {
+      const fallbackMsg: Message = {
+        id: crypto.randomUUID(),
+        role: "assistant",
+        content: `Recebi sua mensagem!\n\nPara ativar a IA, configure uma API key no arquivo ".env":\n\n\`\`\`\nVITE_KIMI_API_KEY=sua-chave-aqui\n# ou\nVITE_GROQ_API_KEY=sua-chave-aqui\n\`\`\`\n\nObtenha sua chave em:\n- **Kimi**: https://platform.moonshot.cn/\n- **Groq**: https://console.groq.com/`,
+        timestamp: new Date(),
+      };
+
+      setTimeout(() => {
+        setConversations((prev) =>
+          prev.map((c) =>
+            c.id === activeConvoId
+              ? { ...c, messages: [...c.messages, fallbackMsg] }
+              : c
+          )
+        );
+        setIsTyping(false);
+      }, 500);
+      return;
+    }
+
+    // Prepara mensagens para a API
+    const currentMessages = activeConvo.messages;
+    const apiMessages: AIMessage[] = [
+      { role: "system", content: getSystemPrompt(agent) },
+      ...currentMessages.map((m): AIMessage => ({
+        role: m.role,
+        content: m.content,
+      })),
+      { role: "user", content: text },
+    ];
+
+    // Cria mensagem de placeholder para streaming
+    const assistantMsgId = crypto.randomUUID();
+    const assistantMsg: Message = {
+      id: assistantMsgId,
+      role: "assistant",
+      content: "",
+      timestamp: new Date(),
+      isStreaming: true,
+    };
+
+    setConversations((prev) =>
+      prev.map((c) =>
+        c.id === activeConvoId
+          ? { ...c, messages: [...c.messages, assistantMsg] }
+          : c
+      )
+    );
+
+    // Chama a API de IA com streaming
+    const provider = getDefaultProvider();
+    let fullContent = "";
+
+    const { error } = await streamMessageFromAI(
+      apiMessages,
+      (chunk) => {
+        fullContent += chunk;
+        setConversations((prev) =>
+          prev.map((c) =
+            c.id === activeConvoId
+              ? {
+                  ...c,
+                  messages: c.messages.map((m) =>
+                    m.id === assistantMsgId
+                      ? { ...m, content: fullContent }
+                      : m
+                  ),
+                }
+              : c
+          )
+        );
+      },
+      provider
+    );
+
+    // Atualiza mensagem final
+    setConversations((prev) =>
+      prev.map((c) =
+        c.id === activeConvoId
+          ? {
+              ...c,
+              messages: c.messages.map((m) =
+                m.id === assistantMsgId
+                  ? { 
+                      ...m, 
+                      content: error 
+                        ? `❌ **Erro:** ${error}\n\nVerifique sua API key e tente novamente.` 
+                        : fullContent,
+                      isStreaming: false 
+                    }
+                  : m
+              ),
+            }
+          : c
+      )
+    );
+
+    setIsTyping(false);
+  }, [input, isTyping, activeConvoId, activeConvo.messages, agent, aiEnabled]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -221,8 +345,13 @@ export default function AgentChatLayout({ agent }: { agent: AgentConfig }) {
           <div>
             <h1 className="font-heading text-sm font-bold text-foreground">{agent.name}</h1>
             <div className="flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-              <span className="text-[10px] text-muted-foreground">Online</span>
+              <span className={cn(
+                "w-1.5 h-1.5 rounded-full",
+                aiEnabled ? "bg-emerald-500" : "bg-amber-500"
+              )} />
+              <span className="text-[10px] text-muted-foreground">
+                {aiEnabled ? "IA Ativa" : "IA Não Configurada"}
+              </span>
             </div>
           </div>
         </motion.header>
@@ -252,25 +381,52 @@ export default function AgentChatLayout({ agent }: { agent: AgentConfig }) {
                   >
                     {msg.content.split("\n").map((line, i) => (
                       <p key={i} className={i > 0 ? "mt-1.5" : ""}>
-                        {line.replace(/\*\*(.*?)\*\*/g, "").includes("**")
-                          ? line
-                          : line.split(/(\*\*.*?\*\*)/g).map((part, j) =>
-                              part.startsWith("**") && part.endsWith("**") ? (
-                                <strong key={j}>{part.slice(2, -2)}</strong>
-                              ) : part.startsWith("> ") ? (
-                                <span key={j} className="italic opacity-70">{part.slice(2)}</span>
-                              ) : (
-                                <span key={j}>{part}</span>
-                              )
-                            )}
+                        {line.startsWith("```") ? (
+                          <pre className="bg-black/10 rounded p-2 mt-2 overflow-x-auto">
+                            <code>{line.replace(/```/g, "")}</code>
+                          </pre>
+                        ) : line.match(/\*\*(.*?)\*\*/g) ? (
+                          line.split(/(\*\*.*?\*\*)/g).map((part, j) =>
+                            part.startsWith("**") && part.endsWith("**") ? (
+                              <strong key={j}>{part.slice(2, -2)}</strong>
+                            ) : part.startsWith("- ") ? (
+                              <span key={j} className="block ml-2">• {part.slice(2)}</span>
+                            ) : part.startsWith("\u003e ") ? (
+                              <span key={j} className="italic opacity-70">{part.slice(2)}</span>
+                            ) : (
+                              <span key={j}>{part}</span>
+                            )
+                          )
+                        ) : (
+                          line
+                        )}
                       </p>
                     ))}
+                    {msg.isStreaming && (
+                      <span className="inline-block w-2 h-4 ml-1 bg-current animate-pulse" />
+                    )}
                     <span className="block mt-2 text-[10px] opacity-50">
                       {msg.timestamp.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
                     </span>
                   </div>
                 </motion.div>
               ))}
+              
+              {/* Indicador de digitando */}
+              {isTyping && !activeConvo.messages.find(m => m.isStreaming) && (
+                <motion.div
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="flex justify-start"
+                >
+                  <div className="bg-secondary text-foreground ring-1 ring-border rounded-2xl px-4 py-3">
+                    <div className="flex items-center gap-2">
+                      <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
+                      <span className="text-sm text-muted-foreground">Digitando...</span>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
             </AnimatePresence>
             <div ref={messagesEndRef} />
           </div>
@@ -289,21 +445,32 @@ export default function AgentChatLayout({ agent }: { agent: AgentConfig }) {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder={`Mensagem para ${agent.name}...`}
+              placeholder={aiEnabled 
+                ? `Mensagem para ${agent.name}...` 
+                : "Configure uma API key para ativar a IA..."
+              }
               className="min-h-[44px] max-h-32 resize-none bg-secondary border-border text-foreground placeholder:text-muted-foreground rounded-xl"
               rows={1}
+              disabled={isTyping}
             />
             <Button
               onClick={handleSend}
-              disabled={!input.trim()}
+              disabled={!input.trim() || isTyping}
               className={cn("h-11 w-11 shrink-0 rounded-xl bg-gradient-to-br", agent.gradient, "hover:opacity-90 disabled:opacity-30")}
               size="icon"
             >
-              <Send className="w-4 h-4 text-white" />
+              {isTyping ? (
+                <Loader2 className="w-4 h-4 text-white animate-spin" />
+              ) : (
+                <Send className="w-4 h-4 text-white" />
+              )}
             </Button>
           </div>
           <p className="text-center text-[10px] text-muted-foreground/50 mt-2">
-            Integração com IA em breve · Totum Apps
+            {aiEnabled 
+              ? `${agent.name} · IA Ativa · Totum Apps` 
+              : "Configure VITE_KIMI_API_KEY ou VITE_GROQ_API_KEY no .env"
+            }
           </p>
         </motion.div>
       </div>

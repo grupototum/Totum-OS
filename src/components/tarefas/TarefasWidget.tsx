@@ -33,19 +33,20 @@ import {
 } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useTarefas, type Tarefa, type StatusTarefa, type PrioridadeTarefa } from '@/hooks/useTarefas';
+import { useTasks, type Tarefa, type StatusTarefa, type PrioridadeTarefa } from '@/hooks/useTasks';
 
 const statusConfig = {
-  pendente: { label: 'Pendente', icon: Circle, color: 'bg-gray-500', textColor: 'text-gray-500' },
-  em_andamento: { label: 'Em Andamento', icon: Clock, color: 'bg-amber-500', textColor: 'text-amber-500' },
-  concluida: { label: 'Concluída', icon: CheckCircle2, color: 'bg-emerald-500', textColor: 'text-emerald-500' },
+  a_fazer: { label: 'A Fazer', icon: Circle, color: 'bg-gray-500', textColor: 'text-gray-500' },
+  fazendo: { label: 'Fazendo', icon: Clock, color: 'bg-amber-500', textColor: 'text-amber-500' },
+  revisao: { label: 'Revisão', icon: Clock, color: 'bg-blue-500', textColor: 'text-blue-500' },
+  feito: { label: 'Feito', icon: CheckCircle2, color: 'bg-emerald-500', textColor: 'text-emerald-500' },
 };
 
 const prioridadeConfig = {
   baixa: { label: 'Baixa', color: 'bg-blue-500/10 text-blue-500 border-blue-500/20' },
   media: { label: 'Média', color: 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20' },
   alta: { label: 'Alta', color: 'bg-orange-500/10 text-orange-500 border-orange-500/20' },
-  critica: { label: 'Crítica', color: 'bg-red-500/10 text-red-500 border-red-500/20' },
+  urgente: { label: 'Urgente', color: 'bg-red-500/10 text-red-500 border-red-500/20' },
 };
 
 function CardSkeleton() {
@@ -76,8 +77,8 @@ function TarefaCard({
   };
 
   const estaAtrasada = () => {
-    if (!tarefa.deadline || tarefa.status === 'concluida') return false;
-    return new Date(tarefa.deadline) < new Date();
+    if (!tarefa.data_limite || tarefa.status === 'feito') return false;
+    return new Date(tarefa.data_limite) < new Date();
   };
 
   return (
@@ -94,21 +95,22 @@ function TarefaCard({
             <button
               onClick={() => {
                 const proximoStatus: Record<StatusTarefa, StatusTarefa> = {
-                  pendente: 'em_andamento',
-                  em_andamento: 'concluida',
-                  concluida: 'pendente',
+                  a_fazer: 'fazendo',
+                  fazendo: 'feito',
+                  feito: 'a_fazer',
+                  revisao: 'feito',
                 };
                 onStatusChange(tarefa.id, proximoStatus[tarefa.status]);
               }}
               className={`w-5 h-5 rounded-full flex items-center justify-center transition-colors ${
-                tarefa.status === 'concluida' 
+                tarefa.status === 'feito' 
                   ? 'bg-emerald-500 text-white' 
                   : 'border-2 border-muted-foreground/30 hover:border-primary'
               }`}
             >
-              {tarefa.status === 'concluida' && <CheckCircle2 className="w-3 h-3" />}
+              {tarefa.status === 'feito' && <CheckCircle2 className="w-3 h-3" />}
             </button>
-            <span className={`font-medium text-sm ${tarefa.status === 'concluida' ? 'line-through text-muted-foreground' : ''}`}>
+            <span className={`font-medium text-sm ${tarefa.status === 'feito' ? 'line-through text-muted-foreground' : ''}`}>
               {tarefa.titulo}
             </span>
           </div>
@@ -129,10 +131,10 @@ function TarefaCard({
               </div>
             )}
 
-            {tarefa.deadline && (
+            {tarefa.data_limite && (
               <div className={`flex items-center gap-1 text-[10px] ${estaAtrasada() ? 'text-red-500' : 'text-muted-foreground'}`}>
                 <Calendar className="w-3 h-3" />
-                {formatarData(tarefa.deadline)}
+                {formatarData(tarefa.data_limite)}
                 {estaAtrasada() && <span className="text-red-500 font-medium"> (Atrasada)</span>}
               </div>
             )}
@@ -171,8 +173,7 @@ export function TarefasWidget() {
     criarTarefa, 
     atualizarTarefa, 
     deletarTarefa,
-    obterEstatisticas,
-  } = useTarefas();
+  } = useTasks();
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editando, setEditando] = useState<Tarefa | null>(null);
@@ -181,20 +182,28 @@ export function TarefasWidget() {
   // Formulário
   const [titulo, setTitulo] = useState('');
   const [descricao, setDescricao] = useState('');
-  const [status, setStatus] = useState<StatusTarefa>('pendente');
+  const [status, setStatus] = useState<StatusTarefa>('a_fazer');
   const [prioridade, setPrioridade] = useState<PrioridadeTarefa>('media');
   const [responsavel, setResponsavel] = useState('');
-  const [deadline, setDeadline] = useState('');
+  const [dataLimite, setDataLimite] = useState('');
 
-  const estatisticas = obterEstatisticas();
+  // Calcular estatísticas
+  const estatisticas = {
+    total: tarefas.length,
+    pendentes: tarefas.filter(t => t.status === 'a_fazer').length,
+    emAndamento: tarefas.filter(t => t.status === 'fazendo').length,
+    concluidas: tarefas.filter(t => t.status === 'feito').length,
+    criticas: tarefas.filter(t => t.prioridade === 'urgente').length,
+    altas: tarefas.filter(t => t.prioridade === 'alta').length,
+  };
 
   const resetForm = () => {
     setTitulo('');
     setDescricao('');
-    setStatus('pendente');
+    setStatus('a_fazer');
     setPrioridade('media');
     setResponsavel('');
-    setDeadline('');
+    setDataLimite('');
     setEditando(null);
   };
 
@@ -205,7 +214,7 @@ export function TarefasWidget() {
     setStatus(tarefa.status);
     setPrioridade(tarefa.prioridade);
     setResponsavel(tarefa.responsavel || '');
-    setDeadline(tarefa.deadline ? tarefa.deadline.slice(0, 16) : '');
+    setDataLimite(tarefa.data_limite ? tarefa.data_limite.slice(0, 16) : '');
     setDialogOpen(true);
   };
 
@@ -220,7 +229,7 @@ export function TarefasWidget() {
       status,
       prioridade,
       responsavel: responsavel.trim() || undefined,
-      deadline: deadline || undefined,
+      data_limite: dataLimite || undefined,
     };
 
     if (editando) {
@@ -243,9 +252,9 @@ export function TarefasWidget() {
   };
 
   const tarefasFiltradas = tarefas.filter(t => {
-    if (filtros.status && t.status !== filtros.status) return false;
-    if (filtros.prioridade && t.prioridade !== filtros.prioridade) return false;
-    if (filtros.responsavel && !t.responsavel?.toLowerCase().includes(filtros.responsavel.toLowerCase())) return false;
+    if (filtros?.status && t.status !== filtros.status) return false;
+    if (filtros?.prioridade && t.prioridade !== filtros.prioridade) return false;
+    if (filtros?.responsavel && !t.responsavel?.toLowerCase().includes(filtros.responsavel.toLowerCase())) return false;
     return true;
   });
 
@@ -308,9 +317,10 @@ export function TarefasWidget() {
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="pendente">Pendente</SelectItem>
-                          <SelectItem value="em_andamento">Em Andamento</SelectItem>
-                          <SelectItem value="concluida">Concluída</SelectItem>
+                          <SelectItem value="a_fazer">A Fazer</SelectItem>
+                          <SelectItem value="fazendo">Fazendo</SelectItem>
+                          <SelectItem value="revisao">Revisão</SelectItem>
+                          <SelectItem value="feito">Feito</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -325,7 +335,7 @@ export function TarefasWidget() {
                           <SelectItem value="baixa">Baixa</SelectItem>
                           <SelectItem value="media">Média</SelectItem>
                           <SelectItem value="alta">Alta</SelectItem>
-                          <SelectItem value="critica">Crítica</SelectItem>
+                          <SelectItem value="urgente">Urgente</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -342,11 +352,11 @@ export function TarefasWidget() {
                     </div>
 
                     <div>
-                      <label className="text-xs font-medium mb-1 block">Deadline</label>
+                      <label className="text-xs font-medium mb-1 block">Data Limite</label>
                       <Input
                         type="datetime-local"
-                        value={deadline}
-                        onChange={(e) => setDeadline(e.target.value)}
+                        value={dataLimite}
+                        onChange={(e) => setDataLimite(e.target.value)}
                       />
                     </div>
                   </div>
@@ -367,15 +377,15 @@ export function TarefasWidget() {
         <div className="flex items-center gap-4 mt-3 text-[10px]">
           <div className="flex items-center gap-1">
             <div className="w-2 h-2 rounded-full bg-gray-500" />
-            <span className="text-muted-foreground">{estatisticas.pendentes} pendentes</span>
+            <span className="text-muted-foreground">{estatisticas.pendentes} a fazer</span>
           </div>
           <div className="flex items-center gap-1">
             <div className="w-2 h-2 rounded-full bg-amber-500" />
-            <span className="text-muted-foreground">{estatisticas.emAndamento} em andamento</span>
+            <span className="text-muted-foreground">{estatisticas.emAndamento} fazendo</span>
           </div>
           <div className="flex items-center gap-1">
             <div className="w-2 h-2 rounded-full bg-emerald-500" />
-            <span className="text-muted-foreground">{estatisticas.concluidas} concluídas</span>
+            <span className="text-muted-foreground">{estatisticas.concluidas} feito</span>
           </div>
         </div>
 
@@ -398,9 +408,10 @@ export function TarefasWidget() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="todos">Todos os status</SelectItem>
-                    <SelectItem value="pendente">Pendente</SelectItem>
-                    <SelectItem value="em_andamento">Em Andamento</SelectItem>
-                    <SelectItem value="concluida">Concluída</SelectItem>
+                    <SelectItem value="a_fazer">A Fazer</SelectItem>
+                    <SelectItem value="fazendo">Fazendo</SelectItem>
+                    <SelectItem value="revisao">Revisão</SelectItem>
+                    <SelectItem value="feito">Feito</SelectItem>
                   </SelectContent>
                 </Select>
 
@@ -416,7 +427,7 @@ export function TarefasWidget() {
                     <SelectItem value="baixa">Baixa</SelectItem>
                     <SelectItem value="media">Média</SelectItem>
                     <SelectItem value="alta">Alta</SelectItem>
-                    <SelectItem value="critica">Crítica</SelectItem>
+                    <SelectItem value="urgente">Urgente</SelectItem>
                   </SelectContent>
                 </Select>
 
