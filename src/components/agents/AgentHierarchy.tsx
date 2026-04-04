@@ -93,6 +93,7 @@ function HierarchyLevel({ nodes, level, onAgentClick, selectedAgentId }: Hierarc
             index={index}
             onAgentClick={onAgentClick}
             isSelected={selectedAgentId === node.agent.id}
+            selectedAgentId={selectedAgentId}
           />
         ))}
       </div>

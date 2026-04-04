@@ -58,6 +58,10 @@ const badgeVariants = cva(
         // Subtle: fundo sutil
         subtle: 
           "bg-stone-100 text-stone-600 border-transparent px-2.5 py-0.5",
+        
+        // Secondary: alias for subtle
+        secondary:
+          "bg-stone-100 text-stone-600 border-transparent px-2.5 py-0.5",
       },
     },
     defaultVariants: {

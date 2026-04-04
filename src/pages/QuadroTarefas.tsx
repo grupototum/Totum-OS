@@ -475,7 +475,7 @@ export default function QuadroTarefas() {
           onToggleSubtarefa={toggleSubtarefa}
           onAddSubtarefa={adicionarSubtarefa}
           onRemoveSubtarefa={removerSubtarefa}
-          onAddComentario={adicionarComentario}
+          onAddComentario={async (tarefaId: string, conteudo: string) => { await adicionarComentario(tarefaId, conteudo, user?.email || 'Sistema'); }}
           currentUser={user?.email || 'Sistema'}
           mode={modalMode}
         />
