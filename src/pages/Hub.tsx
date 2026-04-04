@@ -256,7 +256,7 @@ export default function Hub() {
                   >
                     <div className="flex items-start gap-4">
                       <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${agent.color} flex items-center justify-center shrink-0 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
-                        {agent.emoji ? (
+                        {'emoji' in agent && agent.emoji ? (
                           <span className="text-2xl">{agent.emoji}</span>
                         ) : (
                           <agent.icon className="w-6 h-6 text-white" />
