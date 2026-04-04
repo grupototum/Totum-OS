@@ -109,7 +109,7 @@ interface HierarchyItemProps {
   selectedAgentId?: string;
 }
 
-function HierarchyItem({ node, level, index, onAgentClick, isSelected }: HierarchyItemProps) {
+function HierarchyItem({ node, level, index, onAgentClick, isSelected, selectedAgentId }: HierarchyItemProps) {
   const [isExpanded, setIsExpanded] = useState(true);
   const { agent, children } = node;
   const classification = classifyAgent(agent.name);
