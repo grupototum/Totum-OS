@@ -249,9 +249,9 @@ export default function Hub() {
                   transition={{ delay: 0.1 + index * 0.05 }}
                 >
                   <button
-                    onClick={() => agent.type === 'chat' ? navigate(`/agent/${agent.id}`) : null}
+                    onClick={() => 'type' in agent && agent.type === 'chat' ? navigate(`/agent/${agent.id}`) : null}
                     className={`w-full text-left group cursor-pointer border border-stone-300 bg-white rounded-xl hover:border-stone-500 transition-all duration-300 hover:shadow-lg p-5 ${
-                      agent.type !== 'chat' ? 'opacity-80' : ''
+                      'type' in agent && agent.type !== 'chat' ? 'opacity-80' : ''
                     }`}
                   >
                     <div className="flex items-start gap-4">
