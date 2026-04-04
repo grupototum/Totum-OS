@@ -249,14 +249,14 @@ export default function Hub() {
                   transition={{ delay: 0.1 + index * 0.05 }}
                 >
                   <button
-                    onClick={() => agent.type === 'chat' ? navigate(`/agent/${agent.id}`) : null}
+                    onClick={() => 'type' in agent && agent.type === 'chat' ? navigate(`/agent/${agent.id}`) : null}
                     className={`w-full text-left group cursor-pointer border border-stone-300 bg-white rounded-xl hover:border-stone-500 transition-all duration-300 hover:shadow-lg p-5 ${
-                      agent.type !== 'chat' ? 'opacity-80' : ''
+                      'type' in agent && agent.type !== 'chat' ? 'opacity-80' : ''
                     }`}
                   >
                     <div className="flex items-start gap-4">
                       <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${agent.color} flex items-center justify-center shrink-0 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
-                        {agent.emoji ? (
+                        {'emoji' in agent && agent.emoji ? (
                           <span className="text-2xl">{agent.emoji}</span>
                         ) : (
                           <agent.icon className="w-6 h-6 text-white" />
@@ -270,10 +270,10 @@ export default function Hub() {
                               Novo
                             </span>
                           )}
-                          {agent.status === 'ativo' && agent.type !== 'chat' && (
+                          {'type' in agent && agent.status === 'ativo' && agent.type !== 'chat' && (
                             <span className="shrink-0 w-1.5 h-1.5 rounded-full bg-amber-400" title="Em breve" />
                           )}
-                          {agent.type === 'chat' && (
+                          {'type' in agent && agent.type === 'chat' && (
                             <span className="shrink-0 w-1.5 h-1.5 rounded-full bg-emerald-500" />
                           )}
                         </div>
@@ -282,9 +282,9 @@ export default function Hub() {
                     </div>
                     <div className="mt-4 flex items-center justify-between">
                       <span className="text-[10px] uppercase tracking-wider text-stone-400 font-medium">
-                        {agent.type === 'chat' ? 'Chat' : 'Sistema'}
+                        {'type' in agent && agent.type === 'chat' ? 'Chat' : 'Sistema'}
                       </span>
-                      {agent.type === 'chat' && (
+                      {'type' in agent && agent.type === 'chat' && (
                         <span className="text-xs text-stone-900 opacity-0 group-hover:opacity-100 transition-opacity font-medium flex items-center gap-1">
                           Abrir <ArrowRight className="w-3 h-3" />
                         </span>

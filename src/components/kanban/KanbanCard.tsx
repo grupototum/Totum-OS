@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
 import { Tarefa, PRIORIDADES } from '@/hooks/useTasks';
 import { Icon } from '@iconify/react';
 
@@ -71,21 +70,17 @@ export function KanbanCard({ tarefa, projetoNome, onClick }: KanbanCardProps) {
 
     if (d.toDateString() === hoje.toDateString()) return 'Hoje';
     if (d.toDateString() === amanha.toDateString()) return 'Amanhã';
-    
     return d.toLocaleDateString('pt-BR', { day: 'numeric', month: 'short' });
   };
 
   const isAtrasada = tarefa.data_limite && new Date(tarefa.data_limite) < new Date() && tarefa.status !== 'feito';
 
   return (
-    <motion.div
-      layoutId={tarefa.id}
+    <div
       draggable
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
       onClick={onClick}
-      whileHover={{ scale: 1.02, y: -2 }}
-      whileTap={{ scale: 0.98 }}
       className={`
         bg-white rounded-lg border border-stone-200 p-3 cursor-pointer
         transition-shadow duration-200 hover:shadow-md hover:border-stone-300
@@ -94,40 +89,42 @@ export function KanbanCard({ tarefa, projetoNome, onClick }: KanbanCardProps) {
     >
       {/* Header: Projeto + Prioridade */}
       <div className="flex items-center justify-between mb-2">
-        {projetoNome ? (
-          <span className="text-[10px] font-medium text-stone-500 bg-stone-100 px-2 py-0.5 rounded truncate max-w-[120px]">
+        {projetoNome && (
+          <span className="text-[10px] font-mono uppercase tracking-wider text-stone-400 truncate max-w-[60%]">
             {projetoNome}
           </span>
-        ) : tarefa.tipo === 'unica' ? (
-          <span className="text-[10px] font-medium text-stone-400 bg-stone-50 px-2 py-0.5 rounded">
-            Tarefa única
-          </span>
-        ) : (
-          <span />
         )}
-        
-        <Icon 
-          icon={getPrioridadeIcon(tarefa.prioridade)} 
-          className="w-4 h-4"
-          style={{ color: getPrioridadeColor(tarefa.prioridade) }}
-        />
+        <div className="flex items-center gap-1 ml-auto">
+          <Icon 
+            icon={getPrioridadeIcon(tarefa.prioridade)} 
+            className="w-3.5 h-3.5" 
+            style={{ color: getPrioridadeColor(tarefa.prioridade) }} 
+          />
+        </div>
       </div>
 
       {/* Título */}
-      <h4 className="text-sm font-medium text-stone-800 mb-2 line-clamp-2 leading-snug">
+      <h4 className="text-sm font-medium text-stone-900 mb-2 line-clamp-2 leading-snug">
         {tarefa.titulo}
       </h4>
 
+      {/* Description preview */}
+      {tarefa.descricao && (
+        <p className="text-xs text-stone-500 mb-3 line-clamp-2">
+          {tarefa.descricao}
+        </p>
+      )}
+
       {/* Tags */}
       {tarefa.tags.length > 0 && (
-        <div className="flex flex-wrap gap-1 mb-2">
-          {tarefa.tags.slice(0, 3).map((tag) => {
+        <div className="flex flex-wrap gap-1 mb-3">
+          {tarefa.tags.slice(0, 3).map(tag => {
             const style = getTagStyle(tag);
             return (
-              <span
+              <span 
                 key={tag}
                 className={`
-                  text-[9px] px-1.5 py-0.5 rounded border truncate max-w-[80px]
+                  text-[9px] font-mono uppercase tracking-wider px-1.5 py-0.5 rounded-full border
                   ${style.bg} ${style.text} ${style.border}
                 `}
               >
@@ -136,58 +133,56 @@ export function KanbanCard({ tarefa, projetoNome, onClick }: KanbanCardProps) {
             );
           })}
           {tarefa.tags.length > 3 && (
-            <span className="text-[9px] px-1.5 py-0.5 rounded bg-stone-100 text-stone-500">
-              +{tarefa.tags.length - 3}
-            </span>
+            <span className="text-[9px] text-stone-400">+{tarefa.tags.length - 3}</span>
           )}
         </div>
       )}
 
-      {/* Footer: Info */}
-      <div className="flex items-center justify-between text-stone-400">
-        <div className="flex items-center gap-2">
-          {/* Subtarefas */}
-          {totalSubtarefas > 0 && (
-            <div className="flex items-center gap-1">
-              <Icon icon="solar:checklist-linear" className="w-3.5 h-3.5" />
-              <span className={`text-[10px] ${subtarefasConcluidas === totalSubtarefas ? 'text-emerald-500' : ''}`}>
-                {subtarefasConcluidas}/{totalSubtarefas}
-              </span>
-            </div>
-          )}
-          
-          {/* Comentários (placeholder) */}
-          <div className="flex items-center gap-1">
-            <Icon icon="solar:chat-dots-linear" className="w-3.5 h-3.5" />
-            <span className="text-[10px]">0</span>
-          </div>
-        </div>
-
-        {/* Data limite */}
-        {tarefa.data_limite && (
-          <div className={`flex items-center gap-1 ${isAtrasada ? 'text-red-500' : ''}`}>
-            <Icon 
-              icon={isAtrasada ? 'solar:alarm-bold' : 'solar:calendar-linear'} 
-              className="w-3.5 h-3.5" 
-            />
-            <span className="text-[10px] font-medium">
-              {formatarData(tarefa.data_limite)}
-            </span>
-          </div>
-        )}
-      </div>
-
-      {/* Progress bar for subtarefas */}
+      {/* Subtarefas progress */}
       {totalSubtarefas > 0 && (
-        <div className="mt-2">
-          <div className="h-1 bg-stone-100 rounded-full overflow-hidden">
+        <div className="mb-3">
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-[10px] text-stone-500">
+              {subtarefasConcluidas}/{totalSubtarefas} subtarefas
+            </span>
+            <span className="text-[10px] text-stone-400">{Math.round(progressoSubtarefas)}%</span>
+          </div>
+          <div className="h-1 bg-stone-200 rounded-full overflow-hidden">
             <div 
-              className="h-full bg-emerald-500 transition-all duration-300"
+              className="h-full bg-emerald-500 rounded-full transition-all duration-300"
               style={{ width: `${progressoSubtarefas}%` }}
             />
           </div>
         </div>
       )}
-    </motion.div>
+
+      {/* Footer: Responsável + Data */}
+      <div className="flex items-center justify-between pt-2 border-t border-stone-100">
+        {/* Responsável */}
+        {tarefa.responsavel ? (
+          <div className="flex items-center gap-1.5">
+            <div className="w-5 h-5 rounded-full bg-stone-200 flex items-center justify-center text-[9px] font-semibold text-stone-600">
+              {tarefa.responsavel.charAt(0).toUpperCase()}
+            </div>
+            <span className="text-[10px] text-stone-500 truncate max-w-[80px]">
+              {tarefa.responsavel}
+            </span>
+          </div>
+        ) : (
+          <span className="text-[10px] text-stone-400 italic">Sem responsável</span>
+        )}
+
+        {/* Data */}
+        {tarefa.data_limite && (
+          <span className={`
+            text-[10px] flex items-center gap-1
+            ${isAtrasada ? 'text-red-500 font-medium' : 'text-stone-400'}
+          `}>
+            <Icon icon="solar:calendar-linear" className="w-3 h-3" />
+            {formatarData(tarefa.data_limite)}
+          </span>
+        )}
+      </div>
+    </div>
   );
 }
