@@ -106,6 +106,7 @@ interface HierarchyItemProps {
   index: number;
   onAgentClick?: (agent: Agent) => void;
   isSelected?: boolean;
+  selectedAgentId?: string;
 }
 
 function HierarchyItem({ node, level, index, onAgentClick, isSelected }: HierarchyItemProps) {
