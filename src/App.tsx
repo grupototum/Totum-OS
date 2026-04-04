@@ -31,7 +31,8 @@ import SubAgentPage from "./pages/SubAgentPage";
 import PopSlaPage from "./pages/PopSla";
 import DicasPage from "./pages/DicasPage";
 import RecursosPage from "./pages/RecursosPage";
-import AgentsDashboard from "./pages/AgentsDashboard";
+import AgentsDashboard from "./pages/agents/AgentsDashboard";
+import AgentDetail from "./pages/agents/AgentDetail";
 import ActionPlan from "./pages/ActionPlan";
 import NewClient from "./pages/NewClient";
 import ClientsCenter from "./pages/ClientsCenter";
@@ -96,6 +97,11 @@ const App = () => (
             <Route path="/hub-agentes" element={<HubAgentes />} />
             <Route path="/estrutura-time" element={<EstruturaTime />} />
             <Route path="/agente/:agenteId" element={<AgenteDetail />} />
+            {/* NOVA ESTRUTURA UNIFICADA DE AGENTES */}
+            <Route path="/agents" element={<AgentsDashboard />} />
+            <Route path="/agents/:agentId" element={<AgentDetail />} />
+            {/* Redirecionamentos para compatibilidade */}
+            <Route path="/agents-dashboard" element={<Navigate to="/agents" replace />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
