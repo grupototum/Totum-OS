@@ -1,42 +1,41 @@
 /**
  * TOTUM LABEL COMPONENT
- * Replica exata do design system
- * 
  * font-mono, uppercase, tracking-widest, text-xs
- * Usado para: números de seção, labels de campo, metadados
  */
 
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
-interface LabelProps extends React.HTMLAttributes<HTMLSpanElement> {
+interface LabelProps extends React.HTMLAttributes<HTMLElement> {
   variant?: "default" | "muted" | "dark" | "light";
-  as?: "span" | "div" | "p";
+  as?: "span" | "div" | "p" | "label";
+  htmlFor?: string;
 }
 
-const Label = React.forwardRef<HTMLSpanElement, LabelProps>(
-  ({ className, variant = "default", as: Component = "span", ...props }, ref) => {
-    return (
-      <Component
-        ref={ref}
-        className={cn(
-          // Base styles - exatamente como no design system
-          "font-mono text-xs font-medium uppercase tracking-widest",
-          // Variantes
-          variant === "default" && "text-stone-500",
-          variant === "muted" && "text-stone-400",
-          variant === "dark" && "text-stone-900",
-          variant === "light" && "text-stone-200",
-          className
-        )}
-        {...props}
-      />
-    );
+const Label = React.forwardRef<HTMLElement, LabelProps>(
+  ({ className, variant = "default", as: Component = "span", htmlFor, ...props }, ref) => {
+    const elementProps: any = { ...props, className: cn(
+      "font-mono text-xs font-medium uppercase tracking-widest",
+      variant === "default" && "text-stone-500",
+      variant === "muted" && "text-stone-400",
+      variant === "dark" && "text-stone-900",
+      variant === "light" && "text-stone-200",
+      className
+    )};
+
+    if (htmlFor && Component === "span") {
+      Component = "label" as any;
+      elementProps.htmlFor = htmlFor;
+    } else if (htmlFor) {
+      elementProps.htmlFor = htmlFor;
+    }
+
+    return <Component ref={ref as any} {...elementProps} />;
   }
 );
 Label.displayName = "Label";
 
-// Section Number - "01 / Section Name"
+// Section Number
 interface SectionNumberProps extends React.HTMLAttributes<HTMLSpanElement> {
   number: string;
   total?: string;
@@ -45,7 +44,7 @@ interface SectionNumberProps extends React.HTMLAttributes<HTMLSpanElement> {
 const SectionNumber = React.forwardRef<HTMLSpanElement, SectionNumberProps>(
   ({ className, number, total = "Section", ...props }, ref) => (
     <Label
-      ref={ref}
+      ref={ref as any}
       variant="muted"
       className={cn("block mb-2", className)}
       {...props}
@@ -56,13 +55,13 @@ const SectionNumber = React.forwardRef<HTMLSpanElement, SectionNumberProps>(
 );
 SectionNumber.displayName = "SectionNumber";
 
-// Meta Label - para datas, categorias
-interface MetaLabelProps extends React.HTMLAttributes<HTMLSpanElement> {
+// Meta Label
+interface MetaLabelProps extends React.HTMLAttributes<HTMLDivElement> {
   date?: string;
   category?: string;
 }
 
-const MetaLabel = React.forwardRef<HTMLSpanElement, MetaLabelProps>(
+const MetaLabel = React.forwardRef<HTMLDivElement, MetaLabelProps>(
   ({ className, date, category, ...props }, ref) => (
     <div
       ref={ref}
@@ -82,3 +81,4 @@ const MetaLabel = React.forwardRef<HTMLSpanElement, MetaLabelProps>(
 MetaLabel.displayName = "MetaLabel";
 
 export { Label, SectionNumber, MetaLabel };
+export type { LabelProps };

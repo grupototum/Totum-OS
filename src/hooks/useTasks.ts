@@ -62,10 +62,30 @@ export const PRIORIDADES: { id: PrioridadeTarefa; label: string; cor: string }[]
   { id: 'urgente', label: 'Urgente', cor: '#EF4444' },
 ];
 
+// Map DB row to Tarefa
+function mapRowToTarefa(t: any): Tarefa {
+  return {
+    id: t.id,
+    titulo: t.titulo || '',
+    descricao: t.descricao || undefined,
+    status: (t.status as StatusTarefa) || 'a_fazer',
+    prioridade: (t.prioridade as PrioridadeTarefa) || 'media',
+    responsavel: t.responsavel || undefined,
+    data_limite: t.deadline || undefined,
+    projeto_id: null,
+    tipo: 'unica',
+    tags: [],
+    subtarefas: [],
+    criado_em: t.created_at || new Date().toISOString(),
+    atualizado_em: t.updated_at || new Date().toISOString(),
+    posicao: 0,
+  };
+}
+
 // Hook principal
 export function useTasks() {
   const [tarefas, setTarefas] = useState<Tarefa[]>([]);
-  const [projetos, setProjetos] = useState<Projeto[]>([]);
+  const [projetos] = useState<Projeto[]>([]);
   const [comentarios, setComentarios] = useState<Comentario[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -73,11 +93,10 @@ export function useTasks() {
   // Buscar todas as tarefas
   const fetchTarefas = useCallback(async () => {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('tarefas')
         .select('*')
-        .order('posicao', { ascending: true })
-        .order('criado_em', { ascending: false });
+        .order('created_at', { ascending: false });
 
       if (error) {
         console.warn('Erro ao buscar tarefas:', error.message);
@@ -85,92 +104,48 @@ export function useTasks() {
         return;
       }
 
-      // Parse JSON fields
-      const parsedData: Tarefa[] = (data || []).map((t: any) => ({
-        ...t,
-        tags: Array.isArray(t.tags) ? t.tags : JSON.parse(t.tags || '[]'),
-        subtarefas: Array.isArray(t.subtarefas) ? t.subtarefas : JSON.parse(t.subtarefas || '[]'),
-      }));
-
-      setTarefas(parsedData);
+      setTarefas((data || []).map(mapRowToTarefa));
     } catch (err: any) {
       console.warn('Erro ao buscar tarefas:', err?.message || err);
       setTarefas([]);
     }
   }, []);
 
-  // Buscar projetos
+  // Buscar projetos (stub - table doesn't exist yet)
   const fetchProjetos = useCallback(async () => {
-    try {
-      const { data, error } = await supabase
-        .from('projetos')
-        .select('*')
-        .order('criado_em', { ascending: false });
-
-      if (error) {
-        console.warn('Erro ao buscar projetos:', error.message);
-        setProjetos([]);
-        return;
-      }
-      setProjetos(data || []);
-    } catch (err: any) {
-      console.warn('Erro ao buscar projetos:', err?.message || err);
-      setProjetos([]);
-    }
+    // projetos table not yet created
   }, []);
 
-  // Buscar comentários de uma tarefa
-  const fetchComentarios = useCallback(async (tarefaId: string) => {
-    try {
-      const { data, error } = await supabase
-        .from('comentarios_tarefa')
-        .select('*')
-        .eq('tarefa_id', tarefaId)
-        .order('criado_em', { ascending: true });
-
-      if (error) throw error;
-      setComentarios(data || []);
-      return data || [];
-    } catch (err: any) {
-      console.error('Erro ao buscar comentários:', err);
-      return [];
-    }
+  // Buscar comentários de uma tarefa (stub)
+  const fetchComentarios = useCallback(async (_tarefaId: string) => {
+    setComentarios([]);
+    return [] as Comentario[];
   }, []);
 
   // Criar tarefa
   const criarTarefa = async (tarefa: Partial<Tarefa>): Promise<Tarefa | null> => {
     try {
-      // Get max position for the status column
-      const maxPos = tarefas
-        .filter(t => t.status === (tarefa.status || 'a_fazer'))
-        .reduce((max, t) => Math.max(max, t.posicao || 0), 0);
-
-      const novaTarefa = {
-        ...tarefa,
-        posicao: maxPos + 1,
-        tags: tarefa.tags || [],
-        subtarefas: tarefa.subtarefas || [],
-        criado_em: new Date().toISOString(),
-        atualizado_em: new Date().toISOString(),
+      const insertData = {
+        titulo: tarefa.titulo || 'Nova Tarefa',
+        descricao: tarefa.descricao || null,
+        status: tarefa.status || 'a_fazer',
+        prioridade: tarefa.prioridade || 'media',
+        responsavel: tarefa.responsavel || null,
+        deadline: tarefa.data_limite || null,
       };
 
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('tarefas')
-        .insert([novaTarefa])
+        .insert([insertData])
         .select()
         .single();
 
       if (error) throw error;
 
-      const parsedTarefa: Tarefa = {
-        ...data,
-        tags: Array.isArray(data.tags) ? data.tags : JSON.parse(data.tags || '[]'),
-        subtarefas: Array.isArray(data.subtarefas) ? data.subtarefas : JSON.parse(data.subtarefas || '[]'),
-      };
-
-      setTarefas(prev => [...prev, parsedTarefa]);
-      toast({ title: '✅ Tarefa criada', description: parsedTarefa.titulo });
-      return parsedTarefa;
+      const novaTarefa = mapRowToTarefa(data);
+      setTarefas(prev => [novaTarefa, ...prev]);
+      toast({ title: '✅ Tarefa criada', description: novaTarefa.titulo });
+      return novaTarefa;
     } catch (err: any) {
       console.error('Erro ao criar tarefa:', err);
       toast({ title: '❌ Erro', description: err.message, variant: 'destructive' });
@@ -181,20 +156,25 @@ export function useTasks() {
   // Atualizar tarefa
   const atualizarTarefa = async (id: string, updates: Partial<Tarefa>): Promise<boolean> => {
     try {
-      const updatesComData = {
-        ...updates,
-        atualizado_em: new Date().toISOString(),
+      const updateData: Record<string, any> = {
+        updated_at: new Date().toISOString(),
       };
+      if (updates.titulo !== undefined) updateData.titulo = updates.titulo;
+      if (updates.descricao !== undefined) updateData.descricao = updates.descricao;
+      if (updates.status !== undefined) updateData.status = updates.status;
+      if (updates.prioridade !== undefined) updateData.prioridade = updates.prioridade;
+      if (updates.responsavel !== undefined) updateData.responsavel = updates.responsavel;
+      if (updates.data_limite !== undefined) updateData.deadline = updates.data_limite;
 
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('tarefas')
-        .update(updatesComData)
+        .update(updateData)
         .eq('id', id);
 
       if (error) throw error;
 
       setTarefas(prev => prev.map(t => 
-        t.id === id ? { ...t, ...updatesComData } as Tarefa : t
+        t.id === id ? { ...t, ...updates, atualizado_em: updateData.updated_at } as Tarefa : t
       ));
       
       return true;
@@ -208,7 +188,7 @@ export function useTasks() {
   // Deletar tarefa
   const deletarTarefa = async (id: string): Promise<boolean> => {
     try {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('tarefas')
         .delete()
         .eq('id', id);
@@ -226,37 +206,21 @@ export function useTasks() {
   };
 
   // Mover tarefa (drag & drop)
-  const moverTarefa = async (tarefaId: string, novoStatus: StatusTarefa, novaPosicao: number): Promise<boolean> => {
+  const moverTarefa = async (tarefaId: string, novoStatus: StatusTarefa, _novaPosicao: number): Promise<boolean> => {
     try {
-      const tarefa = tarefas.find(t => t.id === tarefaId);
-      if (!tarefa) return false;
-
-      // Update positions of other tasks in the target column
-      const tarefasColuna = tarefas.filter(t => t.status === novoStatus && t.id !== tarefaId);
-      
-      // Reorder tasks in target column
-      const updates = tarefasColuna.map((t, idx) => {
-        const pos = idx >= novaPosicao ? idx + 1 : idx;
-        return { id: t.id, posicao: pos };
-      });
-
-      // Update all positions in batch
-      for (const update of updates) {
-        await supabase.from('tarefas').update({ posicao: update.posicao }).eq('id', update.id);
-      }
-
-      // Update the moved task
-      await supabase
+      const { error } = await (supabase as any)
         .from('tarefas')
         .update({ 
-          status: novoStatus, 
-          posicao: novaPosicao,
-          atualizado_em: new Date().toISOString()
+          status: novoStatus,
+          updated_at: new Date().toISOString()
         })
         .eq('id', tarefaId);
 
-      // Refresh data
-      await fetchTarefas();
+      if (error) throw error;
+
+      setTarefas(prev => prev.map(t =>
+        t.id === tarefaId ? { ...t, status: novoStatus } : t
+      ));
       return true;
     } catch (err: any) {
       console.error('Erro ao mover tarefa:', err);
@@ -264,163 +228,37 @@ export function useTasks() {
     }
   };
 
-  // Criar projeto
-  const criarProjeto = async (projeto: Partial<Projeto>): Promise<Projeto | null> => {
-    try {
-      const { data, error } = await supabase
-        .from('projetos')
-        .insert([{ ...projeto, criado_em: new Date().toISOString() }])
-        .select()
-        .single();
+  // Stubs for features not yet backed by DB tables
+  const criarProjeto = async (_projeto: Partial<Projeto>): Promise<Projeto | null> => null;
+  const atualizarProjeto = async (_id: string, _updates: Partial<Projeto>): Promise<boolean> => false;
+  const deletarProjeto = async (_id: string): Promise<boolean> => false;
 
-      if (error) throw error;
+  const adicionarComentario = async (_tarefaId: string, _conteudo: string, _autor: string): Promise<Comentario | null> => null;
 
-      setProjetos(prev => [data, ...prev]);
-      toast({ title: '📁 Projeto criado', description: data.nome });
-      return data;
-    } catch (err: any) {
-      console.error('Erro ao criar projeto:', err);
-      toast({ title: '❌ Erro', description: err.message, variant: 'destructive' });
-      return null;
-    }
-  };
-
-  // Atualizar projeto
-  const atualizarProjeto = async (id: string, updates: Partial<Projeto>): Promise<boolean> => {
-    try {
-      const { error } = await supabase
-        .from('projetos')
-        .update(updates)
-        .eq('id', id);
-
-      if (error) throw error;
-
-      setProjetos(prev => prev.map(p => p.id === id ? { ...p, ...updates } : p));
-      return true;
-    } catch (err: any) {
-      console.error('Erro ao atualizar projeto:', err);
-      return false;
-    }
-  };
-
-  // Deletar projeto
-  const deletarProjeto = async (id: string): Promise<boolean> => {
-    try {
-      // First, unlink all tasks from this project
-      await supabase
-        .from('tarefas')
-        .update({ projeto_id: null })
-        .eq('projeto_id', id);
-
-      const { error } = await supabase
-        .from('projetos')
-        .delete()
-        .eq('id', id);
-
-      if (error) throw error;
-
-      setProjetos(prev => prev.filter(p => p.id !== id));
-      setTarefas(prev => prev.map(t => t.projeto_id === id ? { ...t, projeto_id: null } : t));
-      toast({ title: '🗑️ Projeto excluído' });
-      return true;
-    } catch (err: any) {
-      console.error('Erro ao deletar projeto:', err);
-      toast({ title: '❌ Erro', description: err.message, variant: 'destructive' });
-      return false;
-    }
-  };
-
-  // Adicionar comentário
-  const adicionarComentario = async (tarefaId: string, conteudo: string, autor: string): Promise<Comentario | null> => {
-    try {
-      const { data, error } = await supabase
-        .from('comentarios_tarefa')
-        .insert([{ tarefa_id: tarefaId, conteudo, autor, criado_em: new Date().toISOString() }])
-        .select()
-        .single();
-
-      if (error) throw error;
-
-      setComentarios(prev => [...prev, data]);
-      return data;
-    } catch (err: any) {
-      console.error('Erro ao adicionar comentário:', err);
-      return null;
-    }
-  };
-
-  // Toggle subtarefa
-  const toggleSubtarefa = async (tarefaId: string, subtarefaId: string): Promise<boolean> => {
-    try {
-      const tarefa = tarefas.find(t => t.id === tarefaId);
-      if (!tarefa) return false;
-
-      const novasSubtarefas = tarefa.subtarefas.map(st =>
-        st.id === subtarefaId ? { ...st, concluida: !st.concluida } : st
-      );
-
-      return await atualizarTarefa(tarefaId, { subtarefas: novasSubtarefas });
-    } catch (err) {
-      return false;
-    }
-  };
-
-  // Adicionar subtarefa
-  const adicionarSubtarefa = async (tarefaId: string, titulo: string): Promise<boolean> => {
-    try {
-      const tarefa = tarefas.find(t => t.id === tarefaId);
-      if (!tarefa) return false;
-
-      const novaSubtarefa: Subtarefa = {
-        id: crypto.randomUUID(),
-        titulo,
-        concluida: false,
-      };
-
-      const novasSubtarefas = [...tarefa.subtarefas, novaSubtarefa];
-      return await atualizarTarefa(tarefaId, { subtarefas: novasSubtarefas });
-    } catch (err) {
-      return false;
-    }
-  };
-
-  // Remover subtarefa
-  const removerSubtarefa = async (tarefaId: string, subtarefaId: string): Promise<boolean> => {
-    try {
-      const tarefa = tarefas.find(t => t.id === tarefaId);
-      if (!tarefa) return false;
-
-      const novasSubtarefas = tarefa.subtarefas.filter(st => st.id !== subtarefaId);
-      return await atualizarTarefa(tarefaId, { subtarefas: novasSubtarefas });
-    } catch (err) {
-      return false;
-    }
-  };
+  const toggleSubtarefa = async (_tarefaId: string, _subtarefaId: string): Promise<boolean> => false;
+  const adicionarSubtarefa = async (_tarefaId: string, _titulo: string): Promise<boolean> => false;
+  const removerSubtarefa = async (_tarefaId: string, _subtarefaId: string): Promise<boolean> => false;
 
   // Load initial data
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
-      await Promise.all([fetchTarefas(), fetchProjetos()]);
+      await fetchTarefas();
       setLoading(false);
     };
     loadData();
 
-    // Real-time subscription
     const channel = supabase
       .channel('tarefas-changes')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'tarefas' }, () => {
         fetchTarefas();
-      })
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'projetos' }, () => {
-        fetchProjetos();
       })
       .subscribe();
 
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [fetchTarefas, fetchProjetos]);
+  }, [fetchTarefas]);
 
   return {
     tarefas,

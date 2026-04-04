@@ -34,6 +34,13 @@ export interface AgentMetrics {
   };
 }
 
+function inferType(category: string | null): 'conversational' | 'processing' {
+  const conversationalCategories = ['atendimento', 'chat', 'sdr', 'comercial'];
+  return conversationalCategories.some(c => (category || '').toLowerCase().includes(c))
+    ? 'conversational'
+    : 'processing';
+}
+
 export function useAgents() {
   const [agents, setAgents] = useState<Agent[]>([]);
   const [loading, setLoading] = useState(true);
@@ -53,14 +60,28 @@ export function useAgents() {
       const { data, error: supabaseError } = await supabase
         .from('agents')
         .select('*')
-        .order('hierarchy_level', { ascending: true });
+        .order('name', { ascending: true });
 
       if (supabaseError) throw supabaseError;
 
       const typedAgents: Agent[] = (data || []).map(agent => ({
-        ...agent,
-        type: agent.type as 'conversational' | 'processing',
-        status: agent.status as 'online' | 'offline' | 'idle' | 'maintenance',
+        id: agent.id,
+        name: agent.name,
+        role: agent.role,
+        status: (agent.status as Agent['status']) || 'offline',
+        type: inferType(agent.category),
+        category: agent.category || 'geral',
+        emoji: agent.emoji || '🤖',
+        created_at: agent.created_at || new Date().toISOString(),
+        updated_at: agent.created_at || new Date().toISOString(),
+        tasks_completed: agent.tasks || 0,
+        success_rate: agent.success_rate || 0,
+        daily_tasks: agent.daily_tasks || 0,
+        credits_used: 0,
+        effectiveness_score: agent.success_rate || 0,
+        parent_id: undefined,
+        hierarchy_level: 0,
+        is_orchestrator: false,
       }));
 
       setAgents(typedAgents);
@@ -96,9 +117,19 @@ export function useAgents() {
 
   const createAgent = useCallback(async (agentData: Partial<Agent>) => {
     try {
+      const insertData = {
+        name: agentData.name || 'Novo Agente',
+        role: agentData.role || 'Assistente',
+        status: agentData.status || 'offline',
+        category: agentData.category || 'geral',
+        emoji: agentData.emoji || '🤖',
+        tasks: agentData.tasks_completed || 0,
+        success_rate: agentData.success_rate || 0,
+        daily_tasks: agentData.daily_tasks || 0,
+      };
       const { data, error: supabaseError } = await supabase
         .from('agents')
-        .insert([agentData])
+        .insert([insertData])
         .select()
         .single();
 
@@ -112,9 +143,18 @@ export function useAgents() {
 
   const updateAgent = useCallback(async (id: string, updates: Partial<Agent>) => {
     try {
+      const updateData: Record<string, any> = {};
+      if (updates.name) updateData.name = updates.name;
+      if (updates.role) updateData.role = updates.role;
+      if (updates.status) updateData.status = updates.status;
+      if (updates.category) updateData.category = updates.category;
+      if (updates.emoji) updateData.emoji = updates.emoji;
+      if (updates.success_rate !== undefined) updateData.success_rate = updates.success_rate;
+      if (updates.daily_tasks !== undefined) updateData.daily_tasks = updates.daily_tasks;
+
       const { error: supabaseError } = await supabase
         .from('agents')
-        .update(updates)
+        .update(updateData)
         .eq('id', id);
 
       if (supabaseError) throw supabaseError;

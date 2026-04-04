@@ -1,11 +1,16 @@
 import { useState, useEffect, useRef } from 'react';
-import { Tarefa, Comentario } from '@/hooks/useTasks';
+import { Comentario } from '@/hooks/useTasks';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Icon } from '@iconify/react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { motion, AnimatePresence } from 'framer-motion';
+
+interface Tarefa {
+  id: string;
+  [key: string]: any;
+}
 
 interface TaskComentariosProps {
   tarefa: Tarefa;
@@ -17,64 +22,15 @@ export function TaskComentarios({ tarefa, onAddComentario, currentUser = 'Usuár
   const [comentarios, setComentarios] = useState<Comentario[]>([]);
   const [novoComentario, setNovoComentario] = useState('');
   const [enviando, setEnviando] = useState(false);
-  const [carregando, setCarregando] = useState(true);
+  const [carregando, setCarregando] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Buscar comentários
+  // No DB table yet - just show empty state
   useEffect(() => {
-    const fetchComentarios = async () => {
-      setCarregando(true);
-      try {
-        const { supabase } = await import('@/integrations/supabase/client');
-        const { data, error } = await supabase
-          .from('comentarios_tarefa')
-          .select('*')
-          .eq('tarefa_id', tarefa.id)
-          .order('criado_em', { ascending: true });
-
-        if (error) throw error;
-        setComentarios(data || []);
-      } catch (err) {
-        console.error('Erro ao buscar comentários:', err);
-      } finally {
-        setCarregando(false);
-      }
-    };
-
-    fetchComentarios();
-
-    // Subscribe to real-time updates
-    const setupSubscription = async () => {
-      const { supabase } = await import('@/integrations/supabase/client');
-      const channel = supabase
-        .channel(`comentarios-${tarefa.id}`)
-        .on('postgres_changes', 
-          { event: '*', schema: 'public', table: 'comentarios_tarefa', filter: `tarefa_id=eq.${tarefa.id}` },
-          (payload) => {
-            if (payload.eventType === 'INSERT') {
-              setComentarios(prev => [...prev, payload.new as Comentario]);
-            }
-          }
-        )
-        .subscribe();
-
-      return channel;
-    };
-
-    const channelPromise = setupSubscription();
-
-    return () => {
-      channelPromise.then(channel => {
-        if (channel) {
-          import('@/integrations/supabase/client').then(({ supabase }) => {
-            supabase.removeChannel(channel);
-          });
-        }
-      });
-    };
+    setCarregando(false);
+    setComentarios([]);
   }, [tarefa.id]);
 
-  // Scroll to bottom when new comments arrive
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -83,7 +39,6 @@ export function TaskComentarios({ tarefa, onAddComentario, currentUser = 'Usuár
 
   const handleSubmit = async () => {
     if (!novoComentario.trim() || !onAddComentario) return;
-    
     setEnviando(true);
     await onAddComentario(tarefa.id, novoComentario.trim());
     setEnviando(false);
@@ -105,11 +60,7 @@ export function TaskComentarios({ tarefa, onAddComentario, currentUser = 'Usuár
 
   return (
     <div className="flex flex-col h-full">
-      {/* Lista de comentários */}
-      <div 
-        ref={scrollRef}
-        className="flex-1 overflow-y-auto p-6 space-y-4"
-      >
+      <div ref={scrollRef} className="flex-1 overflow-y-auto p-6 space-y-4">
         {carregando ? (
           <div className="flex items-center justify-center h-32">
             <Icon icon="solar:refresh-circle-bold" className="w-6 h-6 text-stone-400 animate-spin" />
@@ -130,28 +81,17 @@ export function TaskComentarios({ tarefa, onAddComentario, currentUser = 'Usuár
                 transition={{ delay: index * 0.05 }}
                 className="flex gap-3"
               >
-                {/* Avatar */}
-                <div className={`
-                  w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-semibold shrink-0
-                  ${getAvatarColor(comentario.autor)}
-                `}>
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-semibold shrink-0 ${getAvatarColor(comentario.autor)}`}>
                   {getInitials(comentario.autor)}
                 </div>
-
-                {/* Content */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="text-sm font-medium text-stone-900">
-                      {comentario.autor}
-                    </span>
+                    <span className="text-sm font-medium text-stone-900">{comentario.autor}</span>
                     <span className="text-xs text-stone-400">
                       {format(new Date(comentario.criado_em), "dd MMM 'às' HH:mm", { locale: ptBR })}
                     </span>
                   </div>
-                  
-                  <p className="text-sm text-stone-700 whitespace-pre-wrap">
-                    {comentario.conteudo}
-                  </p>
+                  <p className="text-sm text-stone-700 whitespace-pre-wrap">{comentario.conteudo}</p>
                 </div>
               </motion.div>
             ))}
@@ -159,7 +99,6 @@ export function TaskComentarios({ tarefa, onAddComentario, currentUser = 'Usuár
         )}
       </div>
 
-      {/* Input de novo comentário */}
       <div className="border-t border-stone-300 p-4 bg-white/50">
         <div className="space-y-3">
           <Textarea
@@ -169,17 +108,11 @@ export function TaskComentarios({ tarefa, onAddComentario, currentUser = 'Usuár
             rows={3}
             className="bg-white border-stone-300 resize-none"
             onKeyDown={(e) => {
-              if (e.key === 'Enter' && e.metaKey) {
-                handleSubmit();
-              }
+              if (e.key === 'Enter' && e.metaKey) handleSubmit();
             }}
           />
-          
           <div className="flex justify-between items-center">
-            <span className="text-xs text-stone-400">
-              Cmd + Enter para enviar
-            </span>
-            
+            <span className="text-xs text-stone-400">Cmd + Enter para enviar</span>
             <Button
               onClick={handleSubmit}
               disabled={!novoComentario.trim() || enviando || !onAddComentario}
