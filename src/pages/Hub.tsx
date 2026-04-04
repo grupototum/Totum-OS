@@ -270,10 +270,10 @@ export default function Hub() {
                               Novo
                             </span>
                           )}
-                          {agent.status === 'ativo' && agent.type !== 'chat' && (
+                          {'type' in agent && agent.status === 'ativo' && agent.type !== 'chat' && (
                             <span className="shrink-0 w-1.5 h-1.5 rounded-full bg-amber-400" title="Em breve" />
                           )}
-                          {agent.type === 'chat' && (
+                          {'type' in agent && agent.type === 'chat' && (
                             <span className="shrink-0 w-1.5 h-1.5 rounded-full bg-emerald-500" />
                           )}
                         </div>
