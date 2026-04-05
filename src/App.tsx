@@ -39,6 +39,9 @@ import ClientsCenter from "./pages/ClientsCenter";
 import AgentProfile from "./pages/AgentProfile";
 import EditClient from "./pages/EditClient";
 import AdaPage from "./pages/ada";
+// Alexandria - Wiki e Chat
+import WikiAlexandria from "./pages/WikiAlexandria";
+import GilesChat from "./pages/GilesChat";
 // Central de Agentes - Novas páginas
 import PainelAgentes from "./pages/PainelAgentes";
 import HubAgentes from "./pages/HubAgentes";
@@ -102,6 +105,9 @@ const App = () => (
             <Route path="/agents/:agentId" element={<AgentDetail />} />
             {/* Redirecionamentos para compatibilidade */}
             <Route path="/agents-dashboard" element={<Navigate to="/agents" replace />} />
+            {/* Alexandria - Wiki e Chat com GILES */}
+            <Route path="/wiki" element={<WikiAlexandria />} />
+            <Route path="/giles" element={<GilesChat />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
