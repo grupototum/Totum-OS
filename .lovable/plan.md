@@ -1,29 +1,49 @@
 
 
-## Plano: Tela de Cadastro (Sign Up) no estilo Totum
+## Plan: Sync Project with GitHub Commit d6a3350 + Fix Build Errors
 
-### O que será feito
-Criar uma página `/signup` com o mesmo visual da tela de Login (background com grid lines, radial glow laranja, card glassmorphism, animações framer-motion), contendo campos de nome, email, senha e confirmação de senha.
+This commit adds agent task management, Gantt chart, and updates the task system. There are also pre-existing build errors to fix.
 
-### Alterações
+### What Changes
 
-**1. Adicionar `signUp` ao AuthContext** (`src/contexts/AuthContext.tsx`)
-- Expor uma função `signUp(email, password)` que chama `supabase.auth.signUp()` com `emailRedirectTo: window.location.origin`.
+**From the GitHub commit (8 files, +2719 lines):**
+1. New database migration for agent execution logs
+2. New `AgentTaskManager` component for managing agent-scheduled tasks
+3. New `GanttChart` component for timeline visualization
+4. New `useAgentTasks` hook for agent task scheduling
+5. Updated `useTasks` hook with new fields (Gantt dates, progress, dependencies, agent support)
+6. Updated `ActionPlan` page with Gantt and Agent tabs
+7. Updated component index exports
 
-**2. Criar página `src/pages/SignUp.tsx`**
-- Mesmo layout visual do Login (grid lines, radial glow, logo Totum, motion container).
-- Campos: Nome completo, Email, Senha, Confirmar Senha (com toggle de visibilidade).
-- Validação: campos obrigatórios, senhas coincidem, senha mínima 6 caracteres.
-- Ao cadastrar com sucesso: toast de sucesso e redirecionar para `/hub` (já que auto-confirm está ativo).
-- Botão "Entrar com Google" (reaproveitando o mesmo fluxo OAuth).
-- Link "Já tem conta? Entrar" apontando para `/login`.
+**Build error fixes (4 files):**
+1. `AgentChat.tsx` line 113 - filter out `'system'` role comparison (change to filter by known roles instead)
+2. `AgentChatLayout.tsx` lines 176, 195, 199 - fix broken arrow functions `(c) =` → `(c) =>`
+3. `TarefasWidget.tsx` - add local `filtros`/`setFiltros` state since `useTasks` doesn't expose them
+4. `QuadroTarefas.tsx` line 476 - fix type mismatch: `adicionarSubtarefa` returns `Promise<Subtarefa>` but `TaskModal` expects `Promise<boolean>`. Wrap the call.
 
-**3. Adicionar link na tela de Login** (`src/pages/Login.tsx`)
-- Trocar o texto "Acesso restrito" por um link "Não tem conta? Cadastre-se" apontando para `/signup`.
+### Technical Steps
 
-**4. Registrar rota no App** (`src/App.tsx`)
-- Adicionar `<Route path="/signup" element={<SignUp />} />`.
+**Step 1: Database Migration**
+- Create migration for `logs_execucao_agente` table with RLS and realtime
+- Add `proxima_execucao`, `ultima_execucao`, `ultimo_resultado` columns to `tarefas`
 
-### Observação
-- A tela de Login também precisa de correção na estrutura HTML (há tags `</div>` mal posicionadas no código atual que causam o botão Google e o divider fora do card). Isso será corrigido junto.
+**Step 2: Create New Files**
+- `src/hooks/useAgentTasks.ts` - Agent task scheduling hook (from GitHub, adapted for Lovable's Supabase types)
+- `src/components/agents/AgentTaskManager.tsx` - Agent task management UI
+- `src/components/gantt/GanttChart.tsx` - Gantt chart + MiniGantt components
+- `src/components/gantt/index.ts` - Export barrel
+
+**Step 3: Update Existing Files**
+- `src/hooks/useTasks.ts` - Add new fields: `data_inicio`, `data_fim`, `progresso`, `dependencias`, `agente_id`, `recorrencia`, `horario_execucao`, `params`, `milestone_id`, `departamento`, `RESPONSAVEIS` constant, `filtros`/`setFiltros` state
+- `src/components/agents/index.ts` - Add `AgentTaskManager` and `useAgentTasks` exports
+- `src/pages/ActionPlan.tsx` - Add Gantt and Agent tabs
+
+**Step 4: Fix Build Errors**
+- `AgentChat.tsx` - Change role filter from `!== 'system'` to `=== 'user' || === 'agent'`
+- `AgentChatLayout.tsx` - Fix 3 broken arrow functions (missing `>`)
+- `TarefasWidget.tsx` - Add local filter state
+- `QuadroTarefas.tsx` - Wrap `adicionarSubtarefa` to return `Promise<boolean>`
+- `TaskModal.tsx` - Ensure `onAddSubtarefa` type matches
+
+**Dependencies:** May need `date-fns` (likely already installed). No new packages expected.
 
