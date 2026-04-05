@@ -312,68 +312,94 @@ export default function Implantação() {
           </motion.div>
         )}
 
-        {/* All Phases */}
-        <motion.div {...anim(3)} className="space-y-4">
-          <h2 className="text-lg font-semibold text-stone-900">Todas as Fases</h2>
-          
-          <div className="grid gap-3">
-            {phases.map((phase, index) => (
-              <motion.div
-                key={phase.num}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.1 }}
-              >
-                <Card className="border-stone-300 bg-white/80 hover:bg-white transition-colors">
-                  <CardContent className="p-4">
-                    <div className="flex items-center gap-4">
-                      <div className="text-2xl">{PHASE_ICONS[phase.num] || "📋"}</div>
-                      
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between mb-2">
-                          <h3 className="font-medium text-stone-900">
-                            Fase {phase.num}: {phase.name}
-                          </h3>
-                          
-                          <div className="flex items-center gap-3">
-                            <Badge 
-                              variant="outline"
-                              className={`
-                                ${phase.progress === 100 
-                                  ? 'bg-emerald-100 text-emerald-700 border-emerald-200' 
-                                  : phase.progress > 0 
-                                    ? 'bg-blue-100 text-blue-700 border-blue-200'
-                                    : 'bg-stone-100 text-stone-600 border-stone-200'}
-                              `}
-                            >
-                              {phase.progress === 100 ? 'Concluída' : phase.progress > 0 ? 'Em andamento' : 'Pendente'}
-                            </Badge>
-                            
-                            <span className="text-sm font-medium text-stone-900 w-12 text-right">
-                              {phase.progress}%
-                            </span>
-                          </div>
-                        </div>
-                        
+        {/* Tabs: Fases / Gantt / Agentes */}
+        <motion.div {...anim(3)}>
+          <Tabs defaultValue="fases" className="space-y-4">
+            <TabsList className="bg-card/50 border border-border/40">
+              <TabsTrigger value="fases">📋 Fases</TabsTrigger>
+              <TabsTrigger value="gantt">📊 Gantt</TabsTrigger>
+              <TabsTrigger value="agentes">🤖 Agentes</TabsTrigger>
+            </TabsList>
+
+            {/* Tab: Fases */}
+            <TabsContent value="fases" className="space-y-4">
+              <h2 className="text-lg font-semibold text-stone-900">Todas as Fases</h2>
+              <div className="grid gap-3">
+                {phases.map((phase, index) => (
+                  <motion.div
+                    key={phase.num}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                  >
+                    <Card className="border-stone-300 bg-white/80 hover:bg-white transition-colors">
+                      <CardContent className="p-4">
                         <div className="flex items-center gap-4">
+                          <div className="text-2xl">{PHASE_ICONS[phase.num] || "📋"}</div>
                           <div className="flex-1">
-                            <Progress 
-                              value={phase.progress} 
-                              className="h-2"
-                            />
+                            <div className="flex items-center justify-between mb-2">
+                              <h3 className="font-medium text-stone-900">
+                                Fase {phase.num}: {phase.name}
+                              </h3>
+                              <div className="flex items-center gap-3">
+                                <Badge 
+                                  variant="outline"
+                                  className={`
+                                    ${phase.progress === 100 
+                                      ? 'bg-emerald-100 text-emerald-700 border-emerald-200' 
+                                      : phase.progress > 0 
+                                        ? 'bg-blue-100 text-blue-700 border-blue-200'
+                                        : 'bg-stone-100 text-stone-600 border-stone-200'}
+                                  `}
+                                >
+                                  {phase.progress === 100 ? 'Concluída' : phase.progress > 0 ? 'Em andamento' : 'Pendente'}
+                                </Badge>
+                                <span className="text-sm font-medium text-stone-900 w-12 text-right">
+                                  {phase.progress}%
+                                </span>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-4">
+                              <div className="flex-1">
+                                <Progress value={phase.progress} className="h-2" />
+                              </div>
+                              <p className="text-xs text-stone-500">
+                                {phase.completedCount}/{phase.taskCount} tarefas
+                              </p>
+                            </div>
                           </div>
-                          
-                          <p className="text-xs text-stone-500">
-                            {phase.completedCount}/{phase.taskCount} tarefas
-                          </p>
                         </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                ))}
+              </div>
+            </TabsContent>
+
+            {/* Tab: Gantt */}
+            <TabsContent value="gantt">
+              <GanttChart
+                tasks={tasks.map(t => ({
+                  id: t.id,
+                  title: t.title,
+                  dayStart: t.day_start,
+                  dayEnd: t.day_end,
+                  progress: t.progress,
+                  status: t.status === 'done' ? 'completed' : t.status === 'in_progress' ? 'in-progress' : 'pending',
+                  responsible: t.responsible,
+                  phase: t.phase,
+                }))}
+                totalDays={30}
+                currentDay={Math.min(30, Math.max(1, Math.ceil((Date.now() - new Date(tasks[0]?.id ? Date.now() : Date.now()).getTime()) / 86400000) + 1))}
+                title="Cronograma de Implantação"
+              />
+            </TabsContent>
+
+            {/* Tab: Agentes */}
+            <TabsContent value="agentes">
+              <AgentTaskManager agenteName="Sistema" />
+            </TabsContent>
+          </Tabs>
         </motion.div>
 
         {/* Velocity */}
@@ -389,7 +415,6 @@ export default function Implantação() {
                   <p className="text-xs text-stone-500">Tarefas concluídas por dia</p>
                 </div>
               </div>
-              
               <p className="text-2xl font-semibold text-stone-900">{velocity}</p>
             </CardContent>
           </Card>
