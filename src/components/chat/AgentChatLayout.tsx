@@ -173,7 +173,7 @@ export default function AgentChatLayout({ agent }: { agent: AgentConfig }) {
       (chunk) => {
         fullContent += chunk;
         setConversations((prev) =>
-          prev.map((c) =
+          prev.map((c) =>
             c.id === activeConvoId
               ? {
                   ...c,
