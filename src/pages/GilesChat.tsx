@@ -7,7 +7,8 @@ import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
-import { searchGiles, askGiles, GilesChunk, logQuery } from '@/services/giles';
+import { searchGiles, GilesChunk, logQuery } from '@/services/giles';
+import { askGeminiAsGiles, isGeminiConfigured, GEMINI_MODELS, getModelInfo } from '@/services/gemini';
 
 interface Message {
   id: string;
@@ -36,6 +37,8 @@ export default function GilesChat() {
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
+  const [selectedModel, setSelectedModel] = useState<string>(GEMINI_MODELS.FLASH);
+  const [geminiError, setGeminiError] = useState<string>('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Mock de sessões anteriores (futuramente virá do banco)
@@ -68,11 +71,38 @@ export default function GilesChat() {
     setIsLoading(true);
 
     try {
+      // Verificar se Gemini está configurado
+      if (!isGeminiConfigured()) {
+        setGeminiError('API key do Gemini não configurada. Adicione VITE_GEMINI_API_KEY no arquivo .env');
+        setIsLoading(false);
+        return;
+      }
+
       // Buscar contexto relevante na Alexandria
       const contextResults = await searchGiles(userMessage.content, { limit: 5 });
       
-      // Gerar resposta (simulada até ter IA)
-      const response = await askGiles(userMessage.content, contextResults);
+      // Preparar histórico da conversa
+      const conversationHistory = messages
+        .filter(m => m.id !== 'welcome')
+        .map(m => ({
+          role: m.role,
+          text: m.content
+        }));
+      
+      // Gerar resposta com Gemini
+      const geminiResponse = await askGeminiAsGiles(
+        userMessage.content,
+        contextResults.map(r => ({ 
+          content: r.content, 
+          dominio: r.dominio, 
+          categoria: r.categoria 
+        })),
+        conversationHistory
+      );
+      
+      if (geminiResponse.error) {
+        setGeminiError(geminiResponse.error);
+      }
       
       // Logar a consulta
       await logQuery(userMessage.content, 'user', contextResults);
@@ -80,7 +110,7 @@ export default function GilesChat() {
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: response,
+        content: geminiResponse.text || 'Desculpe, não consegui processar sua pergunta no momento.',
         timestamp: new Date(),
         context: contextResults
       };
@@ -216,9 +246,20 @@ export default function GilesChat() {
             </div>
 
             <div className="flex items-center gap-2">
+              {/* Seletor de Modelo */}
+              <select
+                value={selectedModel}
+                onChange={(e) => setSelectedModel(e.target.value)}
+                className="bg-slate-800 text-slate-300 text-xs px-3 py-1.5 rounded-lg border border-slate-700 focus:border-amber-500 focus:outline-none"
+              >
+                <option value={GEMINI_MODELS.FLASH_LITE}>⚡ Flash Lite</option>
+                <option value={GEMINI_MODELS.FLASH}>⚡ Flash</option>
+                <option value={GEMINI_MODELS.PRO}>🧠 Pro</option>
+              </select>
+
               <Badge variant="secondary" className="bg-slate-800 text-slate-300">
                 <Sparkles className="w-3 h-3 mr-1" />
-                Modo Consulta
+                Gemini
               </Badge>
             </div>
           </div>
@@ -226,6 +267,18 @@ export default function GilesChat() {
           {/* Messages */}
           <ScrollArea className="flex-1 p-6">
             <div className="max-w-3xl mx-auto space-y-6">
+              {/* Alerta de configuração */}
+              {geminiError && (
+                <div className="bg-red-900/50 border border-red-700 rounded-lg p-4 mb-4">
+                  <p className="text-red-300 text-sm">
+                    ⚠️ <strong>Configuração necessária:</strong> {geminiError}
+                  </p>
+                  <p className="text-red-400 text-xs mt-2">
+                    Obtenha sua API key em: <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" className="underline">Google AI Studio</a>
+                  </p>
+                </div>
+              )}
+              
               {messages.map((message) => (
                 <div
                   key={message.id}
