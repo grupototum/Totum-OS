@@ -192,11 +192,11 @@ export default function AgentChatLayout({ agent }: { agent: AgentConfig }) {
 
     // Atualiza mensagem final
     setConversations((prev) =>
-      prev.map((c) =
+      prev.map((c) =>
         c.id === activeConvoId
           ? {
               ...c,
-              messages: c.messages.map((m) =
+              messages: c.messages.map((m) =>
                 m.id === assistantMsgId
                   ? { 
                       ...m, 

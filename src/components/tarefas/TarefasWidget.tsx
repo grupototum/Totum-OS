@@ -168,8 +168,6 @@ export function TarefasWidget() {
   const { 
     tarefas, 
     loading, 
-    filtros, 
-    setFiltros,
     criarTarefa, 
     atualizarTarefa, 
     deletarTarefa,
