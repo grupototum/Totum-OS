@@ -1,0 +1,162 @@
+ROADMAP TOTUM - FASES SIMPLIFICADAS
+=====================================
+
+PRINCIPIO: Frontend Primeiro → Backend depois → Integrações por último
+
+FASE 1: FRONTEND (4 semanas)
+----------------------------
+Semana 1: Fundação Visual
+- Setup e rotas
+- Componentes de chat
+- Hub atualizado
+
+Semana 2: 7 Páginas de Agentes
+- Kimi (protótipo)
+- Radar de Insights
+- Gestor de Tráfego
+- Planejamento Social
+- Atendente Totum
+- SDR Comercial
+- Radar de Anúncios
+
+Semana 3: Dashboard Core
+- Layout e widgets
+- Overview Cards
+- Admin Panel
+
+Semana 4: Features Avançadas
+- Tasks Board (Kanban)
+- Content Pipeline
+- Polish visual
+
+FASE 2: BACKEND (3 semanas)
+---------------------------
+Semana 5: Auth e Database
+- Supabase setup
+- Database schema
+- API routes
+
+Semana 6: Chat Backend
+- OpenAI/Groq integration
+- Agent personalities
+- Real-time updates
+
+Semana 7: Backend Features
+- Tasks Board persistence
+- Content Pipeline backend
+- Testing
+
+FASE 3: INTEGRAÇÕES (4 semanas)
+-------------------------------
+Semana 8: Tools Framework
+- Tool system
+- Tools básicas
+- Tool calling
+
+Semana 9: Google Integrations
+- Google Drive
+- Google Sheets
+- Google Calendar
+
+Semana 10: RAG e Documentos
+- ChromaDB setup
+- Document processing
+- RAG pipeline
+
+Semana 11: Webhooks e Automação
+- Webhook system
+- Scheduled tasks
+- Notifications
+
+FASE 4: MISSION CONTROL (5 semanas)
+------------------------------------
+Semana 12: Office View
+- Visualização de escritório
+- Avatares animados
+- Status em tempo real
+
+Semana 13: Team Structure
+- Hierarquia de agentes
+- Subagent management
+- Collaboration
+
+Semana 14: n8n Integration
+- n8n self-hosted
+- Workflow sync
+- Custom nodes
+
+Semana 15: Langflow Integration
+- Langflow setup
+- Agent Studio
+- RAG Studio
+
+Semana 16: Produção
+- Performance
+- Security
+- Documentação
+
+TOTAL: 16 semanas (4 meses)
+
+========================================
+
+FEATURES PRINCIPAIS:
+
+1. Tasks Board
+   - Kanban com colunas customizáveis
+   - Drag-and-drop
+   - Cards com título, descrição, assignee, labels
+   - Filtros e busca
+
+2. Content Pipeline
+   - Colunas: Ideas, Script, Thumbnail, Filming, Editing
+   - Upload de imagens/videos
+   - Calendário editorial
+
+3. Office View
+   - Escritório digital com agentes
+   - Avatares animados
+   - Status em tempo real
+
+4. Team Structure
+   - Hierarquia de agentes
+   - Roles e responsabilidades
+   - Subagentes
+
+5. Chat dos 7 Agentes
+   - Interface de conversação
+   - Histórico persistente
+   - Personalidades únicas
+
+6. Dashboard
+   - Métricas em tempo real
+   - Status de sistemas
+   - Admin panel
+
+========================================
+
+STACK TECNOLÓGICO:
+
+Frontend:
+- React + TypeScript + Vite
+- shadcn/ui + Tailwind CSS
+- Framer Motion
+
+Backend:
+- Supabase (Auth, DB, Realtime)
+- Edge Functions
+- ChromaDB (vector)
+
+AI:
+- Groq (llama-3.1-8b)
+- OpenAI
+- LangChain
+
+Integrações:
+- n8n
+- Langflow
+- Google APIs
+
+Infra:
+- VPS
+- Docker
+- GitHub Actions

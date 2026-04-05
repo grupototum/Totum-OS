@@ -1,0 +1,289 @@
+#!/bin/bash
+# =============================================================================
+# TOTUM SYNC v3 - Backup e Sync para Google Drive
+# =============================================================================
+
+set -e
+
+# Configurações
+WORKSPACE_DIR="/root/.openclaw/workspace"
+BACKUP_DIR="$WORKSPACE_DIR/backups"
+MEMORY_DIR="$WORKSPACE_DIR/memory"
+GDRIVE_FOLDER="178QRua7z1ZKlcwyUYUbK3yxHK6cnAFXi"
+LOG_FILE="$WORKSPACE_DIR/logs/totum-sync.log"
+CONFIG_FILE="$WORKSPACE_DIR/.totum-sync.conf"
+DATE=$(date +%Y%m%d_%H%M%S)
+BACKUP_NAME="totum_backup_$DATE.tar.gz"
+
+# Criar diretórios necessários
+mkdir -p "$BACKUP_DIR" "$WORKSPACE_DIR/logs"
+
+# Logging
+log() {
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" | tee -a "$LOG_FILE"
+}
+
+# =============================================================================
+# FUNÇÃO: Backup Local
+# =============================================================================
+backup_local() {
+    log "📦 Criando backup local: $BACKUP_NAME"
+    
+    cd "$WORKSPACE_DIR"
+    
+    # Criar backup excluindo arquivos sensíveis
+    tar -czf "$BACKUP_DIR/$BACKUP_NAME" \
+        --exclude='.env' \
+        --exclude='auth-profiles.json' \
+        --exclude='*.pem' \
+        --exclude='*.key' \
+        --exclude='node_modules' \
+        --exclude='.git/objects' \
+        --exclude='venv' \
+        --exclude='.kimi/downloads' \
+        *.md *.sh *.py *.yaml *.yml \
+        bots/ apps_totum/ context_hub/ \
+        scripts/ data/ memory/ 2>/dev/null || true
+    
+    log "✅ Backup local criado: $BACKUP_DIR/$BACKUP_NAME"
+}
+
+# =============================================================================
+# FUNÇÃO: Sync para Google Drive via rclone
+# =============================================================================
+sync_gdrive() {
+    log "☁️  Sync para Google Drive..."
+    
+    # Verificar se rclone está instalado
+    if ! command -v rclone &> /dev/null; then
+        log "⚠️  rclone não encontrado. Instalando..."
+        curl https://rclone.org/install.sh | sudo bash
+    fi
+    
+    # Verificar se remote "gdrive" existe
+    if ! rclone listremotes | grep -q "gdrive:"; then
+        log "❌ Remote 'gdrive' não configurado."
+        log "   Configure com: rclone config"
+        return 1
+    fi
+    
+    # Sync para Google Drive
+    rclone copy "$BACKUP_DIR/$BACKUP_NAME" "gdrive:$GDRIVE_FOLDER" \
+        --progress \
+        --transfers 4 \
+        --log-file="$LOG_FILE"
+    
+    log "✅ Backup enviado para Google Drive"
+    
+    # Sync da pasta memory também (arquivos pequenos, sempre atualizados)
+    rclone sync "$MEMORY_DIR" "gdrive:$GDRIVE_FOLDER/memory/" \
+        --include="*.md" \
+        --progress \
+        --log-file="$LOG_FILE"
+    
+    log "✅ Memórias sincronizadas com Google Drive"
+}
+
+# =============================================================================
+# FUNÇÃO: Git Commit
+# =============================================================================
+git_commit() {
+    if [ -d "$WORKSPACE_DIR/.git" ]; then
+        cd "$WORKSPACE_DIR"
+        
+        # Verificar se há mudanças
+        if git diff --quiet && git diff --cached --quiet; then
+            log "ℹ️  Nenhuma mudança para commit"
+            return 0
+        fi
+        
+        log "📤 Fazendo git commit..."
+        git add -A
+        git commit -m "Backup automático: $DATE" || true
+        
+        # Push se tiver remote
+        if git remote -v > /dev/null 2>&1; then
+            git push origin main 2>/dev/null || git push origin master 2>/dev/null || true
+            log "✅ Push realizado"
+        fi
+    fi
+}
+
+# =============================================================================
+# FUNÇÃO: Limpeza de backups antigos
+# =============================================================================
+cleanup() {
+    log "🧹 Limpando backups antigos (30 dias)..."
+    
+    # Local
+    find "$BACKUP_DIR" -name "totum_backup_*.tar.gz" -mtime +30 -delete 2>/dev/null || true
+    
+    # Google Drive (manter apenas últimos 10)
+    if command -v rclone &> /dev/null && rclone listremotes | grep -q "gdrive:"; then
+        rclone ls "gdrive:$GDRIVE_FOLDER" --include="totum_backup_*.tar.gz" 2>/dev/null | \
+            sort -r | tail -n +11 | \
+            while read line; do
+                filename=$(echo "$line" | awk '{print $2}')
+                rclone delete "gdrive:$GDRIVE_FOLDER/$filename" 2>/dev/null || true
+            done
+    fi
+    
+    log "✅ Limpeza concluída"
+}
+
+# =============================================================================
+# FUNÇÃO: Setup Inicial
+# =============================================================================
+setup() {
+    echo "🚀 Configuração do Totum Sync"
+    echo "=============================="
+    echo ""
+    
+    # Verificar rclone
+    if ! command -v rclone &> /dev/null; then
+        echo "Instalando rclone..."
+        curl https://rclone.org/install.sh | sudo bash
+    fi
+    
+    echo "Configure o rclone para Google Drive:"
+    echo ""
+    echo "1. Execute: rclone config"
+    echo "2. Escolha: n (new remote)"
+    echo "3. Nome: gdrive"
+    echo "4. Type: drive"
+    echo "5. Siga as instruções de autenticação"
+    echo ""
+    echo "Folder ID do Google Drive: $GDRIVE_FOLDER"
+    echo ""
+    
+    read -p "Pressione ENTER quando configurar..."
+    
+    # Testar conexão
+    if rclone listremotes | grep -q "gdrive:"; then
+        echo "✅ rclone configurado!"
+        rclone ls "gdrive:$GDRIVE_FOLDER" > /dev/null 2>&1 && echo "✅ Conexão OK!"
+    else
+        echo "❌ Remote 'gdrive' não encontrado"
+    fi
+}
+
+# =============================================================================
+# FUNÇÃO: Configurar Cron (12 horas)
+# =============================================================================
+setup_cron() {
+    log "⏰ Configurando cron (a cada 12 horas)..."
+    
+    CRON_CMD="0 */12 * * * cd $WORKSPACE_DIR && ./totum-sync-gdrive push >> $LOG_FILE 2>&1"
+    
+    # Remover cron antigo se existir
+    crontab -l 2>/dev/null | grep -v "totum-sync" | crontab - 2>/dev/null || true
+    
+    # Adicionar novo cron
+    (crontab -l 2>/dev/null; echo "$CRON_CMD") | crontab -
+    
+    log "✅ Cron configurado: a cada 12 horas"
+    log "   Próximos backups: $(date -d '+12 hours' '+%H:%M')"
+}
+
+# =============================================================================
+# FUNÇÃO: Remover Cron
+# =============================================================================
+remove_cron() {
+    log "🗑️  Removendo cron..."
+    crontab -l 2>/dev/null | grep -v "totum-sync" | crontab - 2>/dev/null || true
+    log "✅ Cron removido"
+}
+
+# =============================================================================
+# FUNÇÃO: Status
+# =============================================================================
+status() {
+    echo "📊 Status do Totum Sync"
+    echo "======================="
+    echo ""
+    echo "Backups locais:"
+    ls -lh "$BACKUP_DIR"/*.tar.gz 2>/dev/null | tail -5 || echo "  Nenhum backup encontrado"
+    echo ""
+    echo "Cron configurado:"
+    crontab -l 2>/dev/null | grep "totum-sync" || echo "  Nenhum cron configurado"
+    echo ""
+    echo "rclone configurado:"
+    rclone listremotes 2>/dev/null | grep "gdrive" && echo "  ✅ Google Drive OK" || echo "  ❌ Não configurado"
+    echo ""
+    echo "Últimos logs:"
+    tail -5 "$LOG_FILE" 2>/dev/null || echo "  Sem logs"
+}
+
+# =============================================================================
+# FUNÇÃO: Testar Conexão
+# =============================================================================
+test_connection() {
+    log "🧪 Testando conexão com Google Drive..."
+    
+    if ! command -v rclone &> /dev/null; then
+        log "❌ rclone não instalado"
+        return 1
+    fi
+    
+    if ! rclone listremotes | grep -q "gdrive:"; then
+        log "❌ Remote 'gdrive' não configurado"
+        return 1
+    fi
+    
+    if rclone ls "gdrive:$GDRIVE_FOLDER" > /dev/null 2>&1; then
+        log "✅ Conexão com Google Drive OK!"
+        return 0
+    else
+        log "❌ Falha na conexão"
+        return 1
+    fi
+}
+
+# =============================================================================
+# MAIN
+# =============================================================================
+
+command="${1:-push}"
+
+case "$command" in
+    push)
+        log "🚀 Iniciando backup completo..."
+        backup_local
+        sync_gdrive
+        git_commit
+        cleanup
+        log "✅ Backup completo finalizado!"
+        ;;
+    local)
+        log "📦 Backup local apenas..."
+        backup_local
+        ;;
+    setup)
+        setup
+        ;;
+    cron)
+        setup_cron
+        ;;
+    uncron)
+        remove_cron
+        ;;
+    status)
+        status
+        ;;
+    test)
+        test_connection
+        ;;
+    *)
+        echo "Uso: $0 {push|local|setup|cron|uncron|status|test}"
+        echo ""
+        echo "Comandos:"
+        echo "  push    - Backup completo (local + Google Drive + git)"
+        echo "  local   - Apenas backup local"
+        echo "  setup   - Configurar rclone e Google Drive"
+        echo "  cron    - Ativar backup automático (12h)"
+        echo "  uncron  - Desativar backup automático"
+        echo "  status  - Ver status do sistema"
+        echo "  test    - Testar conexão com Google Drive"
+        exit 1
+        ;;
+esac

@@ -1,0 +1,40 @@
+{
+  "version": "1.0.0",
+  "description": "Índice mestre do MEX - Modelo Contextual Expansível",
+  "last_updated": "2026-04-05T00:00:00Z",
+  "domains": {
+    "totum": {
+      "description": "Conhecimento sobre o negócio Totum",
+      "contexts_count": 0,
+      "index_file": "contexts/totum/index.json",
+      "categories": ["arquitetura", "analise", "decisao", "processo"]
+    },
+    "stark": {
+      "description": "Conhecimento técnico e operacional",
+      "contexts_count": 0,
+      "index_file": "contexts/stark/index.json",
+      "categories": ["deploy", "infra", "monitoramento", "pop", "sla"]
+    },
+    "alexandria": {
+      "description": "Conhecimento sobre o sistema de conhecimento",
+      "contexts_count": 0,
+      "index_file": "contexts/alexandria/index.json",
+      "categories": ["documentacao", "config", "agente", "skill"]
+    },
+    "pixel": {
+      "description": "Conhecimento sobre o CRM Pixel",
+      "contexts_count": 0,
+      "index_file": "contexts/pixel/index.json",
+      "categories": ["config", "integracao", "processo"]
+    }
+  },
+  "global_tags": [
+    "urgente", "revisar", "arquivar", "duplicado", "consolidar"
+  ],
+  "statistics": {
+    "total_contexts": 0,
+    "total_relations": 0,
+    "last_context_added": null,
+    "most_accessed": []
+  }
+}

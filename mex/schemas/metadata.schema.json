@@ -1,0 +1,68 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MEX Metadata Schema",
+  "description": "Schema para metadados de arquivos e recursos",
+  "type": "object",
+  "required": ["resource_id", "resource_type", "path", "created"],
+  "properties": {
+    "resource_id": {
+      "type": "string",
+      "description": "ID único do recurso"
+    },
+    "resource_type": {
+      "type": "string",
+      "enum": ["file", "document", "code", "image", "video", "audio", "database"],
+      "description": "Tipo do recurso"
+    },
+    "path": {
+      "type": "string",
+      "description": "Caminho do recurso no sistema"
+    },
+    "filename": {
+      "type": "string",
+      "description": "Nome do arquivo"
+    },
+    "size_bytes": {
+      "type": "integer",
+      "description": "Tamanho em bytes"
+    },
+    "checksum": {
+      "type": "string",
+      "description": "Hash MD5 ou SHA256 para integridade"
+    },
+    "mime_type": {
+      "type": "string",
+      "description": "Tipo MIME do arquivo"
+    },
+    "created": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "modified": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "indexed": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Quando foi indexado no MEX"
+    },
+    "contexts": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "IDs dos contextos relacionados"
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "author": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["ativo", "arquivado", "excluido"],
+      "default": "ativo"
+    }
+  }
+}

@@ -1,0 +1,130 @@
+[2026-03-31 09:15:54] Backup local criado: totum_backup_20260331_091554.tar.gz
+[2026-03-31 09:15:54] Git commit realizado
+[2026-03-31 09:15:54] Configuração salva em /root/.openclaw/workspace/.totum-sync.conf
+[2026-03-31 09:16:00] Backup local criado: totum_backup_20260331_091600.tar.gz
+[2026-03-31 09:16:01] Git commit realizado
+[2026-03-31 09:16:01] Configuração salva em /root/.openclaw/workspace/.totum-sync.conf
+[2026-03-31 09:21:41] Cron instalado
+[2026-03-31 22:50:56] 📦 Backup local apenas...
+[2026-03-31 22:50:56] 📦 Criando backup local: totum_backup_20260331_225056.tar.gz
+[2026-03-31 22:50:56] ✅ Backup local criado: /root/.openclaw/workspace/backups/totum_backup_20260331_225056.tar.gz
+[2026-03-31 22:51:04] ⏰ Configurando cron (a cada 12 horas)...
+[2026-03-31 22:51:04] ✅ Cron configurado: a cada 12 horas
+[2026-03-31 22:51:04]    Próximos backups: 10:51
+[2026-04-01 00:00:01] 🚀 Iniciando backup completo...
+[2026-04-01 00:00:01] 🚀 Iniciando backup completo...
+[2026-04-01 00:00:01] 📦 Criando backup local: totum_backup_20260401_000001.tar.gz
+[2026-04-01 00:00:01] 📦 Criando backup local: totum_backup_20260401_000001.tar.gz
+[2026-04-01 00:00:02] ✅ Backup local criado: /root/.openclaw/workspace/backups/totum_backup_20260401_000001.tar.gz
+[2026-04-01 00:00:02] ✅ Backup local criado: /root/.openclaw/workspace/backups/totum_backup_20260401_000001.tar.gz
+[2026-04-01 00:00:02] ☁️  Sync para Google Drive...
+[2026-04-01 00:00:02] ☁️  Sync para Google Drive...
+2026/04/01 00:00:02 NOTICE: Config file "/root/.config/rclone/rclone.conf" not found - using defaults
+[2026-04-01 00:00:02] ❌ Remote 'gdrive' não configurado.
+[2026-04-01 00:00:02] ❌ Remote 'gdrive' não configurado.
+[2026-04-01 00:00:02]    Configure com: rclone config
+[2026-04-01 00:00:02]    Configure com: rclone config
+[2026-04-01 12:00:01] 🚀 Iniciando backup completo...
+[2026-04-01 12:00:01] 🚀 Iniciando backup completo...
+[2026-04-01 12:00:01] 📦 Criando backup local: totum_backup_20260401_120001.tar.gz
+[2026-04-01 12:00:01] 📦 Criando backup local: totum_backup_20260401_120001.tar.gz
+[2026-04-01 12:00:01] ✅ Backup local criado: /root/.openclaw/workspace/backups/totum_backup_20260401_120001.tar.gz
+[2026-04-01 12:00:01] ✅ Backup local criado: /root/.openclaw/workspace/backups/totum_backup_20260401_120001.tar.gz
+[2026-04-01 12:00:01] ☁️  Sync para Google Drive...
+[2026-04-01 12:00:01] ☁️  Sync para Google Drive...
+2026/04/01 12:00:01 NOTICE: Config file "/root/.config/rclone/rclone.conf" not found - using defaults
+[2026-04-01 12:00:01] ❌ Remote 'gdrive' não configurado.
+[2026-04-01 12:00:01] ❌ Remote 'gdrive' não configurado.
+[2026-04-01 12:00:01]    Configure com: rclone config
+[2026-04-01 12:00:01]    Configure com: rclone config
+[2026-04-02 00:00:01] 🚀 Iniciando backup completo...
+[2026-04-02 00:00:01] 🚀 Iniciando backup completo...
+[2026-04-02 00:00:01] 📦 Criando backup local: totum_backup_20260402_000001.tar.gz
+[2026-04-02 00:00:01] 📦 Criando backup local: totum_backup_20260402_000001.tar.gz
+[2026-04-02 00:00:01] ✅ Backup local criado: /root/.openclaw/workspace/backups/totum_backup_20260402_000001.tar.gz
+[2026-04-02 00:00:01] ✅ Backup local criado: /root/.openclaw/workspace/backups/totum_backup_20260402_000001.tar.gz
+[2026-04-02 00:00:01] ☁️  Sync para Google Drive...
+[2026-04-02 00:00:01] ☁️  Sync para Google Drive...
+2026/04/02 00:00:02 NOTICE: Config file "/root/.config/rclone/rclone.conf" not found - using defaults
+[2026-04-02 00:00:02] ❌ Remote 'gdrive' não configurado.
+[2026-04-02 00:00:02] ❌ Remote 'gdrive' não configurado.
+[2026-04-02 00:00:02]    Configure com: rclone config
+[2026-04-02 00:00:02]    Configure com: rclone config
+[2026-04-02 12:00:01] 🚀 Iniciando backup completo...
+[2026-04-02 12:00:01] 🚀 Iniciando backup completo...
+[2026-04-02 12:00:01] 📦 Criando backup local: totum_backup_20260402_120001.tar.gz
+[2026-04-02 12:00:01] 📦 Criando backup local: totum_backup_20260402_120001.tar.gz
+[2026-04-02 12:00:01] ✅ Backup local criado: /root/.openclaw/workspace/backups/totum_backup_20260402_120001.tar.gz
+[2026-04-02 12:00:01] ✅ Backup local criado: /root/.openclaw/workspace/backups/totum_backup_20260402_120001.tar.gz
+[2026-04-02 12:00:01] ☁️  Sync para Google Drive...
+[2026-04-02 12:00:01] ☁️  Sync para Google Drive...
+2026/04/02 12:00:01 NOTICE: Config file "/root/.config/rclone/rclone.conf" not found - using defaults
+[2026-04-02 12:00:01] ❌ Remote 'gdrive' não configurado.
+[2026-04-02 12:00:01] ❌ Remote 'gdrive' não configurado.
+[2026-04-02 12:00:01]    Configure com: rclone config
+[2026-04-02 12:00:01]    Configure com: rclone config
+[2026-04-03 00:00:02] 🚀 Iniciando backup completo...
+[2026-04-03 00:00:02] 🚀 Iniciando backup completo...
+[2026-04-03 00:00:02] 📦 Criando backup local: totum_backup_20260403_000001.tar.gz
+[2026-04-03 00:00:02] 📦 Criando backup local: totum_backup_20260403_000001.tar.gz
+[2026-04-03 00:00:02] ✅ Backup local criado: /root/.openclaw/workspace/backups/totum_backup_20260403_000001.tar.gz
+[2026-04-03 00:00:02] ✅ Backup local criado: /root/.openclaw/workspace/backups/totum_backup_20260403_000001.tar.gz
+[2026-04-03 00:00:02] ☁️  Sync para Google Drive...
+[2026-04-03 00:00:02] ☁️  Sync para Google Drive...
+2026/04/03 00:00:03 NOTICE: Config file "/root/.config/rclone/rclone.conf" not found - using defaults
+[2026-04-03 00:00:03] ❌ Remote 'gdrive' não configurado.
+[2026-04-03 00:00:03] ❌ Remote 'gdrive' não configurado.
+[2026-04-03 00:00:03]    Configure com: rclone config
+[2026-04-03 00:00:03]    Configure com: rclone config
+[2026-04-03 12:00:01] 🚀 Iniciando backup completo...
+[2026-04-03 12:00:01] 🚀 Iniciando backup completo...
+[2026-04-03 12:00:01] 📦 Criando backup local: totum_backup_20260403_120001.tar.gz
+[2026-04-03 12:00:01] 📦 Criando backup local: totum_backup_20260403_120001.tar.gz
+[2026-04-03 12:00:02] ✅ Backup local criado: /root/.openclaw/workspace/backups/totum_backup_20260403_120001.tar.gz
+[2026-04-03 12:00:02] ✅ Backup local criado: /root/.openclaw/workspace/backups/totum_backup_20260403_120001.tar.gz
+[2026-04-03 12:00:02] ☁️  Sync para Google Drive...
+[2026-04-03 12:00:02] ☁️  Sync para Google Drive...
+2026/04/03 12:00:03 NOTICE: Config file "/root/.config/rclone/rclone.conf" not found - using defaults
+[2026-04-03 12:00:03] ❌ Remote 'gdrive' não configurado.
+[2026-04-03 12:00:03] ❌ Remote 'gdrive' não configurado.
+[2026-04-03 12:00:03]    Configure com: rclone config
+[2026-04-03 12:00:03]    Configure com: rclone config
+[2026-04-04 00:00:02] 🚀 Iniciando backup completo...
+[2026-04-04 00:00:02] 🚀 Iniciando backup completo...
+[2026-04-04 00:00:02] 📦 Criando backup local: totum_backup_20260404_000002.tar.gz
+[2026-04-04 00:00:02] 📦 Criando backup local: totum_backup_20260404_000002.tar.gz
+[2026-04-04 00:00:02] ✅ Backup local criado: /root/.openclaw/workspace/backups/totum_backup_20260404_000002.tar.gz
+[2026-04-04 00:00:02] ✅ Backup local criado: /root/.openclaw/workspace/backups/totum_backup_20260404_000002.tar.gz
+[2026-04-04 00:00:02] ☁️  Sync para Google Drive...
+[2026-04-04 00:00:02] ☁️  Sync para Google Drive...
+2026/04/04 00:00:03 NOTICE: Config file "/root/.config/rclone/rclone.conf" not found - using defaults
+[2026-04-04 00:00:03] ❌ Remote 'gdrive' não configurado.
+[2026-04-04 00:00:03] ❌ Remote 'gdrive' não configurado.
+[2026-04-04 00:00:03]    Configure com: rclone config
+[2026-04-04 00:00:03]    Configure com: rclone config
+[2026-04-04 12:00:01] 🚀 Iniciando backup completo...
+[2026-04-04 12:00:01] 🚀 Iniciando backup completo...
+[2026-04-04 12:00:01] 📦 Criando backup local: totum_backup_20260404_120001.tar.gz
+[2026-04-04 12:00:01] 📦 Criando backup local: totum_backup_20260404_120001.tar.gz
+[2026-04-04 12:00:03] ✅ Backup local criado: /root/.openclaw/workspace/backups/totum_backup_20260404_120001.tar.gz
+[2026-04-04 12:00:03] ✅ Backup local criado: /root/.openclaw/workspace/backups/totum_backup_20260404_120001.tar.gz
+[2026-04-04 12:00:03] ☁️  Sync para Google Drive...
+[2026-04-04 12:00:03] ☁️  Sync para Google Drive...
+2026/04/04 12:00:04 NOTICE: Config file "/root/.config/rclone/rclone.conf" not found - using defaults
+[2026-04-04 12:00:04] ❌ Remote 'gdrive' não configurado.
+[2026-04-04 12:00:04] ❌ Remote 'gdrive' não configurado.
+[2026-04-04 12:00:05]    Configure com: rclone config
+[2026-04-04 12:00:05]    Configure com: rclone config
+[2026-04-05 00:00:01] 🚀 Iniciando backup completo...
+[2026-04-05 00:00:01] 🚀 Iniciando backup completo...
+[2026-04-05 00:00:01] 📦 Criando backup local: totum_backup_20260405_000001.tar.gz
+[2026-04-05 00:00:01] 📦 Criando backup local: totum_backup_20260405_000001.tar.gz
+[2026-04-05 00:00:02] ✅ Backup local criado: /root/.openclaw/workspace/backups/totum_backup_20260405_000001.tar.gz
+[2026-04-05 00:00:02] ✅ Backup local criado: /root/.openclaw/workspace/backups/totum_backup_20260405_000001.tar.gz
+[2026-04-05 00:00:02] ☁️  Sync para Google Drive...
+[2026-04-05 00:00:02] ☁️  Sync para Google Drive...
+2026/04/05 00:00:02 NOTICE: Config file "/root/.config/rclone/rclone.conf" not found - using defaults
+[2026-04-05 00:00:02] ❌ Remote 'gdrive' não configurado.
+[2026-04-05 00:00:02] ❌ Remote 'gdrive' não configurado.
+[2026-04-05 00:00:02]    Configure com: rclone config
+[2026-04-05 00:00:02]    Configure com: rclone config

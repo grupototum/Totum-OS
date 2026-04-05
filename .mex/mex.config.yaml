@@ -1,0 +1,69 @@
+# MEX - Memory EXtraction Scaffold
+# Biblioteca de Alexandria - Adaptação Totum
+# https://github.com/theDakshJaitly/mex
+
+project:
+  name: "Totum Workspace"
+  type: "workspace"
+  version: "2.0"
+
+scaffold:
+  root: ".mex/"
+  structure:
+    - mex.md              # Bootstrap principal
+    - routing.yaml        # Roteamento de tarefas
+    - architecture.md     # Decisões arquiteturais
+    - conventions.md      # Convenções de código
+    - state.md            # Estado atual
+    - decisions/          # ADRs
+    - patterns/           # Padrões reutilizáveis
+
+context:
+  bootstrap: "mex.md"    # Arquivo de bootstrap (120 tokens)
+  max_bootstrap_tokens: 120
+  
+persistencia:
+  engine: "alexandria"
+  destinos:
+    - vps_local
+    - supabase
+    - github
+    - drive
+    - servidor
+  
+  confirmacao:
+    modo: "sempre_perguntar"  # sempre_perguntar | auto_confirmar
+    min_chars: 50
+    
+  sync:
+    vps: "tempo_real"
+    supabase: "tempo_real"
+    github: "batch_5min"
+    drive: "batch_10min"
+    servidor: "diario"
+
+agentes:
+  giles:
+    role: "bibliotecario"
+    responsavel: "indexacao"
+    
+  default:
+    deve_salvar:
+      - decisoes_arquiteturais
+      - novos_agentes
+      - alteracoes_regras
+      - descobertas_importantes
+      - tarefas_delegadas
+      - erros_e_solucoes
+    
+    nao_salvar:
+      - brainstorming_inicial
+      - testes_falhos
+      - perguntas_clarificacao
+      - codigo_temporario
+      - conversas_casuais
+
+logging:
+  level: "info"
+  arquivo: "logs/persistencia.log"
+  rotacao: "diaria"

@@ -1,0 +1,143 @@
+# ✅ CHECKLIST DE INSTALAÇÃO OLLAMA
+
+**Data:** ___________  
+**Responsável:** Israel  
+**Servidor:** i5-2400 (Escritório)
+
+---
+
+## Preparação
+
+- [ ] Servidor ligado e conectado à internet
+- [ ] Acesso SSH ou terminal físico disponível
+- [ ] Espaço em disco verificado (mínimo 20GB livre)
+- [ ] RAM verificada (mínimo 8GB)
+
+---
+
+## Instalação
+
+### 1. Instalar Ollama
+```bash
+curl -fsSL https://ollama.com/install.sh | sh
+```
+- [ ] Comando executado
+- [ ] `ollama --version` retorna versão
+
+### 2. Configurar Rede
+```bash
+sudo systemctl edit ollama.service
+```
+Adicionar:
+```
+[Service]
+Environment="OLLAMA_HOST=0.0.0.0:11434"
+```
+- [ ] Arquivo criado
+- [ ] `sudo systemctl restart ollama` executado
+- [ ] `sudo systemctl status ollama` mostra "active"
+
+### 3. Baixar Modelos
+Execute um por vez:
+
+```bash
+ollama pull nomic-embed-text
+```
+- [ ] Baixado (274MB)
+
+```bash
+ollama pull llama3.2
+```
+- [ ] Baixado (2GB)
+
+```bash
+ollama pull deepseek-coder
+```
+- [ ] Baixado (4.2GB)
+
+```bash
+ollama pull qwen2.5
+```
+- [ ] Baixado (4.7GB)
+
+---
+
+## Testes
+
+### Teste Local
+```bash
+ollama run llama3.2 "Olá, você está funcionando?"
+```
+- [ ] Respondeu corretamente
+
+### Teste API Local
+```bash
+curl http://localhost:11434/api/tags
+```
+- [ ] Retornou lista de modelos
+
+### Teste de Rede
+```bash
+# Descobrir IP
+ip addr show
+
+# De outro computador na mesma rede:
+curl http://[IP_DO_SERVIDOR]:11434/api/tags
+```
+- [ ] Acessível de outro PC
+
+### Configurar Firewall (se necessário)
+```bash
+sudo ufw allow 11434/tcp
+```
+- [ ] Porta liberada (ou firewall desativado para teste)
+
+---
+
+## Documentação
+
+- [ ] Anotar IP do servidor: `________________`
+- [ ] Confirmar URL de acesso: `http://___:11434`
+- [ ] Verificar serviço inicia automaticamente:
+  ```bash
+  sudo systemctl is-enabled ollama
+  ```
+  - [ ] Retorna "enabled"
+
+---
+
+## Integração Alexandria (Opcional)
+
+- [ ] Editar `.env` da Alexandria
+- [ ] Adicionar `OLLAMA_BASE_URL=http://[IP]:11434`
+- [ ] Reiniciar Alexandria: `pm2 restart alexandria`
+- [ ] Testar integração
+
+---
+
+## ✅ FINALIZAÇÃO
+
+- [ ] Ollama instalado e funcionando
+- [ ] 4 modelos baixados
+- [ ] Acesso via rede configurado
+- [ ] Documentação atualizada
+- [ ] Teste de integração realizado (se aplicável)
+- [ ] Servidor configurado para 24/7
+
+**Observações:**
+```
+
+
+
+
+```
+
+---
+
+## 📞 Em Caso de Problemas
+
+1. Verificar logs: `sudo journalctl -u ollama -f`
+2. Reiniciar serviço: `sudo systemctl restart ollama`
+3. Consultar: `/root/.openclaw/workspace/docs/ollama-setup.md`
+
+**Status Final:** ⬜ Sucesso / ⬜ Problemas (reportar)

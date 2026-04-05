@@ -1,0 +1,140 @@
+# Base de Conhecimento - Processos Internos
+# Formato: categoria | pergunta | resposta | palavras_chave
+
+## Processos Gerais
+
+onboarding|Como funciona o onboarding de novos funcionários?|O onboarding tem 3 fases:
+1. Primeira semana: Integração com equipe + treinamento ferramentas
+2. Segundo mês: Acompanhamento semanal com mentor
+3. Terceiro mês: Avaliação de desempenho
+
+Documentos necessários: Contrato, RG/CPF, Dados bancários
+Responsável: RH (recursos_humanos)|onboard, novo, funcionario, contratação, admissão
+
+ferias|Como solicitar férias?|Para solicitar férias:
+1. Avisar com 30 dias de antecedência
+2. Preencher formulário no sistema
+3. Aguardar aprovação do gestor
+4. Receber confirmação do RH
+
+Regras: Mínimo 10 dias, máximo 30 dias por período
+Responsável: Seu gestor direto|ferias, descanso, folga, ausencia
+
+home_office|Qual a política de home office?|Trabalho remoto:
+- 3 dias home office / 2 dias presencial (padrão)
+- Horário flexível: core hours 10h-15h
+- Reuniões presenciais às terças e quintas
+
+Exceções: Combinar com gestor
+Ferramentas: Slack, Zoom, Notion|remoto, home office, trabalhar de casa, presencial
+
+## Departamentos
+
+suporte|Como abrir um chamado de TI?|Chamados de TI:
+1. Acesse o portal: totum.com/suporte
+2. Crie ticket descrevendo o problema
+3. Informe prioridade: Baixa, Média, Alta, Crítica
+4. Anexe prints se possível
+
+SLA: Crítica (2h), Alta (4h), Média (24h), Baixa (48h)
+Urgente? Ligue: (11) 99999-9999|ti, computador, problema, tecnico, sistema, erro
+
+comercial|Como solicitar uma proposta comercial?|Para propostas:
+1. Preencha brief no sistema CRM
+2. Anexe dados do cliente/prospect
+3. Especificar prazo de entrega
+4. Marcar reunião de alinhamento
+
+SLA de resposta: 48h úteis
+Responsável: Equipe Comercial (comercial@totum.com)|venda, proposta, orçamento, cliente, prospect
+
+financeiro|Como solicitar reembolso de despesas?|Reembolso:
+1. Guarde todos os comprovantes
+2. Preencha planilha de despesas
+3. Anexe notas fiscais digitalizadas
+4. Envie para financeiro@totum.com
+
+Prazo de reembolso: Até 15 dias úteis após aprovação
+Limite sem pré-aprovacao: R$ 200|reembolso, despesa, nota fiscal, dinheiro, gasto
+
+## Ferramentas
+
+slack|Como usar o Slack da empresa?|Slack - Canais principais:
+#geral - Comunicados oficiais
+#random - Conversas informais  
+#suporte - Ajuda técnica
+#comercial - Vendas e propostas
+
+Diretrizes:
+- Use threads para responder
+- @canal apenas para urgências
+- Status online durante expediente
+- Integração com Google Calendar|slack, comunicação, chat, mensagem
+
+notion|Onde encontro os documentos da empresa?|Documentação centralizada no Notion:
+https://notion.so/totum
+
+Espaços:
+📋 Processos Internos
+📊 Projetos Ativos  
+📚 Base de Conhecimento
+👥 Diretório de Colaboradores
+
+Acesso: Entrar com e-mail corporativo
+|notion, documento, wiki, conhecimento, arquivo
+
+reunioes|Como agendar reuniões?|Agendamento:
+1. Verifique disponibilidade no Google Calendar
+2. Crie evento com:
+   - Objetivo claro
+   - Pauta (bullet points)
+   - Tempo estimado
+   - Link Zoom (para remotas)
+
+Regras:
+- Reuniões < 30 min não precisam pauta
+- Sempre envie resumo em até 24h
+- Limite de 8 participantes|reunião, agenda, calendario, zoom, meet
+
+## FAQ
+
+horario|Qual o horário de trabalho?|Expediente padrão:
+Segunda a Sexta: 9h às 18h
+Almoço: 1 hora (flexível)
+
+Core hours (presença obrigatória):
+10h às 12h e 14h às 16h
+
+Banco de horas:
+- Acumular máximo 20h
+- Usar em acordo com gestor|horario, expediente, trabalho, entrada, saida
+
+beneficios|Quais os benefícios da empresa?|Benefícios Totum:
+🏥 Plano de saúde (Amil)
+🦷 Plano odontológico
+🍽️ Vale-refeição: R$ 35/dia
+🚌 Vale-transporte ou estacionamento
+💪 Gympass
+📚 Budget anual de cursos: R$ 2.000
+🏖️ Day off no aniversário|beneficio, vantagem, plano saude, vr, vt
+
+pagamento|Quando é feito o pagamento?|Folha de pagamento:
+Salário: Dia 5 de cada mês (adiantado se fim de semana)
+Adiantamento: Dia 20 (opcional, 40% do salário)
+
+Hollerith: Disponível dia 2 no sistema
+Dúvidas: financeiro@totum.com|salario, pagamento, hollerith, dinheiro, remuneracao
+
+ajuda|Como falo com o RH?|Contato RH:
+📧 rh@totum.com
+📱 (11) 99999-9998
+
+Horário de atendimento:
+Segunda a Sexta: 9h às 17h
+
+Assuntos RH:
+- Contratos e documentos
+- Benefícios
+- Férias e afastamentos
+- Desligamentos
+- Dúvidas trabalhistas|rh, recursos humanos, dp, departamento pessoal

@@ -45,6 +45,10 @@ agents/
 ├── README.md                      # Documentação geral
 ├── ORGANOGRAMA.md                 # Hierarquia visual
 ├── INDEX.md                       # Índice de agentes
+├── alexandria/                    # 🏛️ Sistema de Conhecimento (Novo!)
+│   ├── INDEX.md
+│   ├── alexandria-core.md         # Orquestrador principal
+│   └── alexandria-ingestor.md     # Agente de ingestão
 ├── giles/                         # Cientista da Informação
 ├── data/                          # Analista de Código
 ├── miguel/                        # Arquiteto
@@ -86,12 +90,19 @@ data/
 └── *.db                           # Bancos de dados locais
 ```
 
-### 🔧 INFRAESTRUTURA
+### 🔧 SCRIPTS
 
 ```
-infra/
-├── configs/                       # Configurações
-└── scripts/                       # Scripts de infra
+scripts/
+├── alexandria/                    # 🏛️ Scripts da Alexandria (Novo!)
+│   ├── chunker.js                 # Chunking semântico hierárquico
+│   ├── ingestor-batch.js          # Ingestão com rate limiting
+│   └── zelador-job.js             # Job noturno de manutenção
+├── analista.py                    # Análise de código
+├── backup-*.sh                    # Scripts de backup
+├── git_scout.py                   # GitHub Scout
+├── trend_br.py                    # Trends Brasil
+└── trend_global.py                # Trends Global
 ```
 
 ### 🧪 MEX

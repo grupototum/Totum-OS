@@ -1,0 +1,33 @@
+{
+  "domain": "totum",
+  "description": "Índice de contextos do domínio Totum (negócio e estratégia)",
+  "last_updated": "2026-04-05T00:00:00Z",
+  "contexts": [
+    {
+      "id": "ctx_totum_arquitetura_sistema",
+      "title": "Arquitetura do Sistema Totum",
+      "category": "arquitetura",
+      "tags": ["sistema", "arquitetura", "openclaw", "agentes", "stark"],
+      "file": "arquitetura_sistema.json",
+      "version": "1.0",
+      "status": "ativo",
+      "relations_count": 5
+    },
+    {
+      "id": "ctx_totum_analise_sistema_critica",
+      "title": "Análise Crítica do Sistema",
+      "category": "analise",
+      "tags": ["analise", "critica", "melhoria", "sistema", "gargalos"],
+      "file": "analise_sistema_critica.json",
+      "version": "1.0",
+      "status": "ativo",
+      "relations_count": 2
+    }
+  ],
+  "categories": {
+    "arquitetura": { "count": 1, "description": "Documentação de arquitetura" },
+    "analise": { "count": 1, "description": "Análises e diagnósticos" },
+    "decisao": { "count": 0, "description": "Decisões estratégicas" },
+    "processo": { "count": 0, "description": "Processos de negócio" }
+  }
+}

@@ -1,0 +1,16 @@
+2026-04-01 02:10:41,897 - opik_integration - INFO - ✅ Opik conectado ao projeto: totum-atendente-bot
+2026-04-01 02:10:41,897 - __main__ - INFO - 📊 Opik tracing: Ativo
+2026-04-01 02:10:42,099 - groq_integration - INFO - ✅ Groq client inicializado (modelo: llama-3.1-8b-instant)
+2026-04-01 02:10:42,099 - __main__ - INFO - 🚀 Groq API: Disponível
+2026-04-01 02:10:42,104 - __main__ - INFO - ✅ Banco de dados inicializado
+2026-04-01 02:10:42,104 - __main__ - INFO - 🚀 Usando Groq API (ultra-rápido)
+2026-04-01 02:10:42,104 - __main__ - INFO - 🚀 Iniciando Totum Agents Bot...
+/root/.openclaw/workspace/bot_atendente_totum.py:603: PTBUserWarning: If 'per_message=False', 'CallbackQueryHandler' will not be tracked for every message. Read this FAQ entry to learn more about the per_* settings: https://github.com/python-telegram-bot/python-telegram-bot/wiki/Frequently-Asked-Questions#what-do-the-per_-settings-in-conversationhandler-do.
+  conv_handler = ConversationHandler(
+2026-04-01 02:10:42,271 - __main__ - INFO - ✅ Bot pronto! Pressione Ctrl+C para parar.
+2026-04-01 02:10:42,988 - telegram.ext.Application - INFO - Application started
+2026-04-01 02:19:59,031 - __main__ - INFO - Classificação: {'tipo': 'solicitacao', 'departamento': 'suporte', 'urgencia': 2, 'resumo': 'Cadastrar pops', 'responder_direto': True, 'motivo': 'Pode ser respondido diretamente pelo suporte'}
+OPIK: Started logging traces to the "totum-atendente-bot" project at https://www.comet.com/opik/api/v1/session/redirect/projects/?trace_id=019d451f-b5fe-73d0-9035-ff9f42c04084&path=aHR0cHM6Ly93d3cuY29tZXQuY29tL29waWsvYXBpLw==.
+2026-04-01 02:19:59,359 - __main__ - INFO - 📊 Conversa logada no Opik - User: 8563529121
+2026-04-02 07:05:22,851 - telegram.ext.Application - INFO - Application is stopping. This might take a moment.
+2026-04-02 07:05:22,857 - telegram.ext.Application - INFO - Application.stop() complete

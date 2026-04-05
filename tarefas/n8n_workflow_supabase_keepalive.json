@@ -1,0 +1,140 @@
+{
+  "name": "Supabase Keep-Alive - Anti Pausa",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "days",
+              "daysInterval": 3,
+              "triggerAtHour": 9
+            }
+          ]
+        }
+      },
+      "name": "Cron - A cada 3 dias",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT count(*) FROM information_schema.tables;"
+      },
+      "name": "Supabase - Keep Alive",
+      "type": "n8n-nodes-base.postgres",
+      "position": [
+        450,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "cond-1",
+              "leftValue": "={{ $json.count }}",
+              "rightValue": "0",
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "name": "Query OK?",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        650,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $env.TELEGRAM_CHAT_ID }}",
+        "text": "✅ Supabase Keep-Alive: Query executada com sucesso!\n📊 Total de tabelas: {{ $json.count }}\n⏰ Próxima execução: Daqui a 3 dias"
+      },
+      "name": "Notificação Sucesso",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        850,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $env.TELEGRAM_CHAT_ID }}",
+        "text": "⚠️ ALERTA: Falha no Keep-Alive do Supabase!\n❌ Erro: {{ $json.message }}\n🔧 Ação necessária: Verificar conexão"
+      },
+      "name": "Notificação Erro",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        850,
+        400
+      ]
+    }
+  ],
+  "connections": {
+    "Cron - A cada 3 dias": {
+      "main": [
+        [
+          {
+            "node": "Supabase - Keep Alive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase - Keep Alive": {
+      "main": [
+        [
+          {
+            "node": "Query OK?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Query OK?": {
+      "main": [
+        [
+          {
+            "node": "Notificação Sucesso",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Notificação Erro",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    "supabase",
+    "maintenance",
+    "keep-alive"
+  ]
+}

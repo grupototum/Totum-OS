@@ -1,0 +1,281 @@
+AUTOMAÇÃO & CRM
+
+POP + SLA (VERSÃO FINAL)
+
+⸻
+
+🎯 FUNÇÃO
+
+Estruturar, implementar e manter o sistema de vendas dos clientes, garantindo:
+	•	captação organizada,
+	•	atendimento eficiente,
+	•	automação inteligente,
+	•	e evolução contínua.
+
+⸻
+
+🧠 PRINCÍPIO-CHAVE
+
+CRM não é ferramenta.
+É sistema de receita.
+
+⸻
+
+📘 POP — AUTOMAÇÃO & CRM
+
+⸻
+
+🔔 GATILHO 1 — RECEBIMENTO DA DEMANDA
+
+Origem:
+	•	onboarding (novo cliente)
+	•	atendimento (ajuste ou problema)
+	•	planejamento (nova estratégia)
+	•	comercial (promessa feita)
+
+Ações obrigatórias
+	•	criar task no projeto Automação
+	•	identificar:
+	•	cliente
+	•	tipo (onboarding / ajuste / melhoria / erro)
+	•	origem da demanda
+
+⸻
+
+🔔 GATILHO 2 — VALIDAÇÃO COMERCIAL E CONTRATUAL
+
+Tipo: proteção de escopo
+
+Ações obrigatórias
+	•	confirmar:
+	•	produto contratado
+	•	limites do pacote
+	•	validar:
+	•	se está incluso
+	•	se precisa aprovação extra
+	•	checar:
+	•	pendências financeiras
+
+Saídas
+	•	✅ aprovado para execução
+	•	⚠️ precisa aprovação
+	•	❌ bloqueado
+
+📌 Automação sem validação = prejuízo.
+
+⸻
+
+🔔 GATILHO 3 — COLETA DE ACESSOS E PRÉ-REQUISITOS
+
+Tipo: técnico
+
+Ações obrigatórias
+	•	coletar e testar:
+	•	Kommo
+	•	WhatsApp
+	•	Instagram / Meta
+	•	APIs / integrações
+	•	e-mail
+	•	validar:
+	•	permissões
+	•	ambiente (produção/teste)
+
+Segurança
+	•	armazenar dados sensíveis corretamente
+
+📌 Sem acesso validado, não começa.
+
+⸻
+
+🔔 GATILHO 4 — DESENHO DA LÓGICA DA AUTOMAÇÃO
+
+Tipo: estratégico
+
+Ações obrigatórias
+	•	definir objetivo da automação
+	•	mapear jornada:
+	•	entrada → processamento → saída
+	•	identificar:
+	•	pontos de falha
+	•	dependências externas
+
+Definir sucesso
+	•	o que precisa acontecer para considerar “funcionando”
+
+📌 Automação sem lógica = gambiarra.
+
+⸻
+
+🔔 GATILHO 5 — APROVAÇÃO INTERNA DO FLUXO
+
+Tipo: governança
+
+Ações obrigatórias
+	•	revisar tecnicamente
+	•	validar impacto operacional
+	•	garantir:
+	•	simplicidade
+	•	aderência ao cliente
+	•	conformidade com políticas
+
+📌 Só implementa o que foi aprovado.
+
+⸻
+
+🔔 GATILHO 6 — IMPLEMENTAÇÃO TÉCNICA
+
+Tipo: execução
+
+Ações obrigatórias
+	•	construir no:
+	•	Kommo (funil, tags, bots)
+	•	n8n (lógica, integrações, delays)
+	•	configurar:
+	•	variáveis
+	•	gatilhos
+	•	condições
+	•	ativar:
+	•	logs
+	•	rastreabilidade
+
+📌 Sempre que possível, testar em ambiente controlado.
+
+⸻
+
+🔔 GATILHO 7 — TESTES FUNCIONAIS
+
+Tipo: validação
+
+Testes obrigatórios
+	•	entrada de lead
+	•	fluxo completo
+	•	saída (mensagem, ação, registro)
+	•	erros e exceções
+
+Evidência
+	•	registrar testes (print ou log)
+
+📌 Se não testou erro, não testou de verdade.
+
+⸻
+
+🔔 GATILHO 8 — VALIDAÇÃO COM CLIENTE (quando necessário)
+
+Tipo: alinhamento
+
+Ações
+	•	demonstrar funcionamento
+	•	validar:
+	•	lógica
+	•	mensagens
+	•	fluxo
+
+Saída
+	•	ajustes finos aprovados
+
+⸻
+
+🔔 GATILHO 9 — PUBLICAÇÃO EM PRODUÇÃO
+
+Tipo: ativação
+
+Ações obrigatórias
+	•	ativar automação
+	•	monitorar primeiros eventos
+	•	validar:
+	•	funcionamento real
+	•	ausência de erro crítico
+
+📌 Primeiras horas são críticas.
+
+⸻
+
+🔔 GATILHO 10 — DOCUMENTAÇÃO E ENCERRAMENTO
+
+Tipo: governança
+
+Ações obrigatórias
+	•	registrar:
+	•	o que foi feito
+	•	como funciona
+	•	riscos
+	•	atualizar Wiki / documentação
+	•	encerrar task apenas após estabilidade
+
+📌 Automação sem documentação vira problema futuro.
+
+⸻
+
+⏱️ SLA — AUTOMAÇÃO & CRM
+
+⸻
+
+📌 TEMPOS PADRÃO
+
+🔹 Setup inicial (onboarding)
+	•	até 7 a 14 dias úteis
+
+⸻
+
+🔹 Ajustes simples
+	•	até 24h úteis
+
+⸻
+
+🔹 Ajustes médios
+	•	até 48h úteis
+
+⸻
+
+🔹 Novas automações
+	•	até 3 a 7 dias úteis
+
+⸻
+
+🔹 Correções críticas (erro em produção)
+	•	imediato / prioridade máxima
+
+⸻
+
+📊 INDICADORES (KPIs)
+	•	tempo de implementação
+	•	taxa de erro em automações
+	•	tempo de resposta a falhas
+	•	% de automações utilizadas pelo cliente
+	•	conversão do funil
+	•	taxa de resposta dos leads
+
+⸻
+
+⚠️ REGRAS IMPORTANTES
+	•	❌ não automatizar sem entender o processo
+	•	❌ não criar fluxos complexos sem necessidade
+	•	❌ não ignorar experiência do usuário
+	•	❌ não publicar sem teste
+	•	✅ priorizar automação simples e funcional
+	•	✅ sempre documentar
+	•	✅ sempre pensar em escala
+
+⸻
+
+✅ CHECKLIST FINAL
+	•	⬜ demanda validada
+	•	⬜ acessos testados
+	•	⬜ lógica definida
+	•	⬜ fluxo aprovado
+	•	⬜ automação construída
+	•	⬜ testes realizados
+	•	⬜ cliente validou (se necessário)
+	•	⬜ publicado com sucesso
+	•	⬜ documentado
+	•	⬜ task encerrada
+
+⸻
+
+🧠 VISÃO DE DONO
+
+Esse departamento:
+	•	gera receita,
+	•	reduz esforço manual,
+	•	aumenta conversão,
+	•	e diferencia totalmente a Totum.

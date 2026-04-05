@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arquitetura Totum - Apresentação</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0f;
+            color: #fff;
+            line-height: 1.6;
+        }
+        
+        .slide {
+            min-height: 100vh;
+            padding: 60px 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border-bottom: 1px solid #1a1a2e;
+        }
+        
+        .slide-header {
+            margin-bottom: 40px;
+        }
+        
+        .slide-number {
+            color: #00d4ff;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-top: 10px;
+            background: linear-gradient(135deg, #fff 0%, #00d4ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        h2 {
+            font-size: 36px;
+            margin-bottom: 30px;
+            color: #fff;
+        }
+        
+        h3 {
+            font-size: 24px;
+            color: #00d4ff;
+            margin-bottom: 15px;
+        }
+        
+        .subtitle {
+            font-size: 20px;
+            color: #8892b0;
+            margin-top: 10px;
+        }
+        
+        /* Three Pillars */
+        .pillars {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .pillar {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            border: 1px solid #2a2a4e;
+            transition: transform 0.3s;
+        }
+        
+        .pillar:hover {
+            transform: translateY(-5px);
+        }
+        
+        .pillar-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+        
+        .pillar h3 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .pillar-role {
+            color: #00d4ff;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+        }
+        
+        .pillar-desc {
+            color: #8892b0;
+            font-size: 16px;
+        }
+        
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            font-size: 15px;
+        }
+        
+        th {
+            background: #1a1a2e;
+            color: #00d4ff;
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 13px;
+            letter-spacing: 1px;
+        }
+        
+        td {
+            padding: 16px;
+            border-bottom: 1px solid #1a1a2e;
+            color: #ccd6f6;
+        }
+        
+        tr:hover td {
+            background: rgba(0, 212, 255, 0.05);
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .badge-green {
+            background: rgba(0, 255, 136, 0.1);
+            color: #00ff88;
+        }
+        
+        .badge-blue {
+            background: rgba(0, 212, 255, 0.1);
+            color: #00d4ff;
+        }
+        
+        .badge-purple {
+            background: rgba(157, 0, 255, 0.1);
+            color: #9d00ff;
+        }
+        
+        /* Hardware Cards */
+        .hardware-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            margin: 30px 0;
+        }
+        
+        .hardware-card {
+            background: #1a1a2e;
+            border-radius: 12px;
+            padding: 30px;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .hardware-card:hover {
+            border-color: #00d4ff;
+        }
+        
+        .hardware-card.recommended {
+            border-color: #00ff88;
+            background: linear-gradient(135deg, #1a1a2e 0%, #0a2a1a 100%);
+        }
+        
+        .hardware-card h4 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+        
+        .hardware-card .price {
+            font-size: 32px;
+            color: #00d4ff;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        
+        .hardware-card.recommended .price {
+            color: #00ff88;
+        }
+        
+        .hardware-card .specs {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+        
+        .hardware-card .specs li {
+            padding: 8px 0;
+            border-bottom: 1px solid #2a2a4e;
+            color: #8892b0;
+            font-size: 14px;
+        }
+        
+        .hardware-card .specs li:last-child {
+            border-bottom: none;
+        }
+        
+        .hardware-card .specs strong {
+            color: #fff;
+        }
+        
+        .recommendation-badge {
+            background: #00ff88;
+            color: #0a0a0f;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+        
+        /* Architecture Diagram */
+        .arch-diagram {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+        
+        .arch-box {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-radius: 16px;
+            padding: 30px 40px;
+            text-align: center;
+            min-width: 200px;
+            border: 2px solid;
+        }
+        
+        .arch-box.tot {
+            border-color: #00d4ff;
+        }
+        
+        .arch-box.stark {
+            border-color: #ff6b6b;
+        }
+        
+        .arch-box.alexandria {
+            border-color: #ffd93d;
+        }
+        
+        .arch-box .icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        
+        .arch-box h4 {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        
+        .arch-box .location {
+            font-size: 13px;
+            color: #8892b0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .arch-connector {
+            color: #00d4ff;
+            font-size: 32px;
+        }
+        
+        /* Checklist */
+        .checklist {
+            list-style: none;
+        }
+        
+        .checklist li {
+            padding: 12px 0;
+            padding-left: 35px;
+            position: relative;
+            font-size: 18px;
+            color: #ccd6f6;
+        }
+        
+        .checklist li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #00ff88;
+            font-weight: bold;
+        }
+        
+        /* Next Steps */
+        .timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .timeline-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+        }
+        
+        .timeline-number {
+            width: 40px;
+            height: 40px;
+            background: #00d4ff;
+            color: #0a0a0f;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        .timeline-content h4 {
+            color: #fff;
+            margin-bottom: 5px;
+        }
+        
+        .timeline-content p {
+            color: #8892b0;
+        }
+        
+        /* Footer */
+        .slide-footer {
+            margin-top: auto;
+            padding-top: 40px;
+            text-align: center;
+            color: #8892b0;
+            font-size: 14px;
+        }
+        
+        /* Highlight */
+        .highlight {
+            background: rgba(0, 212, 255, 0.1);
+            border-left: 4px solid #00d4ff;
+            padding: 20px 25px;
+            margin: 25px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .highlight p {
+            color: #ccd6f6;
+            font-size: 18px;
+        }
+        
+        /* Two Column */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin: 30px 0;
+        }
+        
+        .metric-box {
+            background: #1a1a2e;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        .metric-box .number {
+            font-size: 48px;
+            font-weight: 700;
+            color: #00d4ff;
+        }
+        
+        .metric-box .label {
+            color: #8892b0;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SLIDE 1: Título -->
+    <div class="slide">
+        <div class="slide-header">
+            <div class="slide-number">Arquitetura de Operação</div>
+            <h1>Sistema Totum</h1>
+            <p class="subtitle">Estrutura de Inteligência Artificial para Escalar sem Gargalos</p>
+        </div>
+        
+        <div class="two-col" style="margin-top: 60px;">
+            <div class="metric-box">
+                <div class="number">3</div>
+                <div class="label">Entidades IA</div>
+            </div>
+            <div class="metric-box">
+                <div class="number">∞</div>
+                <div class="label">Escalabilidade</div>
+            </div>
+        </div>
+        
+        <div class="slide-footer">
+            Apresentação para Sócios • Totum • Abril 2026
+        </div>
+    </div>
+
+    <!-- SLIDE 2: Os Três Pilares -->
+    <div class="slide">
+        <div class="slide-header">
+            <div class="slide-number">Conceito Central</div>
+            <h2>Os Três Pilares</h2>
+            <p class="subtitle">Separação de responsabilidades para máxima eficiência</p>
+        </div>
+        
+        <div class="pillars">
+            <div class="pillar">
+                <div class="pillar-icon">🧠</div>
+                <div class="pillar-role">Imaginar</div>
+                <h3>TOT</h3>
+                <p class="pillar-desc">Arquitetura, estratégia e engenharia de soluções complexas</p>
+            </div>
+            <div class="pillar">
+                <div class="pillar-icon">💪</div>
+                <div class="pillar-role">Fazer</div>
+                <h3>Stark</h3>
+                <p class="pillar-desc">Execução operacional, deploys, monitoramento 24/7</p>
+            </div>
+            <div class="pillar">
+                <div class="pillar-icon">📚</div>
+                <div class="pillar-role">Saber</div>
+                <h3>Alexandria</h3>
+                <p class="pillar-desc">Biblioteca do conhecimento, indexação e contexto</p>
+            </div>
+        </div>
+        
+        <div class="highlight">
+            <p><strong>Princípio:</strong> Cada entidade faz o que faz de melhor. Nenhuma tenta ser mestre em tudo.</p>
+        </div>
+    </div>
+
+    <!-- SLIDE 3: Infográfico de Arquitetura -->
+    <div class="slide">
+        <div class="slide-header">
+            <div class="slide-number">Arquitetura</div>
+            <h2>Fluxo de Operação</h2>
+        </div>
+        
+        <div class="arch-diagram">
+            <div class="arch-box tot">
+                <div class="icon">🧠</div>
+                <h4>TOT</h4>
+                <div class="location">Cloud (Kimi)</div>
+            </div>
+            
+            <div class="arch-connector">⟷</div>
+            
+            <div class="arch-box stark">
+                <div class="icon">💪</div>
+                <h4>Stark</h4>
+                <div class="location">VPS Hostinger</div>
+            </div>
+            
+            <div class="arch-connector">⟷</div>
+            
+            <div class="arch-box alexandria">
+                <div class="icon">📚</div>
+                <h4>Alexandria</h4>
+                <div class="location">Servidor Dedicado</div>
+            </div>
+        </div>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Entidade</th>
+                    <th>Local</th>
+                    <th>Função Principal</th>
+                    <th>Módulos</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>TOT</strong></td>
+                    <td>Cloud</td>
+                    <td>Imaginar / Construir / Arquitetar</td>
+                    <td><span class="badge badge-blue">Estratégia</span></td>
+                </tr>
+                <tr>
+                    <td><strong>Stark</strong></td>
+                    <td>VPS</td>
+                    <td>Fazer / Executar / Operar</td>
+                    <td><span class="badge badge-green">ABED</span> <span class="badge badge-purple">MIAGUY</span></td>
+                </tr>
+                <tr>
+                    <td><strong>Alexandria</strong></td>
+                    <td>Dedicado</td>
+                    <td>Saber / Indexar / Contextualizar</td>
+                    <td><span class="badge badge-blue">GILES</span> <span class="badge badge-blue">MEX</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- SLIDE 4: Opções de Hardware -->
+    <div class="slide">
+        <div class="slide-header">
+            <div class="slide-number">Investimento</div>
+            <h2>Opções de Hardware</h2>
+            <p class="subtitle">Alexandria: Servidor Dedicado Local</p>
+        </div>
+        
+        <div class="hardware-grid">
+            <div class="hardware-card">
+                <h4>🥉 Sobrevivência</h4>
+                <div class="price">R$ ~4.500</div>
+                <ul class="specs">
+                    <li><strong>CPU:</strong> Ryzen 5 5600</li>
+                    <li><strong>RAM:</strong> 32GB DDR4</li>
+                    <li><strong>GPU:</strong> RTX 3060 12GB</li>
+                    <li><strong>SSD:</strong> NVMe 500GB</li>
+                </ul>
+                <p style="color: #8892b0; font-size: 14px;">IA básica • Texto • Imagens simples</p>
+            </div>
+            
+            <div class="hardware-card recommended">
+                <span class="recommendation-badge">⭐ RECOMENDADO</span>
+                <h4>🥈 Profissional</h4>
+                <div class="price">R$ ~8.000</div>
+                <ul class="specs">
+                    <li><strong>CPU:</strong> Ryzen 7 7700X</li>
+                    <li><strong>RAM:</strong> 64GB DDR5</li>
+                    <li><strong>GPU:</strong> RTX 4070 Ti Super 16GB</li>
+                    <li><strong>SSD:</strong> NVMe 1TB</li>
+                </ul>
+                <p style="color: #00ff88; font-size: 14px;">IA completa • Vídeo • Produção</p>
+            </div>
+            
+            <div class="hardware-card">
+                <h4>🥇 Futuro</h4>
+                <div class="price">R$ ~18.000</div>
+                <ul class="specs">
+                    <li><strong>CPU:</strong> Ryzen 9 7900X3D</li>
+                    <li><strong>RAM:</strong> 128GB DDR5</li>
+                    <li><strong>GPU:</strong> RTX 4090 24GB</li>
+                    <li><strong>SSD:</strong> NVMe 2TB</li>
+                </ul>
+                <p style="color: #8892b0; font-size: 14px;">Estúdio IA • 4K • Tudo local</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 5: Capacidades de IA -->
+    <div class="slide">
+        <div class="slide-header">
+            <div class="slide-number">Capacidades</div>
+            <h2>O que cada opção roda?</h2>
+            <p class="subtitle">Comparação com IAs comerciais famosas</p>
+        </div>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Opção</th>
+                    <th>IA Local</th>
+                    <th>Equivalente Cloud</th>
+                    <th>Capacidade</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td rowspan="3"><strong>🥉 Sobrevivência</strong><br>R$ 4.500</td>
+                    <td>Llama 2 7B</td>
+                    <td>GPT-3.5 Turbo</td>
+                    <td>Texto, análise, resumo</td>
+                </tr>
+                <tr>
+                    <td>Stable Diffusion 1.5</td>
+                    <td>Midjourney v4</td>
+                    <td>Imagens 512x512 (~5s)</td>
+                </tr>
+                <tr>
+                    <td>Whisper Base</td>
+                    <td>Whisper API</td>
+                    <td>Transcrição básica</td>
+                </tr>
+                <tr style="background: rgba(0, 255, 136, 0.05);">
+                    <td rowspan="3"><strong>🥈 Profissional</strong><br>R$ 8.000</td>
+                    <td>Llama 3 8B / Mixtral</td>
+                    <td>GPT-4 Mini</td>
+                    <td>Raciocínio avançado, coding</td>
+                </tr>
+                <tr style="background: rgba(0, 255, 136, 0.05);">
+                    <td>Stable Diffusion XL</td>
+                    <td>Midjourney v5</td>
+                    <td>Imagens 1024x1024 (~3s)</td>
+                </tr>
+                <tr style="background: rgba(0, 255, 136, 0.05);">
+                    <td>AnimateDiff + Whisper</td>
+                    <td>Runway Gen-2</td>
+                    <td>Vídeo animado + transcrição</td>
+                </tr>
+                <tr>
+                    <td rowspan="3"><strong>🥇 Futuro</strong><br>R$ 18.000</td>
+                    <td>Llama 3 70B</td>
+                    <td>GPT-4 / Claude 3</td>
+                    <td>IA de nível máximo</td>
+                </tr>
+                <tr>
+                    <td>SDXL + SVD</td>
+                    <td>Midjourney v6 + Runway</td>
+                    <td>Vídeo 4K, alta fidelidade</td>
+                </tr>
+                <tr>
+                    <td>Pipeline Completo</td>
+                    <td>Suite completa</td>
+                    <td>Texto → Imagem → Vídeo → Áudio</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- SLIDE 6: Benefícios -->
+    <div class="slide">
+        <div class="slide-header">
+            <div class="slide-number">Por quê?</div>
+            <h2>Benefícios da Arquitetura</h2>
+        </div>
+        
+        <ul class="checklist">
+            <li><strong>Resiliência:</strong> Se um cai, os outros continuam operando</li>
+            <li><strong>Especialização:</strong> Cada entidade domina sua função</li>
+            <li><strong>Economia:</strong> Reduz custos de API Cloud (GPT-4, Claude)</li>
+            <li><strong>Privacidade:</strong> Dados sensíveis ficam no servidor local</li>
+            <li><strong>Velocidade:</strong> IA local = latência mínima</li>
+            <li><strong>Escalabilidade:</strong> Adiciona mais servidores conforme cresce</li>
+            <li><strong>Offline:</strong> Sistema funciona sem internet para tarefas locais</li>
+            <li><strong>Controle:</strong> Você dono da infraestrutura (não depende de terceiros)</li>
+        </ul>
+        
+        <div class="highlight" style="margin-top: 40px;">
+            <p><strong>ROI:</strong> Investimento de R$ 8.000 paga em ~3 meses vs custo de APIs Cloud para operação similar.</p>
+        </div>
+    </div>
+
+    <!-- SLIDE 7: Próximos Passos -->
+    <div class="slide">
+        <div class="slide-header">
+            <div class="slide-number">Ação</div>
+            <h2>Próximos Passos</h2>
+        </div>
+        
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-number">1</div>
+                <div class="timeline-content">
+                    <h4>Construir GILES</h4>
+                    <p>Cientista da Informação para organizar o conhecimento atual</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-number">2</div>
+                <div class="timeline-content">
+                    <h4>Implementar MEX</h4>
+                    <p>Sistema de banco de contextos estruturado</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-number">3</div>
+                <div class="timeline-content">
+                    <h4>Popular Contextos</h4>
+                    <p>Migrar documentação existente para o novo formato</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-number">4</div>
+                <div class="timeline-content">
+                    <h4>Adquirir Hardware</h4>
+                    <p>Opção Profissional (R$ 8.000) recomendada</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-number">5</div>
+                <div class="timeline-content">
+                    <h4>Implantar Alexandria</h4>
+                    <p>Migrar MEX para servidor dedicado</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="slide-footer" style="margin-top: 60px;">
+            <h3 style="color: #00d4ff; margin-bottom: 15px;">Decisão</h3>
+            <p style="font-size: 18px; color: #ccd6f6;">
+                Aprovar investimento em arquitetura de IA distribuída com foco em<br>
+                <strong>autonomia, eficiência e escalabilidade</strong>.
+            </p>
+        </div>
+    </div>
+
+</body>
+</html>

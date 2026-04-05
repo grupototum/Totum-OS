@@ -1,0 +1,307 @@
+PROMPT LOVABLE - HIERARQUIA DE AGENTES E SISTEMA POP/SLA
+
+CRIE A ESTRUTURA COMPLETA DE AGENTES E RECURSOS COM HIERARQUIA VISUAL
+
+=====================================
+PARTE 1: HIERARQUIA DE AGENTES (NÍVEIS)
+=====================================
+
+A hierarquia segue o princípio: MAIS ABRANGENTE chama MAIS ESPECÍFICO
+Organização em NÍVEIS (1 = topo, 5 = mais específico)
+
+─────────────────────────────────────
+NÍVEL 1 - AGENTES PRINCIPAIS (Categoria)
+─────────────────────────────────────
+
+1.1 ATENDENTE TOTUM
+    └─ Nível 2: Funções Operacionais
+       ├─ Monitor de Grupos (Classificador de Demandas)
+       │  └─ Detecta menções, classifica por: tipo, departamento, urgência
+       ├─ Detector de Churn
+       ├─ Mataburro de Atendimento (follow-ups automáticos)
+       ├─ Auditor de SLA
+       ├─ Agendador de Compromissos
+       ├─ Gestor de Tarefas por Data
+       ├─ Transcritor de Áudio
+       └─ Gerador de Relatórios
+
+1.2 GESTOR DE TRÁFEGO
+    └─ Nível 2: Funções de Performance
+       ├─ Auditor Diário de Performance
+       ├─ Detector de Anomalias
+       ├─ Protetor de Contas (alertas de violação)
+       ├─ Gerador de Insight Semanal
+       ├─ Escala Inteligente de Budget
+       ├─ Análise de Criativos (A/B testing)
+       ├─ Diagnóstico de Conversão
+       ├─ Relatório Executivo para Cliente
+       └─ Mataburro SLA (follow-ups)
+
+1.3 RADAR ESTRATÉGICA
+    └─ Nível 2: Por Cliente (um agente por cliente)
+       └─ Nível 3: Funções de Conteúdo
+          ├─ Entrada de Referências
+          ├─ Entrada de Metadados do Cliente
+          ├─ Análise de Conteúdos Pendentes
+          ├─ Relatório de Melhores Dias de Postagem
+          ├─ Relatório Otimizado para Cliente
+          ├─ Sugestão de Stories (dias + temas)
+          ├─ Apoio a Tráfego Pago e CRM
+          ├─ Informador de Eventos Sazonais
+          ├─ Pesquisa de Trends (TikTok/Instagram)
+          ├─ Pesquisa Google Newsletter
+          ├─ Sugeridor de Hooks Fortes
+          ├─ Criador de Matriz de Conteúdos Reaproveitáveis
+          ├─ Gerador de Estrutura de Carrossel
+          ├─ Criador de Ideias de Reels (ângulo estratégico)
+          ├─ Indicador de Conteúdo para Tráfego Pago
+          └─ Agente Geral de Captação
+
+─────────────────────────────────────
+NÍVEL 1 - RECURSOS CENTRAIS
+─────────────────────────────────────
+
+2. RECURSOS CENTRAIS (Embedded com níveis de acesso)
+   ├─ Notebook LM (Google)
+   ├─ Google Drive
+   ├─ Chat Específico
+   ├─ Website Downloader (GitHub: asimov-academy)
+   ├─ Backup Sincronizador
+   └─ Integração Alexa
+
+=====================================
+PARTE 2: MENU LATERAL COM HIERARQUIA
+=====================================
+
+CRIE NO MENU LATERAL a seguinte estrutura clicável:
+
+[SEÇÃO: AGENTES]
+▼ Atendente Totum (expandível)
+  ├─ Monitor de Grupos
+  ├─ Detector de Churn
+  ├─ Mataburro
+  ├─ Auditor SLA
+  ├─ Agendador
+  ├─ Gestor de Tarefas
+  ├─ Transcritor
+  └─ Relatórios
+
+▼ Gestor de Tráfego (expandível)
+  ├─ Auditor Diário
+  ├─ Detector de Anomalias
+  ├─ Protetor de Contas
+  ├─ Insight Semanal
+  ├─ Escala Inteligente
+  ├─ Análise de Criativos
+  ├─ Diagnóstico Conversão
+  ├─ Relatório Executivo
+  └─ Mataburro SLA
+
+▼ Radar Estratégica (expandível)
+  ├─ Dashboard por Cliente
+  ├─ Análise de Referências
+  ├─ Planejamento de Conteúdo
+  ├─ Trends e Pesquisas
+  ├─ Criação de Hooks
+  ├─ Matriz de Reaproveitamento
+  ├─ Estrutura de Carrossel
+  ├─ Ideias de Reels
+  └─ Indicador P/Tráfego
+
+[SEÇÃO: RECURSOS]
+▼ Recursos Centrais (expandível)
+  ├─ Notebook LM
+  ├─ Google Drive
+  ├─ Chat Específico
+  ├─ Website Downloader
+  ├─ Backup Sync
+  └─ Integração Alexa
+
+[SEÇÃO: POP/SLA]
+► POP e SLA Totum (página dedicada)
+
+=====================================
+PARTE 3: PÁGINAS E FUNCIONALIDADES
+=====================================
+
+PARA CADA AGENTE/FUNÇÃO, CRIE:
+
+1. PÁGINA DO AGENTE PAI (Nível 1)
+   - Header com nome e descrição
+   - Cards dos sub-agentes/funções
+   - Status do agente (online/offline)
+   - Botão "Conversar" (abre chat)
+
+2. PÁGINAS DOS SUB-AGENTES (Níveis 2-5)
+   - Indicador visual da hierarquia (breadcrumb)
+   - Descrição específica da função
+   - Configurações/parâmetros
+   - Status e logs
+   - Botão "Executar" ou "Conversar"
+
+3. SISTEMA DE CHAT POR AGENTE
+   - Cada agente tem seu próprio chat
+   - Contexto específico da função
+   - Histórico separado
+   - Indicador de "nível" no chat
+
+=====================================
+PARTE 4: PÁGINA TEAM (VISÃO GERAL)
+=====================================
+
+CRIE PÁGINA "/team" COM:
+
+VISUAL: Organograma hierárquico interativo
+
+ESTRUTURA VISUAL:
+┌─────────────────────────────────────────┐
+│           ATENDENTE TOTUM               │
+│              (Nível 1)                  │
+│              [Avatar]                   │
+└──────────────┬──────────────────────────┘
+               │
+    ┌──────────┼──────────┐
+    │          │          │
+┌───▼───┐  ┌──▼────┐ ┌───▼────┐
+│Monitor│  │Churn  │ │Mataburro│
+│Grupos │  │Detect │ │         │
+│(Nível2)│  │(Nível2)│ │(Nível2) │
+└───┬───┘  └──┬────┘ └────┬───┘
+    │         │           │
+┌───▼─────────▼───────────▼───┐
+│     [MAIS SUB-NÍVEIS]       │
+│         (Nível 3+)          │
+└─────────────────────────────┘
+
+FUNCIONALIDADES:
+- Click em qualquer agente → abre página/chat
+- Hover mostra descrição rápida
+- Cores por categoria:
+  * Atendente: Azul
+  * Gestor: Verde
+  * Radar: Roxo
+- Status em tempo real (online/offline)
+- Conexões mostram dependências
+
+=====================================
+PARTE 5: PÁGINA POP/SLA (NOVA)
+=====================================
+
+CRIE PÁGINA "/pop-sla" COM:
+
+HEADER:
+- Título: "POP e SLA - Totum"
+- Subtítulo: "Procedimentos Operacionais Padrão"
+
+CONTEÚDO (MVP - Em Breve):
+┌─────────────────────────────────────────┐
+│                                         │
+│     🚧 EM BREVE 🚧                     │
+│                                         │
+│   Sistema POP/SLA Interativo           │
+│                                         │
+│   Funcionalidades planejadas:          │
+│   • Biblioteca de POPs                 │
+│   • Métricas de SLA em tempo real      │
+│   • Alertas de violação                │
+│   • Histórico de atendimento           │
+│   • Benchmarks por departamento        │
+│                                         │
+│   [Notificar quando disponível]        │
+│                                         │
+└─────────────────────────────────────────┘
+
+DESIGN: Visual alinhado ao design system
+
+=====================================
+PARTE 6: DICAS/RECURSOS (BIBLIOTECA)
+=====================================
+
+CRIE SEÇÃO "/recursos/dicas" COM:
+
+CATEGORIAS DE DICAS (organizadas):
+
+[IA Geral]
+• Claude Code Hacks (computer use, economia, códigos secretos)
+• Gemini Modo Honesto
+• ChatGPT Atlas
+• Goblin.tools
+• LLM Council
+• DeepSeek OCR
+
+[Programação]
+• Kimi K2.5 (Visual Code, Office Agent, Agent Swarm)
+• Google Antigravity
+• Wind Surf IDE
+• OS da OAP
+• Data Button
+• Skills do Claude Code
+
+[Design]
+• Google Vibe Design (Stitch)
+• Magic Animator
+• Super Designer
+• Kim Slides
+
+[Imagens]
+• Método CAMP
+• Flux 2
+• Seedream 4.0
+• Upscale.media
+• Moondream 3
+• Nano Banana Pro
+
+[Vídeos]
+• Runway ML
+• Minamax
+• Kling AI
+• Hailuo 2.3
+• Remotion
+• Stable Video Infinity
+
+[Estudos]
+• Hack de Aulas
+• Hack Google Drive
+• Engenharia de Prompt
+• Otimizador de Prompt
+
+FORMATO: Cards clicáveis com link externo
+
+=====================================
+REQUISITOS TÉCNICOS
+=====================================
+
+1. MENU LATERAL:
+   - Expandir/colapsar seções
+   - Indicador de nível hierárquico
+   - Badge de "novo" para POP/SLA
+   - Scroll independente
+
+2. NAVEGAÇÃO:
+   - Breadcrumbs mostrando hierarquia
+   - Botão "voltar" mantém contexto
+   - URL amigável: /agentes/atendente/monitor
+
+3. CHAT POR AGENTE:
+   - Contexto específico carregado
+   - Avatar e nome do agente
+   - Indicador de capacidades
+
+4. RESPONSIVO:
+   - Menu lateral vira drawer mobile
+   - Organograma adapta layout
+
+=====================================
+CHECKLIST DE ENTREGA
+=====================================
+
+- [ ] Menu lateral com hierarquia completa
+- [ ] Páginas dos 3 Agentes Principais
+- [ ] Sub-páginas para cada função (Níveis 2-5)
+- [ ] Página Team com organograma interativo
+- [ ] Sistema de chat por agente
+- [ ] Página POP/SLA (Em Breve)
+- [ ] Seção de Dicas/Recursos
+- [ ] Todas as páginas clicáveis e funcionais
+- [ ] Navegação hierárquica (breadcrumbs)
+- [ ] Design consistente

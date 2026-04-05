@@ -1,0 +1,275 @@
+TRÁFEGO PAGO
+
+POP + SLA (VERSÃO FINAL)
+
+⸻
+
+🎯 FUNÇÃO
+
+Gerar demanda previsível e qualificada, alimentando o CRM com leads com potencial real de conversão.
+
+⸻
+
+🧠 PRINCÍPIO-CHAVE
+
+Tráfego não é clique.
+É lead qualificado que vira venda.
+
+⸻
+
+📘 POP — TRÁFEGO PAGO
+
+⸻
+
+🔔 GATILHO 1 — RECEBIMENTO DA DEMANDA / CAMPANHA
+
+Origem:
+	•	onboarding
+	•	planejamento estratégico
+	•	cliente (promoção / campanha)
+	•	otimização interna
+
+Ações obrigatórias
+	•	criar task no projeto Tráfego
+	•	definir:
+	•	objetivo da campanha
+	•	tipo (captação / remarketing / institucional)
+
+⸻
+
+🔔 GATILHO 2 — VALIDAÇÃO DE ESCOPO E VERBA
+
+Tipo: estratégico / financeiro
+
+Ações obrigatórias
+	•	confirmar:
+	•	orçamento disponível
+	•	canais (Meta, Google, TikTok)
+	•	validar:
+	•	se a campanha está dentro do pacote
+	•	expectativa realista de resultado
+
+📌 Tráfego sem verba clara = problema.
+
+⸻
+
+🔔 GATILHO 3 — ALINHAMENTO COM CRM E FUNIL
+
+Tipo: integração crítica
+
+Ações obrigatórias
+	•	definir:
+	•	para onde o lead vai (Kommo, WhatsApp, LP)
+	•	como será tratado
+	•	validar:
+	•	tags automáticas
+	•	origem do lead
+	•	integração com n8n (se aplicável)
+
+📌 Lead sem destino estruturado = dinheiro perdido.
+
+⸻
+
+🔔 GATILHO 4 — DEFINIÇÃO DE ESTRATÉGIA
+
+Tipo: estratégico
+
+Ações obrigatórias
+	•	definir:
+	•	público (segmentação)
+	•	oferta (o que está sendo vendido)
+	•	criativos necessários
+	•	tipo de campanha
+
+Tipos comuns
+	•	captação direta
+	•	geração de leads
+	•	tráfego para WhatsApp
+	•	remarketing
+
+⸻
+
+🔔 GATILHO 5 — CRIAÇÃO DOS ATIVOS
+
+Tipo: produção
+
+Ações obrigatórias
+	•	solicitar ou criar:
+	•	criativos (vídeo, imagem)
+	•	copy dos anúncios
+	•	validar:
+	•	clareza
+	•	coerência com o público
+	•	aderência à oferta
+
+📌 Criativo ruim = campanha morta.
+
+⸻
+
+🔔 GATILHO 6 — CONFIGURAÇÃO DA CAMPANHA
+
+Tipo: técnico
+
+Ações obrigatórias
+	•	configurar:
+	•	campanha
+	•	conjuntos
+	•	anúncios
+	•	definir:
+	•	orçamento diário
+	•	posicionamento
+	•	eventos de conversão
+
+Integração
+	•	garantir:
+	•	pixel ativo
+	•	eventos funcionando
+	•	link correto
+
+⸻
+
+🔔 GATILHO 7 — PUBLICAÇÃO E ATIVAÇÃO
+
+Tipo: execução
+
+Ações obrigatórias
+	•	publicar campanha
+	•	verificar:
+	•	aprovação da plataforma
+	•	entrega inicial
+
+📌 Primeiras horas são críticas.
+
+⸻
+
+🔔 GATILHO 8 — MONITORAMENTO INICIAL
+
+Tipo: validação
+
+Ações obrigatórias
+	•	acompanhar:
+	•	impressões
+	•	cliques
+	•	custo inicial
+	•	identificar:
+	•	erros
+	•	baixo desempenho inicial
+
+⸻
+
+🔔 GATILHO 9 — OTIMIZAÇÃO CONTÍNUA
+
+Tipo: melhoria
+
+Ações obrigatórias
+	•	ajustar:
+	•	criativos
+	•	público
+	•	orçamento
+	•	pausar:
+	•	anúncios ruins
+	•	escalar:
+	•	anúncios vencedores
+
+📌 Tráfego é ajuste constante.
+
+⸻
+
+🔔 GATILHO 10 — INTEGRAÇÃO COM RESULTADO (CRM)
+
+Tipo: estratégico
+
+Ações obrigatórias
+	•	analisar:
+	•	qualidade dos leads
+	•	taxa de resposta
+	•	conversão no CRM
+	•	alinhar com:
+	•	equipe de vendas
+	•	automação
+
+📌 Métrica final não é clique. É venda.
+
+⸻
+
+🔔 GATILHO 11 — RELATÓRIO E REGISTRO
+
+Tipo: governança
+
+Ações obrigatórias
+	•	registrar:
+	•	resultados principais
+	•	aprendizados
+	•	atualizar:
+	•	métricas
+	•	status da campanha
+
+⸻
+
+⏱️ SLA — TRÁFEGO PAGO
+
+⸻
+
+📌 TEMPOS PADRÃO
+
+🔹 Setup inicial de campanha
+	•	até 2 a 5 dias úteis
+
+⸻
+
+🔹 Ajustes simples
+	•	até 24h úteis
+
+⸻
+
+🔹 Otimização contínua
+	•	análise mínima 3x por semana
+
+⸻
+
+🔹 Correção de erro crítico
+	•	imediato
+
+⸻
+
+📊 KPIs PRINCIPAIS
+	•	CPC (custo por clique)
+	•	CPM (custo por mil)
+	•	CTR
+	•	CPL (custo por lead)
+	•	CPA (custo por aquisição)
+	•	taxa de conversão no CRM
+	•	ROI
+
+⸻
+
+⚠️ REGRAS IMPORTANTES
+	•	❌ não rodar campanha sem funil estruturado
+	•	❌ não escalar campanha ruim
+	•	❌ não ignorar qualidade do lead
+	•	❌ não tomar decisão com poucos dados
+	•	✅ sempre testar variações
+	•	✅ sempre integrar com CRM
+	•	✅ sempre olhar resultado final
+
+⸻
+
+✅ CHECKLIST FINAL
+	•	⬜ campanha definida
+	•	⬜ verba validada
+	•	⬜ integração com CRM ok
+	•	⬜ criativos prontos
+	•	⬜ campanha configurada
+	•	⬜ publicada
+	•	⬜ monitoramento ativo
+	•	⬜ otimização em andamento
+	•	⬜ resultados registrados
+
+⸻
+
+🧠 VISÃO DE DONO
+
+Esse departamento:
+	•	alimenta toda operação,
+	•	define crescimento,
+	•	e só funciona qu

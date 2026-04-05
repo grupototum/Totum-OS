@@ -1,0 +1,33 @@
+{
+  "domain": "stark",
+  "description": "Índice de contextos do domínio Stark (infraestrutura e operações)",
+  "last_updated": "2026-04-05T00:00:00Z",
+  "contexts": [
+    {
+      "id": "ctx_stark_deploy_react_vps",
+      "title": "Deploy de Aplicação React na VPS",
+      "category": "deploy",
+      "tags": ["react", "vps", "nginx", "pm2", "build"],
+      "file": "deploy_react_vps.json",
+      "version": "1.0",
+      "status": "ativo",
+      "relations_count": 3
+    },
+    {
+      "id": "ctx_stark_ssl_certbot",
+      "title": "Configuração SSL com Certbot",
+      "category": "infra",
+      "tags": ["ssl", "certbot", "letsencrypt", "nginx", "https"],
+      "file": "ssl_certbot.json",
+      "version": "1.0",
+      "status": "ativo",
+      "relations_count": 2
+    }
+  ],
+  "categories": {
+    "deploy": { "count": 1, "description": "Procedimentos de deploy" },
+    "infra": { "count": 1, "description": "Configuração de infraestrutura" },
+    "pop": { "count": 0, "description": "Procedimentos Operacionais Padrão" },
+    "sla": { "count": 0, "description": "Acordos de Nível de Serviço" }
+  }
+}

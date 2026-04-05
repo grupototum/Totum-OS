@@ -1,0 +1,33 @@
+{
+  "domain": "alexandria",
+  "description": "Índice de contextos do domínio Alexandria (sistema de conhecimento)",
+  "last_updated": "2026-04-05T00:00:00Z",
+  "contexts": [
+    {
+      "id": "ctx_alexandria_giles_persona",
+      "title": "GILES - Cientista da Informação",
+      "category": "agente",
+      "tags": ["giles", "agente", "indexacao", "taxonomia", "ontologia"],
+      "file": "giles_persona.json",
+      "version": "1.0",
+      "status": "ativo",
+      "relations_count": 2
+    },
+    {
+      "id": "ctx_alexandria_mex_sistema",
+      "title": "MEX - Sistema de Contextos",
+      "category": "documentacao",
+      "tags": ["mex", "sistema", "contexto", "schema", "json"],
+      "file": "mex_sistema.json",
+      "version": "1.0",
+      "status": "ativo",
+      "relations_count": 3
+    }
+  ],
+  "categories": {
+    "documentacao": { "count": 1, "description": "Documentação do sistema" },
+    "config": { "count": 0, "description": "Configurações" },
+    "agente": { "count": 1, "description": "Agentes da Alexandria" },
+    "skill": { "count": 0, "description": "Skills e competências" }
+  }
+}

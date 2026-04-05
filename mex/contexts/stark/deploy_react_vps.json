@@ -1,0 +1,82 @@
+{
+  "$schema": "../schemas/context.schema.json",
+  "id": "ctx_stark_deploy_react_vps",
+  "domain": "stark",
+  "category": "deploy",
+  "tags": ["react", "vps", "nginx", "pm2", "build", "deploy", "frontend"],
+  "version": "1.0",
+  "created": "2026-04-05T10:00:00Z",
+  "modified": "2026-04-05T10:00:00Z",
+  "author": "TOT",
+  "sources": [
+    "docs/planos/PLANO_MIGRACAO_VPS_STARK.md",
+    "infra/scripts/deploy.sh"
+  ],
+  "status": "ativo",
+  "relations": [
+    {
+      "to": "ctx_stark_ssl_certbot",
+      "type": "requires",
+      "description": "Deploy precisa de SSL configurado"
+    },
+    {
+      "to": "ctx_stark_nginx_config",
+      "type": "depends",
+      "description": "Usa configuração de nginx"
+    },
+    {
+      "to": "ctx_totum_arquitetura_sistema",
+      "type": "related",
+      "description": "Parte da arquitetura geral"
+    }
+  ],
+  "content": {
+    "summary": "Procedimento completo para fazer deploy de aplicação React em VPS usando PM2 e Nginx como reverse proxy",
+    "data": {
+      "pre_requisitos": [
+        "Node.js 18+ instalado",
+        "PM2 instalado globalmente",
+        "Nginx configurado",
+        "Certificado SSL (opcional mas recomendado)"
+      ],
+      "passos": [
+        {
+          "ordem": 1,
+          "acao": "Build da aplicação",
+          "comando": "npm run build"
+        },
+        {
+          "ordem": 2,
+          "acao": "Copiar para pasta do servidor",
+          "comando": "scp -r dist/ user@vps:/var/www/app/"
+        },
+        {
+          "ordem": 3,
+          "acao": "Configurar PM2",
+          "comando": "pm2 start ecosystem.config.js"
+        },
+        {
+          "ordem": 4,
+          "acao": "Configurar Nginx",
+          "arquivo": "/etc/nginx/sites-available/app"
+        }
+      ],
+      "verificacao": [
+        "Acessar URL e verificar se carrega",
+        "Verificar SSL (https)",
+        "Testar refresh em rotas (SPA)"
+      ],
+      "rollout": [
+        "pm2 stop app",
+        "pm2 delete app",
+        "Restaurar backup se necessário"
+      ]
+    },
+    "markdown": "# Deploy React na VPS\n\n## Pré-requisitos..."
+  },
+  "usage_stats": {
+    "access_count": 0,
+    "last_accessed": null,
+    "accessed_by": []
+  }
+}

@@ -1,0 +1,220 @@
+#!/bin/bash
+# =============================================================================
+# GIT SYNC WORKFLOW - Apps Totum
+# Sincronização automática GitHub → VPS/Mac
+# =============================================================================
+
+set -e
+
+# Configurações
+REPO_DIR="/root/.openclaw/workspace/apps_totum"
+REPO_URL="https://github.com/grupototum/Apps_totum_Oficial.git"
+LOG_FILE="/root/.openclaw/workspace/logs/git-sync.log"
+BRANCH="main"
+
+# Criar diretório de logs
+mkdir -p "$(dirname $LOG_FILE)"
+
+# Logging
+log() {
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" | tee -a "$LOG_FILE"
+}
+
+# =============================================================================
+# FUNÇÃO: Setup Inicial do Repo
+# =============================================================================
+setup_repo() {
+    log "🚀 Configurando repositório Git..."
+    
+    if [ ! -d "$REPO_DIR/.git" ]; then
+        log "Clonando repositório..."
+        git clone "$REPO_URL" "$REPO_DIR"
+    fi
+    
+    cd "$REPO_DIR"
+    
+    # Configurar git
+    git config user.name "Totum Claw"
+    git config user.email "claw@totum.com"
+    
+    log "✅ Repositório configurado"
+}
+
+# =============================================================================
+# FUNÇÃO: Pull Automático (VPS recebe do GitHub)
+# =============================================================================
+auto_pull() {
+    log "⬇️  Verificando atualizações do GitHub..."
+    
+    cd "$REPO_DIR"
+    
+    # Fetch sem merge
+    git fetch origin $BRANCH
+    
+    # Verificar se há mudanças
+    LOCAL=$(git rev-parse HEAD)
+    REMOTE=$(git rev-parse origin/$BRANCH)
+    
+    if [ "$LOCAL" != "$REMOTE" ]; then
+        log "🔄 Novas mudanças detectadas! Fazendo pull..."
+        git pull origin $BRANCH
+        log "✅ Repositório atualizado!"
+        
+        # Notificar (opcional: webhook, telegram, etc)
+        notify_update
+    else
+        log "✅ Já está atualizado"
+    fi
+}
+
+# =============================================================================
+# FUNÇÃO: Push Automático (VPS envia para GitHub)
+# =============================================================================
+auto_push() {
+    log "⬆️  Verificando mudanças locais..."
+    
+    cd "$REPO_DIR"
+    
+    # Verificar se há mudanças
+    if git diff --quiet && git diff --cached --quiet; then
+        log "✅ Nenhuma mudança para commit"
+        return 0
+    fi
+    
+    log "📤 Fazendo commit e push..."
+    
+    git add -A
+    git commit -m "Sync: $(date '+%Y-%m-%d %H:%M:%S')" || true
+    git push origin $BRANCH
+    
+    log "✅ Push realizado com sucesso!"
+}
+
+# =============================================================================
+# FUNÇÃO: Notificação de Update
+# =============================================================================
+notify_update() {
+    # Aqui pode ser integrado com:
+    # - Webhook para seu Mac
+    # - Notificação Telegram
+    # - Log para dashboard
+    
+    log "📢 Notificação: Código atualizado do GitHub"
+}
+
+# =============================================================================
+# FUNÇÃO: Status
+# =============================================================================
+status() {
+    cd "$REPO_DIR"
+    
+    echo "📊 Git Sync Status"
+    echo "=================="
+    echo ""
+    echo "Branch: $(git branch --show-current)"
+    echo "Último commit: $(git log -1 --pretty=format:'%h - %s (%ar)')"
+    echo ""
+    echo "Remotes:"
+    git remote -v
+    echo ""
+    echo "Status:"
+    git status --short
+}
+
+# =============================================================================
+# FUNÇÃO: Configurar Cron (a cada 5 min)
+# =============================================================================
+setup_cron() {
+    log "⏰ Configurando cron de sync..."
+    
+    # Script de sync
+    SYNC_CMD="*/5 * * * * cd $(dirname $0) && ./git-sync pull >> $LOG_FILE 2>&1"
+    
+    # Remover cron antigo
+    crontab -l 2>/dev/null | grep -v "git-sync" | crontab - 2>/dev/null || true
+    
+    # Adicionar novo cron
+    (crontab -l 2>/dev/null; echo "$SYNC_CMD") | crontab -
+    
+    log "✅ Cron configurado: pull a cada 5 minutos"
+}
+
+# =============================================================================
+# FUNÇÃO: Remover Cron
+# =============================================================================
+remove_cron() {
+    log "🗑️  Removendo cron..."
+    crontab -l 2>/dev/null | grep -v "git-sync" | crontab - 2>/dev/null || true
+    log "✅ Cron removido"
+}
+
+# =============================================================================
+# FUNÇÃO: Deploy (build + restart)
+# =============================================================================
+deploy() {
+    log "🚀 Iniciando deploy..."
+    
+    cd "$REPO_DIR"
+    
+    # Pull latest
+    git pull origin $BRANCH
+    
+    # Install deps
+    log "📦 Instalando dependências..."
+    npm install || yarn install || pnpm install || bun install
+    
+    # Build
+    log "🔨 Fazendo build..."
+    npm run build || yarn build || pnpm build || bun run build
+    
+    log "✅ Deploy concluído!"
+    log "   Build em: $REPO_DIR/dist/"
+}
+
+# =============================================================================
+# MAIN
+# =============================================================================
+
+command="${1:-status}"
+
+case "$command" in
+    setup)
+        setup_repo
+        ;;
+    pull)
+        auto_pull
+        ;;
+    push)
+        auto_push
+        ;;
+    sync)
+        auto_pull
+        auto_push
+        ;;
+    deploy)
+        deploy
+        ;;
+    cron)
+        setup_cron
+        ;;
+    uncron)
+        remove_cron
+        ;;
+    status)
+        status
+        ;;
+    *)
+        echo "Uso: $0 {setup|pull|push|sync|deploy|cron|uncron|status}"
+        echo ""
+        echo "Comandos:"
+        echo "  setup   - Configurar repositório"
+        echo "  pull    - Puxar mudanças do GitHub"
+        echo "  push    - Enviar mudanças locais"
+        echo "  sync    - Pull + Push"
+        echo "  deploy  - Pull + Build"
+        echo "  cron    - Ativar sync automático (5min)"
+        echo "  uncron  - Desativar sync automático"
+        echo "  status  - Ver status do repo"
+        exit 1
+        ;;
+esac

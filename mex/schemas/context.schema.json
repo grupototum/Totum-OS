@@ -1,0 +1,108 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MEX Context Schema",
+  "description": "Schema de validação para contextos no MEX",
+  "type": "object",
+  "required": ["id", "domain", "category", "version", "created", "content"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^ctx_[a-z]+_[a-z]+_[a-z0-9_]+$",
+      "description": "ID único no formato ctx_dominio_categoria_nome"
+    },
+    "domain": {
+      "type": "string",
+      "enum": ["totum", "stark", "alexandria", "pixel", "geral"],
+      "description": "Domínio ao qual o contexto pertence"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "deploy", "arquitetura", "infra", "monitoramento",
+        "pop", "sla", "processo", "analise", "decisao",
+        "agente", "skill", "codigo", "config", "documentacao"
+      ],
+      "description": "Categoria do contexto"
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Tags para busca e filtragem"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+$",
+      "description": "Versão no formato X.Y"
+    },
+    "created": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Data de criação (ISO 8601)"
+    },
+    "modified": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Data de última modificação"
+    },
+    "author": {
+      "type": "string",
+      "description": "Autor do contexto (humano ou agente)"
+    },
+    "sources": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Arquivos/fontes de origem"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["ativo", "obsoleto", "em_revisao", "rascunho"],
+      "default": "ativo"
+    },
+    "relations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["to", "type"],
+        "properties": {
+          "to": { "type": "string", "description": "ID do contexto relacionado" },
+          "type": {
+            "type": "string",
+            "enum": ["depends", "requires", "extends", "replaces", "related"],
+            "description": "Tipo de relação"
+          },
+          "description": { "type": "string", "description": "Descrição da relação" }
+        }
+      }
+    },
+    "content": {
+      "type": "object",
+      "required": ["summary"],
+      "properties": {
+        "summary": {
+          "type": "string",
+          "maxLength": 500,
+          "description": "Resumo do conteúdo"
+        },
+        "data": {
+          "type": "object",
+          "description": "Dados estruturados específicos"
+        },
+        "markdown": {
+          "type": "string",
+          "description": "Conteúdo completo em markdown"
+        }
+      }
+    },
+    "usage_stats": {
+      "type": "object",
+      "properties": {
+        "access_count": { "type": "integer", "default": 0 },
+        "last_accessed": { "type": "string", "format": "date-time" },
+        "accessed_by": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}

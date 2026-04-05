@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grupo Totum — Diagnóstico de Gastos</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  body{font-family:'Inter',sans-serif;background-color:#050505}
+  .fb{font-family:'Bricolage Grotesque',sans-serif!important}
+  .fm{font-family:'JetBrains Mono',monospace!important}
+  .ec{box-shadow:0 0 30px rgba(249,115,22,.25),inset 0 0 20px rgba(249,115,22,.06)}
+  .gc{box-shadow:0 0 25px rgba(34,197,94,.2),inset 0 0 15px rgba(34,197,94,.04)}
+  .pc{box-shadow:0 0 25px rgba(139,92,246,.2),inset 0 0 15px rgba(139,92,246,.04)}
+  .stars{background-image:radial-gradient(1px 1px at 20px 30px,#fff,rgba(0,0,0,0)),radial-gradient(1px 1px at 80px 70px,#fff,rgba(0,0,0,0)),radial-gradient(1px 1px at 180px 160px,#fff,rgba(0,0,0,0)),radial-gradient(1.5px 1.5px at 320px 40px,#fff,rgba(0,0,0,0)),radial-gradient(1px 1px at 460px 80px,#fff,rgba(0,0,0,0)),radial-gradient(1px 1px at 600px 120px,#fff,rgba(0,0,0,0));background-size:900px 300px;opacity:.12}
+  @keyframes fadeInUpBlur{0%{opacity:0;transform:translateY(20px);filter:blur(10px)}100%{opacity:1;transform:translateY(0);filter:blur(0)}}
+  .ae{animation:fadeInUpBlur .8s cubic-bezier(.2,.8,.2,1) both}
+  .d1{animation-delay:100ms}.d2{animation-delay:200ms}.d3{animation-delay:300ms}.d4{animation-delay:400ms}.d5{animation-delay:500ms}
+  .lc{border-left:2px solid rgba(239,68,68,.55)}
+  .lk{border-left:2px solid rgba(34,197,94,.45)}
+  .ly{border-left:2px solid rgba(234,179,8,.55)}
+  .lp{border-left:2px solid rgba(139,92,246,.4)}
+  .lb{border-left:2px solid rgba(59,130,246,.4)}
+  .lg{border-left:2px solid rgba(34,197,94,.4)}
+  .ln{border-left:2px solid rgba(107,114,128,.4)}
+  @keyframes ping{75%,100%{transform:scale(2);opacity:0}}
+  .animate-ping{animation:ping 1s cubic-bezier(0,0,.2,1) infinite}
+</style>
+</head>
+<body class="min-h-screen overflow-x-hidden text-white bg-[#050505] relative selection:bg-orange-500/30">
+
+<div class="fixed z-0 pointer-events-none inset-0">
+  <div class="stars absolute inset-0"></div>
+  <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-orange-900/10 blur-[120px] rounded-full"></div>
+  <div class="absolute bottom-0 right-0 w-[600px] h-[600px] bg-orange-950/15 blur-[100px] rounded-full"></div>
+</div>
+
+<div class="relative z-10 max-w-7xl mx-auto px-6 py-12">
+
+  <!-- HEADER -->
+  <div class="mb-12 ae d1">
+    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-white/10 bg-white/5 backdrop-blur-sm text-xs text-neutral-300 mb-6">
+      <span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-orange-500"></span></span>
+      Grupo Totum · Cartão Itaú Empresas 0976 · Março/Abril 2026
+    </div>
+    <h1 class="fb font-light tracking-tight text-5xl lg:text-[68px] leading-[1.05] text-white mb-4">
+      Diagnóstico de <span class="text-transparent bg-clip-text bg-gradient-to-r from-white via-orange-200 to-orange-400">Gastos</span>
+    </h1>
+    <p class="text-lg text-neutral-400 max-w-2xl leading-relaxed">Stack de Tecnologia & IA · Análise completa com plano de corte e estratégia de hospedagem</p>
+    <div class="mt-6 inline-flex items-start gap-3 px-4 py-3 rounded-xl border border-yellow-500/20 bg-yellow-500/5 max-w-3xl">
+      <svg class="w-4 h-4 text-yellow-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126z"/></svg>
+      <p class="text-xs text-yellow-300 leading-relaxed">Mês atípico: alto consumo de tokens no Lovable e Manus devido ao desenvolvimento paralelo de Totum System (90%), Upixel CRM (70%) e Totum Apps (65%). O valor da Manus inclui o gasto excedente do trial ($15,63 + $39,41). Todos os custos atípicos são cobertos pelas receitas captadas.</p>
+    </div>
+  </div>
+
+  <!-- METRICS -->
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
+    <div class="ae d2 rounded-xl ring-1 ring-white/10 bg-white/[0.02] p-6 hover:bg-white/[0.04] transition-colors">
+      <div class="text-[10px] uppercase text-neutral-500 tracking-widest mb-3">Gasto total identificado</div>
+      <div class="fb font-light text-4xl text-red-400 tracking-tight">R$ 1.947</div>
+      <div class="text-xs text-neutral-500 mt-2">inclui gastos únicos + Gemini recorrente</div>
+    </div>
+    <div class="ae d3 rounded-xl ring-1 ring-white/10 bg-white/[0.02] p-6 hover:bg-white/[0.04] transition-colors">
+      <div class="text-[10px] uppercase text-neutral-500 tracking-widest mb-3">Custo mensal padrão</div>
+      <div class="fb font-light text-4xl text-orange-400 tracking-tight">~R$ 1.195</div>
+      <div class="text-xs text-neutral-500 mt-2">stack consolidada a partir do mês 2</div>
+    </div>
+    <div class="ae d4 rounded-xl ring-1 ring-white/10 bg-white/[0.02] p-6 hover:bg-white/[0.04] transition-colors">
+      <div class="text-[10px] uppercase text-neutral-500 tracking-widest mb-3">Meta futura</div>
+      <div class="fb font-light text-4xl text-green-400 tracking-tight">~R$ 660</div>
+      <div class="text-xs text-neutral-500 mt-2">quando sistemas gerarem receita</div>
+    </div>
+    <div class="ae d5 relative bg-neutral-900 rounded-[20px] p-[1.5px] ec overflow-hidden">
+      <div class="absolute inset-0 bg-gradient-to-b from-orange-400 via-orange-500 to-transparent opacity-70 z-0"></div>
+      <div class="relative z-10 bg-[#0A0A0A] rounded-[18px] h-full p-6">
+        <div class="text-[10px] uppercase text-neutral-500 tracking-widest mb-3">Receitas captadas</div>
+        <div class="fb font-light text-4xl text-transparent bg-clip-text bg-gradient-to-r from-white via-orange-200 to-orange-400 tracking-tight">R$ 976</div>
+        <div class="text-xs text-neutral-500 mt-2">cobrem todos os custos atípicos</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABLE -->
+  <div class="ae d3 mb-12">
+    <h2 class="fb font-light text-3xl text-white tracking-tight mb-6">Mapeamento da stack — Março/Abril 2026</h2>
+
+    <!-- CORTAR -->
+    <div class="px-4 py-2 rounded-t-xl bg-red-500/[0.08] border border-red-500/20 border-b-0">
+      <span class="text-[10px] uppercase text-red-400 tracking-widest font-medium">Cortar / reduzir — economia confirmada: -R$ 1.425/mês</span>
+    </div>
+    <div class="rounded-b-xl ring-1 ring-white/10 bg-white/[0.02] overflow-hidden mb-5">
+      <div class="hidden md:grid grid-cols-12 px-5 py-3 border-b border-white/5 text-[10px] uppercase text-neutral-600 tracking-wider">
+        <div class="col-span-4">Ferramenta</div><div class="col-span-2">Valor mês atual</div><div class="col-span-2">Categoria</div><div class="col-span-3">Decisão</div><div class="col-span-1 text-right">Eco./mês</div>
+      </div>
+      <div class="lc grid md:grid-cols-12 grid-cols-2 gap-y-1 items-center px-5 py-4 border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+        <div class="col-span-4"><div class="text-sm text-white font-medium">Lovable <span class="text-neutral-500 font-normal text-xs">(3 contas)</span></div><div class="text-xs text-neutral-500 mt-0.5">Consolidar para 1 · Antigravity p/ correções · categorizada como IA</div></div>
+        <div class="col-span-2 fm text-sm text-red-400">~R$ 559</div>
+        <div class="col-span-2"><span class="text-[10px] rounded-md bg-purple-500/10 text-purple-400 ring-1 ring-purple-500/20 px-2 py-0.5 uppercase">IA</span></div>
+        <div class="col-span-3 text-xs text-neutral-400">Consolidar → 1 conta anual ($21/mês)</div>
+        <div class="col-span-1 text-right fm text-sm text-green-400 font-medium">-R$ 438</div>
+      </div>
+      <div class="lc grid md:grid-cols-12 grid-cols-2 gap-y-1 items-center px-5 py-4 border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+        <div class="col-span-4"><div class="text-sm text-white font-medium">Freedcamp</div><div class="text-xs text-neutral-500 mt-0.5">Totum System vai cobrir gestão de projetos</div></div>
+        <div class="col-span-2 fm text-sm text-red-400">~R$ 258</div>
+        <div class="col-span-2"><span class="text-[10px] rounded-md bg-yellow-500/10 text-yellow-400 ring-1 ring-yellow-500/20 px-2 py-0.5 uppercase">Gestão</span></div>
+        <div class="col-span-3 text-xs text-neutral-400">Cancelar · Totum System cobre</div>
+        <div class="col-span-1 text-right fm text-sm text-green-400 font-medium">-R$ 258</div>
+      </div>
+      <div class="lc grid md:grid-cols-12 grid-cols-2 gap-y-1 items-center px-5 py-4 border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+        <div class="col-span-4"><div class="text-sm text-white font-medium">Pareto Tess AI</div><div class="text-xs text-neutral-500 mt-0.5">Cakto já cobre o necessário</div></div>
+        <div class="col-span-2 fm text-sm text-red-400">R$ 100</div>
+        <div class="col-span-2"><span class="text-[10px] rounded-md bg-purple-500/10 text-purple-400 ring-1 ring-purple-500/20 px-2 py-0.5 uppercase">IA</span></div>
+        <div class="col-span-3 text-xs text-neutral-400">Cancelar · Cakto cobre</div>
+        <div class="col-span-1 text-right fm text-sm text-green-400 font-medium">-R$ 100</div>
+      </div>
+      <div class="lc grid md:grid-cols-12 grid-cols-2 gap-y-1 items-center px-5 py-4 border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+        <div class="col-span-4"><div class="text-sm text-white font-medium">ChatGPT Pro</div><div class="text-xs text-neutral-500 mt-0.5">Claude + Kimi cobrem com mais qualidade</div></div>
+        <div class="col-span-2 fm text-sm text-red-400">~R$ 105</div>
+        <div class="col-span-2"><span class="text-[10px] rounded-md bg-purple-500/10 text-purple-400 ring-1 ring-purple-500/20 px-2 py-0.5 uppercase">IA</span></div>
+        <div class="col-span-3 text-xs text-neutral-400">Cancelar · Claude + Kimi cobrem</div>
+        <div class="col-span-1 text-right fm text-sm text-green-400 font-medium">-R$ 105</div>
+      </div>
+      <div class="lc grid md:grid-cols-12 grid-cols-2 gap-y-1 items-center px-5 py-4 border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+        <div class="col-span-4"><div class="text-sm text-white font-medium">HostGator + PWH <span class="text-neutral-500 font-normal text-xs">(substituídos)</span></div><div class="text-xs text-neutral-500 mt-0.5">VPS KVM 4 substitui ambos com hospedagem própria</div></div>
+        <div class="col-span-2 fm text-sm text-red-400">R$ 185</div>
+        <div class="col-span-2"><span class="text-[10px] rounded-md bg-green-500/10 text-green-400 ring-1 ring-green-500/20 px-2 py-0.5 uppercase">Hospedagem</span></div>
+        <div class="col-span-3 text-xs text-neutral-400">Migrar tudo para VPS KVM 4 próprio</div>
+        <div class="col-span-1 text-right fm text-sm text-green-400 font-medium">-R$ 125</div>
+      </div>
+      <div class="lc grid md:grid-cols-12 grid-cols-2 gap-y-1 items-center px-5 py-4 border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+        <div class="col-span-4"><div class="text-sm text-white font-medium">Misterhorse <span class="ml-1 text-[10px] text-red-400 ring-1 ring-red-500/20 px-1.5 py-0.5 rounded">último mês</span></div><div class="text-xs text-neutral-500 mt-0.5">Templates Premiere — não será renovado</div></div>
+        <div class="col-span-2 fm text-sm text-red-400">~R$ 114</div>
+        <div class="col-span-2"><span class="text-[10px] rounded-md bg-orange-500/10 text-orange-400 ring-1 ring-orange-500/20 px-2 py-0.5 uppercase">Design/vídeo</span></div>
+        <div class="col-span-3 text-xs text-neutral-400">Cancelar · este foi o último mês</div>
+        <div class="col-span-1 text-right fm text-sm text-green-400 font-medium">-R$ 114</div>
+      </div>
+      <div class="ly grid md:grid-cols-12 grid-cols-2 gap-y-1 items-start px-5 py-4 hover:bg-white/[0.02] transition-colors">
+        <div class="col-span-4">
+          <div class="text-sm text-white font-medium">Manus AI <span class="ml-1 text-[10px] text-orange-400 ring-1 ring-orange-500/20 px-1.5 py-0.5 rounded">reduzir para $20/mês</span></div>
+          <div class="text-xs text-neutral-500 mt-0.5">Plano mínimo · só agentes Meta · Claude assume os demais</div>
+          <div class="mt-1.5 inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-red-500/10 ring-1 ring-red-500/20">
+            <span class="text-xs text-red-300">⚠ Este mês: $15,63 (plano) + $39,41 (excedente trial) = <strong>$55,04 total (~R$ 317)</strong> · coberto pelas receitas · excedente não se repete</span>
+          </div>
+        </div>
+        <div class="col-span-2"><div class="fm text-sm text-yellow-400">R$ 317 <span class="text-neutral-600 text-xs">(total)</span></div><div class="fm text-xs text-green-400 mt-1">→ ~R$ 115/mês próximos</div></div>
+        <div class="col-span-2"><span class="text-[10px] rounded-md bg-purple-500/10 text-purple-400 ring-1 ring-purple-500/20 px-2 py-0.5 uppercase">IA</span></div>
+        <div class="col-span-3 text-xs text-neutral-400">Plano mínimo $20/mês · excedente não se repete</div>
+        <div class="col-span-1 text-right fm text-sm text-green-400 font-medium">-R$ 202</div>
+      </div>
+    </div>
+
+    <!-- MANTER -->
+    <div class="px-4 py-2 rounded-t-xl bg-green-500/5 border border-green-500/15 border-b-0">
+      <span class="text-[10px] uppercase text-green-500 tracking-widest font-medium">Manter</span>
+    </div>
+    <div class="rounded-b-xl ring-1 ring-white/10 bg-white/[0.02] overflow-hidden mb-5">
+      <div class="lk grid md:grid-cols-12 grid-cols-2 gap-y-1 items-center px-5 py-4 border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+        <div class="col-span-4"><div class="text-sm text-white font-medium">Adobe CC <span class="text-neutral-500 font-normal text-xs">(4 usuários)</span></div><div class="text-xs text-neutral-500 mt-0.5">Ps + Pr + Ai · equipe depende diariamente</div></div>
+        <div class="col-span-2 fm text-sm text-neutral-300">R$ 330</div>
+        <div class="col-span-2"><span class="text-[10px] rounded-md bg-orange-500/10 text-orange-400 ring-1 ring-orange-500/20 px-2 py-0.5 uppercase">Design</span></div>
+        <div class="col-span-3 text-xs text-neutral-400">Manter · essencial para produção</div>
+        <div class="col-span-1 text-right fm text-sm text-neutral-600">—</div>
+      </div>
+      <div class="lk grid md:grid-cols-12 grid-cols-2 gap-y-1 items-center px-5 py-4 border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+        <div class="col-span-4"><div class="text-sm text-white font-medium">Kimi (Moonshot)</div><div class="text-xs text-neutral-500 mt-0.5">Sites, LPs e agentes internos</div></div>
+        <div class="col-span-2 fm text-sm text-neutral-300">~R$ 221</div>
+        <div class="col-span-2"><span class="text-[10px] rounded-md bg-purple-500/10 text-purple-400 ring-1 ring-purple-500/20 px-2 py-0.5 uppercase">IA</span></div>
+        <div class="col-span-3 text-xs text-neutral-400">Manter + usar para sites e LPs</div>
+        <div class="col-span-1 text-right fm text-sm text-neutral-600">—</div>
+      </div>
+      <div class="lk grid md:grid-cols-12 grid-cols-2 gap-y-1 items-center px-5 py-4 border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+        <div class="col-span-4"><div class="text-sm text-white font-medium">Claude Pro</div><div class="text-xs text-neutral-500 mt-0.5">Estratégia, agentes, código, docs · US$20 fixo</div></div>
+        <div class="col-span-2 fm text-sm text-neutral-300">~R$ 115</div>
+        <div class="col-span-2"><span class="text-[10px] rounded-md bg-purple-500/10 text-purple-400 ring-1 ring-purple-500/20 px-2 py-0.5 uppercase">IA</span></div>
+        <div class="col-span-3 text-xs text-neutral-400">Manter · assume agentes do Manus</div>
+        <div class="col-span-1 text-right fm text-sm text-neutral-600">—</div>
+      </div>
+      <div class="lk grid md:grid-cols-12 grid-cols-2 gap-y-1 items-center px-5 py-4 border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+        <div class="col-span-4"><div class="text-sm text-white font-medium">Google Workspace + Gemini</div><div class="text-xs text-neutral-500 mt-0.5">Business Standard · 2 TB/usuário · gravação Meet · upgrade Gemini incluso</div></div>
+        <div class="col-span-2 fm text-sm text-neutral-300">R$ 130,80</div>
+        <div class="col-span-2"><span class="text-[10px] rounded-md bg-purple-500/10 text-purple-400 ring-1 ring-purple-500/20 px-2 py-0.5 uppercase">IA + infra</span></div>
+        <div class="col-span-3 text-xs text-neutral-400">Manter · Gemini recorrente agregado · Matheus arca c/ 1 conta 60 dias</div>
+        <div class="col-span-1 text-right fm text-sm text-neutral-600">—</div>
+      </div>
+      <div class="lk grid md:grid-cols-12 grid-cols-2 gap-y-1 items-center px-5 py-4 border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+        <div class="col-span-4"><div class="text-sm text-white font-medium">Cakto Pay</div><div class="text-xs text-neutral-500 mt-0.5">Agregador de ferramentas · não é IA</div></div>
+        <div class="col-span-2 fm text-sm text-neutral-300">R$ 68</div>
+        <div class="col-span-2"><span class="text-[10px] rounded-md bg-teal-500/10 text-teal-400 ring-1 ring-teal-500/20 px-2 py-0.5 uppercase">Ferramentas</span></div>
+        <div class="col-span-3 text-xs text-neutral-400">Manter · agrega e economiza</div>
+        <div class="col-span-1 text-right fm text-sm text-neutral-600">—</div>
+      </div>
+      <div class="lk grid md:grid-cols-12 grid-cols-2 gap-y-1 items-center px-5 py-4 border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+        <div class="col-span-4"><div class="text-sm text-white font-medium">CapCut</div><div class="text-xs text-neutral-500 mt-0.5">Edição mobile e social media</div></div>
+        <div class="col-span-2 fm text-sm text-neutral-300">R$ 66</div>
+        <div class="col-span-2"><span class="text-[10px] rounded-md bg-neutral-500/10 text-neutral-400 ring-1 ring-neutral-500/20 px-2 py-0.5 uppercase">Vídeo</span></div>
+        <div class="col-span-3 text-xs text-neutral-400">Manter · edição mobile/social</div>
+        <div class="col-span-1 text-right fm text-sm text-neutral-600">—</div>
+      </div>
+      <div class="lk grid md:grid-cols-12 grid-cols-2 gap-y-1 items-center px-5 py-4 hover:bg-white/[0.02] transition-colors">
+        <div class="col-span-4"><div class="text-sm text-white font-medium">Reportei</div><div class="text-xs text-neutral-500 mt-0.5">Relatórios de Social Media dos clientes</div></div>
+        <div class="col-span-2 fm text-sm text-neutral-300">R$ 30</div>
+        <div class="col-span-2"><span class="text-[10px] rounded-md bg-neutral-500/10 text-neutral-400 ring-1 ring-neutral-500/20 px-2 py-0.5 uppercase">Analytics</span></div>
+        <div class="col-span-3 text-xs text-neutral-400">Manter · relatórios Social Media</div>
+        <div class="col-span-1 text-right fm text-sm text-neutral-600">—</div>
+      </div>
+    </div>
+
+    <!-- GASTOS ÚNICOS -->
+    <div class="px-4 py-2 rounded-t-xl bg-yellow-500/[0.06] border border-yellow-500/20 border-b-0">
+      <span class="text-[10px] uppercase text-yellow-400 tracking-widest font-medium">Gastos únicos deste mês — não recorrentes · cobertos pelas receitas</span>
+    </div>
+    <div class="rounded-b-xl ring-1 ring-white/10 bg-white/[0.02] overflow-hidden mb-8">
+      <div class="ly grid md:grid-cols-12 grid-cols-2 gap-y-1 items-center px-5 py-4 border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+        <div class="col-span-4"><div class="text-sm text-white font-medium">Namecheap</div><div class="text-xs text-neutral-500 mt-0.5">Compra de domínios dos projetos</div></div>
+        <div class="col-span-2 fm text-sm text-yellow-400">~R$ 151</div>
+        <div class="col-span-2"><span class="text-[10px] rounded-md bg-neutral-500/10 text-neutral-400 ring-1 ring-neutral-500/20 px-2 py-0.5 uppercase">Domínios</span></div>
+        <div class="col-span-3 text-xs text-neutral-400">Compra única · não recorrente</div>
+        <div class="col-span-1 text-right fm text-xs text-yellow-400">único</div>
+      </div>
+      <div class="ly grid md:grid-cols-12 grid-cols-2 gap-y-1 items-center px-5 py-4 border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+        <div class="col-span-4"><div class="text-sm text-white font-medium">Manus — excedente trial</div><div class="text-xs text-neutral-500 mt-0.5">$39,41 acima do plano (Trial Over) · não se repete</div></div>
+        <div class="col-span-2 fm text-sm text-yellow-400">~R$ 227</div>
+        <div class="col-span-2"><span class="text-[10px] rounded-md bg-purple-500/10 text-purple-400 ring-1 ring-purple-500/20 px-2 py-0.5 uppercase">IA</span></div>
+        <div class="col-span-3 text-xs text-neutral-400">Excedente único · coberto pelas receitas</div>
+        <div class="col-span-1 text-right fm text-xs text-yellow-400">único</div>
+      </div>
+      <div class="ly grid md:grid-cols-12 grid-cols-2 gap-y-1 items-center px-5 py-4 border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+        <div class="col-span-4"><div class="text-sm text-white font-medium">Claude API</div><div class="text-xs text-neutral-500 mt-0.5">$5 para configuração de API externa · fora do Pro</div></div>
+        <div class="col-span-2 fm text-sm text-yellow-400">~R$ 29</div>
+        <div class="col-span-2"><span class="text-[10px] rounded-md bg-purple-500/10 text-purple-400 ring-1 ring-purple-500/20 px-2 py-0.5 uppercase">IA</span></div>
+        <div class="col-span-3 text-xs text-neutral-400">Gasto único · integração API</div>
+        <div class="col-span-1 text-right fm text-xs text-yellow-400">único</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OBS CUSTOS COMPARTILHADOS -->
+  <div class="ae d3 mb-6">
+    <div class="rounded-xl border border-blue-500/20 bg-blue-500/5 p-5 flex flex-col md:flex-row gap-4">
+      <svg class="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+      <div>
+        <div class="text-xs font-semibold text-blue-300 uppercase tracking-wider mb-2">Observação — custos compartilhados (temporário)</div>
+        <div class="space-y-1.5 text-xs text-neutral-400 leading-relaxed">
+          <div class="flex items-start gap-2"><span class="w-1 h-1 rounded-full bg-blue-400 mt-1.5 flex-shrink-0"></span><span><span class="text-white font-medium">Manus AI:</span> custo total deste mês (~R$ 317 = $55,04 total) coberto pelas receitas · a partir do mês 2, plano $20/mês · você arca apenas se a Totum precisar para não ficar no vermelho · Claude assume os demais agentes</span></div>
+          <div class="flex items-start gap-2"><span class="w-1 h-1 rounded-full bg-blue-400 mt-1.5 flex-shrink-0"></span><span><span class="text-white font-medium">Google Workspace (2ª conta):</span> <span class="text-blue-300 font-medium">Matheus Felipe</span> arca com 1 workspace Business Standard por até <span class="text-blue-300 font-medium">60 dias</span>, conforme necessidade operacional</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RECEITAS -->
+  <div class="ae d4 mb-12">
+    <h2 class="fb font-light text-3xl text-white tracking-tight mb-1">Receitas que cobrem os custos de IA</h2>
+    <p class="text-sm text-neutral-500 mb-6">Entradas captadas em Março/Abril 2026 · compensam todos os gastos atípicos deste mês</p>
+    <div class="rounded-xl ring-1 ring-white/10 bg-white/[0.02] overflow-hidden mb-4">
+      <div class="px-4 py-2 bg-green-500/5 border-b border-green-500/15">
+        <span class="text-[10px] uppercase text-green-500 tracking-widest font-medium">Entradas previstas — compensação de custos · Março/Abril 2026</span>
+      </div>
+      <div class="hidden md:grid grid-cols-12 px-5 py-3 border-b border-white/5 text-[10px] uppercase text-neutral-600 tracking-wider">
+        <div class="col-span-5">Origem</div><div class="col-span-3">Descrição</div><div class="col-span-2">Moeda</div><div class="col-span-2 text-right">Valor (~R$5,75)</div>
+      </div>
+      <div class="lg grid md:grid-cols-12 grid-cols-2 items-center px-5 py-4 border-b border-white/5 hover:bg-white/[0.02]">
+        <div class="col-span-5"><div class="text-sm text-white font-medium">Reembolso Kommo</div><div class="text-xs text-neutral-500 mt-0.5">Cancelamento / crédito do CRM</div></div>
+        <div class="col-span-3 text-xs text-neutral-400">Crédito direto</div>
+        <div class="col-span-2 fm text-sm text-neutral-300">BRL</div>
+        <div class="col-span-2 text-right fm text-sm text-green-400 font-medium">~R$ 400</div>
+      </div>
+      <div class="lg grid md:grid-cols-12 grid-cols-2 items-center px-5 py-4 border-b border-white/5 hover:bg-white/[0.02]">
+        <div class="col-span-5"><div class="text-sm text-white font-medium">Renato · Probooks</div><div class="text-xs text-neutral-500 mt-0.5">Pagamento por serviço</div></div>
+        <div class="col-span-3 text-xs text-neutral-400">Serviço prestado</div>
+        <div class="col-span-2 fm text-sm text-neutral-300">USD $25</div>
+        <div class="col-span-2 text-right fm text-sm text-green-400 font-medium">~R$ 144</div>
+      </div>
+      <div class="lg grid md:grid-cols-12 grid-cols-2 items-center px-5 py-4 border-b border-white/5 hover:bg-white/[0.02]">
+        <div class="col-span-5"><div class="text-sm text-white font-medium">Beta Tester · Totum System</div><div class="text-xs text-neutral-500 mt-0.5">Acesso antecipado pago</div></div>
+        <div class="col-span-3 text-xs text-neutral-400">Programa beta</div>
+        <div class="col-span-2 fm text-sm text-neutral-300">USD $25</div>
+        <div class="col-span-2 text-right fm text-sm text-green-400 font-medium">~R$ 144</div>
+      </div>
+      <div class="lg grid md:grid-cols-12 grid-cols-2 items-center px-5 py-4 hover:bg-white/[0.02]">
+        <div class="col-span-5"><div class="text-sm text-white font-medium">Site Wemove</div><div class="text-xs text-neutral-500 mt-0.5">Novo site desenvolvido</div></div>
+        <div class="col-span-3 text-xs text-neutral-400">Projeto de site</div>
+        <div class="col-span-2 fm text-sm text-neutral-300">USD $50</div>
+        <div class="col-span-2 text-right fm text-sm text-green-400 font-medium">~R$ 288</div>
+      </div>
+    </div>
+    <!-- Balanço corrigido com Manus total -->
+    <div class="relative bg-neutral-900 rounded-[20px] p-[1.5px] gc overflow-hidden">
+      <div class="absolute inset-0 bg-gradient-to-b from-green-400 via-green-500 to-transparent opacity-30 z-0"></div>
+      <div class="relative z-10 bg-[#0A0A0A] rounded-[18px] p-6">
+        <div class="text-[10px] uppercase text-green-400 tracking-widest mb-1">Balanço total — Março/Abril 2026</div>
+        <div class="text-xs text-yellow-400/70 mb-4">⚠ Entradas pontuais · não se repetem · todos os valores atípicos estão cobertos pelas receitas</div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div>
+            <div class="text-xs text-neutral-500 mb-3 uppercase tracking-wide">Entradas (só este mês)</div>
+            <div class="space-y-2">
+              <div class="flex justify-between text-xs"><span class="text-neutral-400">Reembolso Kommo</span><span class="fm text-green-400">+R$ 400</span></div>
+              <div class="flex justify-between text-xs"><span class="text-neutral-400">Renato · Probooks ($25)</span><span class="fm text-green-400">+R$ 144</span></div>
+              <div class="flex justify-between text-xs"><span class="text-neutral-400">Beta Tester Totum ($25)</span><span class="fm text-green-400">+R$ 144</span></div>
+              <div class="flex justify-between text-xs"><span class="text-neutral-400">Site Wemove ($50)</span><span class="fm text-green-400">+R$ 288</span></div>
+              <div class="border-t border-white/10 pt-2 flex justify-between text-sm font-semibold"><span class="text-white">Total entradas</span><span class="fm text-green-400">R$ 976</span></div>
+            </div>
+          </div>
+          <div>
+            <div class="text-xs text-neutral-500 mb-3 uppercase tracking-wide">Custos atípicos cobertos</div>
+            <div class="space-y-2">
+              <div class="flex justify-between text-xs"><span class="text-neutral-400">Manus plano ($15,63)</span><span class="fm text-red-400">-R$ 90</span></div>
+              <div class="flex justify-between text-xs"><span class="text-neutral-400">Manus excedente ($39,41)</span><span class="fm text-red-400">-R$ 227</span></div>
+              <div class="flex justify-between text-xs font-medium"><span class="text-orange-300">Manus total ($55,04)</span><span class="fm text-orange-400 font-bold">-R$ 317</span></div>
+              <div class="flex justify-between text-xs"><span class="text-neutral-400">Namecheap (domínios)</span><span class="fm text-red-400">-R$ 151</span></div>
+              <div class="flex justify-between text-xs"><span class="text-neutral-400">Claude API ($5)</span><span class="fm text-red-400">-R$ 29</span></div>
+              <div class="border-t border-white/10 pt-2 flex justify-between text-sm font-semibold"><span class="text-white">Total atípicos</span><span class="fm text-red-400">-R$ 497</span></div>
+            </div>
+          </div>
+          <div class="flex flex-col justify-center items-center text-center p-4 rounded-xl bg-green-500/[0.08] ring-1 ring-green-500/20">
+            <div class="text-xs text-neutral-500 uppercase tracking-widest mb-2">Saldo após cobrir atípicos</div>
+            <div class="fb font-light text-5xl text-green-400 tracking-tight">+R$ 479</div>
+            <div class="text-xs text-green-500/70 mt-2">Receitas cobrem 100% dos gastos únicos<br>e sobram ~R$ 479 neste mês</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STACK POR CATEGORIA -->
+  <div class="ae d4 mb-12">
+    <h2 class="fb font-light text-3xl text-white tracking-tight mb-2">Stack por categoria — mês 2 em diante</h2>
+    <p class="text-sm text-neutral-500 mb-6">IAs (incluindo Lovable e Gemini), Ferramentas e Hospedagem separados · Cakto Pay é agregador, não IA</p>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <!-- IAs -->
+      <div class="rounded-xl ring-1 ring-purple-500/20 bg-white/[0.02] overflow-hidden">
+        <div class="px-4 py-3 bg-purple-500/10 border-b border-purple-500/20 flex items-center justify-between">
+          <span class="text-xs font-semibold text-purple-300 uppercase tracking-wider">IAs</span>
+          <span class="fm text-sm text-purple-400 font-bold">~R$ 660/mês</span>
+        </div>
+        <div class="divide-y divide-white/5">
+          <div class="flex justify-between items-center px-4 py-3"><div><div class="text-sm text-white">Claude Pro</div><div class="text-xs text-neutral-500">US$20 fixo · agentes + estratégia</div></div><div class="fm text-sm text-neutral-300">~R$ 115</div></div>
+          <div class="flex justify-between items-center px-4 py-3"><div><div class="text-sm text-white">Kimi (Moonshot)</div><div class="text-xs text-neutral-500">Sites, LPs, agentes internos</div></div><div class="fm text-sm text-neutral-300">~R$ 178 <span class="text-green-400 text-xs">(anual)</span></div></div>
+          <div class="flex justify-between items-center px-4 py-3"><div><div class="text-sm text-white">Lovable <span class="text-[10px] text-orange-400 ring-1 ring-orange-500/20 px-1.5 py-0.5 rounded ml-1">1 conta</span></div><div class="text-xs text-neutral-500">Criação MVP · IA de desenvolvimento</div></div><div class="fm text-sm text-neutral-300">~R$ 121 <span class="text-green-400 text-xs">(anual)</span></div></div>
+          <div class="flex justify-between items-center px-4 py-3"><div><div class="text-sm text-white">Manus <span class="text-[10px] text-orange-400 ring-1 ring-orange-500/20 px-1.5 py-0.5 rounded ml-1">$20/mês</span></div><div class="text-xs text-neutral-500">Só agentes Meta · se necessário</div></div><div class="fm text-sm text-neutral-300">~R$ 115</div></div>
+          <div class="flex justify-between items-center px-4 py-3"><div><div class="text-sm text-white">Google Workspace + Gemini</div><div class="text-xs text-neutral-500">Business Std + upgrade Gemini recorrente</div></div><div class="fm text-sm text-neutral-300">R$ 130,80</div></div>
+        </div>
+      </div>
+      <!-- Ferramentas -->
+      <div class="rounded-xl ring-1 ring-teal-500/20 bg-white/[0.02] overflow-hidden">
+        <div class="px-4 py-3 bg-teal-500/10 border-b border-teal-500/20 flex items-center justify-between">
+          <span class="text-xs font-semibold text-teal-300 uppercase tracking-wider">Ferramentas</span>
+          <span class="fm text-sm text-teal-400 font-bold">~R$ 494/mês</span>
+        </div>
+        <div class="divide-y divide-white/5">
+          <div class="flex justify-between items-center px-4 py-3"><div><div class="text-sm text-white">Adobe CC <span class="text-neutral-500 text-xs">(4 usuários)</span></div><div class="text-xs text-neutral-500">Ps + Pr + Ai · essencial para produção</div></div><div class="fm text-sm text-neutral-300">R$ 330</div></div>
+          <div class="flex justify-between items-center px-4 py-3"><div><div class="text-sm text-white">CapCut</div><div class="text-xs text-neutral-500">Edição mobile e social</div></div><div class="fm text-sm text-neutral-300">R$ 66</div></div>
+          <div class="flex justify-between items-center px-4 py-3"><div><div class="text-sm text-white">Cakto Pay</div><div class="text-xs text-neutral-500">Agregador · não é IA</div></div><div class="fm text-sm text-neutral-300">R$ 68</div></div>
+          <div class="flex justify-between items-center px-4 py-3"><div><div class="text-sm text-white">Reportei</div><div class="text-xs text-neutral-500">Analytics Social Media</div></div><div class="fm text-sm text-neutral-300">R$ 30</div></div>
+          <div class="flex justify-between items-center px-4 py-3 bg-white/[0.01]"><div class="text-xs text-red-400/70 italic">Misterhorse cancelado — último mês (-R$ 114)</div></div>
+        </div>
+      </div>
+      <!-- Hospedagem -->
+      <div class="rounded-xl ring-1 ring-green-500/20 bg-white/[0.02] overflow-hidden">
+        <div class="px-4 py-3 bg-green-500/10 border-b border-green-500/20 flex items-center justify-between">
+          <span class="text-xs font-semibold text-green-300 uppercase tracking-wider">Hospedagem & Infra</span>
+          <span class="fm text-sm text-green-400 font-bold">~R$ 60/mês</span>
+        </div>
+        <div class="divide-y divide-white/5">
+          <div class="flex justify-between items-start px-4 py-3"><div><div class="text-sm text-white font-medium">VPS Hostinger KVM 4 <span class="ml-1 text-[10px] text-green-400 ring-1 ring-green-500/20 px-1.5 py-0.5 rounded">hospedagem própria</span></div><div class="text-xs text-neutral-500 mt-0.5">Substitui HostGator + PWH · 4 vCPU · 16 GB RAM · 200 GB NVMe · 16 TB banda</div><div class="mt-1.5 space-y-1"><div class="text-xs text-green-400">✓ Hospedar Totum System + Upixel CRM + Apps</div><div class="text-xs text-green-400">✓ Sites e e-mails dos clientes (cPanel próprio)</div><div class="text-xs text-purple-400 font-medium">★ IA self-hosted: GPT 3.5 Turbo ou Claude 3 Haiku gratuita via Docker — IA avançada 100% gratuita nos sistemas Totum e Upixel</div></div></div><div class="text-right flex-shrink-0 ml-4"><div class="fm text-sm text-green-400 font-bold">R$ 59,99</div><div class="text-xs text-neutral-500 mt-0.5">era R$ 185</div></div></div>
+          <div class="px-4 py-3 bg-white/[0.01]"><div class="text-xs text-neutral-500 italic">Google Workspace contabilizado em IA + infra · Namecheap foi gasto único</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="mt-4 grid grid-cols-3 gap-4">
+      <div class="rounded-lg bg-purple-500/8 ring-1 ring-purple-500/20 p-3 text-center"><div class="text-xs text-neutral-500 uppercase mb-1">IAs</div><div class="fm text-lg font-bold text-purple-400">~R$ 660</div></div>
+      <div class="rounded-lg bg-teal-500/8 ring-1 ring-teal-500/20 p-3 text-center"><div class="text-xs text-neutral-500 uppercase mb-1">Ferramentas</div><div class="fm text-lg font-bold text-teal-400">~R$ 494</div></div>
+      <div class="rounded-lg bg-green-500/8 ring-1 ring-green-500/20 p-3 text-center"><div class="text-xs text-neutral-500 uppercase mb-1">Hospedagem</div><div class="fm text-lg font-bold text-green-400">~R$ 60</div></div>
+    </div>
+    <div class="mt-3 rounded-xl bg-orange-500/5 ring-1 ring-orange-500/20 p-4 flex items-center justify-between">
+      <span class="text-sm text-white font-semibold">Total mensal consolidado (mês 2+)</span>
+      <span class="fm text-xl font-bold text-orange-400">~R$ 1.214/mês</span>
+    </div>
+  </div>
+
+  <!-- VPS KVM 4 DESTAQUE -->
+  <div class="ae d4 mb-12">
+    <div class="relative bg-neutral-900 rounded-[20px] p-[1.5px] gc overflow-hidden">
+      <div class="absolute inset-0 bg-gradient-to-r from-green-500 via-purple-500 to-green-500 opacity-40 z-0"></div>
+      <div class="relative z-10 bg-[#0A0A0A] rounded-[18px] p-6">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="text-[10px] uppercase text-green-400 ring-1 ring-green-500/30 bg-green-500/10 px-2 py-1 rounded-md">Nova estratégia de hospedagem</span>
+          <span class="text-[10px] uppercase text-purple-400 ring-1 ring-purple-500/30 bg-purple-500/10 px-2 py-1 rounded-md">IA self-hosted gratuita</span>
+        </div>
+        <h3 class="fb font-light text-2xl text-white tracking-tight mb-2">VPS Hostinger KVM 4 — hospedagem própria completa</h3>
+        <p class="text-sm text-neutral-400 mb-6">R$ 59,99/mês substitui HostGator (R$ 185) + PWH (R$ 39,90) = <span class="text-green-400 font-medium">economia de R$ 165/mês</span>. Você gerencia sua própria infra sem depender de revenda.</p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div>
+            <div class="text-xs text-neutral-500 uppercase tracking-wide mb-3">Specs do servidor</div>
+            <div class="space-y-2">
+              <div class="flex items-center gap-2 text-sm"><span class="w-2 h-2 rounded-full bg-green-500 flex-shrink-0"></span><span class="text-white">4 vCPU dedicados</span></div>
+              <div class="flex items-center gap-2 text-sm"><span class="w-2 h-2 rounded-full bg-green-500 flex-shrink-0"></span><span class="text-white">16 GB RAM</span></div>
+              <div class="flex items-center gap-2 text-sm"><span class="w-2 h-2 rounded-full bg-green-500 flex-shrink-0"></span><span class="text-white">200 GB NVMe SSD</span></div>
+              <div class="flex items-center gap-2 text-sm"><span class="w-2 h-2 rounded-full bg-green-500 flex-shrink-0"></span><span class="text-white">16 TB largura de banda</span></div>
+              <div class="flex items-center gap-2 text-sm"><span class="w-2 h-2 rounded-full bg-green-500 flex-shrink-0"></span><span class="text-white">IP dedicado + SSL automático</span></div>
+            </div>
+          </div>
+          <div>
+            <div class="text-xs text-neutral-500 uppercase tracking-wide mb-3">O que hospeda</div>
+            <div class="space-y-2">
+              <div class="flex items-center gap-2 text-sm"><span class="w-2 h-2 rounded-full bg-blue-500 flex-shrink-0"></span><span class="text-white">Totum System (React + Node.js)</span></div>
+              <div class="flex items-center gap-2 text-sm"><span class="w-2 h-2 rounded-full bg-blue-500 flex-shrink-0"></span><span class="text-white">Upixel CRM (React + Supabase)</span></div>
+              <div class="flex items-center gap-2 text-sm"><span class="w-2 h-2 rounded-full bg-blue-500 flex-shrink-0"></span><span class="text-white">Totum Apps (agentes IA)</span></div>
+              <div class="flex items-center gap-2 text-sm"><span class="w-2 h-2 rounded-full bg-blue-500 flex-shrink-0"></span><span class="text-white">Sites e e-mails dos clientes</span></div>
+              <div class="flex items-center gap-2 text-sm"><span class="w-2 h-2 rounded-full bg-blue-500 flex-shrink-0"></span><span class="text-white">n8n · OpenClaw · deploy GitHub</span></div>
+            </div>
+          </div>
+          <div>
+            <div class="text-xs text-neutral-500 uppercase tracking-wide mb-3">IA gratuita self-hosted</div>
+            <div class="rounded-xl bg-purple-500/10 ring-1 ring-purple-500/20 p-4">
+              <div class="text-xs text-purple-300 font-semibold mb-2 uppercase tracking-wide">Powered by Docker — R$ 0/mês</div>
+              <div class="space-y-2">
+                <div class="flex items-center gap-2 text-xs text-purple-200"><span class="w-1.5 h-1.5 rounded-full bg-purple-400 flex-shrink-0"></span>GPT 3.5 Turbo (via Ollama)</div>
+                <div class="flex items-center gap-2 text-xs text-purple-200"><span class="w-1.5 h-1.5 rounded-full bg-purple-400 flex-shrink-0"></span>Claude 3 Haiku (via API local)</div>
+                <div class="flex items-center gap-2 text-xs text-purple-200"><span class="w-1.5 h-1.5 rounded-full bg-purple-400 flex-shrink-0"></span>IA avançada no Totum System</div>
+                <div class="flex items-center gap-2 text-xs text-purple-200"><span class="w-1.5 h-1.5 rounded-full bg-purple-400 flex-shrink-0"></span>IA avançada no Upixel CRM</div>
+              </div>
+              <div class="mt-3 text-[10px] text-purple-400/70">16 GB RAM é suficiente para rodar modelos 7B-13B simultaneamente com os sistemas</div>
+            </div>
+          </div>
+        </div>
+        <div class="mt-5 grid grid-cols-3 gap-3">
+          <div class="rounded-lg bg-red-500/10 ring-1 ring-red-500/20 p-3 text-center"><div class="text-xs text-neutral-500 uppercase mb-1">Antes (HG + PWH)</div><div class="fm text-lg font-bold text-red-400">R$ 224,90</div></div>
+          <div class="rounded-lg bg-green-500/10 ring-1 ring-green-500/20 p-3 text-center"><div class="text-xs text-neutral-500 uppercase mb-1">KVM 4 (tudo junto)</div><div class="fm text-lg font-bold text-green-400">R$ 59,99</div></div>
+          <div class="rounded-lg bg-green-500/15 ring-1 ring-green-500/30 p-3 text-center"><div class="text-xs text-neutral-500 uppercase mb-1">Economia</div><div class="fm text-lg font-bold text-green-400">-R$ 165/mês</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PLANO MENSAL VS ANUAL -->
+  <div class="ae d4 mb-12">
+    <h2 class="fb font-light text-3xl text-white tracking-tight mb-2">Plano Mensal vs Anual — impacto financeiro</h2>
+    <p class="text-sm text-neutral-500 mb-6">Comparativo do que você paga mensalmente vs o equivalente mensal ao pagar anualmente</p>
+    <div class="rounded-xl ring-1 ring-white/10 bg-white/[0.02] overflow-hidden">
+      <div class="hidden md:grid grid-cols-12 px-5 py-3 border-b border-white/5 text-[10px] uppercase text-neutral-600 tracking-wider">
+        <div class="col-span-4">Serviço</div>
+        <div class="col-span-2 text-center">Mensal/mês</div>
+        <div class="col-span-2 text-center">Total anual</div>
+        <div class="col-span-2 text-center">Equiv./mês anual</div>
+        <div class="col-span-2 text-right">Economia/mês</div>
+      </div>
+      <div class="lp grid md:grid-cols-12 grid-cols-2 items-center px-5 py-3 border-b border-white/5 hover:bg-white/[0.02]">
+        <div class="col-span-4"><div class="text-sm text-white">Claude Pro</div><div class="text-xs text-neutral-500">US$20 fixo · sem plano anual com desconto</div></div>
+        <div class="col-span-2 fm text-sm text-neutral-300 text-center">~R$ 115</div>
+        <div class="col-span-2 fm text-sm text-neutral-500 text-center">—</div>
+        <div class="col-span-2 fm text-sm text-neutral-500 text-center">—</div>
+        <div class="col-span-2 fm text-xs text-neutral-600 text-right">sem desconto</div>
+      </div>
+      <div class="lp grid md:grid-cols-12 grid-cols-2 items-center px-5 py-3 border-b border-white/5 hover:bg-white/[0.02]">
+        <div class="col-span-4"><div class="text-sm text-white">Kimi (Moonshot) · Allegretto</div><div class="text-xs text-neutral-500">Anual $31/mês vs mensal $39/mês</div></div>
+        <div class="col-span-2 fm text-sm text-red-400 text-center">~R$ 224</div>
+        <div class="col-span-2 fm text-sm text-neutral-300 text-center">~R$ 2.139</div>
+        <div class="col-span-2 fm text-sm text-green-400 text-center font-medium">~R$ 178</div>
+        <div class="col-span-2 fm text-sm text-green-400 text-right font-medium">-R$ 46/mês</div>
+      </div>
+      <div class="lp grid md:grid-cols-12 grid-cols-2 items-center px-5 py-3 border-b border-white/5 hover:bg-white/[0.02]">
+        <div class="col-span-4"><div class="text-sm text-white">Lovable · Pro</div><div class="text-xs text-neutral-500">Anual $21/mês · mensal $25/mês · Save $50/ano</div></div>
+        <div class="col-span-2 fm text-sm text-red-400 text-center">~R$ 144</div>
+        <div class="col-span-2 fm text-sm text-neutral-300 text-center">~R$ 1.452</div>
+        <div class="col-span-2 fm text-sm text-green-400 text-center font-medium">~R$ 121</div>
+        <div class="col-span-2 fm text-sm text-green-400 text-right font-medium">-R$ 23/mês</div>
+      </div>
+      <div class="lb grid md:grid-cols-12 grid-cols-2 items-center px-5 py-3 border-b border-white/5 hover:bg-white/[0.02]">
+        <div class="col-span-4"><div class="text-sm text-white">Manus AI · plano mínimo</div><div class="text-xs text-neutral-500">Anual $17/mês · mensal $20/mês · 17% OFF</div></div>
+        <div class="col-span-2 fm text-sm text-red-400 text-center">~R$ 115</div>
+        <div class="col-span-2 fm text-sm text-neutral-300 text-center">~R$ 1.173</div>
+        <div class="col-span-2 fm text-sm text-green-400 text-center font-medium">~R$ 98</div>
+        <div class="col-span-2 fm text-sm text-green-400 text-right font-medium">-R$ 17/mês</div>
+      </div>
+      <div class="lg grid md:grid-cols-12 grid-cols-2 items-center px-5 py-3 border-b border-white/5 hover:bg-white/[0.02]">
+        <div class="col-span-4"><div class="text-sm text-white">VPS Hostinger KVM 4</div><div class="text-xs text-neutral-500">Anual R$ 43,99/mês · promoção R$ 59,99 mensal</div></div>
+        <div class="col-span-2 fm text-sm text-red-400 text-center">R$ 59,99</div>
+        <div class="col-span-2 fm text-sm text-neutral-300 text-center">~R$ 528</div>
+        <div class="col-span-2 fm text-sm text-green-400 text-center font-medium">~R$ 44</div>
+        <div class="col-span-2 fm text-sm text-green-400 text-right font-medium">-R$ 16/mês</div>
+      </div>
+      <div class="ln grid md:grid-cols-12 grid-cols-2 items-center px-5 py-3 hover:bg-white/[0.02]">
+        <div class="col-span-4"><div class="text-sm text-white">Adobe CC · 4 usuários</div><div class="text-xs text-neutral-500">Plano anual ~15-20% menor estimado</div></div>
+        <div class="col-span-2 fm text-sm text-red-400 text-center">R$ 330</div>
+        <div class="col-span-2 fm text-sm text-neutral-300 text-center">~R$ 3.300</div>
+        <div class="col-span-2 fm text-sm text-green-400 text-center font-medium">~R$ 275</div>
+        <div class="col-span-2 fm text-sm text-green-400 text-right font-medium">-R$ 55/mês</div>
+      </div>
+    </div>
+    <div class="mt-4 rounded-xl bg-green-500/5 ring-1 ring-green-500/20 p-5">
+      <div class="text-[10px] uppercase text-green-400 tracking-widest mb-3">Ganho total ao anualizar tudo — economias confirmadas</div>
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-4">
+        <div class="text-center"><div class="text-xs text-neutral-500 mb-1">Kimi</div><div class="fm text-base font-bold text-green-400">-R$ 46/mês</div><div class="text-xs text-neutral-500">R$ 552/ano</div></div>
+        <div class="text-center"><div class="text-xs text-neutral-500 mb-1">Lovable</div><div class="fm text-base font-bold text-green-400">-R$ 23/mês</div><div class="text-xs text-neutral-500">R$ 276/ano</div></div>
+        <div class="text-center"><div class="text-xs text-neutral-500 mb-1">Manus</div><div class="fm text-base font-bold text-green-400">-R$ 17/mês</div><div class="text-xs text-neutral-500">R$ 204/ano</div></div>
+        <div class="text-center"><div class="text-xs text-neutral-500 mb-1">VPS</div><div class="fm text-base font-bold text-green-400">-R$ 16/mês</div><div class="text-xs text-neutral-500">R$ 192/ano</div></div>
+        <div class="text-center"><div class="text-xs text-neutral-500 mb-1">Adobe (est.)</div><div class="fm text-base font-bold text-green-400">-R$ 55/mês</div><div class="text-xs text-neutral-500">R$ 660/ano</div></div>
+      </div>
+      <div class="border-t border-white/10 pt-3 flex justify-between items-center">
+        <span class="text-sm text-white font-semibold">Economia total ao anualizar</span>
+        <div class="text-right"><div class="fm text-xl font-bold text-green-400">-R$ 157/mês</div><div class="text-xs text-neutral-500">R$ 1.884/ano poupados</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CUSTO MÊS 2 -->
+  <div class="ae d5 mb-12">
+    <h2 class="fb font-light text-3xl text-white tracking-tight mb-2">Custo mensal recorrente — a partir do mês 2</h2>
+    <p class="text-sm text-neutral-500 mb-6">Sem os gastos únicos · custo real fixo da operação</p>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="rounded-xl ring-1 ring-white/10 bg-white/[0.02] overflow-hidden">
+        <div class="px-4 py-2 bg-orange-500/5 border-b border-orange-500/10">
+          <span class="text-[10px] uppercase text-orange-400 tracking-widest font-medium">Stack mensal consolidada</span>
+        </div>
+        <div class="divide-y divide-white/5">
+          <div class="flex justify-between items-center px-5 py-3 hover:bg-white/[0.02]" style="border-left:2px solid rgba(139,92,246,.4)"><div><div class="text-sm text-white">Claude Pro</div><div class="text-xs text-neutral-500">Agentes + estratégia + código · US$20</div></div><div class="fm text-sm text-neutral-300">~R$ 115</div></div>
+          <div class="flex justify-between items-center px-5 py-3 hover:bg-white/[0.02]" style="border-left:2px solid rgba(139,92,246,.4)"><div><div class="text-sm text-white">Kimi <span class="text-xs text-green-400">(anual $31)</span></div><div class="text-xs text-neutral-500">Sites, LPs e agentes internos</div></div><div class="fm text-sm text-neutral-300">~R$ 178</div></div>
+          <div class="flex justify-between items-center px-5 py-3 hover:bg-white/[0.02]" style="border-left:2px solid rgba(139,92,246,.4)"><div><div class="text-sm text-white">Lovable <span class="text-xs text-green-400">(anual $21)</span></div><div class="text-xs text-neutral-500">IA de criação · Antigravity p/ evolução</div></div><div class="fm text-sm text-neutral-300">~R$ 121</div></div>
+          <div class="flex justify-between items-center px-5 py-3 hover:bg-white/[0.02]" style="border-left:2px solid rgba(59,130,246,.4)"><div><div class="text-sm text-white">Manus <span class="text-xs text-orange-400">($20/mês)</span></div><div class="text-xs text-neutral-500">Só agentes Meta · se necessário</div></div><div class="fm text-sm text-neutral-300">~R$ 115</div></div>
+          <div class="flex justify-between items-center px-5 py-3 hover:bg-white/[0.02]" style="border-left:2px solid rgba(139,92,246,.4)"><div><div class="text-sm text-white">Google Workspace + Gemini</div><div class="text-xs text-neutral-500">Business Std · Gemini recorrente</div></div><div class="fm text-sm text-neutral-300">R$ 130,80</div></div>
+          <div class="flex justify-between items-center px-5 py-3 hover:bg-white/[0.02]" style="border-left:2px solid rgba(34,197,94,.4)"><div><div class="text-sm text-white">VPS Hostinger KVM 4</div><div class="text-xs text-neutral-500">Hospedagem própria completa · IA self-hosted</div></div><div class="fm text-sm text-neutral-300">R$ 59,99</div></div>
+          <div class="flex justify-between items-center px-5 py-3 hover:bg-white/[0.02]" style="border-left:2px solid rgba(107,114,128,.4)"><div><div class="text-sm text-white">Adobe CC + CapCut</div><div class="text-xs text-neutral-500">Design + vídeo · Misterhorse cancelado</div></div><div class="fm text-sm text-neutral-300">R$ 396</div></div>
+          <div class="flex justify-between items-center px-5 py-3 hover:bg-white/[0.02]" style="border-left:2px solid rgba(20,184,166,.4)"><div><div class="text-sm text-white">Cakto Pay + Reportei</div><div class="text-xs text-neutral-500">Ferramentas + analytics</div></div><div class="fm text-sm text-neutral-300">R$ 98</div></div>
+          <div class="px-5 py-3 bg-white/[0.02] border-t border-white/10">
+            <div class="flex justify-between items-center"><div class="text-sm font-semibold text-white">Total mensal recorrente</div><div class="fm text-lg font-bold text-orange-400">~R$ 1.214/mês</div></div>
+            <div class="text-xs text-neutral-500 mt-1">Com anualização: ~R$ 1.057/mês · vs R$ 1.947 atual = -R$ 733/mês</div>
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-col gap-4">
+        <div class="rounded-xl ring-1 ring-purple-500/20 bg-purple-500/5 p-5">
+          <div class="text-[10px] uppercase text-purple-400 tracking-widest mb-3">Projeção Claude — base no histórico Manus</div>
+          <div class="space-y-2 mb-4">
+            <div class="flex justify-between text-xs"><span class="text-neutral-400">Manus gastava (créditos variáveis)</span><span class="fm text-neutral-300">~R$ 317/mês</span></div>
+            <div class="flex justify-between text-xs"><span class="text-neutral-400">Claude Pro (fixo · sem surpresas)</span><span class="fm text-purple-400">~R$ 115/mês</span></div>
+            <div class="flex justify-between text-xs text-green-400"><span>Economia vs Manus cheio</span><span class="fm font-medium">-R$ 202/mês</span></div>
+          </div>
+          <div class="rounded-lg bg-purple-500/10 p-3 text-xs text-purple-300 leading-relaxed">US$20/mês fixo · independente do volume · toda demanda de agentes do Manus migra sem custo adicional.</div>
+        </div>
+        <div class="rounded-xl ring-1 ring-white/10 bg-white/[0.02] p-5">
+          <div class="text-[10px] uppercase text-neutral-500 tracking-widest mb-4">Comparativo antes × depois × meta</div>
+          <div class="space-y-3">
+            <div class="flex items-center gap-3"><div class="text-xs text-neutral-500 w-28 flex-shrink-0">Mês atípico</div><div class="flex-1 bg-white/5 rounded-full h-2"><div class="bg-red-500 rounded-full h-2" style="width:100%"></div></div><div class="fm text-xs text-red-400 w-24 text-right">R$ 1.947</div></div>
+            <div class="flex items-center gap-3"><div class="text-xs text-neutral-500 w-28 flex-shrink-0">Mês 2+ (real)</div><div class="flex-1 bg-white/5 rounded-full h-2"><div class="bg-orange-400 rounded-full h-2" style="width:62%"></div></div><div class="fm text-xs text-orange-400 w-24 text-right">~R$ 1.214</div></div>
+            <div class="flex items-center gap-3"><div class="text-xs text-neutral-500 w-28 flex-shrink-0">Com anuais</div><div class="flex-1 bg-white/5 rounded-full h-2"><div class="bg-yellow-400 rounded-full h-2" style="width:54%"></div></div><div class="fm text-xs text-yellow-400 w-24 text-right">~R$ 1.057</div></div>
+            <div class="flex items-center gap-3"><div class="text-xs text-neutral-500 w-28 flex-shrink-0">Meta futura</div><div class="flex-1 bg-white/5 rounded-full h-2"><div class="bg-green-400 rounded-full h-2" style="width:34%"></div></div><div class="fm text-xs text-green-400 w-24 text-right">~R$ 660</div></div>
+          </div>
+          <div class="mt-4 text-xs text-neutral-500">Meta de R$ 660 atingida quando Totum System e Upixel CRM gerarem receita recorrente e eliminarem ferramentas pagas.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESUMO FINAL -->
+  <div class="ae d5 mb-10">
+    <h2 class="fb font-light text-3xl text-white tracking-tight mb-6">Resumo financeiro completo</h2>
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
+      <div class="rounded-xl ring-1 ring-red-500/20 bg-red-500/5 p-5 text-center hover:bg-red-500/[0.08] transition-colors">
+        <div class="text-[10px] uppercase text-neutral-500 tracking-widest mb-2">Total este mês</div>
+        <div class="fb font-light text-3xl text-red-400 tracking-tight">R$ 1.947</div>
+        <div class="text-xs text-neutral-500 mt-2">inclui Gemini recorrente + atípicos</div>
+      </div>
+      <div class="rounded-xl ring-1 ring-green-500/20 bg-green-500/5 p-5 text-center hover:bg-green-500/[0.08] transition-colors">
+        <div class="text-[10px] uppercase text-neutral-500 tracking-widest mb-2">Receitas captadas</div>
+        <div class="fb font-light text-3xl text-green-400 tracking-tight">R$ 976</div>
+        <div class="text-xs text-neutral-500 mt-2">cobrem atípicos · sobram R$ 479</div>
+      </div>
+      <div class="rounded-xl ring-1 ring-orange-500/20 bg-orange-500/5 p-5 text-center hover:bg-orange-500/[0.08] transition-colors">
+        <div class="text-[10px] uppercase text-neutral-500 tracking-widest mb-2">Custo padrão mês 2+</div>
+        <div class="fb font-light text-3xl text-orange-400 tracking-tight">~R$ 1.214</div>
+        <div class="text-xs text-neutral-500 mt-2">stack consolidada · sem atípicos</div>
+      </div>
+      <div class="relative bg-neutral-900 rounded-[20px] p-[1.5px] gc overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-green-400 via-green-500 to-transparent opacity-40 z-0"></div>
+        <div class="relative z-10 bg-[#0A0A0A] rounded-[18px] h-full p-5 text-center">
+          <div class="text-[10px] uppercase text-neutral-500 tracking-widest mb-2">Com anualização</div>
+          <div class="fb font-light text-3xl text-transparent bg-clip-text bg-gradient-to-r from-green-300 to-green-500 tracking-tight">~R$ 1.057</div>
+          <div class="text-xs text-neutral-500 mt-2">Kimi + Lovable + Manus + VPS + Adobe</div>
+        </div>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
+      <div class="rounded-xl bg-white/[0.02] ring-1 ring-white/10 p-4">
+        <div class="text-[10px] uppercase text-neutral-500 tracking-widest mb-3">Custo líquido este mês</div>
+        <div class="space-y-2">
+          <div class="flex justify-between text-xs"><span class="text-neutral-400">Total gasto</span><span class="fm text-red-400">R$ 1.947</span></div>
+          <div class="flex justify-between text-xs"><span class="text-neutral-400">Receitas captadas</span><span class="fm text-green-400">-R$ 976</span></div>
+          <div class="border-t border-white/10 pt-2 flex justify-between text-sm font-semibold"><span class="text-white">Custo líquido</span><span class="fm text-orange-400">R$ 971</span></div>
+        </div>
+      </div>
+      <div class="rounded-xl bg-white/[0.02] ring-1 ring-white/10 p-4">
+        <div class="text-[10px] uppercase text-neutral-500 tracking-widest mb-3">Antes × depois</div>
+        <div class="space-y-2">
+          <div class="flex justify-between text-xs"><span class="text-neutral-400">Mês atípico atual</span><span class="fm text-red-400">R$ 1.947</span></div>
+          <div class="flex justify-between text-xs"><span class="text-neutral-400">Padrão mês 2+</span><span class="fm text-orange-400">~R$ 1.214</span></div>
+          <div class="border-t border-white/10 pt-2 flex justify-between text-sm font-semibold"><span class="text-white">Diferença</span><span class="fm text-green-400">-R$ 733/mês</span></div>
+        </div>
+      </div>
+      <div class="rounded-xl bg-white/[0.02] ring-1 ring-white/10 p-4">
+        <div class="text-[10px] uppercase text-neutral-500 tracking-widest mb-3">Ganho anualização</div>
+        <div class="space-y-2">
+          <div class="flex justify-between text-xs"><span class="text-neutral-400">Padrão mensal</span><span class="fm text-orange-400">~R$ 1.214</span></div>
+          <div class="flex justify-between text-xs"><span class="text-neutral-400">Com anuais</span><span class="fm text-green-400">~R$ 1.057</span></div>
+          <div class="border-t border-white/10 pt-2 flex justify-between text-sm font-semibold"><span class="text-white">Economia</span><span class="fm text-green-400">-R$ 157/mês</span></div>
+        </div>
+      </div>
+    </div>
+    <button class="w-full group relative flex items-center justify-between rounded-full bg-gradient-to-t from-yellow-200 via-orange-400 to-orange-500 px-8 py-4 shadow-[0_0_40px_-5px_rgba(249,115,22,0.6)] ring-1 ring-inset ring-white/40 transition-all duration-300 hover:scale-[1.01] hover:shadow-[0_0_60px_-5px_rgba(249,115,22,0.8)]">
+      <div class="text-left">
+        <div class="text-sm font-semibold text-[#2c1306]">Próximo passo: contratar VPS Hostinger KVM 4 — hospedagem própria completa + IA self-hosted gratuita</div>
+        <div class="text-xs text-orange-900/70 mt-0.5">R$ 59,99/mês · substitui HostGator + PWH · 4 vCPU · 16 GB RAM · GPT 3.5 Turbo / Claude 3 Haiku gratuitos nos sistemas</div>
+      </div>
+      <div class="fm text-lg font-medium text-[#2c1306] flex-shrink-0 ml-6">R$ 59,99/mês →</div>
+    </button>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="border-t border-white/5 pt-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-2">
+    <div class="text-xs text-neutral-600">Grupo Totum · Diagnóstico gerado em Março/Abril 2026</div>
+    <div class="text-xs text-neutral-600">Análise: Claude (Anthropic) · Dados: Extrato Itaú Empresas 0976</div>
+  </div>
+
+</div>
+</body>
+</html>

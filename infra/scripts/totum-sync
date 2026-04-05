@@ -1,0 +1,437 @@
+#!/bin/bash
+# ============================================================
+# TOTUM SYNC v2 - Com suporte a Google Drive e VPS Remota
+# ============================================================
+
+set -e
+
+WORKSPACE_DIR="/root/.openclaw/workspace"
+DATA_DIR="$WORKSPACE_DIR/data"
+BACKUP_DIR="$WORKSPACE_DIR/backups"
+CONFIG_FILE="$WORKSPACE_DIR/.totum-sync.conf"
+LOG_FILE="$WORKSPACE_DIR/logs/totum-sync.log"
+
+# Cores
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+CYAN='\033[0;36m'
+NC='\033[0m'
+
+log() {
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" | tee -a "$LOG_FILE"
+}
+
+setup_dirs() {
+    mkdir -p "$BACKUP_DIR" "$WORKSPACE_DIR/logs" "$DATA_DIR"
+}
+
+load_config() {
+    if [ -f "$CONFIG_FILE" ]; then
+        source "$CONFIG_FILE"
+    else
+        CLOUD_PROVIDER="none"
+        AUTO_COMMIT="true"
+        BACKUP_RETENTION_DAYS="30"
+    fi
+}
+
+save_config() {
+    cat > "$CONFIG_FILE" << EOF
+# Totum Sync Configuration
+CLOUD_PROVIDER="${CLOUD_PROVIDER:-none}"
+AUTO_COMMIT="${AUTO_COMMIT:-true}"
+BACKUP_RETENTION_DAYS="${BACKUP_RETENTION_DAYS:-30}"
+GITHUB_REPO="${GITHUB_REPO:-}"
+S3_BUCKET="${S3_BUCKET:-}"
+GDRIVE_FOLDER="${GDRIVE_FOLDER:-TotumClaw-Backups}"
+GDRIVE_REMOTE="${GDRIVE_REMOTE:-gdrive}"
+VPS_HOST="${VPS_HOST:-}"
+VPS_USER="${VPS_USER:-root}"
+VPS_PATH="${VPS_PATH:-/backups/totum-claw}"
+VPS_KEY="${VPS_KEY:-}"
+LAST_BACKUP="${LAST_BACKUP:-}"
+EOF
+    chmod 600 "$CONFIG_FILE"
+}
+
+# ==================== BACKUP LOCAL ====================
+local_backup() {
+    echo -e "${BLUE}📦 Criando backup local...${NC}"
+    
+    TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+    BACKUP_NAME="totum_backup_$TIMESTAMP"
+    BACKUP_PATH="$BACKUP_DIR/$BACKUP_NAME"
+    
+    mkdir -p "$BACKUP_PATH"
+    
+    # Banco de dados
+    if [ -f "$DATA_DIR/totum_claw.db" ]; then
+        cp "$DATA_DIR/totum_claw.db" "$BACKUP_PATH/"
+        echo -e "${GREEN}✓${NC} Banco de dados"
+    fi
+    
+    # Arquivos importantes
+    cp -r "$WORKSPACE_DIR/scripts" "$BACKUP_PATH/" 2>/dev/null || true
+    cp "$WORKSPACE_DIR/"*.md "$BACKUP_PATH/" 2>/dev/null || true
+    cp "$WORKSPACE_DIR/"*.json "$BACKUP_PATH/" 2>/dev/null || true
+    cp "$WORKSPACE_DIR/.totum-sync.conf" "$BACKUP_PATH/" 2>/dev/null || true
+    
+    # Manifesto do backup
+    cat > "$BACKUP_PATH/MANIFEST.txt" << EOF
+Totum Claw Backup
+Data: $(date)
+Hostname: $(hostname)
+Version: 2.0
+EOF
+    
+    # Criar tarball
+    cd "$BACKUP_DIR"
+    tar -czf "$BACKUP_NAME.tar.gz" "$BACKUP_NAME"
+    rm -rf "$BACKUP_NAME"
+    
+    ln -sf "$BACKUP_NAME.tar.gz" "$BACKUP_DIR/latest.tar.gz"
+    
+    # Limpar antigos
+    find "$BACKUP_DIR" -name "totum_backup_*.tar.gz" -mtime +${BACKUP_RETENTION_DAYS:-30} -delete
+    
+    log "Backup local: $BACKUP_NAME.tar.gz"
+    echo -e "${GREEN}✅ Backup local:${NC} $BACKUP_NAME.tar.gz ($(du -h "$BACKUP_DIR/$BACKUP_NAME.tar.gz" | cut -f1))"
+    
+    export LATEST_BACKUP="$BACKUP_DIR/$BACKUP_NAME.tar.gz"
+}
+
+# ==================== GIT COMMIT ====================
+git_commit() {
+    [ "${AUTO_COMMIT:-true}" != "true" ] && return 0
+    
+    cd "$WORKSPACE_DIR"
+    
+    if [ ! -d ".git" ]; then
+        git init
+        git config user.email "totum@claw.local"
+        git config user.name "Totum Claw"
+    fi
+    
+    git add data/ scripts/ *.md *.json .totum-sync.conf 2>/dev/null || true
+    
+    if git diff --cached --quiet; then
+        echo -e "${BLUE}ℹ Nada para commit${NC}"
+        return 0
+    fi
+    
+    git commit -m "Auto-backup: $(date '+%Y-%m-%d %H:%M:%S')" || true
+    echo -e "${GREEN}✓${NC} Git commit"
+}
+
+# ==================== GOOGLE DRIVE ====================
+setup_gdrive() {
+    echo -e "${CYAN}☁️ Configurando Google Drive${NC}"
+    
+    if ! command -v rclone &> /dev/null; then
+        echo "Instalando rclone..."
+        curl https://rclone.org/install.sh | bash
+    fi
+    
+    echo -e "${YELLOW}Siga os passos:${NC}"
+    echo "1. Execute: rclone config"
+    echo "2. Escolha: n (new remote)"
+    echo "3. Nome: gdrive"
+    echo "4. Storage: drive"
+    echo "5. Deixe Client Id e Secret em branco (enter)"
+    echo "6. Scope: 1 (Full access)"
+    echo "7. Deixe Root Folder ID em branco"
+    echo "8. Edit advanced config? n"
+    echo "9. Use auto config? y (se tiver browser) ou n (para link manual)"
+    echo "10. Siga a autenticação do Google"
+    
+    read -p "Pressione ENTER quando terminar o rclone config..."
+    
+    GDRIVE_REMOTE="gdrive"
+    GDRIVE_FOLDER="TotumClaw-Backups"
+    CLOUD_PROVIDER="gdrive"
+    
+    save_config
+    
+    # Testar
+    echo "Testando conexão..."
+    rclone mkdir "$GDRIVE_REMOTE:$GDRIVE_FOLDER" || true
+    
+    echo -e "${GREEN}✅ Google Drive configurado!${NC}"
+}
+
+sync_gdrive() {
+    if [ -z "${LATEST_BACKUP:-}" ]; then
+        LATEST_BACKUP="$BACKUP_DIR/latest.tar.gz"
+    fi
+    
+    if [ ! -f "$LATEST_BACKUP" ]; then
+        echo -e "${RED}✗ Backup não encontrado${NC}"
+        return 1
+    fi
+    
+    echo -e "${CYAN}☁️ Enviando para Google Drive...${NC}"
+    
+    FILENAME=$(basename "$LATEST_BACKUP")
+    rclone copy "$LATEST_BACKUP" "$GDRIVE_REMOTE:$GDRIVE_FOLDER/" --progress
+    
+    log "Sync Google Drive: $FILENAME"
+    echo -e "${GREEN}✅ Enviado para Google Drive!${NC}"
+}
+
+# ==================== VPS REMOTA ====================
+setup_vps() {
+    echo -e "${CYAN}🖥️ Configurando VPS Remota${NC}"
+    
+    read -p "IP/Hostname da VPS: " VPS_HOST
+    read -p "Usuário [root]: " VPS_USER_INPUT
+    VPS_USER=${VPS_USER_INPUT:-root}
+    read -p "Caminho remoto [/backups/totum-claw]: " VPS_PATH_INPUT
+    VPS_PATH=${VPS_PATH_INPUT:-/backups/totum-claw}
+    
+    echo ""
+    echo -e "${YELLOW}Chave SSH:${NC}"
+    echo "1) Usar chave existente"
+    echo "2) Criar nova chave"
+    read -p "Opção [1]: " KEY_OPTION
+    
+    if [ "$KEY_OPTION" = "2" ]; then
+        echo "Gerando nova chave SSH..."
+        ssh-keygen -t ed25519 -f "$HOME/.ssh/totum_vps" -N "" -C "totum@claw"
+        VPS_KEY="$HOME/.ssh/totum_vps"
+        echo -e "${YELLOW}Adicione essa chave pública na VPS:${NC}"
+        cat "$VPS_KEY.pub"
+        read -p "Pressione ENTER quando adicionar a chave na VPS..."
+    else
+        read -p "Caminho da chave SSH [$HOME/.ssh/id_rsa]: " VPS_KEY_INPUT
+        VPS_KEY=${VPS_KEY_INPUT:-$HOME/.ssh/id_rsa}
+    fi
+    
+    CLOUD_PROVIDER="vps"
+    save_config
+    
+    # Testar conexão
+    echo "Testando conexão SSH..."
+    ssh -i "$VPS_KEY" -o StrictHostKeyChecking=no "$VPS_USER@$VPS_HOST" "mkdir -p $VPS_PATH" || {
+        echo -e "${RED}✗ Falha na conexão SSH${NC}"
+        return 1
+    }
+    
+    echo -e "${GREEN}✅ VPS configurada!${NC}"
+}
+
+sync_vps() {
+    if [ -z "${LATEST_BACKUP:-}" ]; then
+        LATEST_BACKUP="$BACKUP_DIR/latest.tar.gz"
+    fi
+    
+    if [ ! -f "$LATEST_BACKUP" ]; then
+        echo -e "${RED}✗ Backup não encontrado${NC}"
+        return 1
+    fi
+    
+    echo -e "${CYAN}🖥️ Enviando para VPS...${NC}"
+    
+    FILENAME=$(basename "$LATEST_BACKUP")
+    
+    # Criar diretório remoto
+    ssh -i "$VPS_KEY" "$VPS_USER@$VPS_HOST" "mkdir -p $VPS_PATH"
+    
+    # Enviar arquivo
+    scp -i "$VPS_KEY" "$LATEST_BACKUP" "$VPS_USER@$VPS_HOST:$VPS_PATH/"
+    
+    # Criar/atualizar link simbólico para latest
+    ssh -i "$VPS_KEY" "$VPS_USER@$VPS_HOST" "cd $VPS_PATH && rm -f latest.tar.gz && ln -s $FILENAME latest.tar.gz"
+    
+    log "Sync VPS: $FILENAME"
+    echo -e "${GREEN}✅ Enviado para VPS!${NC}"
+}
+
+# ==================== STATUS ====================
+show_status() {
+    echo -e "${BLUE}📊 Status do Totum Sync${NC}"
+    echo "=========================="
+    
+    if [ -f "$DATA_DIR/totum_claw.db" ]; then
+        SIZE=$(du -h "$DATA_DIR/totum_claw.db" | cut -f1)
+        echo -e "${GREEN}✓${NC} Banco: $SIZE"
+    else
+        echo -e "${RED}✗${NC} Banco não encontrado"
+    fi
+    
+    BACKUP_COUNT=$(find "$BACKUP_DIR" -name "totum_backup_*.tar.gz" 2>/dev/null | wc -l)
+    echo -e "${GREEN}✓${NC} Backups locais: $BACKUP_COUNT"
+    
+    [ -f "$BACKUP_DIR/latest.tar.gz" ] && echo "  Último: $(ls -la "$BACKUP_DIR/latest.tar.gz" | awk '{print $6, $7, $8}')"
+    
+    cd "$WORKSPACE_DIR"
+    if [ -d ".git" ]; then
+        COMMITS=$(git rev-list --count HEAD 2>/dev/null || echo "0")
+        echo -e "${GREEN}✓${NC} Git: $COMMITS commits"
+    fi
+    
+    echo ""
+    echo -e "${BLUE}⚙️ Configuração:${NC}"
+    echo "  Cloud: ${CLOUD_PROVIDER:-none}"
+    
+    case "${CLOUD_PROVIDER:-none}" in
+        gdrive)
+            echo "  Folder: $GDRIVE_FOLDER"
+            rclone listremotes 2>/dev/null | grep -q "$GDRIVE_REMOTE" && echo -e "  Status: ${GREEN}✓ Conectado${NC}" || echo -e "  Status: ${RED}✗ Desconectado${NC}"
+            ;;
+        vps)
+            echo "  Host: $VPS_HOST"
+            echo "  Path: $VPS_PATH"
+            ;;
+        github)
+            echo "  Repo: $GITHUB_REPO"
+            ;;
+    esac
+    
+    echo "  Auto-commit: ${AUTO_COMMIT:-true}"
+    [ -n "${LAST_BACKUP:-}" ] && echo "  Último: $LAST_BACKUP"
+}
+
+# ==================== SETUP INTERATIVO ====================
+setup() {
+    echo -e "${BLUE}🔧 Configuração do Totum Sync${NC}"
+    echo "=============================="
+    
+    read -p "Auto-commit Git? (s/n) [s]: " AUTO_COMMIT_INPUT
+    AUTO_COMMIT=${AUTO_COMMIT_INPUT:-s}
+    [ "$AUTO_COMMIT" = "s" ] && AUTO_COMMIT="true" || AUTO_COMMIT="false"
+    
+    read -p "Retenção de backups (dias) [30]: " RETENTION
+    BACKUP_RETENTION_DAYS=${RETENTION:-30}
+    
+    echo ""
+    echo "Provedor de nuvem:"
+    echo "1) GitHub"
+    echo "2) Google Drive"
+    echo "3) VPS Remota (SCP/SSH)"
+    echo "4) S3/AWS"
+    echo "5) Nenhum (apenas local)"
+    read -p "Opção [5]: " CLOUD_OPT
+    
+    case $CLOUD_OPT in
+        1)
+            CLOUD_PROVIDER="github"
+            read -p "URL do repo GitHub: " GITHUB_REPO
+            ;;
+        2)
+            setup_gdrive
+            return 0
+            ;;
+        3)
+            setup_vps
+            return 0
+            ;;
+        4)
+            CLOUD_PROVIDER="s3"
+            read -p "Nome do bucket S3: " S3_BUCKET
+            ;;
+        *)
+            CLOUD_PROVIDER="none"
+            ;;
+    esac
+    
+    save_config
+    echo -e "${GREEN}✅ Configurado!${NC}"
+}
+
+# ==================== CRON ====================
+install_cron() {
+    CRON_LINE="0 */6 * * * cd $WORKSPACE_DIR && ./totum-sync push >> $LOG_FILE 2>&1"
+    
+    if crontab -l 2>/dev/null | grep -q "totum-sync"; then
+        echo -e "${YELLOW}⚠ Já existe${NC}"
+        return 0
+    fi
+    
+    (crontab -l 2>/dev/null; echo "$CRON_LINE") | crontab -
+    log "Cron instalado"
+    echo -e "${GREEN}✅ Auto-backup: a cada 6 horas${NC}"
+}
+
+remove_cron() {
+    crontab -l 2>/dev/null | grep -v "totum-sync" | crontab -
+    log "Cron removido"
+    echo -e "${GREEN}✅ Auto-backup desativado${NC}"
+}
+
+# ==================== MAIN ====================
+main() {
+    setup_dirs
+    load_config
+    
+    case "${1:-status}" in
+        push)
+            echo -e "${BLUE}🚀 Backup...${NC}"
+            local_backup
+            git_commit
+            case "${CLOUD_PROVIDER:-none}" in
+                gdrive) sync_gdrive ;;
+                vps) sync_vps ;;
+                github) 
+                    [ -n "${GITHUB_REPO:-}" ] && git push origin master 2>/dev/null || true
+                    ;;
+            esac
+            LAST_BACKUP=$(date '+%Y-%m-%d %H:%M:%S')
+            save_config
+            echo -e "${GREEN}✅ Completo!${NC}"
+            ;;
+        pull)
+            echo -e "${BLUE}📥 Download...${NC}"
+            case "${CLOUD_PROVIDER:-none}" in
+                gdrive) 
+                    echo "Baixando do Google Drive..."
+                    rclone copy "$GDRIVE_REMOTE:$GDRIVE_FOLDER/latest.tar.gz" "$BACKUP_DIR/"
+                    ;;
+                vps)
+                    echo "Baixando da VPS..."
+                    scp -i "$VPS_KEY" "$VPS_USER@$VPS_HOST:$VPS_PATH/latest.tar.gz" "$BACKUP_DIR/"
+                    ;;
+                *)
+                    echo -e "${RED}✗ Cloud não configurada${NC}"
+                    exit 1
+                    ;;
+            esac
+            echo -e "${GREEN}✅ Download completo!${NC}"
+            ;;
+        status)
+            show_status
+            ;;
+        setup)
+            setup
+            ;;
+        cron)
+            install_cron
+            ;;
+        uncron)
+            remove_cron
+            ;;
+        test)
+            # Testar conexão com cloud
+            case "${CLOUD_PROVIDER:-none}" in
+                gdrive) rclone ls "$GDRIVE_REMOTE:$GDRIVE_FOLDER" 2>/dev/null && echo -e "${GREEN}✓ OK${NC}" || echo -e "${RED}✗ Falha${NC}" ;;
+                vps) ssh -i "$VPS_KEY" -o ConnectTimeout=5 "$VPS_USER@$VPS_HOST" "echo 'OK'" 2>/dev/null && echo -e "${GREEN}✓ VPS OK${NC}" || echo -e "${RED}✗ VPS Falha${NC}" ;;
+                *) echo "Cloud não configurada" ;;
+            esac
+            ;;
+        *)
+            echo "Uso: $0 [push|pull|status|setup|cron|uncron|test]"
+            echo ""
+            echo "Comandos:"
+            echo "  push    - Backup + sync nuvem"
+            echo "  pull    - Download da nuvem"
+            echo "  status  - Status do sistema"
+            echo "  setup   - Configurar"
+            echo "  cron    - Ativar auto-backup"
+            echo "  uncron  - Desativar auto-backup"
+            echo "  test    - Testar conexão cloud"
+            ;;
+    esac
+}
+
+main "$@"

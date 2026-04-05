@@ -1,0 +1,119 @@
+PROMPT LOVABLE - REDESIGN COMPLETO COM SIDEBAR VERTICAL
+
+SITUAÇÃO:
+Vou anexar um arquivo ZIP chamado "Apps_Totum.zip" contendo:
+- Novo Design System completo
+- Index de exemplo (referência visual)
+- Assets (ícones, imagens, fonts)
+
+INSTRUÇÃO PRINCIPAL:
+IGNORE 100% o design atual do projeto. 
+BASEIE-SE EM NO MÍNIMO 98% no conteúdo do ZIP anexado.
+
+=====================================
+
+ALTERAÇÕES A REALIZAR:
+
+1. SIDEBAR VERTICAL (ESQUERDA)
+   - Largura: 280px fixa
+   - Posição: Fixed left, full height
+   - Background: Seguir design system do ZIP
+   
+   ITENS DO MENU (ordem):
+   
+   [SEÇÃO: MAIN]
+   - Dashboard (ícone: LayoutDashboard)
+   - Hub de Agentes (ícone: Bot)
+   
+   [SEÇÃO: WORKSPACE]
+   - Tasks Board (ícone: Kanban)
+   - Content Pipeline (ícone: GitBranch)
+   - Office View (ícone: Building2)
+   
+   [SEÇÃO: AI TOOLS]
+   - Claude Code (ícone: Terminal) ← NOVO!
+   - Team Structure (ícone: Users)
+   
+   [SEÇÃO: SETTINGS]
+   - Settings (ícone: Settings)
+   
+   ELEMENTOS DA SIDEBAR:
+   - Logo Totum no topo (usar asset do ZIP)
+   - Ícone + label em cada item
+   - Item ativo: Background destacado + borda esquerda colorida
+   - Hover: Transição suave (200ms)
+   - Separadores entre seções
+   - Avatar do usuário + nome no rodapé
+   - Botão logout discreto
+
+2. NOVA PÁGINA: CLAUDE CODE
+   - Rota: /claude-code
+   - Ícone: Terminal (ou similar)
+   - Layout inicial:
+     * Header com título "Claude Code" + ícone
+     * Área central para terminal/IDE (placeholder)
+     * Sidebar direita com status/configurações
+   - Design consistente com o novo design system
+
+3. ESTRUTURA DE LAYOUT GLOBAL
+   - Sidebar: 280px fixed left
+   - Main content: margin-left 280px
+   - Header interno: Remover (mover elementos para sidebar)
+   - Mobile (< 768px):
+     * Sidebar vira drawer
+     * Botão hamburguer no top-left
+     * Overlay escuro ao abrir
+
+4. APLICAR NOVO DESIGN SYSTEM DO ZIP
+   - Cores: Usar exatamente do ZIP
+   - Tipografia: Fontes do ZIP
+   - Spacing: Sistema do ZIP
+   - Componentes: Replicar do index de exemplo
+   - Animações: Seguir padrão do ZIP
+
+5. ATUALIZAR PÁGINAS EXISTENTES
+   - Todas as 7 páginas de agentes
+   - Dashboard
+   - Tasks Board
+   - Content Pipeline
+   - Team Structure
+   - Office View
+   
+   Em todas:
+   - Remover header horizontal antigo
+   - Ajustar margin-left para sidebar
+   - Aplicar novo design system
+
+=====================================
+
+ASSETS DO ZIP PARA USAR:
+- Logo Totum (logo.svg/png)
+- Ícones customizados (se houver)
+- Fontes (instalar no projeto)
+- Cores (variables.css ou similar)
+- Componentes de exemplo do index
+
+=====================================
+
+REGRAS:
+1. Analisar TODO o ZIP antes de começar
+2. NÃO misturar com design antigo
+3. Manter funcionalidades existentes (auth, rotas, etc)
+4. Sidebar deve ser componente reutilizável
+5. Transições suaves entre páginas
+6. 100% responsivo
+
+=====================================
+
+CHECKLIST DE ENTREGA:
+- [ ] Sidebar vertical funcionando
+- [ ] Navegação entre todas as páginas
+- [ ] Página Claude Code criada
+- [ ] Novo design system aplicado
+- [ ] Mobile responsivo
+- [ ] Animações implementadas
+- [ ] Logout funcionando
+
+=====================================
+
+IMPORTANTE: Aguarde eu anexar o ZIP "Apps_Totum.zip" antes de começar.

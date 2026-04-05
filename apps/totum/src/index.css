@@ -1,0 +1,360 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Oswald:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap');
+@import './styles/design-system.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   TOTUM DESIGN SYSTEM v4
+   Exact replica of Digital Architect design
+   ============================================================ */
+
+@layer base {
+  :root {
+    /* Shadcn UI Variables - adaptado para Totum Design System */
+    --background: 45 8% 91%;
+    --foreground: 24 10% 10%;
+    --card: 40 6% 95%;
+    --card-foreground: 24 10% 10%;
+    --popover: 40 6% 95%;
+    --popover-foreground: 24 10% 10%;
+    --primary: 24 10% 10%;
+    --primary-foreground: 40 6% 97%;
+    --secondary: 40 6% 88%;
+    --secondary-foreground: 24 10% 10%;
+    --muted: 40 6% 85%;
+    --muted-foreground: 25 6% 45%;
+    --accent: 24 10% 10%;
+    --accent-foreground: 40 6% 97%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 40 6% 82%;
+    --input: 40 6% 88%;
+    --ring: 25 6% 45%;
+    --radius: 0.5rem;
+
+    /* Surface tokens */
+    --surface: 45 8% 91%;
+    --surface-container: 40 6% 88%;
+    --surface-container-high: 40 6% 85%;
+    --on-surface: 24 10% 10%;
+    --on-surface-variant: 25 6% 45%;
+    --outline: 40 6% 60%;
+    --outline-variant: 40 6% 82%;
+
+    /* Sidebar tokens */
+    --sidebar-background: 40 6% 95%;
+    --sidebar-foreground: 24 10% 10%;
+    --sidebar-primary: 24 10% 10%;
+    --sidebar-primary-foreground: 40 6% 97%;
+    --sidebar-accent: 40 6% 92%;
+    --sidebar-accent-foreground: 24 10% 10%;
+    --sidebar-border: 40 6% 88%;
+    --sidebar-ring: 25 6% 45%;
+  }
+
+  * {
+    @apply border-border;
+    box-sizing: border-box;
+  }
+
+  html {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    background-color: #EAEAE5;
+    color: #1C1917;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    letter-spacing: -0.025em;
+  }
+
+  /* Selection style */
+  ::selection {
+    background-color: #1C1917;
+    color: #FAFAF9;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #D6D3D1;
+    border-radius: 9999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #78716C;
+  }
+}
+
+@layer components {
+  /* Container principal com bordas */
+  .totum-container {
+    width: 100%;
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+    border-left: 1px solid #D6D3D1;
+    border-right: 1px solid #D6D3D1;
+    position: relative;
+    background-color: #EAEAE5;
+  }
+
+  /* Grid guides verticais */
+  .totum-grid-guides {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 0;
+    z-index: 0;
+    height: 100%;
+    width: 100%;
+  }
+
+  .totum-grid-guides > div:nth-child(1) {
+    grid-column: span 3;
+    border-right: 1px solid rgba(214, 211, 209, 0.4);
+    height: 100%;
+  }
+
+  .totum-grid-guides > div:nth-child(2) {
+    grid-column: span 6;
+    border-right: 1px solid rgba(214, 211, 209, 0.4);
+    height: 100%;
+  }
+
+  .totum-grid-guides > div:nth-child(3) {
+    grid-column: span 3;
+    height: 100%;
+  }
+
+  /* Reveal animation */
+  .reveal {
+    opacity: 0;
+    transform: translateY(2rem);
+    transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Text reveal (masked) */
+  .text-reveal-wrapper {
+    overflow: hidden;
+    display: inline-block;
+    vertical-align: bottom;
+  }
+
+  .text-reveal-content {
+    transform: translateY(110%);
+    opacity: 0;
+    transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.2s ease;
+    display: block;
+  }
+
+  .reveal-active .text-reveal-content {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  /* Stagger delays */
+  .delay-100 { transition-delay: 0.1s; }
+  .delay-200 { transition-delay: 0.2s; }
+  .delay-300 { transition-delay: 0.3s; }
+  .delay-400 { transition-delay: 0.4s; }
+  .delay-500 { transition-delay: 0.5s; }
+  .delay-600 { transition-delay: 0.6s; }
+  .delay-700 { transition-delay: 0.7s; }
+  .delay-800 { transition-delay: 0.8s; }
+
+  /* Nav load */
+  .nav-load {
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.8s ease-out;
+  }
+
+  .nav-load.loaded {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Labels - font-mono uppercase tracking-widest */
+  .label-mono {
+    font-family: 'SF Mono', Monaco, Inconsolata, 'Fira Code', monospace;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* Badges com backdrop-blur */
+  .badge-glass {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.75rem;
+    font-family: 'SF Mono', Monaco, Inconsolata, 'Fira Code', monospace;
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1.25;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-radius: 9999px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    background-color: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    color: white;
+  }
+
+  /* Links com border-bottom */
+  .link-underline {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #57534E;
+    border-bottom: 1px solid #A8A29E;
+    padding-bottom: 0.125rem;
+    text-decoration: none;
+    transition: color 200ms ease, border-color 200ms ease;
+  }
+
+  .link-underline:hover {
+    color: #1C1917;
+    border-color: #1C1917;
+  }
+
+  /* Project cards - hover:bg-white */
+  .project-card {
+    border: 1px solid #D6D3D1;
+    background-color: #EAEAE5;
+    transition: background-color 0.5s ease, box-shadow 200ms ease;
+    cursor: pointer;
+    overflow: hidden;
+  }
+
+  .project-card:hover {
+    background-color: white;
+    box-shadow: 0 10px 15px -3px rgba(28, 25, 23, 0.1), 0 4px 6px -4px rgba(28, 25, 23, 0.1);
+  }
+
+  /* Stat cards */
+  .stat-card {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: background-color 200ms ease;
+  }
+
+  .stat-card:hover {
+    background-color: white;
+  }
+
+  /* Icon alignment fix */
+  iconify-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+  }
+
+  /* No scrollbar */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* Parallax */
+  .parallax-element {
+    will-change: transform;
+  }
+}
+
+@layer utilities {
+  /* Tracking tighter para títulos */
+  .tracking-tighter {
+    letter-spacing: -0.05em;
+  }
+
+  /* Ken Burns */
+  .animate-ken-burns {
+    animation: ken-burns 10s ease-out forwards;
+  }
+
+  @keyframes ken-burns {
+    from { transform: scale(1); }
+    to { transform: scale(1.1); }
+  }
+
+  /* Spin slow */
+  .animate-spin-slow {
+    animation: spin-slow 20s linear infinite;
+  }
+
+  @keyframes spin-slow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  /* Marquee */
+  .animate-marquee {
+    animation: marquee 30s linear infinite;
+  }
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  .animate-scroll {
+    animation: scroll 40s linear infinite;
+  }
+
+  @keyframes scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-100%); }
+  }
+
+  /* Grayscale hover */
+  .grayscale-hover {
+    filter: grayscale(0.8);
+    transition: filter 0.7s ease, transform 0.7s ease, opacity 0.7s ease;
+    opacity: 0.8;
+  }
+
+  .grayscale-hover:hover {
+    filter: grayscale(0);
+    transform: scale(1.05);
+    opacity: 1;
+  }
+}

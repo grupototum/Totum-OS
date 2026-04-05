@@ -1,0 +1,238 @@
+ATENDIMENTO / SUPORTE AO CLIENTE
+
+POP + SLA (VERSÃO FINAL)
+
+⸻
+
+🎯 FUNÇÃO
+
+Gerenciar toda comunicação com o cliente, garantir organização das demandas, controle de SLA e proteção de escopo.
+
+⸻
+
+🧠 PRINCÍPIO-CHAVE
+
+Atendimento não resolve tudo.
+Atendimento organiza, direciona e protege a operação.
+
+⸻
+
+📘 POP — ATENDIMENTO / SUPORTE AO CLIENTE
+
+⸻
+
+🔔 GATILHO 1 — RECEBIMENTO DA DEMANDA
+
+Origem:
+	•	WhatsApp
+	•	E-mail
+	•	Reunião
+	•	Kommo / CRM
+	•	Freedcamp (quando interno)
+
+Ações obrigatórias
+	•	registrar a demanda como task no Freedcamp
+	•	identificar:
+	•	cliente
+	•	origem
+	•	tipo de solicitação
+
+📌 Nenhuma demanda existe fora do sistema.
+
+⸻
+
+🔔 GATILHO 2 — CLASSIFICAÇÃO DA DEMANDA
+
+Tipo: organizacional
+
+Classificar como:
+	•	Suporte (dúvida / erro)
+	•	Ajuste (pequena alteração)
+	•	Nova demanda (fora do escopo)
+	•	Urgência (impacto direto no cliente)
+
+Definir prioridade:
+	•	Alta
+	•	Média
+	•	Baixa
+
+📌 Classificação define SLA.
+
+⸻
+
+🔔 GATILHO 3 — VALIDAÇÃO DE ESCOPO
+
+Tipo: proteção operacional
+
+Ações obrigatórias
+	•	verificar contrato / pacote
+	•	validar se:
+	•	está incluso
+	•	é extra
+	•	precisa aprovação
+
+Saídas possíveis
+	•	✅ Executar
+	•	⚠️ Solicitar aprovação
+	•	❌ Negar (fora do escopo)
+
+📌 Atendimento protege a empresa de escopo infinito.
+
+⸻
+
+🔔 GATILHO 4 — DEFINIÇÃO DE RESPONSÁVEL
+
+Tipo: operacional
+
+Ações
+	•	atribuir responsável no Freedcamp
+	•	adicionar prazo conforme SLA
+	•	garantir que a task está clara
+
+📌 Task sem responsável = task esquecida.
+
+⸻
+
+🔔 GATILHO 5 — COMUNICAÇÃO COM CLIENTE
+
+Tipo: relacional
+
+Ações obrigatórias
+	•	confirmar recebimento
+	•	informar prazo estimado
+	•	alinhar expectativa
+
+Exemplo:
+
+“Recebemos sua solicitação, já estamos analisando e te retorno até [prazo].”
+
+⸻
+
+🔔 GATILHO 6 — ACOMPANHAMENTO DA DEMANDA
+
+Tipo: controle
+
+Ações
+	•	monitorar andamento no Freedcamp
+	•	cobrar responsável se necessário
+	•	atualizar cliente se houver atraso
+
+📌 Cliente nunca pode ficar no escuro.
+
+⸻
+
+🔔 GATILHO 7 — ENTREGA / RESPOSTA
+
+Tipo: conclusão
+
+Ações
+	•	validar entrega internamente
+	•	comunicar cliente com clareza
+	•	confirmar se está resolvido
+
+⸻
+
+🔔 GATILHO 8 — REGISTRO E ENCERRAMENTO
+
+Tipo: rastreabilidade
+
+Ações obrigatórias
+	•	registrar:
+	•	o que foi feito
+	•	ajustes realizados
+	•	marcar task como concluída
+
+📌 Se não foi registrado, não existe.
+
+⸻
+
+⏱️ SLA — ATENDIMENTO / SUPORTE
+
+⸻
+
+📌 TEMPOS PADRÃO
+
+🔹 Resposta inicial ao cliente
+	•	Até 2 horas úteis
+
+⸻
+
+🔹 Classificação e direcionamento
+	•	Até 4 horas úteis
+
+⸻
+
+🔹 Suporte simples
+	•	Até 24h úteis
+
+⸻
+
+🔹 Ajustes médios
+	•	Até 48h úteis
+
+⸻
+
+🔹 Demandas maiores
+	•	Definido por escopo + comunicado ao cliente
+
+⸻
+
+🚨 SLA DE URGÊNCIA
+
+Quando há:
+	•	erro em campanha ativa
+	•	sistema fora do ar
+	•	perda de lead
+
+👉 Atendimento imediato + priorização total
+
+⸻
+
+📊 INDICADORES (KPIs)
+	•	tempo médio de resposta
+	•	tempo médio de resolução
+	•	volume de demandas por cliente
+	•	% de demandas fora do escopo
+	•	satisfação do cliente
+
+⸻
+
+⚠️ REGRAS IMPORTANTES
+	•	❌ Nunca executar demanda sem registro
+	•	❌ Nunca prometer prazo sem validar
+	•	❌ Nunca assumir demanda fora do escopo
+	•	✅ Sempre registrar tudo
+	•	✅ Sempre alinhar expectativa
+
+⸻
+
+✅ CHECKLIST FINAL
+	•	⬜ demanda registrada
+	•	⬜ classificada corretamente
+	•	⬜ escopo validado
+	•	⬜ responsável definido
+	•	⬜ cliente informado
+	•	⬜ entrega validada
+	•	⬜ task encerrada
+
+⸻
+
+🧠 VISÃO DE DONO
+
+Esse departamento:
+	•	evita caos,
+	•	protege margem,
+	•	mantém cliente informado,
+	•	e sustenta todos os outros.
+
+⸻
+
+Próximo passo
+
+Se você quiser seguir na sequência lógica:
+
+👉 Departamento 2 — Automação & CRM (POP + SLA completo)
+
+Esse é o mais crítico do seu modelo.
+
+Só me diga: vamos pro 2?

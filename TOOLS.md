@@ -24,6 +24,10 @@ Things like:
 ### SSH
 
 - home-server → 192.168.1.100, user: admin
+- totum-alibaba → iZt4nikbefyhl6jyuczexzZ, user: root, key-auth: ~/.ssh/authorized_keys
+  - IP Interno: 10.184.5.43
+  - IP Público: (variável/NAT - usar Cloudflare Tunnel)
+  - Apps: 4173 (upixel), 4174 (totum), 4175 (apps-totum), 3000 (stark-api)
 
 ### TTS
 
