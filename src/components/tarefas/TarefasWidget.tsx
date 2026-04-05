@@ -176,6 +176,7 @@ export function TarefasWidget() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editando, setEditando] = useState<Tarefa | null>(null);
   const [mostrarFiltros, setMostrarFiltros] = useState(false);
+  const [filtros, setFiltros] = useState<{ status?: StatusTarefa; prioridade?: PrioridadeTarefa; responsavel?: string }>({});
 
   // Formulário
   const [titulo, setTitulo] = useState('');
