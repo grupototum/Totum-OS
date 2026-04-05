@@ -473,7 +473,7 @@ export default function QuadroTarefas() {
           onSave={handleSaveTarefa}
           onDelete={handleDeleteTarefa}
           onToggleSubtarefa={toggleSubtarefa}
-          onAddSubtarefa={adicionarSubtarefa}
+          onAddSubtarefa={async (tarefaId: string, titulo: string) => { const result = await adicionarSubtarefa(tarefaId, titulo); return !!result; }}
           onRemoveSubtarefa={removerSubtarefa}
           onAddComentario={async (tarefaId: string, conteudo: string) => { await adicionarComentario(tarefaId, conteudo, user?.email || 'Sistema'); }}
           currentUser={user?.email || 'Sistema'}

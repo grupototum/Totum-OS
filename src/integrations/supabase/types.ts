@@ -443,6 +443,53 @@ export type Database = {
         }
         Relationships: []
       }
+      logs_execucao_agente: {
+        Row: {
+          agente_id: string
+          created_at: string
+          duracao_ms: number | null
+          erro: string | null
+          finalizado_em: string | null
+          id: string
+          iniciado_em: string | null
+          resultado: string | null
+          status: string
+          tarefa_id: string | null
+        }
+        Insert: {
+          agente_id: string
+          created_at?: string
+          duracao_ms?: number | null
+          erro?: string | null
+          finalizado_em?: string | null
+          id?: string
+          iniciado_em?: string | null
+          resultado?: string | null
+          status?: string
+          tarefa_id?: string | null
+        }
+        Update: {
+          agente_id?: string
+          created_at?: string
+          duracao_ms?: number | null
+          erro?: string | null
+          finalizado_em?: string | null
+          id?: string
+          iniciado_em?: string | null
+          resultado?: string | null
+          status?: string
+          tarefa_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "logs_execucao_agente_tarefa_id_fkey"
+            columns: ["tarefa_id"]
+            isOneToOne: false
+            referencedRelation: "tarefas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       mex_sync: {
         Row: {
           created_at: string | null
@@ -474,9 +521,12 @@ export type Database = {
           descricao: string | null
           id: string
           prioridade: string
+          proxima_execucao: string | null
           responsavel: string | null
           status: string
           titulo: string
+          ultima_execucao: string | null
+          ultimo_resultado: string | null
           updated_at: string
         }
         Insert: {
@@ -485,9 +535,12 @@ export type Database = {
           descricao?: string | null
           id?: string
           prioridade?: string
+          proxima_execucao?: string | null
           responsavel?: string | null
           status?: string
           titulo: string
+          ultima_execucao?: string | null
+          ultimo_resultado?: string | null
           updated_at?: string
         }
         Update: {
@@ -496,9 +549,12 @@ export type Database = {
           descricao?: string | null
           id?: string
           prioridade?: string
+          proxima_execucao?: string | null
           responsavel?: string | null
           status?: string
           titulo?: string
+          ultima_execucao?: string | null
+          ultimo_resultado?: string | null
           updated_at?: string
         }
         Relationships: []

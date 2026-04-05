@@ -110,7 +110,7 @@ export function AgentChat({ agent, onClose }: AgentChatProps) {
     const systemPrompt = getAgentSystemPrompt(agent);
     const apiMessages = [
       { role: 'system' as const, content: systemPrompt },
-      ...messages.filter(m => m.role !== 'system').map(m => ({
+      ...messages.filter(m => m.role === 'user' || m.role === 'agent').map(m => ({
         role: m.role === 'user' ? 'user' as const : 'assistant' as const,
         content: m.content,
       })),
