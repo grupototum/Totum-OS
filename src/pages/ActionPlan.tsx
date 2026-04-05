@@ -6,10 +6,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Rocket, CheckCircle2, Clock, Circle, TrendingUp, Lock, Target, Zap, Calendar } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Rocket, CheckCircle2, Clock, Circle, TrendingUp, Lock, Target, Zap, Calendar, BarChart3, Bot } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
+import { GanttChart } from "@/components/gantt";
+import { AgentTaskManager } from "@/components/agents";
 
 /* ─── types ─── */
 interface Task {
