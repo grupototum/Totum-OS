@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Lock, Unlock } from 'lucide-react';
 
-export const ActionPlan = () => {
+const ActionPlan = () => {
   const [passInput, setPassInput] = useState('');
   const [autorizado, setAutorizado] = useState(false);
   const [loading, setLoading] = useState(false);
