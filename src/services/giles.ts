@@ -179,7 +179,7 @@ export async function getRelatedChunks(chunkId: string): Promise<GilesChunk[]> {
       .select('*')
       .eq('dominio', chunk.dominio)
       .neq('id', chunkId)
-      .overlap('tags', chunk.tags)
+      .overlaps('tags', chunk.tags)
       .limit(5);
 
     if (error) {

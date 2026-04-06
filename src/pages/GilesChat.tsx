@@ -85,7 +85,7 @@ export default function GilesChat() {
       const conversationHistory = messages
         .filter(m => m.id !== 'welcome')
         .map(m => ({
-          role: m.role,
+          role: m.role === 'assistant' ? 'model' as const : 'user' as const,
           text: m.content
         }));
       

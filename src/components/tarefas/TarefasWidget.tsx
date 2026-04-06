@@ -4,7 +4,6 @@ import {
   CheckCircle2,
   Circle,
   Clock,
-  AlertCircle,
   Plus,
   Trash2,
   Edit2,
@@ -35,14 +34,14 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useTasks, type Tarefa, type StatusTarefa, type PrioridadeTarefa } from '@/hooks/useTasks';
 
-const statusConfig = {
-  a_fazer: { label: 'A Fazer', icon: Circle, color: 'bg-gray-500', textColor: 'text-gray-500' },
-  fazendo: { label: 'Fazendo', icon: Clock, color: 'bg-amber-500', textColor: 'text-amber-500' },
-  revisao: { label: 'Revisão', icon: Clock, color: 'bg-blue-500', textColor: 'text-blue-500' },
-  feito: { label: 'Feito', icon: CheckCircle2, color: 'bg-emerald-500', textColor: 'text-emerald-500' },
+const statusConfig: Record<StatusTarefa, { label: string; icon: any; color: string; textColor: string }> = {
+  pendente: { label: 'Pendente', icon: Circle, color: 'bg-gray-500', textColor: 'text-gray-500' },
+  em_andamento: { label: 'Em Andamento', icon: Clock, color: 'bg-amber-500', textColor: 'text-amber-500' },
+  concluida: { label: 'Concluída', icon: CheckCircle2, color: 'bg-emerald-500', textColor: 'text-emerald-500' },
+  cancelada: { label: 'Cancelada', icon: X, color: 'bg-red-500', textColor: 'text-red-500' },
 };
 
-const prioridadeConfig = {
+const prioridadeConfig: Record<PrioridadeTarefa, { label: string; color: string }> = {
   baixa: { label: 'Baixa', color: 'bg-blue-500/10 text-blue-500 border-blue-500/20' },
   media: { label: 'Média', color: 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20' },
   alta: { label: 'Alta', color: 'bg-orange-500/10 text-orange-500 border-orange-500/20' },
@@ -64,11 +63,11 @@ function TarefaCard({
   onDelete: (id: string) => void;
   onStatusChange: (id: string, status: StatusTarefa) => void;
 }) {
-  const status = statusConfig[tarefa.status];
-  const prioridade = prioridadeConfig[tarefa.prioridade];
+  const status = statusConfig[tarefa.status] || statusConfig.pendente;
+  const prioridade = prioridadeConfig[tarefa.prioridade] || prioridadeConfig.media;
   const StatusIcon = status.icon;
 
-  const formatarData = (data: string | null) => {
+  const formatarData = (data: string | null | undefined) => {
     if (!data) return null;
     return new Date(data).toLocaleDateString('pt-BR', {
       day: '2-digit',
@@ -76,9 +75,11 @@ function TarefaCard({
     });
   };
 
+  const dataLimite = tarefa.data_limite || tarefa.deadline;
+
   const estaAtrasada = () => {
-    if (!tarefa.data_limite || tarefa.status === 'feito') return false;
-    return new Date(tarefa.data_limite) < new Date();
+    if (!dataLimite || tarefa.status === 'concluida') return false;
+    return new Date(dataLimite) < new Date();
   };
 
   return (
@@ -95,22 +96,22 @@ function TarefaCard({
             <button
               onClick={() => {
                 const proximoStatus: Record<StatusTarefa, StatusTarefa> = {
-                  a_fazer: 'fazendo',
-                  fazendo: 'feito',
-                  feito: 'a_fazer',
-                  revisao: 'feito',
+                  pendente: 'em_andamento',
+                  em_andamento: 'concluida',
+                  concluida: 'pendente',
+                  cancelada: 'pendente',
                 };
                 onStatusChange(tarefa.id, proximoStatus[tarefa.status]);
               }}
               className={`w-5 h-5 rounded-full flex items-center justify-center transition-colors ${
-                tarefa.status === 'feito' 
+                tarefa.status === 'concluida' 
                   ? 'bg-emerald-500 text-white' 
                   : 'border-2 border-muted-foreground/30 hover:border-primary'
               }`}
             >
-              {tarefa.status === 'feito' && <CheckCircle2 className="w-3 h-3" />}
+              {tarefa.status === 'concluida' && <CheckCircle2 className="w-3 h-3" />}
             </button>
-            <span className={`font-medium text-sm ${tarefa.status === 'feito' ? 'line-through text-muted-foreground' : ''}`}>
+            <span className={`font-medium text-sm ${tarefa.status === 'concluida' ? 'line-through text-muted-foreground' : ''}`}>
               {tarefa.titulo}
             </span>
           </div>
@@ -131,10 +132,10 @@ function TarefaCard({
               </div>
             )}
 
-            {tarefa.data_limite && (
+            {dataLimite && (
               <div className={`flex items-center gap-1 text-[10px] ${estaAtrasada() ? 'text-red-500' : 'text-muted-foreground'}`}>
                 <Calendar className="w-3 h-3" />
-                {formatarData(tarefa.data_limite)}
+                {formatarData(dataLimite)}
                 {estaAtrasada() && <span className="text-red-500 font-medium"> (Atrasada)</span>}
               </div>
             )}
@@ -142,20 +143,10 @@ function TarefaCard({
         </div>
 
         <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8"
-            onClick={() => onEdit(tarefa)}
-          >
+          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onEdit(tarefa)}>
             <Edit2 className="w-4 h-4" />
           </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 text-destructive hover:text-destructive"
-            onClick={() => onDelete(tarefa.id)}
-          >
+          <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive" onClick={() => onDelete(tarefa.id)}>
             <Trash2 className="w-4 h-4" />
           </Button>
         </div>
@@ -165,41 +156,31 @@ function TarefaCard({
 }
 
 export function TarefasWidget() {
-  const { 
-    tarefas, 
-    loading, 
-    criarTarefa, 
-    atualizarTarefa, 
-    deletarTarefa,
-  } = useTasks();
+  const { tarefas, loading, criarTarefa, atualizarTarefa, deletarTarefa } = useTasks();
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editando, setEditando] = useState<Tarefa | null>(null);
   const [mostrarFiltros, setMostrarFiltros] = useState(false);
   const [filtros, setFiltros] = useState<{ status?: StatusTarefa; prioridade?: PrioridadeTarefa; responsavel?: string }>({});
 
-  // Formulário
   const [titulo, setTitulo] = useState('');
   const [descricao, setDescricao] = useState('');
-  const [status, setStatus] = useState<StatusTarefa>('a_fazer');
+  const [status, setStatus] = useState<StatusTarefa>('pendente');
   const [prioridade, setPrioridade] = useState<PrioridadeTarefa>('media');
   const [responsavel, setResponsavel] = useState('');
   const [dataLimite, setDataLimite] = useState('');
 
-  // Calcular estatísticas
   const estatisticas = {
     total: tarefas.length,
-    pendentes: tarefas.filter(t => t.status === 'a_fazer').length,
-    emAndamento: tarefas.filter(t => t.status === 'fazendo').length,
-    concluidas: tarefas.filter(t => t.status === 'feito').length,
-    criticas: tarefas.filter(t => t.prioridade === 'urgente').length,
-    altas: tarefas.filter(t => t.prioridade === 'alta').length,
+    pendentes: tarefas.filter(t => t.status === 'pendente').length,
+    emAndamento: tarefas.filter(t => t.status === 'em_andamento').length,
+    concluidas: tarefas.filter(t => t.status === 'concluida').length,
   };
 
   const resetForm = () => {
     setTitulo('');
     setDescricao('');
-    setStatus('a_fazer');
+    setStatus('pendente');
     setPrioridade('media');
     setResponsavel('');
     setDataLimite('');
@@ -213,16 +194,16 @@ export function TarefasWidget() {
     setStatus(tarefa.status);
     setPrioridade(tarefa.prioridade);
     setResponsavel(tarefa.responsavel || '');
-    setDataLimite(tarefa.data_limite ? tarefa.data_limite.slice(0, 16) : '');
+    const dl = tarefa.data_limite || tarefa.deadline;
+    setDataLimite(dl ? dl.slice(0, 16) : '');
     setDialogOpen(true);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!titulo.trim()) return;
 
-    const dto = {
+    const dto: Partial<Tarefa> = {
       titulo: titulo.trim(),
       descricao: descricao.trim() || undefined,
       status,
@@ -233,16 +214,10 @@ export function TarefasWidget() {
 
     if (editando) {
       const sucesso = await atualizarTarefa(editando.id, dto);
-      if (sucesso) {
-        setDialogOpen(false);
-        resetForm();
-      }
+      if (sucesso) { setDialogOpen(false); resetForm(); }
     } else {
       const sucesso = await criarTarefa(dto);
-      if (sucesso) {
-        setDialogOpen(false);
-        resetForm();
-      }
+      if (sucesso) { setDialogOpen(false); resetForm(); }
     }
   };
 
@@ -267,12 +242,7 @@ export function TarefasWidget() {
             <span className="text-xs text-muted-foreground font-normal">({estatisticas.total})</span>
           </CardTitle>
           <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8"
-              onClick={() => setMostrarFiltros(!mostrarFiltros)}
-            >
+            <Button variant="ghost" size="sm" className="h-8" onClick={() => setMostrarFiltros(!mostrarFiltros)}>
               <Filter className="w-4 h-4 mr-1" />
               Filtros
             </Button>
@@ -290,46 +260,29 @@ export function TarefasWidget() {
                 <form onSubmit={handleSubmit} className="space-y-4 pt-4">
                   <div>
                     <label className="text-xs font-medium mb-1 block">Título *</label>
-                    <Input
-                      value={titulo}
-                      onChange={(e) => setTitulo(e.target.value)}
-                      placeholder="Digite o título da tarefa"
-                      required
-                    />
+                    <Input value={titulo} onChange={(e) => setTitulo(e.target.value)} placeholder="Digite o título da tarefa" required />
                   </div>
-
                   <div>
                     <label className="text-xs font-medium mb-1 block">Descrição</label>
-                    <Textarea
-                      value={descricao}
-                      onChange={(e) => setDescricao(e.target.value)}
-                      placeholder="Descrição opcional"
-                      rows={3}
-                    />
+                    <Textarea value={descricao} onChange={(e) => setDescricao(e.target.value)} placeholder="Descrição opcional" rows={3} />
                   </div>
-
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="text-xs font-medium mb-1 block">Status</label>
                       <Select value={status} onValueChange={(v) => setStatus(v as StatusTarefa)}>
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
+                        <SelectTrigger><SelectValue /></SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="a_fazer">A Fazer</SelectItem>
-                          <SelectItem value="fazendo">Fazendo</SelectItem>
-                          <SelectItem value="revisao">Revisão</SelectItem>
-                          <SelectItem value="feito">Feito</SelectItem>
+                          <SelectItem value="pendente">Pendente</SelectItem>
+                          <SelectItem value="em_andamento">Em Andamento</SelectItem>
+                          <SelectItem value="concluida">Concluída</SelectItem>
+                          <SelectItem value="cancelada">Cancelada</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
-
                     <div>
                       <label className="text-xs font-medium mb-1 block">Prioridade</label>
                       <Select value={prioridade} onValueChange={(v) => setPrioridade(v as PrioridadeTarefa)}>
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
+                        <SelectTrigger><SelectValue /></SelectTrigger>
                         <SelectContent>
                           <SelectItem value="baixa">Baixa</SelectItem>
                           <SelectItem value="media">Média</SelectItem>
@@ -339,31 +292,18 @@ export function TarefasWidget() {
                       </Select>
                     </div>
                   </div>
-
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="text-xs font-medium mb-1 block">Responsável</label>
-                      <Input
-                        value={responsavel}
-                        onChange={(e) => setResponsavel(e.target.value)}
-                        placeholder="Nome"
-                      />
+                      <Input value={responsavel} onChange={(e) => setResponsavel(e.target.value)} placeholder="Nome" />
                     </div>
-
                     <div>
                       <label className="text-xs font-medium mb-1 block">Data Limite</label>
-                      <Input
-                        type="datetime-local"
-                        value={dataLimite}
-                        onChange={(e) => setDataLimite(e.target.value)}
-                      />
+                      <Input type="datetime-local" value={dataLimite} onChange={(e) => setDataLimite(e.target.value)} />
                     </div>
                   </div>
-
                   <div className="flex justify-end gap-2 pt-2">
-                    <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>
-                      Cancelar
-                    </Button>
+                    <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>Cancelar</Button>
                     <Button type="submit">{editando ? 'Salvar' : 'Criar'}</Button>
                   </div>
                 </form>
@@ -372,23 +312,21 @@ export function TarefasWidget() {
           </div>
         </div>
 
-        {/* Estatísticas */}
         <div className="flex items-center gap-4 mt-3 text-[10px]">
           <div className="flex items-center gap-1">
             <div className="w-2 h-2 rounded-full bg-gray-500" />
-            <span className="text-muted-foreground">{estatisticas.pendentes} a fazer</span>
+            <span className="text-muted-foreground">{estatisticas.pendentes} pendentes</span>
           </div>
           <div className="flex items-center gap-1">
             <div className="w-2 h-2 rounded-full bg-amber-500" />
-            <span className="text-muted-foreground">{estatisticas.emAndamento} fazendo</span>
+            <span className="text-muted-foreground">{estatisticas.emAndamento} em andamento</span>
           </div>
           <div className="flex items-center gap-1">
             <div className="w-2 h-2 rounded-full bg-emerald-500" />
-            <span className="text-muted-foreground">{estatisticas.concluidas} feito</span>
+            <span className="text-muted-foreground">{estatisticas.concluidas} concluídas</span>
           </div>
         </div>
 
-        {/* Filtros */}
         <AnimatePresence>
           {mostrarFiltros && (
             <motion.div
@@ -402,15 +340,13 @@ export function TarefasWidget() {
                   value={filtros.status || 'todos'} 
                   onValueChange={(v) => setFiltros({ ...filtros, status: v === 'todos' ? undefined : v as StatusTarefa })}
                 >
-                  <SelectTrigger className="h-8 w-[130px]">
-                    <SelectValue placeholder="Status" />
-                  </SelectTrigger>
+                  <SelectTrigger className="h-8 w-[130px]"><SelectValue placeholder="Status" /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="todos">Todos os status</SelectItem>
-                    <SelectItem value="a_fazer">A Fazer</SelectItem>
-                    <SelectItem value="fazendo">Fazendo</SelectItem>
-                    <SelectItem value="revisao">Revisão</SelectItem>
-                    <SelectItem value="feito">Feito</SelectItem>
+                    <SelectItem value="pendente">Pendente</SelectItem>
+                    <SelectItem value="em_andamento">Em Andamento</SelectItem>
+                    <SelectItem value="concluida">Concluída</SelectItem>
+                    <SelectItem value="cancelada">Cancelada</SelectItem>
                   </SelectContent>
                 </Select>
 
@@ -418,9 +354,7 @@ export function TarefasWidget() {
                   value={filtros.prioridade || 'todas'} 
                   onValueChange={(v) => setFiltros({ ...filtros, prioridade: v === 'todas' ? undefined : v as PrioridadeTarefa })}
                 >
-                  <SelectTrigger className="h-8 w-[140px]">
-                    <SelectValue placeholder="Prioridade" />
-                  </SelectTrigger>
+                  <SelectTrigger className="h-8 w-[140px]"><SelectValue placeholder="Prioridade" /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="todas">Todas prioridades</SelectItem>
                     <SelectItem value="baixa">Baixa</SelectItem>
@@ -430,12 +364,7 @@ export function TarefasWidget() {
                   </SelectContent>
                 </Select>
 
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-8"
-                  onClick={() => setFiltros({})}
-                >
+                <Button variant="ghost" size="sm" className="h-8" onClick={() => setFiltros({})}>
                   <X className="w-3 h-3 mr-1" />
                   Limpar
                 </Button>
@@ -448,9 +377,7 @@ export function TarefasWidget() {
       <CardContent>
         {loading ? (
           <div className="space-y-3">
-            {[1, 2, 3].map((i) => (
-              <CardSkeleton key={i} />
-            ))}
+            {[1, 2, 3].map((i) => <CardSkeleton key={i} />)}
           </div>
         ) : tarefasFiltradas.length === 0 ? (
           <div className="text-center py-8 text-muted-foreground">
