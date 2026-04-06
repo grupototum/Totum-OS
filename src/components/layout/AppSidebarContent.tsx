@@ -5,6 +5,7 @@ import {
   LayoutDashboard, Bot, KanbanSquare, GitBranch, Building2,
   Terminal, Users, Settings, LogOut, Sun, Moon,
   ChevronDown, ChevronRight, Notebook, FileCheck, Lightbulb, ClipboardList, UserPlus, Contact,
+  BookOpen,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -28,6 +29,7 @@ const staticSections: NavSection[] = [
       { label: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },
       { label: "Hub de Agentes", icon: Bot, path: "/hub" },
       { label: "Painel de Agentes", icon: Bot, path: "/agents-dashboard" },
+      { label: "Alexandria", icon: BookOpen, path: "/alexandria" },
     ],
   },
   {

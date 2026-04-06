@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate, Outlet } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -47,6 +47,20 @@ import PainelAgentes from "./pages/PainelAgentes";
 import HubAgentes from "./pages/HubAgentes";
 import EstruturaTime from "./pages/EstruturaTime";
 import AgenteDetail from "./pages/AgenteDetail";
+// Alexandria - Novas páginas transplantadas
+import AlexandriaLayout from "./components/layout/AlexandriaLayout";
+import AlexandriaDashboard from "./pages/alexandria/Dashboard";
+import ContextHub from "./pages/alexandria/ContextHub";
+import PopsPortal from "./pages/alexandria/PopsPortal";
+import SkillsCentral from "./pages/alexandria/SkillsCentral";
+import OpenClawDashboard from "./pages/alexandria/OpenClawDashboard";
+
+// Wrapper para páginas do Alexandria com layout
+const AlexandriaRoutes = () => (
+  <AlexandriaLayout>
+    <Outlet />
+  </AlexandriaLayout>
+);
 
 const queryClient = new QueryClient();
 
@@ -108,6 +122,16 @@ const App = () => (
             {/* Alexandria - Wiki e Chat com GILES */}
             <Route path="/wiki" element={<WikiAlexandria />} />
             <Route path="/giles" element={<GilesChat />} />
+            
+            {/* Alexandria - Novas rotas transplantadas com layout */}
+            <Route path="/alexandria" element={<AlexandriaRoutes />}>
+              <Route index element={<AlexandriaDashboard />} />
+              <Route path="pops" element={<PopsPortal />} />
+              <Route path="context" element={<ContextHub />} />
+              <Route path="skills" element={<SkillsCentral />} />
+              <Route path="openclaw" element={<OpenClawDashboard />} />
+            </Route>
+            
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
