@@ -44,8 +44,8 @@ const getPrioridadeColor = (prioridade: string) => {
 export function KanbanCard({ tarefa, projetoNome, onClick }: KanbanCardProps) {
   const [isDragging, setIsDragging] = useState(false);
   
-  const subtarefasConcluidas = tarefa.subtarefas.filter(st => st.concluida).length;
-  const totalSubtarefas = tarefa.subtarefas.length;
+  const subtarefasConcluidas = (tarefa.subtarefas || []).filter(st => st.concluida).length;
+  const totalSubtarefas = (tarefa.subtarefas || []).length;
   const progressoSubtarefas = totalSubtarefas > 0 
     ? (subtarefasConcluidas / totalSubtarefas) * 100 
     : 0;
@@ -61,7 +61,7 @@ export function KanbanCard({ tarefa, projetoNome, onClick }: KanbanCardProps) {
     setIsDragging(false);
   };
 
-  const formatarData = (data?: string) => {
+  const formatarData = (data?: string | null) => {
     if (!data) return null;
     const d = new Date(data);
     const hoje = new Date();
@@ -73,7 +73,9 @@ export function KanbanCard({ tarefa, projetoNome, onClick }: KanbanCardProps) {
     return d.toLocaleDateString('pt-BR', { day: 'numeric', month: 'short' });
   };
 
-  const isAtrasada = tarefa.data_limite && new Date(tarefa.data_limite) < new Date() && tarefa.status !== 'feito';
+  const dataLimite = tarefa.data_limite || tarefa.deadline;
+  const isAtrasada = dataLimite && new Date(dataLimite) < new Date() && tarefa.status !== 'concluida';
+  const tags = tarefa.tags || [];
 
   return (
     <div
@@ -116,9 +118,9 @@ export function KanbanCard({ tarefa, projetoNome, onClick }: KanbanCardProps) {
       )}
 
       {/* Tags */}
-      {tarefa.tags.length > 0 && (
+      {tags.length > 0 && (
         <div className="flex flex-wrap gap-1 mb-3">
-          {tarefa.tags.slice(0, 3).map(tag => {
+          {tags.slice(0, 3).map(tag => {
             const style = getTagStyle(tag);
             return (
               <span 
@@ -132,8 +134,8 @@ export function KanbanCard({ tarefa, projetoNome, onClick }: KanbanCardProps) {
               </span>
             );
           })}
-          {tarefa.tags.length > 3 && (
-            <span className="text-[9px] text-stone-400">+{tarefa.tags.length - 3}</span>
+          {tags.length > 3 && (
+            <span className="text-[9px] text-stone-400">+{tags.length - 3}</span>
           )}
         </div>
       )}
@@ -158,7 +160,6 @@ export function KanbanCard({ tarefa, projetoNome, onClick }: KanbanCardProps) {
 
       {/* Footer: Responsável + Data */}
       <div className="flex items-center justify-between pt-2 border-t border-stone-100">
-        {/* Responsável */}
         {tarefa.responsavel ? (
           <div className="flex items-center gap-1.5">
             <div className="w-5 h-5 rounded-full bg-stone-200 flex items-center justify-center text-[9px] font-semibold text-stone-600">
@@ -172,14 +173,13 @@ export function KanbanCard({ tarefa, projetoNome, onClick }: KanbanCardProps) {
           <span className="text-[10px] text-stone-400 italic">Sem responsável</span>
         )}
 
-        {/* Data */}
-        {tarefa.data_limite && (
+        {dataLimite && (
           <span className={`
             text-[10px] flex items-center gap-1
             ${isAtrasada ? 'text-red-500 font-medium' : 'text-stone-400'}
           `}>
             <Icon icon="solar:calendar-linear" className="w-3 h-3" />
-            {formatarData(tarefa.data_limite)}
+            {formatarData(dataLimite)}
           </span>
         )}
       </div>

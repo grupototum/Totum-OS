@@ -1,6 +1,3 @@
-// src/hooks/useTasksFixed.ts
-// ✅ CORREÇÃO: Funções stub implementadas com Supabase
-
 import { useState, useCallback, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -9,19 +6,28 @@ import { toast } from 'sonner';
 // TIPOS
 // ============================================
 
+export type StatusTarefa = 'pendente' | 'em_andamento' | 'concluida' | 'cancelada';
+export type PrioridadeTarefa = 'baixa' | 'media' | 'alta' | 'urgente';
+export type TipoTarefa = 'unica' | 'projeto';
+
 export interface Tarefa {
   id: string;
   titulo: string;
-  descricao?: string;
-  responsavel: string;
-  prioridade: 'baixa' | 'media' | 'alta' | 'urgente';
-  status: 'pendente' | 'em_andamento' | 'concluida' | 'cancelada';
-  data_limite?: string;
-  projeto_id?: string;
+  descricao?: string | null;
+  responsavel?: string | null;
+  prioridade: PrioridadeTarefa;
+  status: StatusTarefa;
+  deadline?: string | null;
+  proxima_execucao?: string | null;
+  ultima_execucao?: string | null;
+  ultimo_resultado?: string | null;
   created_at?: string;
   updated_at?: string;
-  subtarefas?: Subtarefa[];
-  comentarios?: Comentario[];
+  // Client-side only (not in DB)
+  subtarefas: Subtarefa[];
+  tags: string[];
+  data_limite?: string | null;
+  projeto_id?: string | null;
 }
 
 export interface Projeto {
@@ -41,6 +47,8 @@ export interface Comentario {
   conteudo: string;
   autor_id: string;
   autor_nome?: string;
+  autor?: string;
+  criado_em?: string;
   created_at?: string;
 }
 
@@ -53,6 +61,35 @@ export interface Subtarefa {
 }
 
 // ============================================
+// CONSTANTES
+// ============================================
+
+export const PRIORIDADES = [
+  { id: 'baixa', label: 'Baixa', cor: '#78716C' },
+  { id: 'media', label: 'Média', cor: '#F59E0B' },
+  { id: 'alta', label: 'Alta', cor: '#F97316' },
+  { id: 'urgente', label: 'Urgente', cor: '#EF4444' },
+];
+
+export const STATUS_LIST = [
+  { id: 'pendente', label: 'Pendente' },
+  { id: 'em_andamento', label: 'Em Andamento' },
+  { id: 'concluida', label: 'Concluída' },
+  { id: 'cancelada', label: 'Cancelada' },
+];
+
+export const COLUNAS_KANBAN = [
+  { id: 'pendente' as StatusTarefa, titulo: 'Pendente', cor: '#78716C' },
+  { id: 'em_andamento' as StatusTarefa, titulo: 'Em Andamento', cor: '#F59E0B' },
+  { id: 'concluida' as StatusTarefa, titulo: 'Concluída', cor: '#22C55E' },
+  { id: 'cancelada' as StatusTarefa, titulo: 'Cancelada', cor: '#EF4444' },
+];
+
+export const RESPONSAVEIS = [
+  'Lucas', 'Ana', 'Pedro', 'Maria', 'João', 'Carla'
+];
+
+// ============================================
 // HOOK
 // ============================================
 
@@ -62,12 +99,7 @@ export const useTasks = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // ==========================================
-  // TAREFAS
-  // ==========================================
-
   const fetchTarefas = useCallback(async (filtros?: {
-    projeto_id?: string;
     responsavel?: string;
     status?: string;
     prioridade?: string;
@@ -78,16 +110,9 @@ export const useTasks = () => {
     try {
       let query = supabase
         .from('tarefas')
-        .select(`
-          *,
-          subtarefas(*),
-          comentarios(*, autor:autor_id(nome))
-        `)
+        .select('*')
         .order('created_at', { ascending: false });
 
-      if (filtros?.projeto_id) {
-        query = query.eq('projeto_id', filtros.projeto_id);
-      }
       if (filtros?.responsavel) {
         query = query.eq('responsavel', filtros.responsavel);
       }
@@ -102,19 +127,19 @@ export const useTasks = () => {
 
       if (supaError) throw supaError;
 
-      // Formatar dados
-      const tarefasFormatadas: Tarefa[] = (data || []).map(t => ({
+      const tarefasFormatadas: Tarefa[] = (data || []).map((t: any) => ({
         ...t,
-        comentarios: t.comentarios?.map((c: any) => ({
-          ...c,
-          autor_nome: c.autor?.nome || 'Usuário'
-        }))
+        prioridade: t.prioridade as PrioridadeTarefa,
+        status: t.status as StatusTarefa,
+        data_limite: t.deadline,
+        subtarefas: [],
+        tags: [],
       }));
 
       setTarefas(tarefasFormatadas);
       return tarefasFormatadas;
-    } catch (err: any) {
-      setError(err.message);
+    } catch (_err: any) {
+      setError(_err.message);
       toast.error('Erro ao carregar tarefas');
       return [];
     } finally {
@@ -124,19 +149,28 @@ export const useTasks = () => {
 
   const criarTarefa = useCallback(async (tarefa: Partial<Tarefa>): Promise<Tarefa | null> => {
     try {
+      const dbData: any = {
+        titulo: tarefa.titulo,
+        descricao: tarefa.descricao,
+        responsavel: tarefa.responsavel,
+        prioridade: tarefa.prioridade || 'media',
+        status: tarefa.status || 'pendente',
+        deadline: tarefa.data_limite || tarefa.deadline,
+      };
+
       const { data, error } = await supabase
         .from('tarefas')
-        .insert([tarefa])
+        .insert([dbData])
         .select()
         .single();
 
       if (error) throw error;
 
       toast.success('Tarefa criada com sucesso');
-      await fetchTarefas(); // Recarregar lista
-      return data;
-    } catch (err: any) {
-      toast.error('Erro ao criar tarefa: ' + err.message);
+      await fetchTarefas();
+      return data as any;
+    } catch (_err: any) {
+      toast.error('Erro ao criar tarefa: ' + _err.message);
       return null;
     }
   }, [fetchTarefas]);
@@ -146,9 +180,18 @@ export const useTasks = () => {
     updates: Partial<Tarefa>
   ): Promise<boolean> => {
     try {
+      const dbUpdates: any = {};
+      if (updates.titulo !== undefined) dbUpdates.titulo = updates.titulo;
+      if (updates.descricao !== undefined) dbUpdates.descricao = updates.descricao;
+      if (updates.responsavel !== undefined) dbUpdates.responsavel = updates.responsavel;
+      if (updates.prioridade !== undefined) dbUpdates.prioridade = updates.prioridade;
+      if (updates.status !== undefined) dbUpdates.status = updates.status;
+      if (updates.data_limite !== undefined) dbUpdates.deadline = updates.data_limite;
+      if (updates.deadline !== undefined) dbUpdates.deadline = updates.deadline;
+
       const { error } = await supabase
         .from('tarefas')
-        .update(updates)
+        .update(dbUpdates)
         .eq('id', id);
 
       if (error) throw error;
@@ -156,8 +199,8 @@ export const useTasks = () => {
       toast.success('Tarefa atualizada');
       await fetchTarefas();
       return true;
-    } catch (err: any) {
-      toast.error('Erro ao atualizar tarefa: ' + err.message);
+    } catch (_err: any) {
+      toast.error('Erro ao atualizar tarefa: ' + _err.message);
       return false;
     }
   }, [fetchTarefas]);
@@ -174,203 +217,65 @@ export const useTasks = () => {
       toast.success('Tarefa removida');
       await fetchTarefas();
       return true;
-    } catch (err: any) {
-      toast.error('Erro ao remover tarefa: ' + err.message);
+    } catch (_err: any) {
+      toast.error('Erro ao remover tarefa: ' + _err.message);
       return false;
     }
   }, [fetchTarefas]);
 
-  // ==========================================
-  // PROJETOS (IMPLEMENTADO - antes era stub)
-  // ==========================================
-
+  // Projetos - stub (no DB table yet)
   const fetchProjetos = useCallback(async (): Promise<Projeto[]> => {
-    try {
-      const { data, error } = await supabase
-        .from('projetos')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-
-      const projetosList = data || [];
-      setProjetos(projetosList);
-      return projetosList;
-    } catch (err: any) {
-      toast.error('Erro ao carregar projetos');
-      return [];
-    }
+    setProjetos([]);
+    return [];
   }, []);
 
-  const criarProjeto = useCallback(async (
-    projeto: Partial<Projeto>
-  ): Promise<Projeto | null> => {
-    try {
-      const { data, error } = await supabase
-        .from('projetos')
-        .insert([projeto])
-        .select()
-        .single();
+  const criarProjeto = useCallback(async (_projeto: Partial<Projeto>): Promise<Projeto | null> => {
+    toast.error('Projetos ainda não disponíveis');
+    return null;
+  }, []);
 
-      if (error) throw error;
+  const atualizarProjeto = useCallback(async (_id: string, _updates: Partial<Projeto>): Promise<boolean> => {
+    toast.error('Projetos ainda não disponíveis');
+    return false;
+  }, []);
 
-      toast.success('Projeto criado com sucesso');
-      await fetchProjetos();
-      return data;
-    } catch (err: any) {
-      toast.error('Erro ao criar projeto: ' + err.message);
-      return null;
-    }
-  }, [fetchProjetos]);
+  const deletarProjeto = useCallback(async (_id: string): Promise<boolean> => {
+    toast.error('Projetos ainda não disponíveis');
+    return false;
+  }, []);
 
-  const atualizarProjeto = useCallback(async (
-    id: string, 
-    updates: Partial<Projeto>
-  ): Promise<boolean> => {
-    try {
-      const { error } = await supabase
-        .from('projetos')
-        .update(updates)
-        .eq('id', id);
-
-      if (error) throw error;
-
-      toast.success('Projeto atualizado');
-      await fetchProjetos();
-      return true;
-    } catch (err: any) {
-      toast.error('Erro ao atualizar projeto: ' + err.message);
-      return false;
-    }
-  }, [fetchProjetos]);
-
-  const deletarProjeto = useCallback(async (id: string): Promise<boolean> => {
-    try {
-      const { error } = await supabase
-        .from('projetos')
-        .delete()
-        .eq('id', id);
-
-      if (error) throw error;
-
-      toast.success('Projeto removido');
-      await fetchProjetos();
-      return true;
-    } catch (err: any) {
-      toast.error('Erro ao remover projeto: ' + err.message);
-      return false;
-    }
-  }, [fetchProjetos]);
-
-  // ==========================================
-  // COMENTÁRIOS (IMPLEMENTADO - antes era stub)
-  // ==========================================
-
+  // Comentários - stub
   const adicionarComentario = useCallback(async (
-    tarefaId: string, 
-    conteudo: string, 
-    autorId: string
+    _tarefaId: string, 
+    _conteudo: string, 
+    _autorId?: string
   ): Promise<Comentario | null> => {
-    try {
-      const { data, error } = await supabase
-        .from('comentarios')
-        .insert([{
-          tarefa_id: tarefaId,
-          conteudo,
-          autor_id: autorId
-        }])
-        .select()
-        .single();
+    toast.info('Comentários em desenvolvimento');
+    return null;
+  }, []);
 
-      if (error) throw error;
-
-      await fetchTarefas();
-      return data;
-    } catch (err: any) {
-      toast.error('Erro ao adicionar comentário');
-      return null;
-    }
-  }, [fetchTarefas]);
-
-  // ==========================================
-  // SUBTAREFAS (IMPLEMENTADO - antes era stub)
-  // ==========================================
-
+  // Subtarefas - stub
   const adicionarSubtarefa = useCallback(async (
-    tarefaId: string, 
-    titulo: string
+    _tarefaId: string, 
+    _titulo: string
   ): Promise<boolean> => {
-    try {
-      const { error } = await supabase
-        .from('subtarefas')
-        .insert([{
-          tarefa_id: tarefaId,
-          titulo,
-          concluida: false
-        }]);
-
-      if (error) throw error;
-
-      await fetchTarefas();
-      return true;
-    } catch (err: any) {
-      toast.error('Erro ao adicionar subtarefa');
-      return false;
-    }
-  }, [fetchTarefas]);
+    toast.info('Subtarefas em desenvolvimento');
+    return false;
+  }, []);
 
   const toggleSubtarefa = useCallback(async (
-    tarefaId: string, 
-    subtarefaId: string
+    _tarefaId: string, 
+    _subtarefaId: string
   ): Promise<boolean> => {
-    try {
-      // Buscar estado atual
-      const { data: subtarefa } = await supabase
-        .from('subtarefas')
-        .select('concluida')
-        .eq('id', subtarefaId)
-        .single();
-
-      const novoEstado = !subtarefa?.concluida;
-
-      const { error } = await supabase
-        .from('subtarefas')
-        .update({ concluida: novoEstado })
-        .eq('id', subtarefaId);
-
-      if (error) throw error;
-
-      await fetchTarefas();
-      return true;
-    } catch (err: any) {
-      toast.error('Erro ao atualizar subtarefa');
-      return false;
-    }
-  }, [fetchTarefas]);
+    return false;
+  }, []);
 
   const removerSubtarefa = useCallback(async (
-    tarefaId: string, 
-    subtarefaId: string
+    _tarefaId: string, 
+    _subtarefaId: string
   ): Promise<boolean> => {
-    try {
-      const { error } = await supabase
-        .from('subtarefas')
-        .delete()
-        .eq('id', subtarefaId);
-
-      if (error) throw error;
-
-      await fetchTarefas();
-      return true;
-    } catch (err: any) {
-      toast.error('Erro ao remover subtarefa');
-      return false;
-    }
-  }, [fetchTarefas]);
-
-  // ==========================================
-  // ESTATÍSTICAS
-  // ==========================================
+    return false;
+  }, []);
 
   const getEstatisticas = useCallback(() => {
     const total = tarefas.length;
@@ -389,43 +294,28 @@ export const useTasks = () => {
     };
   }, [tarefas]);
 
-  // ==========================================
-  // LIFECYCLE
-  // ==========================================
-
   useEffect(() => {
     fetchTarefas();
     fetchProjetos();
   }, [fetchTarefas, fetchProjetos]);
 
   return {
-    // Estados
     tarefas,
     projetos,
     loading,
     error,
-
-    // Tarefas
     fetchTarefas,
     criarTarefa,
     atualizarTarefa,
     deletarTarefa,
-
-    // Projetos (✅ Implementados)
     fetchProjetos,
     criarProjeto,
     atualizarProjeto,
     deletarProjeto,
-
-    // Comentários (✅ Implementados)
     adicionarComentario,
-
-    // Subtarefas (✅ Implementados)
     adicionarSubtarefa,
     toggleSubtarefa,
     removerSubtarefa,
-
-    // Estatísticas
     getEstatisticas
   };
 };

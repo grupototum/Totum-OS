@@ -7,13 +7,8 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { motion, AnimatePresence } from 'framer-motion';
 
-interface Tarefa {
-  id: string;
-  [key: string]: any;
-}
-
 interface TaskComentariosProps {
-  tarefa: Tarefa;
+  tarefa: { id: string; [key: string]: any };
   onAddComentario?: (tarefaId: string, conteudo: string) => Promise<void>;
   currentUser?: string;
 }
@@ -25,7 +20,6 @@ export function TaskComentarios({ tarefa, onAddComentario, currentUser = 'Usuár
   const [carregando, setCarregando] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // No DB table yet - just show empty state
   useEffect(() => {
     setCarregando(false);
     setComentarios([]);
@@ -50,10 +44,7 @@ export function TaskComentarios({ tarefa, onAddComentario, currentUser = 'Usuár
   };
 
   const getAvatarColor = (nome: string) => {
-    const colors = [
-      'bg-blue-500', 'bg-green-500', 'bg-yellow-500', 
-      'bg-purple-500', 'bg-pink-500', 'bg-indigo-500'
-    ];
+    const colors = ['bg-blue-500', 'bg-green-500', 'bg-yellow-500', 'bg-purple-500', 'bg-pink-500', 'bg-indigo-500'];
     const index = nome.charCodeAt(0) % colors.length;
     return colors[index];
   };
@@ -73,28 +64,34 @@ export function TaskComentarios({ tarefa, onAddComentario, currentUser = 'Usuár
           </div>
         ) : (
           <AnimatePresence>
-            {comentarios.map((comentario, index) => (
-              <motion.div
-                key={comentario.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.05 }}
-                className="flex gap-3"
-              >
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-semibold shrink-0 ${getAvatarColor(comentario.autor)}`}>
-                  {getInitials(comentario.autor)}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-sm font-medium text-stone-900">{comentario.autor}</span>
-                    <span className="text-xs text-stone-400">
-                      {format(new Date(comentario.criado_em), "dd MMM 'às' HH:mm", { locale: ptBR })}
-                    </span>
+            {comentarios.map((comentario, index) => {
+              const autorNome = comentario.autor_nome || comentario.autor || 'Usuário';
+              const dataComentario = comentario.criado_em || comentario.created_at;
+              return (
+                <motion.div
+                  key={comentario.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.05 }}
+                  className="flex gap-3"
+                >
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-semibold shrink-0 ${getAvatarColor(autorNome)}`}>
+                    {getInitials(autorNome)}
                   </div>
-                  <p className="text-sm text-stone-700 whitespace-pre-wrap">{comentario.conteudo}</p>
-                </div>
-              </motion.div>
-            ))}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-sm font-medium text-stone-900">{autorNome}</span>
+                      {dataComentario && (
+                        <span className="text-xs text-stone-400">
+                          {format(new Date(dataComentario), "dd MMM 'às' HH:mm", { locale: ptBR })}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-sm text-stone-700 whitespace-pre-wrap">{comentario.conteudo}</p>
+                  </div>
+                </motion.div>
+              );
+            })}
           </AnimatePresence>
         )}
       </div>
@@ -107,18 +104,11 @@ export function TaskComentarios({ tarefa, onAddComentario, currentUser = 'Usuár
             placeholder="Escreva um comentário..."
             rows={3}
             className="bg-white border-stone-300 resize-none"
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && e.metaKey) handleSubmit();
-            }}
+            onKeyDown={(e) => { if (e.key === 'Enter' && e.metaKey) handleSubmit(); }}
           />
           <div className="flex justify-between items-center">
             <span className="text-xs text-stone-400">Cmd + Enter para enviar</span>
-            <Button
-              onClick={handleSubmit}
-              disabled={!novoComentario.trim() || enviando || !onAddComentario}
-              size="sm"
-              className="bg-stone-900 hover:bg-stone-800"
-            >
+            <Button onClick={handleSubmit} disabled={!novoComentario.trim() || enviando || !onAddComentario} size="sm" className="bg-stone-900 hover:bg-stone-800">
               {enviando ? (
                 <Icon icon="solar:refresh-circle-bold" className="w-4 h-4 animate-spin" />
               ) : (
