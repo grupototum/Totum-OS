@@ -141,3 +141,5 @@ const ActionPlan = () => {
     </div>
   );
 };
+
+export default ActionPlan;
