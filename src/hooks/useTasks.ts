@@ -430,4 +430,21 @@ export const useTasks = () => {
   };
 };
 
+export type StatusTarefa = Tarefa['status'];
+export type PrioridadeTarefa = Tarefa['prioridade'];
+
+export const PRIORIDADES = [
+  { id: 'baixa', label: 'Baixa', cor: '#78716C' },
+  { id: 'media', label: 'Média', cor: '#F59E0B' },
+  { id: 'alta', label: 'Alta', cor: '#F97316' },
+  { id: 'urgente', label: 'Urgente', cor: '#EF4444' },
+];
+
+export const STATUS_LIST = [
+  { id: 'pendente', label: 'Pendente' },
+  { id: 'em_andamento', label: 'Em Andamento' },
+  { id: 'concluida', label: 'Concluída' },
+  { id: 'cancelada', label: 'Cancelada' },
+];
+
 export default useTasks;
