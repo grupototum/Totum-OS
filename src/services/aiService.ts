@@ -153,3 +153,7 @@ export const streamMessageFromAI = async (
     return { error: error.message };
   }
 };
+
+// Re-export de serviços relacionados a agentes
+export * from './skillsService';
+export * from './openClawClient';
