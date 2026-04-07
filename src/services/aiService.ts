@@ -1,4 +1,26 @@
 // Serviço de integração com APIs de IA (Kimi/Groq/OpenAI)
+// Novos serviços adicionados: skillsService, openClawClient
+
+export { 
+  loadSkillsRegistry, 
+  getSkillById, 
+  listSkills,
+  getAgentConfig,
+  getAllAgentConfigs,
+  createAgentConfig,
+  updateAgentConfig,
+  addSkillToAgent,
+  removeSkillFromAgent,
+  reorderAgentSkills,
+  getAgentSkills,
+} from './skillsService';
+
+export { 
+  executeAgent, 
+  checkOpenClawHealth,
+  buildAgentPayload,
+  OPENCLAW_CONFIG,
+} from './openClawClient';
 
 export type AIProvider = 'kimi' | 'groq' | 'openai';
 
