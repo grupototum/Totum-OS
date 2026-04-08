@@ -118,7 +118,7 @@ export default function AgentsDashboard() {
         if (!isMounted) return;
         supabase.from("agents").select("*").then(({ data }) => { 
           if (data && isMounted) {
-            const typedAgents: Agent[] = (data || []).map(agent => ({
+            const typedAgents = (data || []).map(agent => ({
               id: agent.id,
               name: agent.name,
               role: agent.role,
