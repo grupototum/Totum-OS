@@ -100,7 +100,7 @@ export function estimateSkillsDuration(skillIds: string[]): number {
  * Busca configuração de um agente
  */
 export async function getAgentConfig(agentId: string): Promise<AgentConfig | null> {
-  const { data, error } = await supabase
+  const { data, error } = await (supabase as any)
     .from('agents_config')
     .select('*')
     .eq('agent_id', agentId)
