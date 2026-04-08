@@ -151,7 +151,7 @@ export default function SkillsCentral() {
             {categorias?.map((cat) => (
               <Button
                 key={cat}
-                variant={selectedCategoria === cat ? 'default' : 'outline'}
+                variant={selectedCategoria === cat ? 'secondary' : 'outline'}
                 size="sm"
                 onClick={() => setSelectedCategoria(selectedCategoria === cat ? null : cat)}
               >
