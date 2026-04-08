@@ -137,7 +137,7 @@ export async function getAllAgentConfigs(): Promise<AgentConfig[]> {
 export async function createAgentConfig(
   config: Omit<AgentConfig, 'id' | 'created_at' | 'updated_at'>
 ): Promise<AgentConfig | null> {
-  const { data, error } = await supabase
+  const { data, error } = await (supabase as any)
     .from('agents_config')
     .insert([config])
     .select()
