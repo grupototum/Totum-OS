@@ -12,6 +12,7 @@ import Dashboard from "./pages/Dashboard";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
+// Agent chats - refatorados para usar AgentChatLayout dinâmico
 import RadarInsightsChat from "./pages/agents/RadarInsightsChat";
 import GestorTrafegoChat from "./pages/agents/GestorTrafegoChat";
 import PlanejamentoSocialChat from "./pages/agents/PlanejamentoSocialChat";
@@ -19,6 +20,8 @@ import AtendenteTotumChat from "./pages/agents/AtendenteTotumChat";
 import SdrComercialChat from "./pages/agents/SdrComercialChat";
 import KimiChat from "./pages/agents/KimiChat";
 import RadarAnunciosChat from "./pages/agents/RadarAnunciosChat";
+// Novo AgentChatLayout para agentes do Supabase
+import AgentChatLayout from "./components/chat/AgentChatLayout";
 import TasksBoard from "./pages/TasksBoard";
 import QuadroTarefas from "./pages/QuadroTarefas";
 import ContentPipeline from "./pages/ContentPipeline";
@@ -117,6 +120,8 @@ const App = () => (
             {/* NOVA ESTRUTURA UNIFICADA DE AGENTES */}
             <Route path="/agents" element={<AgentsDashboard />} />
             <Route path="/agents/:agentId" element={<AgentDetail />} />
+            {/* Chat dinâmico dos agentes do Supabase */}
+            <Route path="/agents/:agentId/chat" element={<AgentChatLayout />} />
             {/* Redirecionamentos para compatibilidade */}
             <Route path="/agents-dashboard" element={<Navigate to="/agents" replace />} />
             {/* Alexandria - Wiki e Chat com GILES */}

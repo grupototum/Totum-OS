@@ -1,480 +1,265 @@
-import { useState, useRef, useEffect, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
-import { Send, Plus, MessageSquare, Trash2, Menu, Loader2 } from "lucide-react";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { cn } from "@/lib/utils";
-import AppLayout from "@/components/layout/AppLayout";
-import { 
-  sendMessageToAI, 
-  streamMessageFromAI, 
-  hasAIConfig, 
-  getDefaultProvider,
-  type AIMessage 
-} from "@/services/aiService";
-
-export interface AgentConfig {
-  id: string;
-  name: string;
-  icon: React.ElementType;
-  gradient: string;
-  accentColor: string;
-  description: string;
-  systemPrompt?: string;
-}
+// src/components/chat/AgentChatLayout.tsx
+import React, { useEffect, useState, useCallback } from 'react';
+import { useParams } from 'react-router-dom';
+import { useAgentExecution } from '@/hooks/useAgentExecution';
+import { ExecutionResult } from '@/types/agents';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Card } from '@/components/ui/card';
+import { Loader2, AlertCircle, CheckCircle2, Send } from 'lucide-react';
+import AppLayout from '@/components/layout/AppLayout';
 
 interface Message {
   id: string;
-  role: "user" | "assistant";
+  role: 'user' | 'assistant';
   content: string;
   timestamp: Date;
-  isStreaming?: boolean;
+  executionResult?: ExecutionResult;
 }
 
-interface Conversation {
-  id: string;
-  title: string;
-  messages: Message[];
-  createdAt: Date;
-}
+export const AgentChatLayout: React.FC = () => {
+  const { agentId } = useParams<{ agentId: string }>();
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [inputValue, setInputValue] = useState('');
+  const [isSending, setIsSending] = useState(false);
 
-// System prompt padrão para agentes
-const getSystemPrompt = (agent: AgentConfig): string => {
-  return agent.systemPrompt || `Você é ${agent.name}, ${agent.description}. 
-
-Diretrizes:
-- Seja prestativo, profissional e direto
-- Responda em português do Brasil
-- Se não souber algo, admita honestamente
-- Mantenha respostas concisas mas completas
-- Use formatação markdown quando apropriado`;
-};
-
-export default function AgentChatLayout({ agent }: { agent: AgentConfig }) {
-  const navigate = useNavigate();
-  const [conversations, setConversations] = useState<Conversation[]>([
-    {
-      id: "default",
-      title: "Nova conversa",
-      messages: [
-        {
-          id: "welcome",
-          role: "assistant",
-          content: `Olá! Sou o **${agent.name}**. ${agent.description}\n\nComo posso ajudar?`,
-          timestamp: new Date(),
-        },
-      ],
-      createdAt: new Date(),
+  const {
+    agentConfig,
+    isLoading,
+    isExecuting,
+    result,
+    error,
+    executionStatus,
+    loadAgentConfig,
+    execute,
+    isReady,
+  } = useAgentExecution({
+    agentId: agentId || '',
+    onSuccess: (result) => {
+      console.log('✅ Execução com sucesso:', result);
     },
-  ]);
-  const [activeConvoId, setActiveConvoId] = useState("default");
-  const [input, setInput] = useState("");
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [isTyping, setIsTyping] = useState(false);
-  const [aiEnabled, setAiEnabled] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-
-  const activeConvo = conversations.find((c) => c.id === activeConvoId)!;
-
-  // Verifica se IA está configurada
-  useEffect(() => {
-    setAiEnabled(hasAIConfig());
-  }, []);
+    onError: (error) => {
+      console.error('❌ Erro na execução:', error);
+    },
+  });
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [activeConvo.messages.length, activeConvo.messages]);
+    if (agentId) {
+      loadAgentConfig();
+    }
+  }, [agentId, loadAgentConfig]);
 
-  const handleSend = useCallback(async () => {
-    const text = input.trim();
-    if (!text || isTyping) return;
-
-    const userMsg: Message = {
-      id: crypto.randomUUID(),
-      role: "user",
-      content: text,
-      timestamp: new Date(),
-    };
-
-    // Adiciona mensagem do usuário
-    setConversations((prev) =>
-      prev.map((c) => {
-        if (c.id !== activeConvoId) return c;
-        const updated = { ...c, messages: [...c.messages, userMsg] };
-        if (c.title === "Nova conversa" && text.length > 0) {
-          updated.title = text.slice(0, 40) + (text.length > 40 ? "..." : "");
-        }
-        return updated;
-      })
-    );
-    setInput("");
-    setIsTyping(true);
-
-    // Se IA não está configurada, mostra mensagem de fallback
-    if (!aiEnabled) {
-      const fallbackMsg: Message = {
-        id: crypto.randomUUID(),
-        role: "assistant",
-        content: `Recebi sua mensagem!\n\nPara ativar a IA, configure uma API key no arquivo ".env":\n\n\`\`\`\nVITE_KIMI_API_KEY=sua-chave-aqui\n# ou\nVITE_GROQ_API_KEY=sua-chave-aqui\n\`\`\`\n\nObtenha sua chave em:\n- **Kimi**: https://platform.moonshot.cn/\n- **Groq**: https://console.groq.com/`,
-        timestamp: new Date(),
-      };
-
-      setTimeout(() => {
-        setConversations((prev) =>
-          prev.map((c) =>
-            c.id === activeConvoId
-              ? { ...c, messages: [...c.messages, fallbackMsg] }
-              : c
-          )
-        );
-        setIsTyping(false);
-      }, 500);
+  const handleSendMessage = useCallback(async () => {
+    if (!inputValue.trim() || !isReady || isSending) {
       return;
     }
 
-    // Prepara mensagens para a API
-    const currentMessages = activeConvo.messages;
-    const apiMessages: AIMessage[] = [
-      { role: "system", content: getSystemPrompt(agent) },
-      ...currentMessages.map((m): AIMessage => ({
-        role: m.role,
-        content: m.content,
-      })),
-      { role: "user", content: text },
-    ];
-
-    // Cria mensagem de placeholder para streaming
-    const assistantMsgId = crypto.randomUUID();
-    const assistantMsg: Message = {
-      id: assistantMsgId,
-      role: "assistant",
-      content: "",
+    const userMessage: Message = {
+      id: crypto.randomUUID(),
+      role: 'user',
+      content: inputValue,
       timestamp: new Date(),
-      isStreaming: true,
     };
 
-    setConversations((prev) =>
-      prev.map((c) =>
-        c.id === activeConvoId
-          ? { ...c, messages: [...c.messages, assistantMsg] }
-          : c
-      )
-    );
+    setMessages(prev => [...prev, userMessage]);
+    setInputValue('');
+    setIsSending(true);
 
-    // Chama a API de IA com streaming
-    const provider = getDefaultProvider();
-    let fullContent = "";
+    try {
+      const result = await execute(inputValue, {});
 
-    const { error } = await streamMessageFromAI(
-      apiMessages,
-      (chunk) => {
-        fullContent += chunk;
-        setConversations((prev) =>
-          prev.map((c) =>
-            c.id === activeConvoId
-              ? {
-                  ...c,
-                  messages: c.messages.map((m) =>
-                    m.id === assistantMsgId
-                      ? { ...m, content: fullContent }
-                      : m
-                  ),
-                }
-              : c
-          )
-        );
-      },
-      provider
-    );
+      if (result) {
+        const assistantMessage: Message = {
+          id: crypto.randomUUID(),
+          role: 'assistant',
+          content: `Execução concluída em ${result.duration_ms}ms`,
+          timestamp: new Date(),
+          executionResult: result,
+        };
+        setMessages(prev => [...prev, assistantMessage]);
+      }
+    } finally {
+      setIsSending(false);
+    }
+  }, [inputValue, isReady, execute, isSending]);
 
-    // Atualiza mensagem final
-    setConversations((prev) =>
-      prev.map((c) =>
-        c.id === activeConvoId
-          ? {
-              ...c,
-              messages: c.messages.map((m) =>
-                m.id === assistantMsgId
-                  ? { 
-                      ...m, 
-                      content: error 
-                        ? `❌ **Erro:** ${error}\n\nVerifique sua API key e tente novamente.` 
-                        : fullContent,
-                      isStreaming: false 
-                    }
-                  : m
-              ),
-            }
-          : c
-      )
-    );
-
-    setIsTyping(false);
-  }, [input, isTyping, activeConvoId, activeConvo.messages, agent, aiEnabled]);
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !e.shiftKey) {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      handleSend();
+      handleSendMessage();
     }
   };
 
-  const newConvo = () => {
-    const id = crypto.randomUUID();
-    const convo: Conversation = {
-      id,
-      title: "Nova conversa",
-      messages: [
-        {
-          id: "welcome-" + id,
-          role: "assistant",
-          content: `Olá! Como posso ajudar?`,
-          timestamp: new Date(),
-        },
-      ],
-      createdAt: new Date(),
-    };
-    setConversations((prev) => [convo, ...prev]);
-    setActiveConvoId(id);
-    setSidebarOpen(false);
-  };
+  if (isLoading) {
+    return (
+      <AppLayout>
+        <div className="flex items-center justify-center h-full bg-background">
+          <div className="text-center space-y-4">
+            <Loader2 className="h-8 w-8 animate-spin mx-auto text-primary" />
+            <p className="text-sm text-muted-foreground">Carregando agente...</p>
+          </div>
+        </div>
+      </AppLayout>
+    );
+  }
 
-  const deleteConvo = (id: string) => {
-    if (conversations.length <= 1) return;
-    const filtered = conversations.filter((c) => c.id !== id);
-    setConversations(filtered);
-    if (activeConvoId === id) setActiveConvoId(filtered[0].id);
-  };
-
-  const Icon = agent.icon;
+  if (error && !isReady) {
+    return (
+      <AppLayout>
+        <div className="flex items-center justify-center h-full bg-background">
+          <Card className="p-6 max-w-md w-full border-destructive">
+            <div className="flex gap-3">
+              <AlertCircle className="h-5 w-5 text-destructive flex-shrink-0 mt-0.5" />
+              <div>
+                <h3 className="font-semibold text-destructive mb-1">Erro ao carregar agente</h3>
+                <p className="text-sm text-muted-foreground">{error.message}</p>
+              </div>
+            </div>
+          </Card>
+        </div>
+      </AppLayout>
+    );
+  }
 
   return (
     <AppLayout>
-    <div className="h-[calc(100vh)] flex overflow-hidden">
-      {/* Mobile overlay */}
-      <AnimatePresence>
-        {sidebarOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/60 z-30 lg:hidden"
-            onClick={() => setSidebarOpen(false)}
-          />
-        )}
-      </AnimatePresence>
-
-      {/* Sidebar */}
-      <motion.aside
-        initial={false}
-        className={cn(
-          "fixed lg:relative z-40 h-full w-72 border-r border-border bg-sidebar-background flex flex-col transition-transform duration-300",
-          sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
-        )}
-      >
-        <div className="p-3 border-b border-border flex items-center justify-between">
-          <span className="text-xs font-semibold text-sidebar-foreground uppercase tracking-wider">Conversas</span>
-          <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground" onClick={newConvo}>
-            <Plus className="w-4 h-4" />
-          </Button>
-        </div>
-
-        <ScrollArea className="flex-1">
-          <div className="p-2 space-y-1">
-            {conversations.map((c) => (
-              <motion.button
-                key={c.id}
-                layout
-                onClick={() => { setActiveConvoId(c.id); setSidebarOpen(false); }}
-                className={cn(
-                  "w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-left text-sm transition-colors group",
-                  c.id === activeConvoId
-                    ? "bg-sidebar-accent text-sidebar-accent-foreground"
-                    : "text-muted-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
-                )}
-              >
-                <MessageSquare className="w-3.5 h-3.5 shrink-0" />
-                <span className="truncate flex-1">{c.title}</span>
-                {conversations.length > 1 && (
-                  <Trash2
-                    className="w-3.5 h-3.5 opacity-0 group-hover:opacity-60 hover:!opacity-100 shrink-0 transition-opacity"
-                    onClick={(e) => { e.stopPropagation(); deleteConvo(c.id); }}
-                  />
-                )}
-              </motion.button>
-            ))}
-          </div>
-        </ScrollArea>
-
-        <div className="p-3 border-t border-border">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="w-full justify-start text-muted-foreground hover:text-foreground text-xs"
-            onClick={() => navigate("/hub")}
-          >
-            <MessageSquare className="w-3.5 h-3.5 mr-2" />
-            Voltar ao Hub
-          </Button>
-        </div>
-      </motion.aside>
-
-      {/* Main Chat */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex flex-col h-[calc(100vh-4rem)] bg-background">
         {/* Header */}
-        <motion.header
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="h-14 border-b border-border flex items-center px-4 gap-3 shrink-0"
-        >
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 lg:hidden text-muted-foreground"
-            onClick={() => setSidebarOpen(true)}
-          >
-            <Menu className="w-4 h-4" />
-          </Button>
-
-          <div className={cn("w-9 h-9 rounded-xl bg-gradient-to-br flex items-center justify-center shadow-lg", agent.gradient)}>
-            <Icon className="w-4.5 h-4.5 text-white" />
-          </div>
-          <div>
-            <h1 className="font-heading text-sm font-bold text-foreground">{agent.name}</h1>
-            <div className="flex items-center gap-1.5">
-              <span className={cn(
-                "w-1.5 h-1.5 rounded-full",
-                aiEnabled ? "bg-emerald-500" : "bg-amber-500"
-              )} />
-              <span className="text-[10px] text-muted-foreground">
-                {aiEnabled ? "IA Ativa" : "IA Não Configurada"}
-              </span>
+        <div className="border-b bg-card p-4">
+          <div className="flex items-center gap-3">
+            <div className="text-2xl">{agentConfig?.emoji}</div>
+            <div>
+              <h2 className="font-semibold">{agentConfig?.name}</h2>
+              <p className="text-sm text-muted-foreground">
+                Tier {agentConfig?.tier} • {agentConfig?.status}
+              </p>
             </div>
           </div>
-        </motion.header>
+        </div>
 
         {/* Messages */}
-        <ScrollArea className="flex-1">
-          <div className="max-w-3xl mx-auto px-4 py-6 space-y-4">
-            <AnimatePresence initial={false}>
-              {activeConvo.messages.map((msg) => (
-                <motion.div
-                  key={msg.id}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.25 }}
-                  className={cn(
-                    "flex",
-                    msg.role === "user" ? "justify-end" : "justify-start"
-                  )}
+        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          {messages.length === 0 ? (
+            <div className="flex items-center justify-center h-full text-center text-muted-foreground">
+              <div>
+                <p className="text-lg font-semibold mb-2">Comece uma conversa</p>
+                <p className="text-sm">Digite uma mensagem para começar</p>
+              </div>
+            </div>
+          ) : (
+            messages.map((message) => (
+              <div
+                key={message.id}
+                className={`flex gap-3 ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+              >
+                <Card
+                  className={`max-w-md p-4 ${
+                    message.role === 'user'
+                      ? 'bg-primary text-primary-foreground'
+                      : 'bg-muted'
+                  }`}
                 >
-                  <div
-                    className={cn(
-                      "max-w-[80%] rounded-2xl px-4 py-3 text-sm leading-relaxed",
-                      msg.role === "user"
-                        ? `bg-gradient-to-br ${agent.gradient} text-white`
-                        : "bg-secondary text-foreground ring-1 ring-border"
-                    )}
-                  >
-                    {msg.content.split("\n").map((line, i) => (
-                      <p key={i} className={i > 0 ? "mt-1.5" : ""}>
-                        {line.startsWith("```") ? (
-                          <pre className="bg-black/10 rounded p-2 mt-2 overflow-x-auto">
-                            <code>{line.replace(/```/g, "")}</code>
-                          </pre>
-                        ) : line.match(/\*\*(.*?)\*\*/g) ? (
-                          line.split(/(\*\*.*?\*\*)/g).map((part, j) =>
-                            part.startsWith("**") && part.endsWith("**") ? (
-                              <strong key={j}>{part.slice(2, -2)}</strong>
-                            ) : part.startsWith("- ") ? (
-                              <span key={j} className="block ml-2">• {part.slice(2)}</span>
-                            ) : part.startsWith("\u003e ") ? (
-                              <span key={j} className="italic opacity-70">{part.slice(2)}</span>
-                            ) : (
-                              <span key={j}>{part}</span>
-                            )
-                          )
-                        ) : (
-                          line
-                        )}
-                      </p>
-                    ))}
-                    {msg.isStreaming && (
-                      <span className="inline-block w-2 h-4 ml-1 bg-current animate-pulse" />
-                    )}
-                    <span className="block mt-2 text-[10px] opacity-50">
-                      {msg.timestamp.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
-                    </span>
-                  </div>
-                </motion.div>
-              ))}
-              
-              {/* Indicador de digitando */}
-              {isTyping && !activeConvo.messages.find(m => m.isStreaming) && (
-                <motion.div
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="flex justify-start"
-                >
-                  <div className="bg-secondary text-foreground ring-1 ring-border rounded-2xl px-4 py-3">
-                    <div className="flex items-center gap-2">
-                      <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
-                      <span className="text-sm text-muted-foreground">Digitando...</span>
+                  <p className="text-sm">{message.content}</p>
+
+                  {message.executionResult && (
+                    <div className="mt-3 pt-3 border-t border-current/20 space-y-2 text-xs opacity-90">
+                      <div className="flex items-center gap-2">
+                        <CheckCircle2 className="h-4 w-4" />
+                        <span>Status: {message.executionResult.success ? '✓ Sucesso' : '✗ Erro'}</span>
+                      </div>
+                      <div>
+                        <span className="font-semibold">Tokens:</span> {message.executionResult.total_tokens}
+                      </div>
+                      <div>
+                        <span className="font-semibold">Custo:</span> R$ {message.executionResult.total_cost.toFixed(2)}
+                      </div>
+                      <div>
+                        <span className="font-semibold">Tempo:</span> {message.executionResult.duration_ms}ms
+                      </div>
+
+                      {message.executionResult.results.length > 0 && (
+                        <div className="mt-2">
+                          <p className="font-semibold mb-1">Skills:</p>
+                          <div className="space-y-1">
+                            {message.executionResult.results.map((skill, idx) => (
+                              <div key={idx} className="flex items-center gap-2">
+                                <span>{skill.status === 'success' ? '✓' : '✗'} {skill.skill_id}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                     </div>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-            <div ref={messagesEndRef} />
-          </div>
-        </ScrollArea>
+                  )}
+                </Card>
+              </div>
+            ))
+          )}
+
+          {isExecuting && (
+            <div className="flex gap-3 justify-start">
+              <Card className="bg-muted p-4 space-y-2">
+                <div className="flex items-center gap-2">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <span className="text-sm">Executando skills...</span>
+                </div>
+              </Card>
+            </div>
+          )}
+        </div>
 
         {/* Input */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="border-t border-border p-4 shrink-0"
-        >
-          <div className="max-w-3xl mx-auto flex items-end gap-2">
-            <Textarea
-              ref={textareaRef}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
+        <div className="border-t bg-card p-4 space-y-2">
+          {error && isReady && (
+            <div className="flex items-center gap-2 p-3 bg-destructive/10 border border-destructive/20 rounded-md text-sm text-destructive">
+              <AlertCircle className="h-4 w-4 flex-shrink-0" />
+              <span>{error.message}</span>
+            </div>
+          )}
+
+          <div className="flex gap-2">
+            <Input
+              placeholder="Digite sua mensagem..."
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder={aiEnabled 
-                ? `Mensagem para ${agent.name}...` 
-                : "Configure uma API key para ativar a IA..."
-              }
-              className="min-h-[44px] max-h-32 resize-none bg-secondary border-border text-foreground placeholder:text-muted-foreground rounded-xl"
-              rows={1}
-              disabled={isTyping}
+              disabled={!isReady || isSending || isExecuting}
+              className="flex-1"
             />
             <Button
-              onClick={handleSend}
-              disabled={!input.trim() || isTyping}
-              className={cn("h-11 w-11 shrink-0 rounded-xl bg-gradient-to-br", agent.gradient, "hover:opacity-90 disabled:opacity-30")}
+              onClick={handleSendMessage}
+              disabled={!isReady || isSending || isExecuting || !inputValue.trim()}
               size="icon"
             >
-              {isTyping ? (
-                <Loader2 className="w-4 h-4 text-white animate-spin" />
+              {isSending || isExecuting ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
-                <Send className="w-4 h-4 text-white" />
+                <Send className="h-4 w-4" />
               )}
             </Button>
           </div>
-          <p className="text-center text-[10px] text-muted-foreground/50 mt-2">
-            {aiEnabled 
-              ? `${agent.name} · IA Ativa · Totum Apps` 
-              : "Configure VITE_KIMI_API_KEY ou VITE_GROQ_API_KEY no .env"
-            }
-          </p>
-        </motion.div>
+
+          <div className="flex items-center justify-between text-xs text-muted-foreground">
+            <div>
+              {!isReady ? (
+                <span>Carregando...</span>
+              ) : (
+                <span className="flex items-center gap-1">
+                  <div className="h-2 w-2 rounded-full bg-green-500" />
+                  Pronto
+                </span>
+              )}
+            </div>
+            {agentConfig?.skills && agentConfig.skills.length > 0 && (
+              <div>
+                {agentConfig.skills.length} skill{agentConfig.skills.length !== 1 ? 's' : ''}
+              </div>
+            )}
+          </div>
+        </div>
       </div>
-    </div>
     </AppLayout>
   );
-}
+};
+
+export default AgentChatLayout;
