@@ -48,7 +48,7 @@ export async function searchSimilarDocuments(
     const queryEmbedding = await generateEmbedding(query);
     
     // Buscar documentos similares
-    const { data, error } = await supabase.rpc('match_documents', {
+    const { data, error } = await (supabase.rpc as any)('match_documents', {
       query_embedding: queryEmbedding,
       match_threshold: threshold,
       match_count: limit,
@@ -94,7 +94,7 @@ async function fallbackTextSearch(
   const queryTerms = queryLower.split(' ').filter(t => t.length > 2);
   
   let queryBuilder = supabase
-    .from('rag_documents')
+    .from('rag_documents' as any)
     .select('*');
   
   if (type) {
@@ -182,7 +182,7 @@ export async function saveExecutionContext(
 ): Promise<void> {
   try {
     const { error } = await supabase
-      .from('rag_context')
+      .from('rag_context' as any)
       .insert({
         agent_id: agentId,
         execution_id: executionId,
@@ -219,7 +219,7 @@ export async function addDocument(
     }
     
     const { data, error } = await supabase
-      .from('rag_documents')
+      .from('rag_documents' as any)
       .insert({
         type,
         title,
@@ -261,7 +261,7 @@ export async function listDocuments(
 ): Promise<RagDocument[]> {
   try {
     let queryBuilder = supabase
-      .from('rag_documents')
+      .from('rag_documents' as any)
       .select('*')
       .order('updated_at', { ascending: false })
       .limit(limit);

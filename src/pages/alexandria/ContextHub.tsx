@@ -137,7 +137,7 @@ export default function ContextHub() {
       {/* Agent Filter */}
       <div className="flex gap-2 flex-wrap">
         <Button
-          variant={selectedAgent === null ? 'default' : 'outline'}
+          variant={selectedAgent === null ? 'primary' : 'outline'}
           size="sm"
           onClick={() => setSelectedAgent(null)}
         >
@@ -146,7 +146,7 @@ export default function ContextHub() {
         {agents?.map((agent) => (
           <Button
             key={agent}
-            variant={selectedAgent === agent ? 'default' : 'outline'}
+            variant={selectedAgent === agent ? 'primary' : 'outline'}
             size="sm"
             onClick={() => setSelectedAgent(agent)}
           >
@@ -189,7 +189,7 @@ export default function ContextHub() {
                       <div>
                         <h4 className="font-medium text-slate-900">{ctx.titulo}</h4>
                         <div className="flex items-center gap-2 mt-1">
-                          <Badge variant="outline" size="sm">{ctx.agente}</Badge>
+                          <Badge variant="outline">{ctx.agente}</Badge>
                           <Badge className={tipoColors[ctx.tipo] || 'bg-slate-100'}>
                             {tipoLabels[ctx.tipo] || ctx.tipo}
                           </Badge>
