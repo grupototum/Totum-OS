@@ -181,7 +181,7 @@ export default function SkillsCentral() {
       {/* Agent Filter */}
       <div className="flex gap-2 flex-wrap">
         <Button
-          variant={selectedAgent === null ? 'default' : 'outline'}
+          variant={selectedAgent === null ? 'secondary' : 'outline'}
           size="sm"
           onClick={() => setSelectedAgent(null)}
         >
