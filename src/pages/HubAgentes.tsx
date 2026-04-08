@@ -37,7 +37,7 @@ const CONNECTIONS = [
 
 export default function HubAgentes() {
   const navigate = useNavigate();
-  const { agents, loading } = useAgents();
+  const { agents, isLoading: loading } = useAgents();
   const { classifiedAgents } = useAgentClassification(agents);
   const [selectedAgentId, setSelectedAgentId] = useState<string | null>(null);
   const [hoveredAgentId, setHoveredAgentId] = useState<string | null>(null);

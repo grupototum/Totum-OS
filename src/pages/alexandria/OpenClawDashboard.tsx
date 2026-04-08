@@ -151,7 +151,7 @@ export default function OpenClawDashboard() {
                     <span className="font-medium">{skill.name}</span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <Badge variant="secondary" size="sm">v{skill.version}</Badge>
+                    <Badge variant="secondary">v{skill.version}</Badge>
                     <Badge
                       className={
                         skill.status === 'active'

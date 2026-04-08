@@ -43,7 +43,7 @@ const generateMockData = () => {
 export default function AgenteDetail() {
   const { agenteId } = useParams();
   const navigate = useNavigate();
-  const { agents, loading } = useAgents();
+  const { agents, isLoading: loading } = useAgents();
   const [activeTab, setActiveTab] = useState('overview');
   const [chartData, setChartData] = useState(generateMockData());
 

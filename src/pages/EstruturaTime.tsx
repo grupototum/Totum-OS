@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
 
 export default function EstruturaTime() {
   const navigate = useNavigate();
-  const { agents, loading } = useAgents();
+  const { agents, isLoading: loading } = useAgents();
   const [selectedAgentId, setSelectedAgentId] = useState<string | undefined>(undefined);
 
   // Organize agents by hierarchy level for display

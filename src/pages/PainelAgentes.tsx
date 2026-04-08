@@ -14,7 +14,7 @@ type FilterType = typeof FILTERS[number];
 
 export default function PainelAgentes() {
   const navigate = useNavigate();
-  const { agents, loading, metrics, isNewAgent } = useAgents();
+  const { agents, isLoading: loading } = useAgents();
   const { classifiedAgents } = useAgentClassification(agents);
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState<FilterType>('Todos');
@@ -30,13 +30,20 @@ export default function PainelAgentes() {
         return matchesSearch && agent.classification.type === 'processing';
       case 'Online':
         return matchesSearch && agent.status === 'online';
-      case 'Novo':
-        return matchesSearch && isNewAgent(agent.created_at);
+      case 'Novo': {
+        const created = new Date(agent.created_at);
+        const diffDays = Math.ceil(Math.abs(Date.now() - created.getTime()) / (1000 * 60 * 60 * 24));
+        return matchesSearch && diffDays <= 7;
+      }
       default:
         return matchesSearch;
     }
   });
 
+  const isNewAgent = (dateStr: string) => {
+    const created = new Date(dateStr);
+    return Math.ceil(Math.abs(Date.now() - created.getTime()) / (1000 * 60 * 60 * 24)) <= 7;
+  };
   const newAgentsCount = agents.filter(a => isNewAgent(a.created_at)).length;
 
   return (
@@ -72,7 +79,7 @@ export default function PainelAgentes() {
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2 px-4 py-2 bg-white rounded-lg border border-stone-300">
                   <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-                  <span className="text-sm text-stone-600">{metrics.onlineAgents} online</span>
+                  <span className="text-sm text-stone-600">{agents.filter(a => a.status === 'online').length} online</span>
                 </div>
                 {newAgentsCount > 0 && (
                   <div className="flex items-center gap-2 px-4 py-2 bg-stone-900 rounded-lg">
@@ -84,9 +91,21 @@ export default function PainelAgentes() {
             </div>
           </motion.div>
 
-          {/* Metrics */}
+          {/* Metrics - computed locally */}
           <div className="p-8 border-b border-stone-300">
-            <AgentMetrics metrics={metrics} loading={loading} />
+            <AgentMetrics 
+              metrics={{
+                totalAgents: agents.length,
+                onlineAgents: agents.filter(a => a.status === 'online').length,
+                totalTasks: agents.reduce((sum, a) => sum + (a.tasks || 0), 0),
+                avgSuccessRate: agents.length > 0 ? Math.round(agents.reduce((sum, a) => sum + (a.success_rate || 0), 0) / agents.length) : 0,
+                agentsByType: {
+                  conversational: classifiedAgents.filter(a => a.classification.type === 'conversational').length,
+                  processing: classifiedAgents.filter(a => a.classification.type === 'processing').length,
+                },
+              }} 
+              loading={loading} 
+            />
           </div>
 
           {/* Filters & Search */}

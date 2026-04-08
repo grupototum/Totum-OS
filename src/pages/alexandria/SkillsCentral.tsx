@@ -241,7 +241,7 @@ export default function SkillsCentral() {
                         </div>
                         <p className="text-sm text-slate-500">{skill.descricao}</p>
                         <div className="flex items-center gap-2 mt-1">
-                          <Badge variant="outline" size="sm">{skill.agente}</Badge>
+                          <Badge variant="outline">{skill.agente}</Badge>
                           <Badge className={categoriaColors[skill.categoria] || 'bg-slate-100'}>
                             {categoriaLabels[skill.categoria] || skill.categoria}
                           </Badge>
