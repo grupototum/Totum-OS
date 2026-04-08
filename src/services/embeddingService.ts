@@ -181,8 +181,8 @@ export async function saveExecutionContext(
   similarityScore: number
 ): Promise<void> {
   try {
-    const { error } = await supabase
-      .from('rag_context' as any)
+    const { error } = await (supabase as any)
+      .from('rag_context')
       .insert({
         agent_id: agentId,
         execution_id: executionId,
