@@ -55,7 +55,7 @@ export function ExecutionLog({ execution, className }: ExecutionLogProps) {
       case 'success':
         return <Badge variant="default" className="bg-green-500">Sucesso</Badge>;
       case 'error':
-        return <Badge variant="destructive">Erro</Badge>;
+        return <Badge variant="error">Erro</Badge>;
       case 'running':
         return <Badge variant="secondary" className="animate-pulse">Executando...</Badge>;
       default:
@@ -80,14 +80,13 @@ export function ExecutionLog({ execution, className }: ExecutionLogProps) {
             <Terminal className="h-4 w-4" />
             Log de Execução
           </CardTitle>
-          <Badge variant={execution.success ? 'default' : 'destructive'}>
+          <Badge variant={execution.success ? 'default' : 'error'}>
             {execution.success ? 'Concluído' : 'Falhou'}
           </Badge>
         </div>
       </CardHeader>
 
       <CardContent className="space-y-4">
-        {/* Timeline */}
         <div className="space-y-2">
           {execution.logs.map((log, index) => (
             <Collapsible
@@ -100,7 +99,6 @@ export function ExecutionLog({ execution, className }: ExecutionLogProps) {
                   <button className="w-full">
                     <div className="flex items-center gap-3 p-3 hover:bg-muted/50 transition-colors">
                       {getStatusIcon(log.status)}
-                      
                       <div className="flex-1 min-w-0 text-left">
                         <div className="flex items-center gap-2">
                           <span className="font-medium text-sm">{log.name}</span>
@@ -125,7 +123,6 @@ export function ExecutionLog({ execution, className }: ExecutionLogProps) {
                           )}
                         </div>
                       </div>
-
                       {expandedSkills.has(log.skill_id) ? (
                         <ChevronUp className="h-4 w-4 text-muted-foreground" />
                       ) : (
@@ -134,7 +131,6 @@ export function ExecutionLog({ execution, className }: ExecutionLogProps) {
                     </div>
                   </button>
                 </CollapsibleTrigger>
-
                 <CollapsibleContent>
                   <div className="px-3 pb-3 space-y-3">
                     <div className="rounded bg-muted p-2 text-xs">
@@ -143,7 +139,6 @@ export function ExecutionLog({ execution, className }: ExecutionLogProps) {
                         {JSON.stringify(log.input, null, 2)}
                       </pre>
                     </div>
-                    
                     {log.output && (
                       <div className="rounded bg-muted p-2 text-xs">
                         <span className="font-medium text-muted-foreground">Output:</span>
@@ -152,7 +147,6 @@ export function ExecutionLog({ execution, className }: ExecutionLogProps) {
                         </pre>
                       </div>
                     )}
-
                     {log.error && (
                       <div className="rounded bg-red-50 p-2 text-xs text-red-600">
                         <span className="font-medium">Erro:</span>
@@ -166,7 +160,6 @@ export function ExecutionLog({ execution, className }: ExecutionLogProps) {
           ))}
         </div>
 
-        {/* Summary Footer */}
         <div className="rounded-lg border bg-muted/50 p-3">
           <div className="flex items-center justify-between text-sm">
             <div className="flex items-center gap-4">

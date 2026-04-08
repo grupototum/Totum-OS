@@ -236,11 +236,11 @@ export const AgentChatLayout: React.FC = () => {
                           </div>
                         )}
 
-                        {message.executionResult.results.length > 0 && (
+                        {message.executionResult.logs && message.executionResult.logs.length > 0 && (
                           <div className="mt-2">
                             <p className="font-semibold mb-1">Skills:</p>
                             <div className="space-y-1">
-                              {message.executionResult.results.map((skill, idx) => (
+                              {message.executionResult.logs.map((skill, idx) => (
                                 <div key={idx} className="flex items-center gap-2">
                                   <span>{skill.status === 'success' ? '✓' : '✗'} {skill.skill_id}</span>
                                 </div>
