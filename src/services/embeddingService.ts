@@ -218,8 +218,8 @@ export async function addDocument(
       console.log('Embedding generation failed, storing without vector');
     }
     
-    const { data, error } = await supabase
-      .from('rag_documents' as any)
+    const { data, error } = await (supabase as any)
+      .from('rag_documents')
       .insert({
         type,
         title,
