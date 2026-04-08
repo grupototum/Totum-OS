@@ -79,7 +79,7 @@ export default function PainelAgentes() {
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2 px-4 py-2 bg-white rounded-lg border border-stone-300">
                   <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-                  <span className="text-sm text-stone-600">{metrics.onlineAgents} online</span>
+                  <span className="text-sm text-stone-600">{agents.filter(a => a.status === 'online').length} online</span>
                 </div>
                 {newAgentsCount > 0 && (
                   <div className="flex items-center gap-2 px-4 py-2 bg-stone-900 rounded-lg">
