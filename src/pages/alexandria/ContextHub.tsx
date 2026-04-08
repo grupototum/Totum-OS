@@ -146,7 +146,7 @@ export default function ContextHub() {
         {agents?.map((agent) => (
           <Button
             key={agent}
-            variant={selectedAgent === agent ? 'primary' : 'outline'}
+            variant={selectedAgent === agent ? 'secondary' : 'outline'}
             size="sm"
             onClick={() => setSelectedAgent(agent)}
           >
