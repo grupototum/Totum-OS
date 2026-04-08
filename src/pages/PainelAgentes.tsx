@@ -30,13 +30,20 @@ export default function PainelAgentes() {
         return matchesSearch && agent.classification.type === 'processing';
       case 'Online':
         return matchesSearch && agent.status === 'online';
-      case 'Novo':
-        return matchesSearch && isNewAgent(agent.created_at);
+      case 'Novo': {
+        const created = new Date(agent.created_at);
+        const diffDays = Math.ceil(Math.abs(Date.now() - created.getTime()) / (1000 * 60 * 60 * 24));
+        return matchesSearch && diffDays <= 7;
+      }
       default:
         return matchesSearch;
     }
   });
 
+  const isNewAgent = (dateStr: string) => {
+    const created = new Date(dateStr);
+    return Math.ceil(Math.abs(Date.now() - created.getTime()) / (1000 * 60 * 60 * 24)) <= 7;
+  };
   const newAgentsCount = agents.filter(a => isNewAgent(a.created_at)).length;
 
   return (
