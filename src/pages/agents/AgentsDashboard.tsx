@@ -100,7 +100,7 @@ export default function AgentsDashboard() {
             hierarchy_level: 0,
             is_orchestrator: false,
           }));
-          setAgents(typedAgents);
+          setAgents(typedAgents as Agent[]);
         }
         if (intRes.data) setInteractions(intRes.data as Interaction[]);
       } catch (error) {
