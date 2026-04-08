@@ -190,7 +190,7 @@ export default function SkillsCentral() {
         {agents?.map((agent) => (
           <Button
             key={agent}
-            variant={selectedAgent === agent ? 'default' : 'outline'}
+            variant={selectedAgent === agent ? 'secondary' : 'outline'}
             size="sm"
             onClick={() => setSelectedAgent(agent)}
           >
