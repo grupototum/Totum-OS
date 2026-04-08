@@ -183,7 +183,6 @@ export default function OpenClawDashboard() {
                 <div key={index} className="flex gap-3 p-2 rounded hover:bg-slate-50">
                   <span className="text-slate-400">{log.time}</span>
                   <Badge
-                    size="sm"
                     className={
                       log.level === 'error'
                         ? 'bg-red-100 text-red-700'

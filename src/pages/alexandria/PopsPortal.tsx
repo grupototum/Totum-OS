@@ -102,7 +102,7 @@ export default function PopsPortal() {
         {departamentos?.map((dept) => (
           <Button
             key={dept}
-            variant={selectedDepartamento === dept ? 'default' : 'outline'}
+            variant={selectedDepartamento === dept ? 'secondary' : 'outline'}
             size="sm"
             onClick={() => setSelectedDepartamento(dept)}
           >
