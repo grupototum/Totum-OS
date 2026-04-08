@@ -93,7 +93,7 @@ export default function PopsPortal() {
       {/* Departments */}
       <div className="flex gap-2 flex-wrap">
         <Button
-          variant={selectedDepartamento === null ? 'default' : 'outline'}
+          variant={selectedDepartamento === null ? 'secondary' : 'outline'}
           size="sm"
           onClick={() => setSelectedDepartamento(null)}
         >
