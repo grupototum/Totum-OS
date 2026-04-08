@@ -80,7 +80,7 @@ export default function AgentsDashboard() {
         if (!isMounted) return;
         
         if (agRes.data) {
-          const typedAgents: Agent[] = (agRes.data || []).map(agent => ({
+          const typedAgents = (agRes.data || []).map(agent => ({
             id: agent.id,
             name: agent.name,
             role: agent.role,
