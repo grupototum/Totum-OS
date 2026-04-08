@@ -1,14 +1,17 @@
 // src/hooks/useAgentExecution.ts
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { ExecutionResult, AgentConfig, ExecutionStatus } from '@/types/agents';
 import { getAgentConfig } from '@/services/skillsService';
 import { executeAgent } from '@/services/openClawClient';
+import { useRAG } from './useRAG';
 
 interface UseAgentExecutionOptions {
   agentId: string;
   onSuccess?: (result: ExecutionResult) => void;
   onError?: (error: Error) => void;
+  enableRAG?: boolean; // Novo: habilitar RAG
+  ragType?: string;    // Novo: filtrar por tipo de documento
 }
 
 interface UseAgentExecutionState {
@@ -21,7 +24,7 @@ interface UseAgentExecutionState {
 }
 
 export const useAgentExecution = (options: UseAgentExecutionOptions) => {
-  const { agentId, onSuccess, onError } = options;
+  const { agentId, onSuccess, onError, enableRAG = true, ragType } = options;
   const [state, setState] = useState<UseAgentExecutionState>({
     isLoading: true,
     isExecuting: false,
@@ -30,6 +33,18 @@ export const useAgentExecution = (options: UseAgentExecutionOptions) => {
     agentConfig: null,
     executionStatus: 'pending',
   });
+
+  // Alexandria RAG hook
+  const { 
+    context: ragContext, 
+    documents: ragDocuments, 
+    isLoading: isRagLoading,
+    retrieveContext,
+    retrieveAndSave
+  } = useRAG();
+
+  // Gerar execution_id único
+  const executionIdRef = useRef<string>(`exec_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
 
   const loadAgentConfig = useCallback(async () => {
     try {
@@ -66,6 +81,10 @@ export const useAgentExecution = (options: UseAgentExecutionOptions) => {
         return null;
       }
 
+      // Gerar novo execution_id
+      const executionId = `exec_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      executionIdRef.current = executionId;
+
       try {
         setState(prev => ({
           ...prev,
@@ -73,6 +92,31 @@ export const useAgentExecution = (options: UseAgentExecutionOptions) => {
           executionStatus: 'running' as ExecutionStatus,
           error: null,
         }));
+
+        // 🧠 ALEXANDRIA RAG: Recuperar contexto
+        let retrievedContext = '';
+        let contextDocuments: string[] = [];
+        
+        if (enableRAG) {
+          console.log('🔍 Alexandria RAG: Buscando contexto...');
+          const ragResult = await retrieveAndSave(
+            userInput,
+            agentId,
+            executionId,
+            {
+              type: ragType,
+              limit: 5,
+              threshold: 0.5,
+              maxContextTokens: 2000
+            }
+          );
+          
+          if (ragResult) {
+            retrievedContext = ragResult.context;
+            contextDocuments = ragResult.documents;
+            console.log(`✅ Contexto recuperado: ${contextDocuments.length} documentos`);
+          }
+        }
 
         const skills = state.agentConfig.skills || [];
         const payload = {
@@ -84,7 +128,7 @@ export const useAgentExecution = (options: UseAgentExecutionOptions) => {
             model: state.agentConfig.model_override || 'claude',
           })),
           system_prompt: state.agentConfig.system_prompt,
-          rag_context: context?.rag_context || '',
+          rag_context: retrievedContext || context?.rag_context || '',
           execution_mode: 'sequential' as const,
         };
 
@@ -92,7 +136,7 @@ export const useAgentExecution = (options: UseAgentExecutionOptions) => {
 
         const { data: userData } = await supabase.auth.getUser();
         const executionData = {
-          execution_id: result.execution_id,
+          execution_id: executionId,
           agent_id: agentId,
           user_id: userData?.user?.id,
           input_data: userInput,
@@ -107,7 +151,12 @@ export const useAgentExecution = (options: UseAgentExecutionOptions) => {
           duration_ms: result.duration_ms,
           status: result.success ? 'success' : 'error',
           error_message: result.error || null,
-          context: context || {},
+          context: {
+            ...context,
+            rag_context: retrievedContext,
+            rag_documents: contextDocuments,
+            rag_enabled: enableRAG,
+          },
         };
 
         const { error: insertError } = await supabase
@@ -140,7 +189,7 @@ export const useAgentExecution = (options: UseAgentExecutionOptions) => {
         return null;
       }
     },
-    [agentId, state.agentConfig, onSuccess, onError]
+    [agentId, state.agentConfig, enableRAG, ragType, retrieveAndSave, onSuccess, onError]
   );
 
   return {
@@ -150,5 +199,10 @@ export const useAgentExecution = (options: UseAgentExecutionOptions) => {
     isReady: !state.isLoading && state.agentConfig !== null,
     hasError: state.error !== null,
     hasResult: state.result !== null,
+    // Alexandria RAG extras
+    ragContext,
+    ragDocuments,
+    isRagLoading,
+    executionId: executionIdRef.current,
   };
 };
