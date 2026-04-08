@@ -91,9 +91,21 @@ export default function PainelAgentes() {
             </div>
           </motion.div>
 
-          {/* Metrics */}
+          {/* Metrics - computed locally */}
           <div className="p-8 border-b border-stone-300">
-            <AgentMetrics metrics={metrics} loading={loading} />
+            <AgentMetrics 
+              metrics={{
+                totalAgents: agents.length,
+                onlineAgents: agents.filter(a => a.status === 'online').length,
+                totalTasks: agents.reduce((sum, a) => sum + (a.tasks || 0), 0),
+                avgSuccessRate: agents.length > 0 ? Math.round(agents.reduce((sum, a) => sum + (a.success_rate || 0), 0) / agents.length) : 0,
+                agentsByType: {
+                  conversational: classifiedAgents.filter(a => a.classification.type === 'conversational').length,
+                  processing: classifiedAgents.filter(a => a.classification.type === 'processing').length,
+                },
+              }} 
+              loading={loading} 
+            />
           </div>
 
           {/* Filters & Search */}
