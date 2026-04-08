@@ -80,7 +80,7 @@ export default function AgentsDashboard() {
         if (!isMounted) return;
         
         if (agRes.data) {
-          const typedAgents: Agent[] = (agRes.data || []).map(agent => ({
+          const typedAgents = (agRes.data || []).map(agent => ({
             id: agent.id,
             name: agent.name,
             role: agent.role,
@@ -100,7 +100,7 @@ export default function AgentsDashboard() {
             hierarchy_level: 0,
             is_orchestrator: false,
           }));
-          setAgents(typedAgents);
+          setAgents(typedAgents as Agent[]);
         }
         if (intRes.data) setInteractions(intRes.data as Interaction[]);
       } catch (error) {
@@ -118,7 +118,7 @@ export default function AgentsDashboard() {
         if (!isMounted) return;
         supabase.from("agents").select("*").then(({ data }) => { 
           if (data && isMounted) {
-            const typedAgents: Agent[] = (data || []).map(agent => ({
+            const typedAgents = (data || []).map(agent => ({
               id: agent.id,
               name: agent.name,
               role: agent.role,
@@ -138,7 +138,7 @@ export default function AgentsDashboard() {
               hierarchy_level: 0,
               is_orchestrator: false,
             }));
-            setAgents(typedAgents);
+            setAgents(typedAgents as Agent[]);
           }
         }); 
       })

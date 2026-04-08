@@ -137,7 +137,7 @@ export default function ContextHub() {
       {/* Agent Filter */}
       <div className="flex gap-2 flex-wrap">
         <Button
-          variant={selectedAgent === null ? 'primary' : 'outline'}
+          variant={selectedAgent === null ? 'secondary' : 'outline'}
           size="sm"
           onClick={() => setSelectedAgent(null)}
         >
@@ -146,7 +146,7 @@ export default function ContextHub() {
         {agents?.map((agent) => (
           <Button
             key={agent}
-            variant={selectedAgent === agent ? 'primary' : 'outline'}
+            variant={selectedAgent === agent ? 'secondary' : 'outline'}
             size="sm"
             onClick={() => setSelectedAgent(agent)}
           >

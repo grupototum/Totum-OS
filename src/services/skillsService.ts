@@ -100,7 +100,7 @@ export function estimateSkillsDuration(skillIds: string[]): number {
  * Busca configuração de um agente
  */
 export async function getAgentConfig(agentId: string): Promise<AgentConfig | null> {
-  const { data, error } = await supabase
+  const { data, error } = await (supabase as any)
     .from('agents_config')
     .select('*')
     .eq('agent_id', agentId)
@@ -118,7 +118,7 @@ export async function getAgentConfig(agentId: string): Promise<AgentConfig | nul
  * Busca configuração de todos os agentes
  */
 export async function getAllAgentConfigs(): Promise<AgentConfig[]> {
-  const { data, error } = await supabase
+  const { data, error } = await (supabase as any)
     .from('agents_config')
     .select('*')
     .order('created_at', { ascending: true });
@@ -137,7 +137,7 @@ export async function getAllAgentConfigs(): Promise<AgentConfig[]> {
 export async function createAgentConfig(
   config: Omit<AgentConfig, 'id' | 'created_at' | 'updated_at'>
 ): Promise<AgentConfig | null> {
-  const { data, error } = await supabase
+  const { data, error } = await (supabase as any)
     .from('agents_config')
     .insert([config])
     .select()
@@ -158,7 +158,7 @@ export async function updateAgentConfig(
   agentId: string,
   updates: Partial<Omit<AgentConfig, 'id' | 'agent_id' | 'created_at' | 'updated_at'>>
 ): Promise<AgentConfig | null> {
-  const { data, error } = await supabase
+  const { data, error } = await (supabase as any)
     .from('agents_config')
     .update({ ...updates, updated_at: new Date().toISOString() })
     .eq('agent_id', agentId)

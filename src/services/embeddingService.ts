@@ -93,8 +93,8 @@ async function fallbackTextSearch(
   const queryLower = query.toLowerCase();
   const queryTerms = queryLower.split(' ').filter(t => t.length > 2);
   
-  let queryBuilder = supabase
-    .from('rag_documents' as any)
+  let queryBuilder = (supabase as any)
+    .from('rag_documents')
     .select('*');
   
   if (type) {
@@ -181,8 +181,8 @@ export async function saveExecutionContext(
   similarityScore: number
 ): Promise<void> {
   try {
-    const { error } = await supabase
-      .from('rag_context' as any)
+    const { error } = await (supabase as any)
+      .from('rag_context')
       .insert({
         agent_id: agentId,
         execution_id: executionId,
@@ -218,8 +218,8 @@ export async function addDocument(
       console.log('Embedding generation failed, storing without vector');
     }
     
-    const { data, error } = await supabase
-      .from('rag_documents' as any)
+    const { data, error } = await (supabase as any)
+      .from('rag_documents')
       .insert({
         type,
         title,
@@ -260,8 +260,8 @@ export async function listDocuments(
   limit: number = 50
 ): Promise<RagDocument[]> {
   try {
-    let queryBuilder = supabase
-      .from('rag_documents' as any)
+    let queryBuilder = (supabase as any)
+      .from('rag_documents')
       .select('*')
       .order('updated_at', { ascending: false })
       .limit(limit);

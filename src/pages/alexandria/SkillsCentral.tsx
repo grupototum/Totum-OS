@@ -151,7 +151,7 @@ export default function SkillsCentral() {
             {categorias?.map((cat) => (
               <Button
                 key={cat}
-                variant={selectedCategoria === cat ? 'default' : 'outline'}
+                variant={selectedCategoria === cat ? 'secondary' : 'outline'}
                 size="sm"
                 onClick={() => setSelectedCategoria(selectedCategoria === cat ? null : cat)}
               >
@@ -181,7 +181,7 @@ export default function SkillsCentral() {
       {/* Agent Filter */}
       <div className="flex gap-2 flex-wrap">
         <Button
-          variant={selectedAgent === null ? 'default' : 'outline'}
+          variant={selectedAgent === null ? 'secondary' : 'outline'}
           size="sm"
           onClick={() => setSelectedAgent(null)}
         >
@@ -190,7 +190,7 @@ export default function SkillsCentral() {
         {agents?.map((agent) => (
           <Button
             key={agent}
-            variant={selectedAgent === agent ? 'default' : 'outline'}
+            variant={selectedAgent === agent ? 'secondary' : 'outline'}
             size="sm"
             onClick={() => setSelectedAgent(agent)}
           >
