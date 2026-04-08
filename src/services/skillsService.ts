@@ -158,7 +158,7 @@ export async function updateAgentConfig(
   agentId: string,
   updates: Partial<Omit<AgentConfig, 'id' | 'agent_id' | 'created_at' | 'updated_at'>>
 ): Promise<AgentConfig | null> {
-  const { data, error } = await supabase
+  const { data, error } = await (supabase as any)
     .from('agents_config')
     .update({ ...updates, updated_at: new Date().toISOString() })
     .eq('agent_id', agentId)

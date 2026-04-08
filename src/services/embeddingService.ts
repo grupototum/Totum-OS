@@ -260,8 +260,8 @@ export async function listDocuments(
   limit: number = 50
 ): Promise<RagDocument[]> {
   try {
-    let queryBuilder = supabase
-      .from('rag_documents' as any)
+    let queryBuilder = (supabase as any)
+      .from('rag_documents')
       .select('*')
       .order('updated_at', { ascending: false })
       .limit(limit);
