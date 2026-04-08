@@ -118,7 +118,7 @@ export async function getAgentConfig(agentId: string): Promise<AgentConfig | nul
  * Busca configuração de todos os agentes
  */
 export async function getAllAgentConfigs(): Promise<AgentConfig[]> {
-  const { data, error } = await supabase
+  const { data, error } = await (supabase as any)
     .from('agents_config')
     .select('*')
     .order('created_at', { ascending: true });
