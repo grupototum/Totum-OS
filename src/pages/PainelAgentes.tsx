@@ -14,7 +14,7 @@ type FilterType = typeof FILTERS[number];
 
 export default function PainelAgentes() {
   const navigate = useNavigate();
-  const { agents, loading, metrics, isNewAgent } = useAgents();
+  const { agents, isLoading: loading } = useAgents();
   const { classifiedAgents } = useAgentClassification(agents);
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState<FilterType>('Todos');
