@@ -93,8 +93,8 @@ async function fallbackTextSearch(
   const queryLower = query.toLowerCase();
   const queryTerms = queryLower.split(' ').filter(t => t.length > 2);
   
-  let queryBuilder = supabase
-    .from('rag_documents' as any)
+  let queryBuilder = (supabase as any)
+    .from('rag_documents')
     .select('*');
   
   if (type) {
