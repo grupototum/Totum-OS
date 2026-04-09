@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { supabase } from '@/integrations/supabase/client';
@@ -10,9 +7,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import AppLayout from '@/components/layout/AppLayout';
 import {
-  Server, Globe, Container, DollarSign, Shield,
-  Plus, Edit, Trash2, Search, RefreshCw, Activity,
-  CheckCircle, XCircle, AlertCircle, Users, ArrowRight
+  Globe, Container, DollarSign, Shield,
+  Plus, Edit, Trash2, Search, RefreshCw, Activity, Users
 } from 'lucide-react';
 
 // ── Types ──
