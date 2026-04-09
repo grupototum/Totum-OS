@@ -50,6 +50,12 @@ const staticSections: NavSection[] = [
       { label: "Estrutura do Time", icon: Users, path: "/team" },
     ],
   },
+  {
+    title: "INFRAESTRUTURA",
+    items: [
+      { label: "Painel de Hosting", icon: Server, path: "/hosting" },
+    ],
+  },
 ];
 
 interface Props {
