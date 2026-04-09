@@ -250,10 +250,15 @@ export default function Hub() {
                 >
                   <button
                     onClick={() => 'type' in agent && agent.type === 'chat' ? navigate(`/agent/${agent.id}`) : null}
-                    className={`w-full text-left group cursor-pointer border border-stone-300 bg-white rounded-xl hover:border-stone-500 transition-all duration-300 hover:shadow-lg p-5 ${
+                    className={`relative w-full text-left group cursor-pointer border border-border bg-card hover:border-primary/40 hover:shadow-[0_0_20px_-5px_hsl(var(--primary)/0.25)] transition-all duration-500 p-5 overflow-hidden ${
                       'type' in agent && agent.type !== 'chat' ? 'opacity-80' : ''
                     }`}
                   >
+                    {/* Corner marks */}
+                    <span className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-primary/60 transition-all duration-500 group-hover:w-5 group-hover:h-5 group-hover:border-primary pointer-events-none" />
+                    <span className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-primary/60 transition-all duration-500 group-hover:w-5 group-hover:h-5 group-hover:border-primary pointer-events-none" />
+                    <span className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-primary/60 transition-all duration-500 group-hover:w-5 group-hover:h-5 group-hover:border-primary pointer-events-none" />
+                    <span className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-primary/60 transition-all duration-500 group-hover:w-5 group-hover:h-5 group-hover:border-primary pointer-events-none" />
                     <div className="flex items-start gap-4">
                       <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${agent.color} flex items-center justify-center shrink-0 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
                         {'emoji' in agent && agent.emoji ? (
@@ -304,7 +309,7 @@ export default function Hub() {
             className="px-8 py-6 border-t border-stone-300 bg-[#E5E5E0]"
           >
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="p-4 bg-white rounded-lg border border-stone-300">
+                <div className="p-4 bg-card border border-border relative group overflow-hidden hover:border-primary/40 hover:shadow-[0_0_20px_-5px_hsl(var(--primary)/0.25)] transition-all duration-500">
                 <div className="flex items-center gap-2 mb-2">
                   <Network className="w-5 h-5 text-stone-600" />
                   <h3 className="font-medium text-stone-900">TOT - Orquestrador</h3>
@@ -314,7 +319,7 @@ export default function Hub() {
                 </p>
               </div>
 
-              <div className="p-4 bg-white rounded-lg border border-stone-300">
+              <div className="p-4 bg-card border border-border relative group overflow-hidden hover:border-primary/40 hover:shadow-[0_0_20px_-5px_hsl(var(--primary)/0.25)] transition-all duration-500">
                 <div className="flex items-center gap-2 mb-2">
                   <Users className="w-5 h-5 text-emerald-600" />
                   <h3 className="font-medium text-stone-900">Modos de Operação</h3>
@@ -324,7 +329,7 @@ export default function Hub() {
                 </p>
               </div>
 
-              <div className="p-4 bg-white rounded-lg border border-stone-300">
+              <div className="p-4 bg-card border border-border relative group overflow-hidden hover:border-primary/40 hover:shadow-[0_0_20px_-5px_hsl(var(--primary)/0.25)] transition-all duration-500">
                 <div className="flex items-center gap-2 mb-2">
                   <Bot className="w-5 h-5 text-amber-600" />
                   <h3 className="font-medium text-stone-900">Agentes Especializados</h3>
