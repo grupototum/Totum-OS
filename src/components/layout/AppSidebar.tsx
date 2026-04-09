@@ -12,13 +12,18 @@ import {
   LogOut,
   ChevronLeft,
   Menu,
-  ClipboardList,
   UserPlus,
   Contact,
   Rocket,
   Network,
   Sparkles,
   BookOpen,
+  Shield,
+  FolderOpen,
+  CalendarClock,
+  Cpu,
+  UserCog,
+  CheckSquare,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
@@ -38,8 +43,10 @@ const sections: NavSection[] = [
   {
     title: "PRINCIPAL",
     items: [
-      { label: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },
+      { label: "Stark Industries", icon: Shield, path: "/stark" },
       { label: "Hub de Agentes", icon: Sparkles, path: "/hub" },
+      { label: "Visão do Escritório", icon: Building2, path: "/office" },
+      { label: "Estrutura do Time", icon: Users, path: "/team" },
     ],
   },
   {
@@ -53,24 +60,26 @@ const sections: NavSection[] = [
     title: "ÁREA DE TRABALHO",
     items: [
       { label: "Quadro de Tarefas", icon: KanbanSquare, path: "/quadro-tarefas" },
+      { label: "Recorrência de Tarefas", icon: CalendarClock, path: "/task-recurrence" },
       { label: "Pipeline de Conteúdo", icon: GitBranch, path: "/content" },
-      { label: "Implantação", icon: Rocket, path: "/action-plan" },
+      { label: "Google Drive", icon: FolderOpen, path: "/google-drive" },
+      { label: "Checklist Deploy", icon: CheckSquare, path: "/deployment" },
       { label: "Novo Cliente", icon: UserPlus, path: "/new-client" },
       { label: "Central de Clientes", icon: Contact, path: "/clients" },
-      { label: "Visão do Escritório", icon: Building2, path: "/office" },
     ],
   },
   {
     title: "FERRAMENTAS IA",
     items: [
       { label: "Alexandria", icon: BookOpen, path: "/alexandria" },
+      { label: "Cráudio Codete", icon: Cpu, path: "/craudio-codete" },
       { label: "Claudio Code", icon: Terminal, path: "/claude-code" },
-      { label: "Estrutura do Time", icon: Users, path: "/team" },
     ],
   },
   {
     title: "CONFIGURAÇÕES",
     items: [
+      { label: "Operadores", icon: UserCog, path: "/operadores" },
       { label: "Configurações", icon: Settings, path: "/settings" },
     ],
   },

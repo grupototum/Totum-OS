@@ -50,6 +50,13 @@ import PainelAgentes from "./pages/PainelAgentes";
 import HubAgentes from "./pages/HubAgentes";
 import EstruturaTime from "./pages/EstruturaTime";
 import AgenteDetail from "./pages/AgenteDetail";
+// Stark Industries + Workspace + IA Tools + Settings
+import StarkIndustries from "./pages/dashboard/StarkIndustries";
+import GoogleDriveEmbed from "./pages/workspace/GoogleDriveEmbed";
+import TaskRecurrence from "./pages/workspace/TaskRecurrence";
+import DeploymentChecklist from "./pages/workspace/DeploymentChecklist";
+import CraudioCodete from "./pages/iatools/CraudioCodete";
+import Operadores from "./pages/settings/Operadores";
 // Alexandria - Novas páginas transplantadas
 import AlexandriaLayout from "./components/layout/AlexandriaLayout";
 import AlexandriaPage from "./pages/alexandria";
@@ -125,6 +132,16 @@ const App = () => (
             <Route path="/agents/:agentId/chat" element={<AgentChatLayout />} />
             {/* Redirecionamentos para compatibilidade */}
             <Route path="/agents-dashboard" element={<Navigate to="/agents" replace />} />
+            {/* Stark Industries */}
+            <Route path="/stark" element={<StarkIndustries />} />
+            {/* Workspace */}
+            <Route path="/google-drive" element={<GoogleDriveEmbed />} />
+            <Route path="/task-recurrence" element={<TaskRecurrence />} />
+            <Route path="/deployment" element={<DeploymentChecklist />} />
+            {/* Ferramentas IA */}
+            <Route path="/craudio-codete" element={<CraudioCodete />} />
+            {/* Configurações */}
+            <Route path="/operadores" element={<Operadores />} />
             {/* Alexandria - Wiki e Chat com GILES */}
             <Route path="/wiki" element={<WikiAlexandria />} />
             <Route path="/giles" element={<GilesChat />} />
