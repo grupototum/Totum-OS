@@ -23,18 +23,18 @@
    ============================================================ */
 :root {
   /* Core Colors - Creative DS */
-  --totum-bg: #000000;
-  --totum-bg-alt: #0a0a0a;
-  --totum-stone-50: #ededed;
-  --totum-stone-100: #e0e0e0;
-  --totum-stone-200: #c0c0c0;
-  --totum-stone-300: #3f3f46;
-  --totum-stone-400: #555;
-  --totum-stone-500: #777;
-  --totum-stone-600: #999;
-  --totum-stone-700: #27272a;
-  --totum-stone-800: #18181b;
-  --totum-stone-900: #ededed;
+  --totum-bg: hsl(var(--background));
+  --totum-bg-alt: hsl(var(--surface));
+  --totum-stone-50: hsl(var(--foreground));
+  --totum-stone-100: hsl(var(--foreground));
+  --totum-stone-200: hsl(var(--muted-foreground));
+  --totum-stone-300: hsl(var(--border));
+  --totum-stone-400: hsl(var(--muted-foreground));
+  --totum-stone-500: hsl(var(--muted-foreground));
+  --totum-stone-600: hsl(var(--muted-foreground));
+  --totum-stone-700: hsl(var(--border));
+  --totum-stone-800: hsl(var(--card));
+  --totum-stone-900: hsl(var(--foreground));
   
   /* Semantic Colors */
   --totum-primary: #ef233c;
