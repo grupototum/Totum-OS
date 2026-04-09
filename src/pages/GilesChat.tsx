@@ -179,17 +179,17 @@ export default function GilesChat() {
         
         {/* Sidebar - History */}
         {showHistory && (
-          <div className="w-80 bg-slate-950 border-r border-slate-800 flex flex-col">
-            <div className="p-4 border-b border-slate-800 flex items-center justify-between">
+          <div className="w-80 bg-card border-r border-border flex flex-col">
+            <div className="p-4 border-b border-border flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <History className="w-5 h-5 text-amber-400" />
-                <h2 className="text-white font-semibold">Histórico</h2>
+                <h2 className="text-foreground font-semibold">Histórico</h2>
               </div>
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => setShowHistory(false)}
-                className="text-slate-400 hover:text-white"
+                className="text-muted-foreground hover:text-foreground"
               >
                 <X className="w-5 h-5" />
               </Button>
@@ -200,16 +200,16 @@ export default function GilesChat() {
                 {sessions.map((session) => (
                   <button
                     key={session.id}
-                    className="w-full text-left p-3 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-amber-500/50 transition-all group"
+                    className="w-full text-left p-3 rounded-lg bg-muted hover:bg-accent border border-border hover:border-amber-500/50 transition-all group"
                   >
-                    <p className="text-white font-medium text-sm group-hover:text-amber-400 transition-colors">
+                    <p className="text-foreground font-medium text-sm group-hover:text-amber-400 transition-colors">
                       {session.title}
                     </p>
                     <div className="flex items-center justify-between mt-1">
-                      <span className="text-xs text-slate-500">
+                      <span className="text-xs text-muted-foreground">
                         {formatDate(session.date)}
                       </span>
-                      <span className="text-xs text-slate-600">
+                      <span className="text-xs text-muted-foreground/60">
                         {session.messageCount} msgs
                       </span>
                     </div>
