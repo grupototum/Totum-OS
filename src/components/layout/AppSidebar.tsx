@@ -18,6 +18,7 @@ import {
   Rocket,
   Network,
   Sparkles,
+  BookOpen,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
@@ -62,6 +63,7 @@ const sections: NavSection[] = [
   {
     title: "FERRAMENTAS IA",
     items: [
+      { label: "Alexandria", icon: BookOpen, path: "/alexandria" },
       { label: "Claudio Code", icon: Terminal, path: "/claude-code" },
       { label: "Estrutura do Time", icon: Users, path: "/team" },
     ],

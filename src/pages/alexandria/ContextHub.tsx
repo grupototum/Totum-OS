@@ -1,219 +1,132 @@
-import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import React from 'react';
+import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import {
-  BookOpen,
-  Search,
-  Plus,
-  User,
-  Brain,
-  FileText,
-  Settings,
-  Users,
-  ChevronRight,
-  Loader2,
-  Edit,
-  Trash2
-} from 'lucide-react';
+import { Agent } from '@/types/alexandria';
+import { Zap, Users } from 'lucide-react';
 
-const tipoIcons: Record<string, React.ElementType> = {
-  personality: User,
-  memory: Brain,
-  knowledge: FileText,
-  process: Settings,
-  client: Users
+interface ContextHubProps {
+  agents?: Agent[];
+}
+
+const statusColors = {
+  online: { bg: 'bg-green-100', text: 'text-green-700', label: 'Online' },
+  offline: { bg: 'bg-red-100', text: 'text-red-700', label: 'Offline' },
+  testing: { bg: 'bg-yellow-100', text: 'text-yellow-700', label: 'Testing' },
+  idle: { bg: 'bg-blue-100', text: 'text-blue-700', label: 'Idle' },
 };
 
-const tipoLabels: Record<string, string> = {
-  personality: 'Personalidade',
-  memory: 'Memória',
-  knowledge: 'Conhecimento',
-  process: 'Processo',
-  client: 'Cliente'
-};
+type StatusType = keyof typeof statusColors;
 
-const tipoColors: Record<string, string> = {
-  personality: 'bg-purple-100 text-purple-700 border-purple-200',
-  memory: 'bg-blue-100 text-blue-700 border-blue-200',
-  knowledge: 'bg-green-100 text-green-700 border-green-200',
-  process: 'bg-orange-100 text-orange-700 border-orange-200',
-  client: 'bg-pink-100 text-pink-700 border-pink-200'
-};
+export default function ContextHub({ agents = [] }: ContextHubProps) {
+  // Simular status por posição (em produção viria do banco em tempo real)
+  const agentsWithStatus = agents.map((agent, idx) => ({
+    ...agent,
+    statusType: (['online', 'offline', 'idle'] as StatusType[])[idx % 3],
+  }));
 
-// Mock data
-const mockAgents = ['TOT', 'Jarvis', 'Radar', 'Pablo', 'ADA'];
-const mockContexts = [
-  { id: '1', titulo: 'Personalidade TOT', agente: 'TOT', tipo: 'personality' },
-  { id: '2', titulo: 'Memória de Clientes', agente: 'Jarvis', tipo: 'memory' },
-  { id: '3', titulo: 'Processo de Onboarding', agente: 'TOT', tipo: 'process' },
-  { id: '4', titulo: 'Base de Conhecimento', agente: 'ADA', tipo: 'knowledge' },
-  { id: '5', titulo: 'Perfil Cliente VIP', agente: 'Pablo', tipo: 'client' },
-];
-const mockStats = {
-  byType: {
-    personality: 5,
-    memory: 8,
-    knowledge: 12,
-    process: 6,
-    client: 4
-  }
-};
-
-export default function ContextHub() {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
-  const [selectedTipo, setSelectedTipo] = useState<string | null>(null);
-  const [isLoading] = useState(false);
-  const [agents] = useState(mockAgents);
-  const [contexts] = useState(mockContexts);
-  const [stats] = useState(mockStats);
-
-  const filteredContexts = contexts.filter(ctx => {
-    if (selectedAgent && ctx.agente !== selectedAgent) return false;
-    if (selectedTipo && ctx.tipo !== selectedTipo) return false;
-    if (searchQuery && !ctx.titulo.toLowerCase().includes(searchQuery.toLowerCase())) return false;
-    return true;
-  });
+  const onlineCount = agentsWithStatus.filter((a) => a.statusType === 'online').length;
+  const totalSkills = agentsWithStatus.reduce((sum, a) => sum + (a.skills?.length || 0), 0);
 
   return (
-    <div className="p-8 space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-slate-900">Context HUB</h1>
-          <p className="text-slate-600 mt-1">
-            Gerenciador de contextos para agentes IA
-          </p>
-        </div>
-        <Button>
-          <Plus size={18} className="mr-2" />
-          Novo Contexto
-        </Button>
-      </div>
-
-      {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-        {['personality', 'memory', 'knowledge', 'process', 'client'].map((tipo) => {
-          const Icon = tipoIcons[tipo];
-          const count = stats?.byType?.[tipo as keyof typeof stats.byType] || 0;
-          return (
-            <Card
-              key={tipo}
-              className={`cursor-pointer transition-all ${
-                selectedTipo === tipo ? 'ring-2 ring-purple-500' : ''
-              }`}
-              onClick={() => setSelectedTipo(selectedTipo === tipo ? null : tipo)}
-            >
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between">
-                  <Icon size={20} className="text-slate-400" />
-                  <span className="text-2xl font-bold">{count}</span>
-                </div>
-                <p className="text-sm text-slate-600 mt-2">{tipoLabels[tipo]}</p>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
-
-      {/* Search */}
-      <Card>
-        <CardContent className="p-4">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" size={18} />
-            <Input
-              placeholder="Buscar contextos..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
-            />
+    <div className="space-y-6">
+      {/* Header Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card className="p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-muted-foreground">Total de Agentes</p>
+              <p className="text-3xl font-bold">{agents.length}</p>
+            </div>
+            <Users className="h-8 w-8 text-primary opacity-20" />
           </div>
-        </CardContent>
-      </Card>
+        </Card>
 
-      {/* Agent Filter */}
-      <div className="flex gap-2 flex-wrap">
-        <Button
-          variant={selectedAgent === null ? 'secondary' : 'outline'}
-          size="sm"
-          onClick={() => setSelectedAgent(null)}
-        >
-          Todos Agentes
-        </Button>
-        {agents?.map((agent) => (
-          <Button
-            key={agent}
-            variant={selectedAgent === agent ? 'secondary' : 'outline'}
-            size="sm"
-            onClick={() => setSelectedAgent(agent)}
-          >
-            {agent}
-          </Button>
-        ))}
+        <Card className="p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-muted-foreground">Online</p>
+              <p className="text-3xl font-bold">{onlineCount}</p>
+            </div>
+            <div className="w-3 h-3 bg-green-500 rounded-full opacity-50" />
+          </div>
+        </Card>
+
+        <Card className="p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-muted-foreground">Skills Associadas</p>
+              <p className="text-3xl font-bold">{totalSkills}</p>
+            </div>
+            <Zap className="h-8 w-8 text-amber-500 opacity-20" />
+          </div>
+        </Card>
       </div>
 
-      {/* Contexts List */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Contextos</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {isLoading ? (
-            <div className="flex items-center justify-center py-12">
-              <Loader2 className="animate-spin mr-2" />
-              Carregando...
-            </div>
-          ) : filteredContexts?.length === 0 ? (
-            <div className="text-center py-12 text-slate-500">
-              <BookOpen size={48} className="mx-auto mb-4 text-slate-300" />
-              <p>Nenhum contexto encontrado</p>
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {filteredContexts?.map((ctx: any) => {
-                const Icon = tipoIcons[ctx.tipo] || FileText;
-                return (
-                  <div
-                    key={ctx.id}
-                    className="flex items-center justify-between p-4 border rounded-lg hover:bg-slate-50 transition-colors"
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                        tipoColors[ctx.tipo]?.split(' ')[0] || 'bg-slate-100'
-                      }`}>
-                        <Icon className={tipoColors[ctx.tipo]?.split(' ')[1] || 'text-slate-600'} size={20} />
-                      </div>
-                      <div>
-                        <h4 className="font-medium text-slate-900">{ctx.titulo}</h4>
-                        <div className="flex items-center gap-2 mt-1">
-                          <Badge variant="outline">{ctx.agente}</Badge>
-                          <Badge className={tipoColors[ctx.tipo] || 'bg-slate-100'}>
-                            {tipoLabels[ctx.tipo] || ctx.tipo}
-                          </Badge>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Button variant="ghost" size="sm">
-                        <Edit size={16} />
-                      </Button>
-                      <Button variant="ghost" size="sm" className="text-red-600">
-                        <Trash2 size={16} />
-                      </Button>
-                      <Button variant="ghost" size="sm">
-                        <ChevronRight size={18} />
-                      </Button>
+      {/* Grid de Agentes */}
+      {agentsWithStatus.length === 0 ? (
+        <Card className="p-8 text-center">
+          <p className="text-muted-foreground">Nenhum agente encontrado</p>
+        </Card>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {agentsWithStatus.map((agent) => {
+            const statusColor =
+              statusColors[agent.statusType as StatusType] || statusColors.offline;
+
+            return (
+              <Card
+                key={agent.agent_id}
+                className="p-6 hover:shadow-lg transition-shadow"
+              >
+                {/* Cabeçalho */}
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <span className="text-3xl">{agent.emoji}</span>
+                    <div>
+                      <h3 className="font-semibold">{agent.name}</h3>
+                      <p className="text-xs text-muted-foreground">Tier {agent.tier}</p>
                     </div>
                   </div>
-                );
-              })}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+                </div>
+
+                {/* Status */}
+                <div className="mb-4">
+                  <Badge className={`${statusColor.bg} ${statusColor.text} border-0`}>
+                    {statusColor.label}
+                  </Badge>
+                </div>
+
+                {/* Preview do System Prompt */}
+                <div className="mb-4">
+                  <p className="text-xs text-muted-foreground mb-1">Prompt:</p>
+                  <p className="text-xs bg-muted p-2 rounded line-clamp-2">
+                    {agent.system_prompt}
+                  </p>
+                </div>
+
+                {/* Skills */}
+                <div>
+                  <p className="text-xs text-muted-foreground mb-2">
+                    Skills ({agent.skills?.length || 0})
+                  </p>
+                  <div className="flex flex-wrap gap-1">
+                    {agent.skills?.slice(0, 3).map((skillId) => (
+                      <Badge key={skillId} variant="outline" className="text-xs">
+                        {skillId}
+                      </Badge>
+                    ))}
+                    {(agent.skills?.length || 0) > 3 && (
+                      <Badge variant="outline" className="text-xs">
+                        +{(agent.skills?.length || 0) - 3}
+                      </Badge>
+                    )}
+                  </div>
+                </div>
+              </Card>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

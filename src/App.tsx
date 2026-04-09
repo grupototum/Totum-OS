@@ -52,6 +52,7 @@ import EstruturaTime from "./pages/EstruturaTime";
 import AgenteDetail from "./pages/AgenteDetail";
 // Alexandria - Novas páginas transplantadas
 import AlexandriaLayout from "./components/layout/AlexandriaLayout";
+import AlexandriaPage from "./pages/alexandria";
 import AlexandriaDashboard from "./pages/alexandria/Dashboard";
 import ContextHub from "./pages/alexandria/ContextHub";
 import PopsPortal from "./pages/alexandria/PopsPortal";
@@ -130,7 +131,7 @@ const App = () => (
             
             {/* Alexandria - Novas rotas transplantadas com layout */}
             <Route path="/alexandria" element={<AlexandriaRoutes />}>
-              <Route index element={<AlexandriaDashboard />} />
+              <Route index element={<AlexandriaPage />} />
               <Route path="pops" element={<PopsPortal />} />
               <Route path="context" element={<ContextHub />} />
               <Route path="skills" element={<SkillsCentral />} />

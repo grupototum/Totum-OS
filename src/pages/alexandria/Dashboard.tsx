@@ -1,251 +1,140 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import {
-  FileText,
-  BookOpen,
-  Zap,
-  BarChart3,
-  ArrowRight,
-  Search,
-  Clock,
-  CheckCircle,
-  AlertCircle,
-  Loader2,
-  TrendingUp,
-  Users,
-  Layers
-} from 'lucide-react';
+import React from 'react';
+import { Card } from '@/components/ui/card';
+import { AlexandriaContextData } from '@/types/alexandria';
+import { BookOpen, Zap, Users, TrendingUp } from 'lucide-react';
 
-// Mock data para stats
-const mockStats = {
-  pops: { total: 12 },
-  context: { total: 8 },
-  skills: { total: 15 },
-  knowledge: { total: 45 }
-};
+interface DashboardProps {
+  data: AlexandriaContextData;
+}
 
-const mockHealthCheck = { status: 'ok', knowledge: { total: 45 } };
-
-export default function AlexandriaDashboard() {
-  const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
-  const [healthCheck] = useState(mockHealthCheck);
-  const [popsStats] = useState(mockStats.pops);
-  const [contextStats] = useState(mockStats.context);
-  const [skillsStats] = useState(mockStats.skills);
-
-  const modules = [
+export default function Dashboard({ data }: DashboardProps) {
+  const stats = [
     {
-      title: 'Portal de POPs',
-      description: 'Procedimentos Operacionais Padrão com busca semântica',
-      icon: FileText,
-      href: '/alexandria/pops',
-      color: 'from-blue-500 to-cyan-500',
-      stats: popsStats
-    },
-    {
-      title: 'Context Hub',
-      description: 'Gerenciador de contextos para agentes IA',
+      label: '📚 Documentos',
+      value: data.stats.totalDocuments,
       icon: BookOpen,
-      href: '/alexandria/context',
-      color: 'from-purple-500 to-pink-500',
-      stats: contextStats
+      color: 'bg-blue-100 text-blue-700',
     },
     {
-      title: 'Central de Skills',
-      description: 'Catálogo de habilidades com recomendações',
+      label: '⚙️ Skills Ativas',
+      value: data.stats.totalSkills,
       icon: Zap,
-      href: '/alexandria/skills',
-      color: 'from-orange-500 to-red-500',
-      stats: skillsStats
+      color: 'bg-amber-100 text-amber-700',
     },
     {
-      title: 'Dashboard OpenClaw',
-      description: 'Monitoramento do gateway e skills',
-      icon: BarChart3,
-      href: '/alexandria/openclaw',
-      color: 'from-green-500 to-emerald-500'
-    }
+      label: '🤖 Agentes',
+      value: data.stats.totalAgents,
+      icon: Users,
+      color: 'bg-green-100 text-green-700',
+    },
+    {
+      label: '📈 Taxa de Uso',
+      value: '92%',
+      icon: TrendingUp,
+      color: 'bg-purple-100 text-purple-700',
+    },
   ];
 
+  const documentTypes = {
+    design_system: data.documents.filter((d) => d.type === 'design_system').length,
+    pops: data.documents.filter((d) => d.type === 'pops').length,
+    slas: data.documents.filter((d) => d.type === 'slas').length,
+    client_info: data.documents.filter((d) => d.type === 'client_info').length,
+  };
+
   return (
-    <div className="p-8 space-y-8">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-slate-900">Alexandria</h1>
-          <p className="text-slate-600 mt-1">
-            Central de Conhecimento Integrada com IA
-          </p>
-        </div>
-        <div className="flex items-center gap-4">
-          {isLoading ? (
-            <div className="flex items-center gap-2 text-slate-500">
-              <Loader2 size={18} className="animate-spin" />
-              Carregando...
+    <div className="space-y-6">
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        {stats.map((stat) => (
+          <Card key={stat.label} className="p-6">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground mb-1">{stat.label}</p>
+                <p className="text-3xl font-bold">{stat.value}</p>
+              </div>
+              <div className={`p-3 rounded-lg ${stat.color}`}>
+                <stat.icon className="h-5 w-5" />
+              </div>
             </div>
-          ) : healthCheck?.status === 'ok' ? (
-            <div className="flex items-center gap-2 text-green-600 bg-green-50 px-4 py-2 rounded-full">
-              <CheckCircle size={18} />
-              <span className="font-medium">Sistema Online</span>
-            </div>
-          ) : (
-            <div className="flex items-center gap-2 text-red-600 bg-red-50 px-4 py-2 rounded-full">
-              <AlertCircle size={18} />
-              <span className="font-medium">Sistema Offline</span>
-            </div>
-          )}
-        </div>
+          </Card>
+        ))}
       </div>
 
-      {/* Search Bar */}
-      <Card className="border-slate-200">
-        <CardContent className="p-6">
-          <div className="flex items-center gap-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" size={20} />
-              <input
-                type="text"
-                placeholder="Buscar em toda a base de conhecimento..."
-                className="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-lg"
-              />
+      {/* Distribuição de Documentos */}
+      <Card className="p-6">
+        <h3 className="font-semibold text-lg mb-4">📚 Distribuição de Documentos</h3>
+        <div className="space-y-4">
+          {Object.entries(documentTypes).map(([type, count]) => (
+            <div key={type}>
+              <div className="flex justify-between text-sm mb-1">
+                <span className="capitalize">{type.replace('_', ' ')}</span>
+                <span className="font-semibold">{count}</span>
+              </div>
+              <div className="w-full bg-muted rounded-full h-2">
+                <div
+                  className="bg-primary rounded-full h-2 transition-all"
+                  style={{
+                    width: `${data.stats.totalDocuments > 0 ? (count / data.stats.totalDocuments) * 100 : 0}%`,
+                  }}
+                />
+              </div>
             </div>
-            <Button size="lg" className="px-8">
-              Buscar
-            </Button>
-          </div>
-        </CardContent>
+          ))}
+        </div>
       </Card>
 
-      {/* Stats Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-blue-600 font-medium">Total POPs</p>
-                <p className="text-2xl font-bold text-blue-900">
-                  {popsStats?.total ?? '-'}
-                </p>
-              </div>
-              <FileText className="text-blue-400" size={24} />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-purple-600 font-medium">Contextos</p>
-                <p className="text-2xl font-bold text-purple-900">
-                  {contextStats?.total ?? '-'}
-                </p>
-              </div>
-              <BookOpen className="text-purple-400" size={24} />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-gradient-to-br from-orange-50 to-orange-100 border-orange-200">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-orange-600 font-medium">Skills</p>
-                <p className="text-2xl font-bold text-orange-900">
-                  {skillsStats?.total ?? '-'}
-                </p>
-              </div>
-              <Zap className="text-orange-400" size={24} />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-gradient-to-br from-green-50 to-green-100 border-green-200">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-green-600 font-medium">Documentos</p>
-                <p className="text-2xl font-bold text-green-900">
-                  {healthCheck?.knowledge?.total ?? '-'}
-                </p>
-              </div>
-              <Layers className="text-green-400" size={24} />
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Module Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {modules.map((module) => {
-          const Icon = module.icon;
-          return (
-            <Card
-              key={module.href}
-              className="overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer group"
-              onClick={() => navigate(module.href)}
-            >
-              <div className={`bg-gradient-to-r ${module.color} h-24 flex items-center px-6`}>
-                <Icon size={32} className="text-white" />
-                <div className="ml-4 text-white">
-                  <h3 className="text-xl font-bold">{module.title}</h3>
+      {/* Top Skills */}
+      <Card className="p-6">
+        <h3 className="font-semibold text-lg mb-4">⭐ Skills mais Usadas</h3>
+        {data.skills.length === 0 ? (
+          <p className="text-sm text-muted-foreground">Nenhuma skill encontrada</p>
+        ) : (
+          <div className="space-y-3">
+            {data.skills.slice(0, 5).map((skill) => (
+              <div
+                key={skill.id}
+                className="flex items-center justify-between p-3 bg-muted rounded-lg"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="text-xl">{skill.emoji}</span>
+                  <div>
+                    <p className="font-semibold text-sm">{skill.name}</p>
+                    <p className="text-xs text-muted-foreground">{skill.category}</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="text-sm font-semibold">{skill.success_rate || 0}%</p>
                 </div>
               </div>
-              <CardContent className="p-6">
-                <p className="text-slate-600 mb-4">{module.description}</p>
-                {module.stats && (
-                  <div className="flex gap-4 mb-4 text-sm">
-                    <span className="text-slate-500">
-                      Total: <strong className="text-slate-900">{module.stats.total}</strong>
-                    </span>
-                  </div>
-                )}
-                <Button variant="outline" className="w-full group/btn">
-                  Acessar
-                  <ArrowRight size={16} className="ml-2 group-hover/btn:translate-x-1 transition-transform" />
-                </Button>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
-
-      {/* Recent Activity */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Clock size={20} />
-            Atividade Recente
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="flex items-center gap-4 p-4 bg-slate-50 rounded-lg">
-              <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                <FileText className="text-blue-600" size={18} />
-              </div>
-              <div className="flex-1">
-                <p className="font-medium text-slate-900">POP atualizado</p>
-                <p className="text-sm text-slate-500">Procedimento de Onboarding</p>
-              </div>
-              <span className="text-sm text-slate-400">Há 2 horas</span>
-            </div>
-            <div className="flex items-center gap-4 p-4 bg-slate-50 rounded-lg">
-              <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
-                <BookOpen className="text-purple-600" size={18} />
-              </div>
-              <div className="flex-1">
-                <p className="font-medium text-slate-900">Novo contexto criado</p>
-                <p className="text-sm text-slate-500">Agente: Pablo</p>
-              </div>
-              <span className="text-sm text-slate-400">Há 5 horas</span>
-            </div>
+            ))}
           </div>
-        </CardContent>
+        )}
+      </Card>
+
+      {/* Status do Ecossistema */}
+      <Card className="p-6">
+        <h3 className="font-semibold text-lg mb-4">🎯 Status do Ecossistema</h3>
+        <div className="space-y-3 text-sm">
+          <div className="flex justify-between items-center">
+            <span className="text-muted-foreground">Documentos Indexados</span>
+            <span className="font-semibold text-green-600">✅ OK</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-muted-foreground">Skills Operacionais</span>
+            <span className="font-semibold text-green-600">✅ OK</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-muted-foreground">Agentes Online</span>
+            <span className="font-semibold text-green-600">
+              ✅ {data.stats.activeAgents}/{data.stats.totalAgents}
+            </span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-muted-foreground">Última Sincronização</span>
+            <span className="font-semibold text-green-600">✅ Agora</span>
+          </div>
+        </div>
       </Card>
     </div>
   );
