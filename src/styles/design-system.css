@@ -148,58 +148,7 @@
   --totum-transition-text-reveal: 1.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* ============================================================
-   BASE STYLES
-   ============================================================ */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-html {
-  font-family: var(--totum-font-sans);
-  font-size: 16px;
-  line-height: var(--totum-leading-normal);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  scroll-behavior: smooth;
-}
-
-body {
-  background-color: var(--totum-bg);
-  color: var(--totum-stone-900);
-  font-family: var(--totum-font-sans);
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-
-/* Selection */
-::selection {
-  background-color: var(--totum-stone-900);
-  color: var(--totum-stone-50);
-}
-
-/* Scrollbar */
-::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--totum-stone-300);
-  border-radius: var(--totum-radius-full);
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--totum-stone-500);
-}
+/* Base styles removed — handled by index.css @layer base */
 
 /* ============================================================
    ANIMATIONS - REVEAL SYSTEM
