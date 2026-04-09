@@ -17,7 +17,6 @@ export const useTranscriptionProcessing = () => {
     isLoading: false, progress: 0, total: 0, current: '', results: {}, error: null,
   });
 
-  // Faz parse do CSV
   const parseCSV = useCallback((csvText: string): TranscriptionCSVRow[] => {
     const lines = csvText.trim().split('\n');
     if (lines.length < 2) return [];
@@ -44,7 +43,6 @@ export const useTranscriptionProcessing = () => {
     }).filter(r => r.Transcrição);
   }, []);
 
-  // Processa um lote de transcrições
   const processTranscriptions = useCallback(async (
     rows: TranscriptionCSVRow[],
     model: string
@@ -65,8 +63,6 @@ export const useTranscriptionProcessing = () => {
         }, model);
 
         allResults[row.Subject || String(i)] = results;
-
-        // Salva no Supabase
         await saveToSupabase(row, results);
       } catch (err: any) {
         console.error(`Erro ao processar "${row.Subject}":`, err);
@@ -81,8 +77,7 @@ export const useTranscriptionProcessing = () => {
     results: SkillExecutionResult[]
   ) => {
     try {
-      // Insere importação
-      const { data: importData } = await supabase
+      const { data: importData } = await (supabase as any)
         .from('transcription_imports')
         .insert({
           subject: row.Subject,
@@ -97,7 +92,6 @@ export const useTranscriptionProcessing = () => {
 
       if (!importData?.id) return;
 
-      // Insere análises
       const analyses = results
         .filter(r => r.success)
         .map(r => ({
@@ -110,7 +104,7 @@ export const useTranscriptionProcessing = () => {
         }));
 
       if (analyses.length > 0) {
-        await supabase.from('transcription_analysis').insert(analyses);
+        await (supabase as any).from('transcription_analysis').insert(analyses);
       }
     } catch (err) {
       console.error('[Supabase] Erro ao salvar transcrição:', err);
@@ -118,12 +112,12 @@ export const useTranscriptionProcessing = () => {
   };
 
   const loadImports = useCallback(async (): Promise<TranscriptionImport[]> => {
-    const { data } = await supabase
+    const { data } = await (supabase as any)
       .from('transcription_imports')
       .select('*')
       .order('imported_at', { ascending: false })
       .limit(100);
-    return (data || []) as TranscriptionImport[];
+    return (data || []) as unknown as TranscriptionImport[];
   }, []);
 
   return { ...state, parseCSV, processTranscriptions, loadImports };

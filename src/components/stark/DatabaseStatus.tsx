@@ -20,24 +20,11 @@ export default function DatabaseStatus() {
     setStats(s => ({ ...s, status: 'checking' }));
     const start = Date.now();
     try {
-      const { data, error } = await supabase
-        .from('information_schema.tables' as any)
-        .select('table_name', { count: 'exact', head: true })
-        .eq('table_schema', 'public');
-
+      const { error } = await (supabase as any).from('agents').select('id').limit(1);
       const latency = Date.now() - start;
-
-      if (error) throw error;
-      setStats({ status: 'online', tablesCount: (data as any)?.length || 0, latency, lastChecked: new Date() });
+      setStats({ status: error ? 'offline' : 'online', tablesCount: 0, latency, lastChecked: new Date() });
     } catch {
-      // Tenta um ping simples
-      try {
-        const { error: pingError } = await supabase.from('skills').select('id').limit(1);
-        const latency = Date.now() - start;
-        setStats({ status: pingError ? 'offline' : 'online', tablesCount: 0, latency, lastChecked: new Date() });
-      } catch {
-        setStats(s => ({ ...s, status: 'offline', latency: Date.now() - start, lastChecked: new Date() }));
-      }
+      setStats(s => ({ ...s, status: 'offline', latency: Date.now() - start, lastChecked: new Date() }));
     }
   };
 

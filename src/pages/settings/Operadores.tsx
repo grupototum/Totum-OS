@@ -46,8 +46,8 @@ export default function Operadores() {
 
   const loadOperadores = async () => {
     setIsLoading(true);
-    const { data } = await supabase.from('operadores').select('*').order('nome');
-    setOperadores((data || []) as Operador[]);
+    const { data } = await (supabase as any).from('operadores').select('*').order('nome');
+    setOperadores((data || []) as unknown as Operador[]);
     setIsLoading(false);
   };
 
@@ -67,9 +67,9 @@ export default function Operadores() {
     setSaving(true);
     try {
       if (editing) {
-        await supabase.from('operadores').update({ ...form, updated_at: new Date().toISOString() }).eq('id', editing.id);
+        await (supabase as any).from('operadores').update({ ...form, updated_at: new Date().toISOString() }).eq('id', editing.id);
       } else {
-        await supabase.from('operadores').insert({ ...form, created_at: new Date().toISOString(), updated_at: new Date().toISOString() });
+        await (supabase as any).from('operadores').insert({ ...form, created_at: new Date().toISOString(), updated_at: new Date().toISOString() });
       }
       await loadOperadores();
       setDialogOpen(false);
@@ -80,7 +80,7 @@ export default function Operadores() {
 
   const handleDelete = async (id: string) => {
     if (!confirm('Remover operador?')) return;
-    await supabase.from('operadores').delete().eq('id', id);
+    await (supabase as any).from('operadores').delete().eq('id', id);
     await loadOperadores();
   };
 
@@ -102,7 +102,6 @@ export default function Operadores() {
         <Button onClick={openNew}><Plus className="h-4 w-4 mr-2" />Novo Operador</Button>
       </div>
 
-      {/* Busca + Stats */}
       <div className="flex gap-3">
         <div className="relative flex-1 max-w-sm">
           <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -112,7 +111,6 @@ export default function Operadores() {
         <Badge className="bg-green-100 text-green-700 border-0 px-3">{operadores.filter(o => o.status === 'ativo').length} ativos</Badge>
       </div>
 
-      {/* Tabela */}
       <Card className="overflow-hidden">
         {isLoading ? (
           <div className="p-8 text-center text-muted-foreground">Carregando...</div>
@@ -161,7 +159,6 @@ export default function Operadores() {
         )}
       </Card>
 
-      {/* Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="max-w-lg">
           <DialogHeader>

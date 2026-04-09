@@ -56,6 +56,7 @@ import GoogleDriveEmbed from "./pages/workspace/GoogleDriveEmbed";
 import TaskRecurrence from "./pages/workspace/TaskRecurrence";
 import DeploymentChecklist from "./pages/workspace/DeploymentChecklist";
 import CraudioCodete from "./pages/iatools/CraudioCodete";
+import HostingPanel from "./pages/HostingPanel";
 import Operadores from "./pages/settings/Operadores";
 // Alexandria - Novas páginas transplantadas
 import AlexandriaLayout from "./components/layout/AlexandriaLayout";
@@ -142,6 +143,8 @@ const App = () => (
             <Route path="/craudio-codete" element={<CraudioCodete />} />
             {/* Configurações */}
             <Route path="/operadores" element={<Operadores />} />
+            {/* Painel de Hosting */}
+            <Route path="/hosting" element={<HostingPanel />} />
             {/* Alexandria - Wiki e Chat com GILES */}
             <Route path="/wiki" element={<WikiAlexandria />} />
             <Route path="/giles" element={<GilesChat />} />

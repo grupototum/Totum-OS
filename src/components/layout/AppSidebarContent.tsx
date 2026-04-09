@@ -5,7 +5,7 @@ import {
   LayoutDashboard, Bot, KanbanSquare, GitBranch, Building2,
   Terminal, Users, Settings, LogOut, Sun, Moon,
   ChevronDown, ChevronRight, Notebook, FileCheck, Lightbulb, ClipboardList, UserPlus, Contact,
-  BookOpen,
+  BookOpen, Server,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -48,6 +48,12 @@ const staticSections: NavSection[] = [
     items: [
       { label: "Claudio Code", icon: Terminal, path: "/claude-code" },
       { label: "Estrutura do Time", icon: Users, path: "/team" },
+    ],
+  },
+  {
+    title: "INFRAESTRUTURA",
+    items: [
+      { label: "Painel de Hosting", icon: Server, path: "/hosting" },
     ],
   },
 ];

@@ -443,6 +443,190 @@ export type Database = {
         }
         Relationships: []
       }
+      hosting_audit_log: {
+        Row: {
+          action: string
+          created_at: string
+          details: Json | null
+          id: string
+          target: string | null
+          user_email: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          details?: Json | null
+          id?: string
+          target?: string | null
+          user_email?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          details?: Json | null
+          id?: string
+          target?: string | null
+          user_email?: string | null
+        }
+        Relationships: []
+      }
+      hosting_billing: {
+        Row: {
+          amount: number
+          client_id: string
+          created_at: string
+          id: string
+          month: string
+          paid_at: string | null
+          receipt_url: string | null
+          status: string
+        }
+        Insert: {
+          amount?: number
+          client_id: string
+          created_at?: string
+          id?: string
+          month: string
+          paid_at?: string | null
+          receipt_url?: string | null
+          status?: string
+        }
+        Update: {
+          amount?: number
+          client_id?: string
+          created_at?: string
+          id?: string
+          month?: string
+          paid_at?: string | null
+          receipt_url?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hosting_billing_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "hosting_clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hosting_clients: {
+        Row: {
+          company_name: string
+          contact_email: string | null
+          contact_name: string | null
+          created_at: string
+          domain: string | null
+          id: string
+          monthly_value: number | null
+          notes: string | null
+          payment_status: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          company_name: string
+          contact_email?: string | null
+          contact_name?: string | null
+          created_at?: string
+          domain?: string | null
+          id?: string
+          monthly_value?: number | null
+          notes?: string | null
+          payment_status?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          company_name?: string
+          contact_email?: string | null
+          contact_name?: string | null
+          created_at?: string
+          domain?: string | null
+          id?: string
+          monthly_value?: number | null
+          notes?: string | null
+          payment_status?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      hosting_containers: {
+        Row: {
+          container_type: string | null
+          created_at: string
+          health_check_url: string | null
+          id: string
+          last_health_check: string | null
+          last_restart: string | null
+          name: string
+          port: number | null
+          status: string
+        }
+        Insert: {
+          container_type?: string | null
+          created_at?: string
+          health_check_url?: string | null
+          id?: string
+          last_health_check?: string | null
+          last_restart?: string | null
+          name: string
+          port?: number | null
+          status?: string
+        }
+        Update: {
+          container_type?: string | null
+          created_at?: string
+          health_check_url?: string | null
+          id?: string
+          last_health_check?: string | null
+          last_restart?: string | null
+          name?: string
+          port?: number | null
+          status?: string
+        }
+        Relationships: []
+      }
+      hosting_subdomains: {
+        Row: {
+          base_domain: string
+          client_id: string
+          created_at: string
+          full_url: string | null
+          id: string
+          status: string
+          subdomain: string
+        }
+        Insert: {
+          base_domain?: string
+          client_id: string
+          created_at?: string
+          full_url?: string | null
+          id?: string
+          status?: string
+          subdomain: string
+        }
+        Update: {
+          base_domain?: string
+          client_id?: string
+          created_at?: string
+          full_url?: string | null
+          id?: string
+          status?: string
+          subdomain?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hosting_subdomains_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "hosting_clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       logs_execucao_agente: {
         Row: {
           agente_id: string
