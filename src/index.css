@@ -235,30 +235,30 @@
   .link-underline {
     font-size: 0.875rem;
     font-weight: 500;
-    color: #57534E;
-    border-bottom: 1px solid #A8A29E;
+    color: hsl(var(--muted-foreground));
+    border-bottom: 1px solid hsl(var(--border));
     padding-bottom: 0.125rem;
     text-decoration: none;
     transition: color 200ms ease, border-color 200ms ease;
   }
 
   .link-underline:hover {
-    color: #1C1917;
-    border-color: #1C1917;
+    color: hsl(var(--foreground));
+    border-color: hsl(var(--primary));
   }
 
-  /* Project cards - hover:bg-white */
+  /* Project cards */
   .project-card {
-    border: 1px solid #D6D3D1;
-    background-color: #EAEAE5;
-    transition: background-color 0.5s ease, box-shadow 200ms ease;
+    border: 1px solid hsl(var(--border));
+    background-color: hsl(var(--card));
+    transition: background-color 0.5s ease, box-shadow 200ms ease, border-color 200ms ease;
     cursor: pointer;
     overflow: hidden;
   }
 
   .project-card:hover {
-    background-color: white;
-    box-shadow: 0 10px 15px -3px rgba(28, 25, 23, 0.1), 0 4px 6px -4px rgba(28, 25, 23, 0.1);
+    border-color: hsl(var(--primary) / 0.3);
+    box-shadow: 0 10px 15px -3px hsl(var(--primary) / 0.1), 0 4px 6px -4px hsl(var(--primary) / 0.1);
   }
 
   /* Stat cards */
@@ -271,7 +271,7 @@
   }
 
   .stat-card:hover {
-    background-color: white;
+    background-color: hsl(var(--card));
   }
 
   /* Icon alignment fix */
