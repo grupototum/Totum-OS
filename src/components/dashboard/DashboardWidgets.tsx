@@ -80,7 +80,7 @@ export function OverviewCards() {
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       {cards.map((c, i) => (
         <motion.div key={c.label} {...anim(i)}>
-          <Card className={`border-l-2 ${c.accent} bg-card/50 backdrop-blur-sm border-border/40 hover:border-border/80 transition-all hover:shadow-lg hover:shadow-primary/5`}>
+          <Card cornerMarks className={`border-l-2 ${c.accent} bg-card/50 backdrop-blur-sm border-border/40 hover:border-border/80 transition-all`}>
             <CardContent className="p-4 flex items-start gap-3">
               <div className="w-9 h-9 rounded-lg bg-secondary/80 flex items-center justify-center shrink-0">
                 <c.icon className="w-4.5 h-4.5 text-muted-foreground" />
@@ -107,7 +107,7 @@ export function AppStatusList() {
   if (loading) return <CardSkeleton />;
   return (
     <motion.div {...anim(5)}>
-      <Card className="bg-card/50 backdrop-blur-sm border-border/40">
+      <Card cornerMarks className="bg-card/50 backdrop-blur-sm border-border/40">
         <CardContent className="p-5">
           <h3 className="font-heading font-bold text-sm text-foreground mb-4 flex items-center gap-2">
             <Activity className="w-4 h-4 text-primary" />
@@ -154,7 +154,7 @@ export function ActivityLog() {
   if (loading) return <CardSkeleton />;
   return (
     <motion.div {...anim(6)}>
-      <Card className="bg-card/50 backdrop-blur-sm border-border/40">
+      <Card cornerMarks className="bg-card/50 backdrop-blur-sm border-border/40">
         <CardContent className="p-5">
           <h3 className="font-heading font-bold text-sm text-foreground mb-4 flex items-center gap-2">
             <Clock className="w-4 h-4 text-primary" />
@@ -203,7 +203,7 @@ export function ResourceUsage() {
   if (loading) return <CardSkeleton />;
   return (
     <motion.div {...anim(7)}>
-      <Card className="bg-card/50 backdrop-blur-sm border-border/40">
+      <Card cornerMarks className="bg-card/50 backdrop-blur-sm border-border/40">
         <CardContent className="p-5 space-y-5">
           <h3 className="font-heading font-bold text-sm text-foreground flex items-center gap-2">
             <Server className="w-4 h-4 text-primary" />
@@ -238,7 +238,7 @@ export function CostEstimate() {
   const total = costs.reduce((sum, c) => sum + Number(c.value), 0);
   return (
     <motion.div {...anim(8)}>
-      <Card className="bg-card/50 backdrop-blur-sm border-border/40">
+      <Card cornerMarks className="bg-card/50 backdrop-blur-sm border-border/40">
         <CardContent className="p-5">
           <h3 className="font-heading font-bold text-sm text-foreground mb-4 flex items-center gap-2">
             <DollarSign className="w-4 h-4 text-primary" />
@@ -280,7 +280,7 @@ export function MexSync() {
   if (loading) return <CardSkeleton />;
   return (
     <motion.div {...anim(9)}>
-      <Card className="bg-card/50 backdrop-blur-sm border-border/40">
+      <Card cornerMarks className="bg-card/50 backdrop-blur-sm border-border/40">
         <CardContent className="p-5">
           <h3 className="font-heading font-bold text-sm text-foreground mb-4 flex items-center gap-2">
             <Brain className="w-4 h-4 text-primary" />
