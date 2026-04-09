@@ -179,17 +179,17 @@ export default function GilesChat() {
         
         {/* Sidebar - History */}
         {showHistory && (
-          <div className="w-80 bg-slate-950 border-r border-slate-800 flex flex-col">
-            <div className="p-4 border-b border-slate-800 flex items-center justify-between">
+          <div className="w-80 bg-card border-r border-border flex flex-col">
+            <div className="p-4 border-b border-border flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <History className="w-5 h-5 text-amber-400" />
-                <h2 className="text-white font-semibold">Histórico</h2>
+                <h2 className="text-foreground font-semibold">Histórico</h2>
               </div>
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => setShowHistory(false)}
-                className="text-slate-400 hover:text-white"
+                className="text-muted-foreground hover:text-foreground"
               >
                 <X className="w-5 h-5" />
               </Button>
@@ -200,16 +200,16 @@ export default function GilesChat() {
                 {sessions.map((session) => (
                   <button
                     key={session.id}
-                    className="w-full text-left p-3 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-amber-500/50 transition-all group"
+                    className="w-full text-left p-3 rounded-lg bg-muted hover:bg-accent border border-border hover:border-amber-500/50 transition-all group"
                   >
-                    <p className="text-white font-medium text-sm group-hover:text-amber-400 transition-colors">
+                    <p className="text-foreground font-medium text-sm group-hover:text-amber-400 transition-colors">
                       {session.title}
                     </p>
                     <div className="flex items-center justify-between mt-1">
-                      <span className="text-xs text-slate-500">
+                      <span className="text-xs text-muted-foreground">
                         {formatDate(session.date)}
                       </span>
-                      <span className="text-xs text-slate-600">
+                      <span className="text-xs text-muted-foreground/60">
                         {session.messageCount} msgs
                       </span>
                     </div>
@@ -223,14 +223,14 @@ export default function GilesChat() {
         {/* Main Chat Area */}
         <div className="flex-1 flex flex-col">
           {/* Header */}
-          <div className="h-16 bg-slate-950 border-b border-slate-800 flex items-center justify-between px-6">
+          <div className="h-16 bg-card border-b border-border flex items-center justify-between px-6">
             <div className="flex items-center gap-3">
               {!showHistory && (
                 <Button
                   variant="ghost"
                   size="icon"
                   onClick={() => setShowHistory(true)}
-                  className="text-slate-400 hover:text-white"
+                  className="text-muted-foreground hover:text-foreground"
                 >
                   <History className="w-5 h-5" />
                 </Button>
@@ -239,8 +239,8 @@ export default function GilesChat() {
                 <BookOpen className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h1 className="text-white font-semibold">GILES</h1>
-                <p className="text-xs text-slate-400">Cientista da Informação</p>
+                <h1 className="text-foreground font-semibold">GILES</h1>
+                <p className="text-xs text-muted-foreground">Cientista da Informação</p>
               </div>
               <Badge variant="outline" className="ml-2 border-green-500 text-green-400">
                 🟢 Online
@@ -248,18 +248,17 @@ export default function GilesChat() {
             </div>
 
             <div className="flex items-center gap-2">
-              {/* Seletor de Modelo */}
               <select
                 value={selectedModel}
                 onChange={(e) => setSelectedModel(e.target.value)}
-                className="bg-slate-800 text-slate-300 text-xs px-3 py-1.5 rounded-lg border border-slate-700 focus:border-amber-500 focus:outline-none"
+                className="bg-muted text-muted-foreground text-xs px-3 py-1.5 rounded-lg border border-border focus:border-amber-500 focus:outline-none"
               >
                 <option value={GEMINI_MODELS.FLASH_LITE}>⚡ Flash Lite</option>
                 <option value={GEMINI_MODELS.FLASH}>⚡ Flash</option>
                 <option value={GEMINI_MODELS.PRO}>🧠 Pro</option>
               </select>
 
-              <Badge variant="secondary" className="bg-slate-800 text-slate-300">
+              <Badge variant="secondary" className="bg-muted text-muted-foreground">
                 <Sparkles className="w-3 h-3 mr-1" />
                 Gemini
               </Badge>
@@ -296,7 +295,7 @@ export default function GilesChat() {
                   <div className={`max-w-[80%] ${message.role === 'user' ? 'items-end' : 'items-start'}`}>
                     <Card className={`${
                       message.role === 'assistant' 
-                        ? 'bg-slate-800 border-slate-700 text-white' 
+                        ? 'bg-card border-border text-foreground' 
                         : 'bg-purple-600 border-purple-500 text-white'
                     }`}>
                       <CardContent className="p-4">
@@ -304,13 +303,12 @@ export default function GilesChat() {
                           {message.content}
                         </div>
                         
-                        {/* Mostrar contexto se existir */}
                         {message.context && message.context.length > 0 && (
-                          <div className="mt-4 pt-4 border-t border-slate-600">
-                            <p className="text-xs text-slate-400 mb-2">Fontes consultadas:</p>
+                          <div className="mt-4 pt-4 border-t border-border">
+                            <p className="text-xs text-muted-foreground mb-2">Fontes consultadas:</p>
                             <div className="space-y-1">
                               {message.context.slice(0, 3).map((ctx, idx) => (
-                                <div key={idx} className="text-xs text-slate-500 bg-slate-900/50 p-2 rounded">
+                                <div key={idx} className="text-xs text-muted-foreground bg-muted/50 p-2 rounded">
                                   <span className="text-amber-400">{ctx.dominio}</span> → {ctx.content.substring(0, 60)}...
                                 </div>
                               ))}
@@ -319,7 +317,7 @@ export default function GilesChat() {
                         )}
                       </CardContent>
                     </Card>
-                    <span className="text-xs text-slate-500 mt-1">
+                    <span className="text-xs text-muted-foreground mt-1">
                       {formatTime(message.timestamp)}
                     </span>
                   </div>
@@ -331,10 +329,10 @@ export default function GilesChat() {
                   <Avatar className="bg-amber-600">
                     <AvatarFallback><BookOpen className="w-5 h-5" /></AvatarFallback>
                   </Avatar>
-                  <Card className="bg-slate-800 border-slate-700">
+                  <Card className="bg-card border-border">
                     <CardContent className="p-4 flex items-center gap-2">
                       <Loader2 className="w-4 h-4 animate-spin text-amber-400" />
-                      <span className="text-slate-400">Consultando a Alexandria...</span>
+                      <span className="text-muted-foreground">Consultando a Alexandria...</span>
                     </CardContent>
                   </Card>
                 </div>
@@ -344,7 +342,7 @@ export default function GilesChat() {
           </ScrollArea>
 
           {/* Input Area */}
-          <div className="p-6 border-t border-slate-800 bg-slate-950">
+          <div className="p-6 border-t border-border bg-card">
             <div className="max-w-3xl mx-auto">
               {/* Sugestões */}
               {messages.length === 1 && (
@@ -355,7 +353,7 @@ export default function GilesChat() {
                       onClick={() => {
                         setInputMessage(question);
                       }}
-                      className="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-full transition-colors"
+                      className="text-xs bg-muted hover:bg-accent text-muted-foreground px-3 py-1.5 rounded-full transition-colors"
                     >
                       {question}
                     </button>
@@ -369,7 +367,7 @@ export default function GilesChat() {
                   value={inputMessage}
                   onChange={(e) => setInputMessage(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  className="flex-1 bg-slate-900 border-slate-700 text-white placeholder:text-slate-500 h-12"
+                  className="flex-1 h-12"
                 />
                 <Button
                   onClick={handleSendMessage}
@@ -380,7 +378,7 @@ export default function GilesChat() {
                 </Button>
               </div>
               
-              <p className="text-xs text-slate-600 mt-2 text-center">
+              <p className="text-xs text-muted-foreground mt-2 text-center">
                 GILES consulta a Alexandria em tempo real • Respostas baseadas em documentação oficial
               </p>
             </div>
