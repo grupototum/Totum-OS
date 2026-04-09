@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import AppLayout from '@/components/layout/AppLayout';
 import { Send, Bot, User, BookOpen, Sparkles, History, X, Loader2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -172,7 +173,8 @@ export default function GilesChat() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <AppLayout>
+    <div className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto h-screen flex">
         
         {/* Sidebar - History */}
@@ -386,5 +388,6 @@ export default function GilesChat() {
         </div>
       </div>
     </div>
+    </AppLayout>
   );
 }

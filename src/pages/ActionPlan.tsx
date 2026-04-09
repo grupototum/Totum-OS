@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { toast } from 'sonner';
+import AppLayout from '@/components/layout/AppLayout';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Lock, Unlock } from 'lucide-react';
@@ -57,9 +58,9 @@ const ActionPlan = () => {
   }
 
   return (
-    <div className="p-6">
+    <AppLayout><div className="p-6">
       <h1>Plano de Ação - Conteúdo Protegido</h1>
-    </div>
+    </div></AppLayout>
   );
 };
 

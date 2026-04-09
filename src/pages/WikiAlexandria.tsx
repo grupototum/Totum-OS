@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import AppLayout from '@/components/layout/AppLayout';
 import { Search, BookOpen, Tag, FileText, Database, Server, Users, Settings, ChevronRight } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -79,7 +80,8 @@ export default function WikiAlexandria() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-6">
+    <AppLayout>
+    <div className="min-h-screen bg-background p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
@@ -307,5 +309,6 @@ export default function WikiAlexandria() {
         </Card>
       </div>
     </div>
+    </AppLayout>
   );
 }
