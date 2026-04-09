@@ -295,7 +295,7 @@ export default function GilesChat() {
                   <div className={`max-w-[80%] ${message.role === 'user' ? 'items-end' : 'items-start'}`}>
                     <Card className={`${
                       message.role === 'assistant' 
-                        ? 'bg-slate-800 border-slate-700 text-white' 
+                        ? 'bg-card border-border text-foreground' 
                         : 'bg-purple-600 border-purple-500 text-white'
                     }`}>
                       <CardContent className="p-4">
@@ -303,13 +303,12 @@ export default function GilesChat() {
                           {message.content}
                         </div>
                         
-                        {/* Mostrar contexto se existir */}
                         {message.context && message.context.length > 0 && (
-                          <div className="mt-4 pt-4 border-t border-slate-600">
-                            <p className="text-xs text-slate-400 mb-2">Fontes consultadas:</p>
+                          <div className="mt-4 pt-4 border-t border-border">
+                            <p className="text-xs text-muted-foreground mb-2">Fontes consultadas:</p>
                             <div className="space-y-1">
                               {message.context.slice(0, 3).map((ctx, idx) => (
-                                <div key={idx} className="text-xs text-slate-500 bg-slate-900/50 p-2 rounded">
+                                <div key={idx} className="text-xs text-muted-foreground bg-muted/50 p-2 rounded">
                                   <span className="text-amber-400">{ctx.dominio}</span> → {ctx.content.substring(0, 60)}...
                                 </div>
                               ))}
