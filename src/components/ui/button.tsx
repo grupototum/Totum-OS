@@ -10,7 +10,7 @@
  */
 
 import * as React from "react";
-import { Slot } from "@radix-ui/react-slot";
+import { Slot, Slottable } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
@@ -79,7 +79,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             {icon}
           </span>
         )}
-        {children}
+        <Slottable>{children}</Slottable>
         {icon && iconPosition === "right" && (
           <span className="inline-flex items-center justify-center transition-transform duration-200 group-hover:translate-y-0.5">
             {icon}
