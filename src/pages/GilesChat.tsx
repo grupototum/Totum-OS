@@ -317,7 +317,7 @@ export default function GilesChat() {
                         )}
                       </CardContent>
                     </Card>
-                    <span className="text-xs text-slate-500 mt-1">
+                    <span className="text-xs text-muted-foreground mt-1">
                       {formatTime(message.timestamp)}
                     </span>
                   </div>
@@ -329,10 +329,10 @@ export default function GilesChat() {
                   <Avatar className="bg-amber-600">
                     <AvatarFallback><BookOpen className="w-5 h-5" /></AvatarFallback>
                   </Avatar>
-                  <Card className="bg-slate-800 border-slate-700">
+                  <Card className="bg-card border-border">
                     <CardContent className="p-4 flex items-center gap-2">
                       <Loader2 className="w-4 h-4 animate-spin text-amber-400" />
-                      <span className="text-slate-400">Consultando a Alexandria...</span>
+                      <span className="text-muted-foreground">Consultando a Alexandria...</span>
                     </CardContent>
                   </Card>
                 </div>
@@ -342,7 +342,7 @@ export default function GilesChat() {
           </ScrollArea>
 
           {/* Input Area */}
-          <div className="p-6 border-t border-slate-800 bg-slate-950">
+          <div className="p-6 border-t border-border bg-card">
             <div className="max-w-3xl mx-auto">
               {/* Sugestões */}
               {messages.length === 1 && (
@@ -353,7 +353,7 @@ export default function GilesChat() {
                       onClick={() => {
                         setInputMessage(question);
                       }}
-                      className="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-full transition-colors"
+                      className="text-xs bg-muted hover:bg-accent text-muted-foreground px-3 py-1.5 rounded-full transition-colors"
                     >
                       {question}
                     </button>
@@ -367,7 +367,7 @@ export default function GilesChat() {
                   value={inputMessage}
                   onChange={(e) => setInputMessage(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  className="flex-1 bg-slate-900 border-slate-700 text-white placeholder:text-slate-500 h-12"
+                  className="flex-1 h-12"
                 />
                 <Button
                   onClick={handleSendMessage}
@@ -378,7 +378,7 @@ export default function GilesChat() {
                 </Button>
               </div>
               
-              <p className="text-xs text-slate-600 mt-2 text-center">
+              <p className="text-xs text-muted-foreground mt-2 text-center">
                 GILES consulta a Alexandria em tempo real • Respostas baseadas em documentação oficial
               </p>
             </div>
