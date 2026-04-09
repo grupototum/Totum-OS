@@ -143,6 +143,8 @@ const App = () => (
             <Route path="/craudio-codete" element={<CraudioCodete />} />
             {/* Configurações */}
             <Route path="/operadores" element={<Operadores />} />
+            {/* Painel de Hosting */}
+            <Route path="/hosting" element={<HostingPanel />} />
             {/* Alexandria - Wiki e Chat com GILES */}
             <Route path="/wiki" element={<WikiAlexandria />} />
             <Route path="/giles" element={<GilesChat />} />
