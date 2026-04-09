@@ -23,23 +23,17 @@ export default function SyncButton({ onSyncComplete }: SyncButtonProps) {
       log.push('🔄 Iniciando sincronização...');
       setSyncLog([...log]);
 
-      // 1. Verifica conexão com Supabase
-      const { error: pingError } = await supabase.from('skills').select('id').limit(1);
+      const { error: pingError } = await (supabase as any).from('agents').select('id').limit(1);
       if (pingError) throw new Error('Supabase indisponível');
       log.push('✅ Supabase: conectado');
       setSyncLog([...log]);
 
-      // 2. Recarrega dados das tabelas principais
-      await supabase.from('agents_config').select('count', { count: 'exact', head: true });
-      log.push('✅ agents_config: sincronizado');
+      await (supabase as any).from('agents').select('count', { count: 'exact', head: true });
+      log.push('✅ agents: sincronizado');
       setSyncLog([...log]);
 
-      await supabase.from('rag_documents').select('count', { count: 'exact', head: true });
-      log.push('✅ rag_documents: sincronizado');
-      setSyncLog([...log]);
-
-      await supabase.from('skills').select('count', { count: 'exact', head: true });
-      log.push('✅ skills: sincronizado');
+      await (supabase as any).from('tarefas').select('count', { count: 'exact', head: true });
+      log.push('✅ tarefas: sincronizado');
       setSyncLog([...log]);
 
       log.push('🎯 Sincronização concluída com sucesso!');
@@ -64,7 +58,7 @@ export default function SyncButton({ onSyncComplete }: SyncButtonProps) {
         onClick={forceSync}
         disabled={state === 'syncing'}
         className="w-full"
-        variant={state === 'error' ? 'destructive' : 'default'}
+        variant={state === 'error' ? 'outline' : 'secondary'}
       >
         {state === 'syncing' ? (
           <><RefreshCw className="h-4 w-4 mr-2 animate-spin" />Sincronizando...</>
