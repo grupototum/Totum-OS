@@ -22,44 +22,44 @@
    CSS VARIABLES - DESIGN TOKENS
    ============================================================ */
 :root {
-  /* Core Colors - Exatas */
-  --totum-bg: #EAEAE5;
-  --totum-bg-alt: #E5E5E0;
-  --totum-stone-50: #FAFAF9;
-  --totum-stone-100: #F5F5F4;
-  --totum-stone-200: #E7E5E4;
-  --totum-stone-300: #D6D3D1;
-  --totum-stone-400: #A8A29E;
-  --totum-stone-500: #78716C;
-  --totum-stone-600: #57534E;
-  --totum-stone-700: #44403C;
-  --totum-stone-800: #292524;
-  --totum-stone-900: #1C1917;
+  /* Core Colors - Creative DS */
+  --totum-bg: #000000;
+  --totum-bg-alt: #0a0a0a;
+  --totum-stone-50: #ededed;
+  --totum-stone-100: #e0e0e0;
+  --totum-stone-200: #c0c0c0;
+  --totum-stone-300: #3f3f46;
+  --totum-stone-400: #555;
+  --totum-stone-500: #777;
+  --totum-stone-600: #999;
+  --totum-stone-700: #27272a;
+  --totum-stone-800: #18181b;
+  --totum-stone-900: #ededed;
   
   /* Semantic Colors */
-  --totum-primary: #1C1917;
-  --totum-primary-foreground: #FAFAF9;
-  --totum-secondary: #78716C;
-  --totum-secondary-foreground: #FAFAF9;
-  --totum-muted: #D6D3D1;
-  --totum-muted-foreground: #78716C;
-  --totum-border: #D6D3D1;
-  --totum-border-subtle: rgba(214, 211, 209, 0.4);
-  --totum-ring: #78716C;
+  --totum-primary: #ef233c;
+  --totum-primary-foreground: #ffffff;
+  --totum-secondary: #777;
+  --totum-secondary-foreground: #ffffff;
+  --totum-muted: #3f3f46;
+  --totum-muted-foreground: #777;
+  --totum-border: #27272a;
+  --totum-border-subtle: rgba(63, 63, 70, 0.4);
+  --totum-ring: #ef233c;
   
   /* Status Colors */
   --totum-success: #22C55E;
   --totum-success-bg: rgba(34, 197, 94, 0.15);
-  --totum-success-text: #15803d;
+  --totum-success-text: #4ade80;
   --totum-warning: #F59E0B;
   --totum-warning-bg: rgba(245, 158, 11, 0.15);
-  --totum-warning-text: #b45309;
+  --totum-warning-text: #fbbf24;
   --totum-error: #EF4444;
   --totum-error-bg: rgba(239, 68, 68, 0.15);
-  --totum-error-text: #b91c1c;
+  --totum-error-text: #f87171;
   --totum-info: #3B82F6;
   --totum-info-bg: rgba(59, 130, 246, 0.15);
-  --totum-info-text: #1d4ed8;
+  --totum-info-text: #60a5fa;
   
   /* Typography */
   --totum-font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
