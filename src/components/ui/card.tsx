@@ -1,5 +1,6 @@
 /**
  * TOTUM CARD COMPONENT — Creative DS
+ * Glow vermelho no hover + corner marks decorativos
  */
 
 import * as React from "react";
@@ -10,19 +11,34 @@ const Card = React.forwardRef<
   React.HTMLAttributes<HTMLDivElement> & { 
     interactive?: boolean;
     noBorder?: boolean;
+    cornerMarks?: boolean;
   }
->(({ className, interactive = true, noBorder = false, ...props }, ref) => (
+>(({ className, interactive = true, noBorder = false, cornerMarks = false, children, ...props }, ref) => (
   <div
     ref={ref}
     className={cn(
-      "overflow-hidden transition-all duration-500",
+      "relative overflow-hidden transition-all duration-500 group",
       "bg-card",
       !noBorder && "border border-border",
-      interactive && "hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 cursor-pointer",
+      interactive && [
+        "hover:border-primary/40 cursor-pointer",
+        "hover:shadow-[0_0_20px_-5px_hsl(var(--primary)/0.25)]",
+      ],
       className
     )}
     {...props}
-  />
+  >
+    {cornerMarks && (
+      <>
+        {/* Corner marks */}
+        <span className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-primary/60 transition-all duration-500 group-hover:w-5 group-hover:h-5 group-hover:border-primary pointer-events-none" />
+        <span className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-primary/60 transition-all duration-500 group-hover:w-5 group-hover:h-5 group-hover:border-primary pointer-events-none" />
+        <span className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-primary/60 transition-all duration-500 group-hover:w-5 group-hover:h-5 group-hover:border-primary pointer-events-none" />
+        <span className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-primary/60 transition-all duration-500 group-hover:w-5 group-hover:h-5 group-hover:border-primary pointer-events-none" />
+      </>
+    )}
+    {children}
+  </div>
 ));
 Card.displayName = "Card";
 
