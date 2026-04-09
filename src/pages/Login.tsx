@@ -102,7 +102,7 @@ export default function Login() {
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          background: "radial-gradient(circle, rgba(247,105,38,0.08) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(239,35,60,0.08) 0%, transparent 70%)",
         }}
       />
 
