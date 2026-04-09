@@ -1,5 +1,6 @@
 // src/pages/agents/HubAgentes.tsx
 import React from 'react';
+import AppLayout from '@/components/layout/AppLayout';
 import { useNavigate } from 'react-router-dom';
 import { useAgents } from '@/hooks/useAgents';
 import { Card } from '@/components/ui/card';
@@ -57,6 +58,7 @@ export const HubAgentes: React.FC = () => {
   };
 
   return (
+    <AppLayout>
     <div className="space-y-8 p-6">
       <div>
         <h1 className="text-4xl font-bold mb-2">🤖 Hub de Agentes</h1>
@@ -107,6 +109,7 @@ export const HubAgentes: React.FC = () => {
         </div>
       )}
     </div>
+    </AppLayout>
   );
 };
 

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import AppLayout from '@/components/layout/AppLayout';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -90,6 +91,7 @@ export default function Operadores() {
   );
 
   return (
+    <AppLayout>
     <div className="p-6 space-y-5">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -216,5 +218,6 @@ export default function Operadores() {
         </DialogContent>
       </Dialog>
     </div>
+    </AppLayout>
   );
 }

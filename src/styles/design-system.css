@@ -23,18 +23,18 @@
    ============================================================ */
 :root {
   /* Core Colors - Creative DS */
-  --totum-bg: #000000;
-  --totum-bg-alt: #0a0a0a;
-  --totum-stone-50: #ededed;
-  --totum-stone-100: #e0e0e0;
-  --totum-stone-200: #c0c0c0;
-  --totum-stone-300: #3f3f46;
-  --totum-stone-400: #555;
-  --totum-stone-500: #777;
-  --totum-stone-600: #999;
-  --totum-stone-700: #27272a;
-  --totum-stone-800: #18181b;
-  --totum-stone-900: #ededed;
+  --totum-bg: hsl(var(--background));
+  --totum-bg-alt: hsl(var(--surface));
+  --totum-stone-50: hsl(var(--foreground));
+  --totum-stone-100: hsl(var(--foreground));
+  --totum-stone-200: hsl(var(--muted-foreground));
+  --totum-stone-300: hsl(var(--border));
+  --totum-stone-400: hsl(var(--muted-foreground));
+  --totum-stone-500: hsl(var(--muted-foreground));
+  --totum-stone-600: hsl(var(--muted-foreground));
+  --totum-stone-700: hsl(var(--border));
+  --totum-stone-800: hsl(var(--card));
+  --totum-stone-900: hsl(var(--foreground));
   
   /* Semantic Colors */
   --totum-primary: #ef233c;
@@ -148,58 +148,7 @@
   --totum-transition-text-reveal: 1.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* ============================================================
-   BASE STYLES
-   ============================================================ */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-html {
-  font-family: var(--totum-font-sans);
-  font-size: 16px;
-  line-height: var(--totum-leading-normal);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  scroll-behavior: smooth;
-}
-
-body {
-  background-color: var(--totum-bg);
-  color: var(--totum-stone-900);
-  font-family: var(--totum-font-sans);
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-
-/* Selection */
-::selection {
-  background-color: var(--totum-stone-900);
-  color: var(--totum-stone-50);
-}
-
-/* Scrollbar */
-::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--totum-stone-300);
-  border-radius: var(--totum-radius-full);
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--totum-stone-500);
-}
+/* Base styles removed — handled by index.css @layer base */
 
 /* ============================================================
    ANIMATIONS - REVEAL SYSTEM

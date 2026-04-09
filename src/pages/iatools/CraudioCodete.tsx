@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
+import AppLayout from '@/components/layout/AppLayout';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -56,6 +57,7 @@ export default function CraudioCodete() {
   const allMessages = [...messages, ...(currentResponse ? [{ role: 'assistant' as const, content: currentResponse }] : [])];
 
   return (
+    <AppLayout>
     <div className="flex h-[calc(100vh-80px)] gap-4 p-4">
       {/* CHAT PRINCIPAL */}
       <div className="flex-1 flex flex-col">
@@ -179,5 +181,6 @@ export default function CraudioCodete() {
         </Card>
       </div>
     </div>
+    </AppLayout>
   );
 }

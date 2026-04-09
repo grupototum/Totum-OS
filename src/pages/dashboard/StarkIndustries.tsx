@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import AppLayout from '@/components/layout/AppLayout';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import ServerStatus from '@/components/stark/ServerStatus';
@@ -11,6 +12,7 @@ export default function StarkIndustries() {
   const [lastSyncSuccess, setLastSyncSuccess] = useState<boolean | null>(null);
 
   return (
+    <AppLayout>
     <div className="p-6 space-y-6">
       {/* Cabeçalho */}
       <div className="flex items-center justify-between">
@@ -71,5 +73,6 @@ export default function StarkIndustries() {
         <SyncButton onSyncComplete={setLastSyncSuccess} />
       </Card>
     </div>
+    </AppLayout>
   );
 }

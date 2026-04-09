@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import AppLayout from '@/components/layout/AppLayout';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -32,6 +33,7 @@ export default function GoogleDriveEmbed() {
   const embedUrl = `https://drive.google.com/embeddedfolderview?id=${folderId}#list`;
 
   return (
+    <AppLayout>
     <div className="p-6 space-y-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -91,5 +93,6 @@ export default function GoogleDriveEmbed() {
         </Card>
       )}
     </div>
+    </AppLayout>
   );
 }

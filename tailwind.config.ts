@@ -27,8 +27,8 @@ export default {
       colors: {
         // Core Colors - exatas
         totum: {
-          bg: "#EAEAE5",
-          "bg-alt": "#E5E5E0",
+          bg: "hsl(var(--background))",
+          "bg-alt": "hsl(var(--surface))",
         },
         
         // Stone scale exata

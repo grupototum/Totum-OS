@@ -54,6 +54,49 @@
     --sidebar-ring: 354 82% 57%;
   }
 
+  .light {
+    /* Light mode — Creative DS */
+    --background: 0 0% 97%;
+    --foreground: 0 0% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 10%;
+    --primary: 354 82% 50%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 92%;
+    --secondary-foreground: 0 0% 15%;
+    --muted: 0 0% 94%;
+    --muted-foreground: 0 0% 40%;
+    --accent: 354 82% 50%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 50%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 85%;
+    --input: 0 0% 90%;
+    --ring: 354 82% 50%;
+    --radius: 0rem;
+
+    /* Surface tokens */
+    --surface: 0 0% 96%;
+    --surface-container: 0 0% 93%;
+    --surface-container-high: 0 0% 90%;
+    --on-surface: 0 0% 10%;
+    --on-surface-variant: 0 0% 40%;
+    --outline: 0 0% 75%;
+    --outline-variant: 0 0% 80%;
+
+    /* Sidebar tokens */
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 0 0% 15%;
+    --sidebar-primary: 354 82% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 95%;
+    --sidebar-accent-foreground: 0 0% 10%;
+    --sidebar-border: 0 0% 90%;
+    --sidebar-ring: 354 82% 50%;
+  }
+
   * {
     @apply border-border;
     box-sizing: border-box;

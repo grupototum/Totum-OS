@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import AppLayout from '@/components/layout/AppLayout';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -60,6 +61,7 @@ export default function DeploymentChecklist() {
   }));
 
   return (
+    <AppLayout>
     <div className="p-6 space-y-5">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -129,5 +131,6 @@ export default function DeploymentChecklist() {
         ))}
       </div>
     </div>
+    </AppLayout>
   );
 }
