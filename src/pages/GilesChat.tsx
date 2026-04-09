@@ -223,14 +223,14 @@ export default function GilesChat() {
         {/* Main Chat Area */}
         <div className="flex-1 flex flex-col">
           {/* Header */}
-          <div className="h-16 bg-slate-950 border-b border-slate-800 flex items-center justify-between px-6">
+          <div className="h-16 bg-card border-b border-border flex items-center justify-between px-6">
             <div className="flex items-center gap-3">
               {!showHistory && (
                 <Button
                   variant="ghost"
                   size="icon"
                   onClick={() => setShowHistory(true)}
-                  className="text-slate-400 hover:text-white"
+                  className="text-muted-foreground hover:text-foreground"
                 >
                   <History className="w-5 h-5" />
                 </Button>
@@ -239,8 +239,8 @@ export default function GilesChat() {
                 <BookOpen className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h1 className="text-white font-semibold">GILES</h1>
-                <p className="text-xs text-slate-400">Cientista da Informação</p>
+                <h1 className="text-foreground font-semibold">GILES</h1>
+                <p className="text-xs text-muted-foreground">Cientista da Informação</p>
               </div>
               <Badge variant="outline" className="ml-2 border-green-500 text-green-400">
                 🟢 Online
@@ -248,18 +248,17 @@ export default function GilesChat() {
             </div>
 
             <div className="flex items-center gap-2">
-              {/* Seletor de Modelo */}
               <select
                 value={selectedModel}
                 onChange={(e) => setSelectedModel(e.target.value)}
-                className="bg-slate-800 text-slate-300 text-xs px-3 py-1.5 rounded-lg border border-slate-700 focus:border-amber-500 focus:outline-none"
+                className="bg-muted text-muted-foreground text-xs px-3 py-1.5 rounded-lg border border-border focus:border-amber-500 focus:outline-none"
               >
                 <option value={GEMINI_MODELS.FLASH_LITE}>⚡ Flash Lite</option>
                 <option value={GEMINI_MODELS.FLASH}>⚡ Flash</option>
                 <option value={GEMINI_MODELS.PRO}>🧠 Pro</option>
               </select>
 
-              <Badge variant="secondary" className="bg-slate-800 text-slate-300">
+              <Badge variant="secondary" className="bg-muted text-muted-foreground">
                 <Sparkles className="w-3 h-3 mr-1" />
                 Gemini
               </Badge>
