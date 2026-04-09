@@ -84,11 +84,17 @@ export function KanbanCard({ tarefa, projetoNome, onClick }: KanbanCardProps) {
       onDragEnd={handleDragEnd}
       onClick={onClick}
       className={`
-        bg-white rounded-lg border border-stone-200 p-3 cursor-pointer
-        transition-shadow duration-200 hover:shadow-md hover:border-stone-300
+        relative bg-card border border-border p-3 cursor-pointer group overflow-hidden
+        transition-all duration-500 hover:border-primary/40
+        hover:shadow-[0_0_20px_-5px_hsl(var(--primary)/0.25)]
         ${isDragging ? 'opacity-50 rotate-2' : ''}
       `}
     >
+      {/* Corner marks */}
+      <span className="absolute top-0 left-0 w-2 h-2 border-t border-l border-primary/50 transition-all duration-500 group-hover:w-3 group-hover:h-3 group-hover:border-primary pointer-events-none" />
+      <span className="absolute top-0 right-0 w-2 h-2 border-t border-r border-primary/50 transition-all duration-500 group-hover:w-3 group-hover:h-3 group-hover:border-primary pointer-events-none" />
+      <span className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-primary/50 transition-all duration-500 group-hover:w-3 group-hover:h-3 group-hover:border-primary pointer-events-none" />
+      <span className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-primary/50 transition-all duration-500 group-hover:w-3 group-hover:h-3 group-hover:border-primary pointer-events-none" />
       {/* Header: Projeto + Prioridade */}
       <div className="flex items-center justify-between mb-2">
         {projetoNome && (
