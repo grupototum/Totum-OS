@@ -309,7 +309,7 @@ export default function Hub() {
             className="px-8 py-6 border-t border-stone-300 bg-[#E5E5E0]"
           >
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="p-4 bg-white rounded-lg border border-stone-300">
+                <div className="p-4 bg-card border border-border relative group overflow-hidden hover:border-primary/40 hover:shadow-[0_0_20px_-5px_hsl(var(--primary)/0.25)] transition-all duration-500">
                 <div className="flex items-center gap-2 mb-2">
                   <Network className="w-5 h-5 text-stone-600" />
                   <h3 className="font-medium text-stone-900">TOT - Orquestrador</h3>
@@ -319,7 +319,7 @@ export default function Hub() {
                 </p>
               </div>
 
-              <div className="p-4 bg-white rounded-lg border border-stone-300">
+              <div className="p-4 bg-card border border-border relative group overflow-hidden hover:border-primary/40 hover:shadow-[0_0_20px_-5px_hsl(var(--primary)/0.25)] transition-all duration-500">
                 <div className="flex items-center gap-2 mb-2">
                   <Users className="w-5 h-5 text-emerald-600" />
                   <h3 className="font-medium text-stone-900">Modos de Operação</h3>
@@ -329,7 +329,7 @@ export default function Hub() {
                 </p>
               </div>
 
-              <div className="p-4 bg-white rounded-lg border border-stone-300">
+              <div className="p-4 bg-card border border-border relative group overflow-hidden hover:border-primary/40 hover:shadow-[0_0_20px_-5px_hsl(var(--primary)/0.25)] transition-all duration-500">
                 <div className="flex items-center gap-2 mb-2">
                   <Bot className="w-5 h-5 text-amber-600" />
                   <h3 className="font-medium text-stone-900">Agentes Especializados</h3>
