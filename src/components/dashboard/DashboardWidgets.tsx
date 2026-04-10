@@ -109,7 +109,7 @@ export function AppStatusList() {
     <motion.div {...anim(5)}>
       <Card cornerMarks className="bg-card/50 backdrop-blur-sm border-border/40">
         <CardContent className="p-5">
-          <h3 className="font-heading font-bold text-sm text-foreground mb-4 flex items-center gap-2">
+          <h3 className="font-sans font-bold text-sm text-foreground mb-4 flex items-center gap-2">
             <Activity className="w-4 h-4 text-primary" />
             Status dos Apps
           </h3>
@@ -156,7 +156,7 @@ export function ActivityLog() {
     <motion.div {...anim(6)}>
       <Card cornerMarks className="bg-card/50 backdrop-blur-sm border-border/40">
         <CardContent className="p-5">
-          <h3 className="font-heading font-bold text-sm text-foreground mb-4 flex items-center gap-2">
+          <h3 className="font-sans font-bold text-sm text-foreground mb-4 flex items-center gap-2">
             <Clock className="w-4 h-4 text-primary" />
             Log de Atividades
           </h3>
@@ -205,7 +205,7 @@ export function ResourceUsage() {
     <motion.div {...anim(7)}>
       <Card cornerMarks className="bg-card/50 backdrop-blur-sm border-border/40">
         <CardContent className="p-5 space-y-5">
-          <h3 className="font-heading font-bold text-sm text-foreground flex items-center gap-2">
+          <h3 className="font-sans font-bold text-sm text-foreground flex items-center gap-2">
             <Server className="w-4 h-4 text-primary" />
             Uso de Recursos
           </h3>
@@ -240,7 +240,7 @@ export function CostEstimate() {
     <motion.div {...anim(8)}>
       <Card cornerMarks className="bg-card/50 backdrop-blur-sm border-border/40">
         <CardContent className="p-5">
-          <h3 className="font-heading font-bold text-sm text-foreground mb-4 flex items-center gap-2">
+          <h3 className="font-sans font-bold text-sm text-foreground mb-4 flex items-center gap-2">
             <DollarSign className="w-4 h-4 text-primary" />
             Custos Estimados
           </h3>
@@ -262,7 +262,7 @@ export function CostEstimate() {
           </div>
           <div className="mt-4 pt-3 border-t border-border/30 flex justify-between items-center">
             <span className="text-xs font-medium text-foreground">Total mensal</span>
-            <span className="text-sm font-heading font-bold text-primary">~R$ {total}</span>
+            <span className="text-sm font-sans font-bold text-primary">~R$ {total}</span>
           </div>
           <button className="mt-2 text-[11px] text-primary/50 cursor-not-allowed flex items-center gap-1">
             Ver detalhes <ExternalLink className="w-3 h-3" />
@@ -282,7 +282,7 @@ export function MexSync() {
     <motion.div {...anim(9)}>
       <Card cornerMarks className="bg-card/50 backdrop-blur-sm border-border/40">
         <CardContent className="p-5">
-          <h3 className="font-heading font-bold text-sm text-foreground mb-4 flex items-center gap-2">
+          <h3 className="font-sans font-bold text-sm text-foreground mb-4 flex items-center gap-2">
             <Brain className="w-4 h-4 text-primary" />
             MEX Status
           </h3>
@@ -328,7 +328,7 @@ export function AgentCards() {
           <Card className="bg-card/50 backdrop-blur-sm border-border/40 hover:border-primary/30 transition-all hover:shadow-lg hover:shadow-primary/5 group">
             <CardContent className="p-5 text-center">
               <span className="text-3xl block mb-2">{agent.emoji}</span>
-              <h4 className="font-heading font-bold text-foreground text-sm">{agent.name}</h4>
+              <h4 className="font-sans font-bold text-foreground text-sm">{agent.name}</h4>
               <p className="text-[11px] text-muted-foreground mb-3">{agent.role}</p>
               <div className="flex items-center justify-center gap-1.5 mb-2">
                 <div className={`w-2 h-2 rounded-full ${statusColor(agent.status)} ${agent.status === "online" ? "animate-pulse" : ""}`} />

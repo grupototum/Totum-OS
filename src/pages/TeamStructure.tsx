@@ -465,7 +465,7 @@ export default function TeamStructure() {
               <Users className="w-5 h-5 text-primary" />
             </div>
             <div>
-              <h1 className="font-heading text-2xl font-medium text-foreground tracking-tight">TEAM STRUCTURE</h1>
+              <h1 className="font-sans text-2xl font-medium text-foreground tracking-tight">TEAM STRUCTURE</h1>
               <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Organograma dos agentes IA</p>
             </div>
           </div>

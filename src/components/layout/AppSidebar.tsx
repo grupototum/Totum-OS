@@ -126,7 +126,7 @@ export default function AppSidebar() {
               <div className="w-[5px] h-4 bg-primary/60 rounded-full" />
               <div className="w-[5px] h-6 bg-primary rounded-full" />
             </div>
-            <span className="font-heading text-lg font-medium text-sidebar-foreground tracking-tight">
+            <span className="font-sans text-lg font-medium text-sidebar-foreground tracking-tight">
               TOTUM
             </span>
           </div>
@@ -144,7 +144,7 @@ export default function AppSidebar() {
         {sections.map((section) => (
           <div key={section.title}>
             {!collapsed && (
-              <p className="label-industrial text-[10px] text-sidebar-foreground/40 mb-2 px-2">
+              <p className="font-mono text-xs uppercase tracking-widest text-[10px] text-sidebar-foreground/40 mb-2 px-2">
                 {section.title}
               </p>
             )}

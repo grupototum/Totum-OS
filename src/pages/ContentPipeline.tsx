@@ -270,7 +270,7 @@ export default function ContentPipeline() {
         className="shrink-0 border-b border-border px-4 sm:px-6 py-3 flex items-center gap-4"
       >
         <div className="flex-1">
-          <h1 className="font-heading text-xl font-medium text-foreground tracking-tight">CONTENT PIPELINE</h1>
+          <h1 className="font-sans text-xl font-medium text-foreground tracking-tight">CONTENT PIPELINE</h1>
           <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Pipeline de produção de conteúdo</p>
         </div>
 

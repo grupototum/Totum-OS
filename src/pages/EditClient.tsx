@@ -241,7 +241,7 @@ export default function EditClient() {
           <Button variant="ghost" size="sm" className="text-xs text-muted-foreground mb-3" onClick={() => navigate("/clients")}>
             <ArrowLeft className="w-3 h-3 mr-1" /> Voltar à Central
           </Button>
-          <h1 className="font-heading text-2xl font-semibold text-foreground tracking-tight">EDITAR CLIENTE</h1>
+          <h1 className="font-sans text-2xl font-semibold text-foreground tracking-tight">EDITAR CLIENTE</h1>
           <p className="text-xs text-muted-foreground uppercase tracking-widest mt-1">{form.company_name} · Etapa {step + 1} de 5</p>
         </motion.div>
 
@@ -469,13 +469,13 @@ export default function EditClient() {
                 <CardContent className="space-y-4">
                   <div className="w-16 h-16 rounded-xl mx-auto flex items-center justify-center border-2 border-dashed border-border/60" style={{ backgroundColor: form.primary_color + "20" }}>
                     {form.company_name ? (
-                      <span className="text-2xl font-heading font-bold" style={{ color: form.primary_color }}>{form.company_name.charAt(0).toUpperCase()}</span>
+                      <span className="text-2xl font-sans font-bold" style={{ color: form.primary_color }}>{form.company_name.charAt(0).toUpperCase()}</span>
                     ) : (
                       <User className="w-6 h-6 text-muted-foreground" />
                     )}
                   </div>
                   <div className="text-center">
-                    <p className="font-heading font-semibold text-foreground text-sm">{form.company_name || "Nome da Empresa"}</p>
+                    <p className="font-sans font-semibold text-foreground text-sm">{form.company_name || "Nome da Empresa"}</p>
                     {form.industry && <Badge variant="outline" className="text-[10px] mt-1 bg-primary/10 text-primary border-primary/30">{form.industry}</Badge>}
                   </div>
                   <div className="text-center">

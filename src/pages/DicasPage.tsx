@@ -14,7 +14,7 @@ export default function DicasPage() {
               <Lightbulb className="w-5 h-5 text-primary" />
             </div>
             <div>
-              <h1 className="font-heading text-2xl font-medium text-foreground tracking-tight">
+              <h1 className="font-sans text-2xl font-medium text-foreground tracking-tight">
                 DICAS & RECURSOS
               </h1>
               <p className="text-xs text-muted-foreground uppercase tracking-widest">
@@ -33,7 +33,7 @@ export default function DicasPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 + ci * 0.05 }}
             >
-              <h2 className="font-heading text-lg text-foreground mb-3">{cat.title}</h2>
+              <h2 className="font-sans text-lg text-foreground mb-3">{cat.title}</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 {cat.tips.map((tip) => (
                   <div

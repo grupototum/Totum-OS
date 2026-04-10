@@ -173,7 +173,7 @@ export default function ClaudeCode() {
               <Terminal className="w-5 h-5 text-primary" />
             </div>
             <div>
-              <h1 className="font-heading text-2xl font-medium text-foreground tracking-tight">
+              <h1 className="font-sans text-2xl font-medium text-foreground tracking-tight">
                 CLAUDE CODE
               </h1>
               <p className="text-xs text-muted-foreground uppercase tracking-widest">
@@ -293,7 +293,7 @@ export default function ClaudeCode() {
           >
             {/* Status */}
             <div className="rounded-2xl border border-border bg-card p-4">
-              <p className="label-industrial text-[10px] text-muted-foreground mb-3">STATUS</p>
+              <p className="font-mono text-xs uppercase tracking-widest text-[10px] text-muted-foreground mb-3">STATUS</p>
               <div className="space-y-3">
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
@@ -316,7 +316,7 @@ export default function ClaudeCode() {
 
             {/* Quick actions */}
             <div className="rounded-2xl border border-border bg-card p-4">
-              <p className="label-industrial text-[10px] text-muted-foreground mb-3">QUICK ACTIONS</p>
+              <p className="font-mono text-xs uppercase tracking-widest text-[10px] text-muted-foreground mb-3">QUICK ACTIONS</p>
               <div className="space-y-1.5">
                 {[
                   { icon: FolderOpen, label: "Open Project", command: "Abrir projeto atual" },
@@ -355,7 +355,7 @@ export default function ClaudeCode() {
 
             {/* Session info */}
             <div className="rounded-2xl border border-border bg-card p-4">
-              <p className="label-industrial text-[10px] text-muted-foreground mb-3">SESSION</p>
+              <p className="font-mono text-xs uppercase tracking-widest text-[10px] text-muted-foreground mb-3">SESSION</p>
               <div className="space-y-2 text-xs">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Duration</span>

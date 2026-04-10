@@ -82,14 +82,14 @@ export default function ForgotPassword() {
               alt="Totum"
               className="w-10 h-10 rounded-lg"
             />
-            <span className="font-heading text-xl font-bold tracking-tight text-foreground">
+            <span className="font-sans text-xl font-bold tracking-tight text-foreground">
               Apps Totum
             </span>
           </div>
         </div>
 
         <div className="text-center mb-8">
-          <h1 className="font-heading text-3xl font-bold text-foreground mb-2">
+          <h1 className="font-sans text-3xl font-bold text-foreground mb-2">
             {sent ? "E-mail enviado" : "Redefinir senha"}
           </h1>
           <p className="text-sm text-muted-foreground">
@@ -130,7 +130,7 @@ export default function ForgotPassword() {
             <button
               type="submit"
               disabled={loading}
-              className="relative w-full py-3 rounded-xl font-heading font-semibold text-sm text-primary-foreground bg-primary overflow-hidden transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed animate-totum-glow"
+              className="relative w-full py-3 rounded-xl font-sans font-semibold text-sm text-primary-foreground bg-primary overflow-hidden transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed animate-totum-glow"
             >
               {loading && <Loader2 className="inline-block w-4 h-4 mr-2 animate-spin" />}
               {loading ? "Enviando..." : "Enviar link de redefinição"}
