@@ -74,7 +74,7 @@ export default function Hub() {
   // Enriches each agent from DB with its UI config
   const enrichedAgents = agents.map((agent) => ({
     ...agent,
-    ui: AGENT_UI_CONFIG[agent.id] ?? { icon: Bot, color: "from-stone-500 to-stone-700", group: "especializados" as const },
+    ui: AGENT_UI_CONFIG[agent.slug ?? ''] ?? { icon: Bot, color: "from-stone-500 to-stone-700", group: "especializados" as const },
   }));
 
   const byGroup = {
