@@ -157,16 +157,16 @@ export function AgentChat({ agent, onClose }: AgentChatProps) {
             : m
         )
       );
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Erro na comunicação com IA:', error);
-      
+
       // Atualiza mensagem com erro
-      setMessages(prev => 
-        prev.map(m => 
-          m.id === agentMessageId 
-            ? { 
-                ...m, 
-                content: `❌ Erro ao processar mensagem: ${error.message || 'Erro desconhecido'}. Por favor, verifique sua conexão e configurações de API.`,
+      setMessages(prev =>
+        prev.map(m =>
+          m.id === agentMessageId
+            ? {
+                ...m,
+                content: `❌ Erro ao processar mensagem: ${error instanceof Error ? error.message : 'Erro desconhecido'}. Por favor, verifique sua conexão e configurações de API.`,
                 isStreaming: false 
               }
             : m

@@ -28,7 +28,22 @@ export interface AgentTask {
   ultimo_resultado?: string;
 }
 
-function mapRowToAgentTask(row: any): AgentTask {
+interface TarefaRow {
+  id: string;
+  titulo: string;
+  descricao?: string | null;
+  status: string;
+  responsavel?: string | null;
+  recorrencia?: string | null;
+  horario_execucao?: string | null;
+  proxima_execucao?: string | null;
+  ultima_execucao?: string | null;
+  ultimo_resultado?: string | null;
+  created_at?: string;
+  updated_at?: string;
+}
+
+function mapRowToAgentTask(row: TarefaRow): AgentTask {
   return {
     id: row.id,
     titulo: row.titulo,
@@ -48,22 +63,22 @@ export function useAgentTasks(agenteId?: string) {
 
   const fetchTasks = useCallback(async () => {
     try {
-      let query = (supabase as any).from('tarefas').select('*');
+      let query = supabase.from('tarefas' as never).select('*');
       if (agenteId) {
         query = query.eq('responsavel', agenteId);
       }
       const { data, error } = await query.order('created_at', { ascending: false });
       if (error) throw error;
-      setTasks((data || []).map(mapRowToAgentTask));
-    } catch (err: any) {
-      console.warn('Erro ao buscar tarefas do agente:', err?.message);
+      setTasks(((data || []) as TarefaRow[]).map(mapRowToAgentTask));
+    } catch (err: unknown) {
+      console.warn('Erro ao buscar tarefas do agente:', err instanceof Error ? err.message : 'Erro desconhecido');
       setTasks([]);
     }
   }, [agenteId]);
 
   const fetchLogs = useCallback(async (tarefaId?: string) => {
     try {
-      let query = (supabase as any).from('logs_execucao_agente').select('*');
+      let query = supabase.from('logs_execucao_agente' as never).select('*');
       if (tarefaId) {
         query = query.eq('tarefa_id', tarefaId);
       }
@@ -72,9 +87,9 @@ export function useAgentTasks(agenteId?: string) {
       }
       const { data, error } = await query.order('created_at', { ascending: false }).limit(50);
       if (error) throw error;
-      setLogs(data || []);
-    } catch (err: any) {
-      console.warn('Erro ao buscar logs:', err?.message);
+      setLogs((data || []) as LogExecucao[]);
+    } catch (err: unknown) {
+      console.warn('Erro ao buscar logs:', err instanceof Error ? err.message : 'Erro desconhecido');
       setLogs([]);
     }
   }, [agenteId]);
@@ -88,14 +103,14 @@ export function useAgentTasks(agenteId?: string) {
         iniciado_em: new Date().toISOString(),
       };
 
-      const { error } = await (supabase as any)
-        .from('logs_execucao_agente')
-        .insert([log]);
+      const { error } = await supabase
+        .from('logs_execucao_agente' as never)
+        .insert([log] as never);
 
       if (error) throw error;
 
-      await (supabase as any)
-        .from('tarefas')
+      await supabase
+        .from('tarefas' as never)
         .update({ 
           ultima_execucao: new Date().toISOString(),
           ultimo_resultado: 'executando',
@@ -106,9 +121,9 @@ export function useAgentTasks(agenteId?: string) {
       toast({ title: '🚀 Tarefa em execução', description: `Agente ${agenteNome} iniciou a tarefa` });
       await fetchTasks();
       await fetchLogs(tarefaId);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Erro ao executar tarefa:', err);
-      toast({ title: '❌ Erro', description: err.message, variant: 'destructive' });
+      toast({ title: '❌ Erro', description: err instanceof Error ? err.message : 'Erro desconhecido', variant: 'destructive' });
     }
   }, [fetchTasks, fetchLogs]);
 

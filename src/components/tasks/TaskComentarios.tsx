@@ -8,7 +8,7 @@ import { ptBR } from 'date-fns/locale';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface TaskComentariosProps {
-  tarefa: { id: string; [key: string]: any };
+  tarefa: { id: string };
   onAddComentario?: (tarefaId: string, conteudo: string) => Promise<void>;
   currentUser?: string;
 }
