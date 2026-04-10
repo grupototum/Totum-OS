@@ -50,7 +50,7 @@ export default function AdminPanel() {
 
       // Group roles by user_id
       const userMap = new Map<string, string[]>();
-      rolesData?.forEach((r: any) => {
+      rolesData?.forEach((r: { user_id: string; role: string }) => {
         const existing = userMap.get(r.user_id) || [];
         existing.push(r.role);
         userMap.set(r.user_id, existing);
@@ -69,8 +69,8 @@ export default function AdminPanel() {
       );
 
       setUsers(userList);
-    } catch (err: any) {
-      toast.error("Erro ao carregar usuários: " + err.message);
+    } catch (err: unknown) {
+      toast.error("Erro ao carregar usuários: " + (err instanceof Error ? err.message : 'Erro desconhecido'));
     } finally {
       setLoading(false);
     }
@@ -85,12 +85,12 @@ export default function AdminPanel() {
     try {
       const { error } = await supabase
         .from("user_roles")
-        .insert({ user_id: userId, role: role as any });
+        .insert({ user_id: userId, role: role as 'admin' | 'moderator' | 'user' });
       if (error) throw error;
       toast.success(`Role "${role}" adicionada com sucesso.`);
       fetchUsers();
-    } catch (err: any) {
-      toast.error(err.message);
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : 'Erro desconhecido');
     } finally {
       setActionLoading(null);
     }
@@ -103,12 +103,12 @@ export default function AdminPanel() {
         .from("user_roles")
         .delete()
         .eq("user_id", userId)
-        .eq("role", role as any);
+        .eq("role", role as 'admin' | 'moderator' | 'user');
       if (error) throw error;
       toast.success(`Role "${role}" removida.`);
       fetchUsers();
-    } catch (err: any) {
-      toast.error(err.message);
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : 'Erro desconhecido');
     } finally {
       setActionLoading(null);
     }

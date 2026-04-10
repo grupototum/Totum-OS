@@ -11,6 +11,7 @@ import {
   User,
   Filter,
   X,
+  type LucideIcon,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -34,7 +35,7 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useTasks, type Tarefa, type StatusTarefa, type PrioridadeTarefa } from '@/hooks/useTasks';
 
-const statusConfig: Record<StatusTarefa, { label: string; icon: any; color: string; textColor: string }> = {
+const statusConfig: Record<StatusTarefa, { label: string; icon: LucideIcon; color: string; textColor: string }> = {
   pendente: { label: 'Pendente', icon: Circle, color: 'bg-gray-500', textColor: 'text-gray-500' },
   em_andamento: { label: 'Em Andamento', icon: Clock, color: 'bg-amber-500', textColor: 'text-amber-500' },
   concluida: { label: 'Concluída', icon: CheckCircle2, color: 'bg-emerald-500', textColor: 'text-emerald-500' },

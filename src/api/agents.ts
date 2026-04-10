@@ -5,7 +5,7 @@ import type { AgentConfig } from '@/types/agents';
 import type { Skill } from '@/types/agents';
 import type { ExecutionResult } from '@/types/agents';
 
-const API_BASE_URL = (import.meta as any).env.VITE_API_URL || '';
+const API_BASE_URL = import.meta.env.VITE_API_URL || '';
 
 class AgentAPIClient {
   private baseUrl: string;

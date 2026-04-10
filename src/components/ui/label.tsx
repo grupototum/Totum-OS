@@ -14,23 +14,25 @@ interface LabelProps extends React.HTMLAttributes<HTMLElement> {
 
 const Label = React.forwardRef<HTMLElement, LabelProps>(
   ({ className, variant = "default", as: Component = "span", htmlFor, ...props }, ref) => {
-    const elementProps: any = { ...props, className: cn(
-      "font-mono text-xs font-medium uppercase tracking-widest",
-      variant === "default" && "text-stone-500",
-      variant === "muted" && "text-stone-400",
-      variant === "dark" && "text-stone-900",
-      variant === "light" && "text-stone-200",
-      className
-    )};
+    const resolvedComponent = (htmlFor && Component === "span" ? "label" : Component) as React.ElementType;
 
-    if (htmlFor && Component === "span") {
-      Component = "label" as any;
-      elementProps.htmlFor = htmlFor;
-    } else if (htmlFor) {
+    const elementProps: React.HTMLAttributes<HTMLElement> & { htmlFor?: string } = {
+      ...props,
+      className: cn(
+        "font-mono text-xs font-medium uppercase tracking-widest",
+        variant === "default" && "text-stone-500",
+        variant === "muted" && "text-stone-400",
+        variant === "dark" && "text-stone-900",
+        variant === "light" && "text-stone-200",
+        className
+      ),
+    };
+
+    if (htmlFor) {
       elementProps.htmlFor = htmlFor;
     }
 
-    return <Component ref={ref as any} {...elementProps} />;
+    return <resolvedComponent ref={ref} {...elementProps} />;
   }
 );
 Label.displayName = "Label";
@@ -44,7 +46,7 @@ interface SectionNumberProps extends React.HTMLAttributes<HTMLSpanElement> {
 const SectionNumber = React.forwardRef<HTMLSpanElement, SectionNumberProps>(
   ({ className, number, total = "Section", ...props }, ref) => (
     <Label
-      ref={ref as any}
+      ref={ref as React.Ref<HTMLElement>}
       variant="muted"
       className={cn("block mb-2", className)}
       {...props}
