@@ -12,15 +12,7 @@ import Dashboard from "./pages/Dashboard";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
-// Agent chats - refatorados para usar AgentChatLayout dinâmico
-import RadarInsightsChat from "./pages/agents/RadarInsightsChat";
-import GestorTrafegoChat from "./pages/agents/GestorTrafegoChat";
-import PlanejamentoSocialChat from "./pages/agents/PlanejamentoSocialChat";
-import AtendenteTotumChat from "./pages/agents/AtendenteTotumChat";
-import SdrComercialChat from "./pages/agents/SdrComercialChat";
-import KimiChat from "./pages/agents/KimiChat";
-import RadarAnunciosChat from "./pages/agents/RadarAnunciosChat";
-// Novo AgentChatLayout para agentes do Supabase
+// Chat dinâmico único - substitui os 7 wrappers anteriores
 import AgentChatLayout from "./components/chat/AgentChatLayout";
 import TasksBoard from "./pages/TasksBoard";
 import QuadroTarefas from "./pages/QuadroTarefas";
@@ -92,13 +84,14 @@ const App = () => (
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/agent/radar" element={<RadarInsightsChat />} />
-            <Route path="/agent/gestor" element={<GestorTrafegoChat />} />
-            <Route path="/agent/social" element={<PlanejamentoSocialChat />} />
-            <Route path="/agent/atendente" element={<AtendenteTotumChat />} />
-            <Route path="/agent/sdr" element={<SdrComercialChat />} />
-            <Route path="/agent/kimi" element={<KimiChat />} />
-            <Route path="/agent/ads-extractor" element={<RadarAnunciosChat />} />
+            {/* Redirects de compatibilidade: rotas antigas de chat → rota dinâmica */}
+            <Route path="/agent/radar" element={<Navigate to="/agents/radar/chat" replace />} />
+            <Route path="/agent/gestor" element={<Navigate to="/agents/gestor/chat" replace />} />
+            <Route path="/agent/social" element={<Navigate to="/agents/social/chat" replace />} />
+            <Route path="/agent/atendente" element={<Navigate to="/agents/atendente/chat" replace />} />
+            <Route path="/agent/sdr" element={<Navigate to="/agents/sdr/chat" replace />} />
+            <Route path="/agent/kimi" element={<Navigate to="/agents/kimi/chat" replace />} />
+            <Route path="/agent/ads-extractor" element={<Navigate to="/agents/ads-extractor/chat" replace />} />
             <Route path="/tasks" element={<TasksBoard />} />
             <Route path="/quadro-tarefas" element={<QuadroTarefas />} />
             <Route path="/content" element={<ContentPipeline />} />
