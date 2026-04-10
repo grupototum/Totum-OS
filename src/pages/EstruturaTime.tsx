@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import AppLayout from '@/components/layout/AppLayout';
-import { AgentHierarchy } from '@/components/agents';
 import { useAgents } from '@/hooks/useAgents';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -27,14 +26,14 @@ export default function EstruturaTime() {
 
   return (
     <AppLayout>
-      <div className="min-h-screen bg-[#EAEAE5]">
-        <div className="max-w-[1400px] mx-auto border-l border-r border-stone-300 min-h-screen">
+      <div className="min-h-screen bg-background">
+        <div className="max-w-[1400px] mx-auto border-l border-r border-border min-h-screen">
           {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="p-8 border-b border-stone-300"
+            className="p-8 border-b border-border"
           >
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
               <div>
@@ -57,7 +56,7 @@ export default function EstruturaTime() {
                 <Button
                   variant="outline"
                   onClick={() => navigate('/painel-agentes')}
-                  className="border-stone-300"
+                  className="border-border"
                 >
                   <Icon icon="solar:users-group-rounded-linear" className="w-4 h-4 mr-2" />
                   Painel
@@ -65,7 +64,7 @@ export default function EstruturaTime() {
                 <Button
                   variant="outline"
                   onClick={() => navigate('/hub-agentes')}
-                  className="border-stone-300"
+                  className="border-border"
                 >
                   <Icon icon="solar:graph-new-linear" className="w-4 h-4 mr-2" />
                   Hub N8N
@@ -79,10 +78,10 @@ export default function EstruturaTime() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2, duration: 0.5 }}
-            className="p-8 border-b border-stone-300 bg-[#E5E5E0]"
+            className="p-8 border-b border-border bg-muted/30"
           >
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="flex items-center gap-4 p-4 bg-white rounded-lg border border-stone-300">
+              <div className="flex items-center gap-4 p-4 bg-card rounded-lg border border-border">
                 <div className="w-12 h-12 rounded-full bg-stone-900 flex items-center justify-center">
                   <Icon icon="solar:crown-linear" className="w-6 h-6 text-white" />
                 </div>
@@ -92,7 +91,7 @@ export default function EstruturaTime() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-4 p-4 bg-white rounded-lg border border-stone-300">
+              <div className="flex items-center gap-4 p-4 bg-card rounded-lg border border-border">
                 <div className="w-12 h-12 rounded-full bg-stone-200 flex items-center justify-center">
                   <Icon icon="solar:users-group-two-rounded-linear" className="w-6 h-6 text-stone-700" />
                 </div>
@@ -102,7 +101,7 @@ export default function EstruturaTime() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-4 p-4 bg-white rounded-lg border border-stone-300">
+              <div className="flex items-center gap-4 p-4 bg-card rounded-lg border border-border">
                 <div className="w-12 h-12 rounded-full bg-stone-200 flex items-center justify-center">
                   <Icon icon="solar:stars-linear" className="w-6 h-6 text-stone-700" />
                 </div>
@@ -157,7 +156,7 @@ export default function EstruturaTime() {
                             p-4 bg-white rounded-lg border cursor-pointer transition-all
                             ${selectedAgentId === agent.id 
                               ? 'border-stone-900 shadow-lg' 
-                              : 'border-stone-300 hover:border-stone-400'
+                              : 'border-border hover:border-stone-400'
                             }
                           `}
                           onClick={() => {
@@ -214,24 +213,6 @@ export default function EstruturaTime() {
                   </motion.div>
                 ))}
 
-                {/* Interactive Tree View */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.6, duration: 0.5 }}
-                  className="mt-12 pt-8 border-t border-stone-300"
-                >
-                  <div className="flex items-center gap-3 mb-6">
-                    <Icon icon="solar:branching-paths-down-linear" className="w-5 h-5 text-stone-600" />
-                    <h3 className="text-lg font-medium text-stone-900">Visualização em Árvore</h3>
-                  </div>
-
-                  <AgentHierarchy
-                    agents={agents}
-                    onAgentClick={(agent) => navigate(`/agente/${agent.id}`)}
-                    selectedAgentId={selectedAgentId}
-                  />
-                </motion.div>
               </div>
             )}
           </div>

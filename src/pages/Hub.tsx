@@ -96,11 +96,11 @@ export default function Hub() {
 
   return (
     <AppLayout>
-      <div className="min-h-screen bg-[#EAEAE5]">
-        <div className="max-w-[1400px] mx-auto border-l border-r border-stone-300 min-h-screen">
+      <div className="min-h-screen bg-background">
+        <div className="max-w-[1400px] mx-auto border-l border-r border-border min-h-screen">
 
           {/* Header */}
-          <div className="p-8 border-b border-stone-300 totum-reveal active">
+          <div className="p-8 border-b border-border totum-reveal active">
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
               <div>
                 <div className="flex items-center gap-3 mb-2">
@@ -108,10 +108,10 @@ export default function Hub() {
                     <Sparkles className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <h1 className="text-3xl font-semibold text-stone-900 tracking-tight">
+                    <h1 className="text-3xl font-semibold text-foreground tracking-tight">
                       Hub de Agentes
                     </h1>
-                    <p className="text-xs uppercase tracking-widest text-stone-500">
+                    <p className="text-xs uppercase tracking-widest text-muted-foreground">
                       Central de Agentes · {totalCount} agentes disponíveis
                     </p>
                   </div>
@@ -119,16 +119,16 @@ export default function Hub() {
               </div>
 
               <div className="flex items-center gap-3">
-                <div className="flex items-center bg-stone-100 rounded-lg p-1 border border-stone-300">
+                <div className="flex items-center bg-muted rounded-lg p-1 border border-border">
                   <button
-                    className="flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-all bg-white shadow-sm text-stone-900"
+                    className="flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-all bg-card shadow-sm text-foreground"
                   >
                     <Grid3X3 className="w-4 h-4" />
                     Grid
                   </button>
                   <button
                     onClick={() => navigate('/agents')}
-                    className="flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-all text-stone-500 hover:text-stone-700"
+                    className="flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-all text-muted-foreground hover:text-stone-700"
                   >
                     <Network className="w-4 h-4" />
                     Dashboard
@@ -138,7 +138,7 @@ export default function Hub() {
                 <Button
                   variant="outline"
                   onClick={() => navigate('/agents')}
-                  className="border-stone-300"
+                  className="border-border"
                 >
                   <BarChart3 className="w-4 h-4 mr-2" />
                   Painel
@@ -146,7 +146,7 @@ export default function Hub() {
                 <Button
                   variant="outline"
                   onClick={() => navigate('/estrutura-time')}
-                  className="border-stone-300"
+                  className="border-border"
                 >
                   <Users className="w-4 h-4 mr-2" />
                   Estrutura
@@ -155,40 +155,73 @@ export default function Hub() {
             </div>
           </div>
 
+          {/* Painel TOT — logo abaixo do header */}
+          <div className="px-8 py-4 border-b border-border bg-muted/20">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="p-3 bg-card border border-border relative group overflow-hidden hover:border-primary/40 hover:shadow-[0_0_20px_-5px_hsl(var(--primary)/0.25)] transition-all duration-500">
+                <div className="flex items-center gap-2 mb-1">
+                  <Network className="w-4 h-4 text-muted-foreground" />
+                  <h3 className="font-medium text-sm text-foreground">TOT - Orquestrador</h3>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Coordena todos os modos e agentes especializados.
+                </p>
+              </div>
+              <div className="p-3 bg-card border border-border relative group overflow-hidden hover:border-primary/40 hover:shadow-[0_0_20px_-5px_hsl(var(--primary)/0.25)] transition-all duration-500">
+                <div className="flex items-center gap-2 mb-1">
+                  <Users className="w-4 h-4 text-emerald-500" />
+                  <h3 className="font-medium text-sm text-foreground">Modos de Operação</h3>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Pablo (Executor), Data (Dev) e Hug (Atendimento).
+                </p>
+              </div>
+              <div className="p-3 bg-card border border-border relative group overflow-hidden hover:border-primary/40 hover:shadow-[0_0_20px_-5px_hsl(var(--primary)/0.25)] transition-all duration-500">
+                <div className="flex items-center gap-2 mb-1">
+                  <Bot className="w-4 h-4 text-amber-500" />
+                  <h3 className="font-medium text-sm text-foreground">Agentes Especializados</h3>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Giles, Monk, Watson, WALL·E, EVE e mais.
+                </p>
+              </div>
+            </div>
+          </div>
+
           {/* Stats */}
-          <div className="px-8 py-4 border-b border-stone-300 bg-[#E5E5E0]">
+          <div className="px-8 py-4 border-b border-border bg-muted/10">
             <div className="flex items-center gap-6 flex-wrap">
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-sm text-stone-600">
-                  <span className="text-stone-900 font-semibold">{totalCount}</span> agentes disponíveis
+                <span className="text-sm text-muted-foreground">
+                  <span className="text-foreground font-semibold">{totalCount}</span> agentes disponíveis
                 </span>
               </div>
-              <div className="h-4 w-px bg-stone-400" />
+              <div className="h-4 w-px bg-border" />
               <div className="flex items-center gap-2">
-                <Brain className="w-4 h-4 text-stone-500" />
-                <span className="text-sm text-stone-600">
-                  <span className="text-stone-900 font-semibold">{chatCount}</span> de chat
+                <Brain className="w-4 h-4 text-muted-foreground" />
+                <span className="text-sm text-muted-foreground">
+                  <span className="text-foreground font-semibold">{chatCount}</span> de chat
                 </span>
               </div>
-              <div className="h-4 w-px bg-stone-400" />
+              <div className="h-4 w-px bg-border" />
               <div className="flex items-center gap-2">
-                <Bot className="w-4 h-4 text-stone-500" />
-                <span className="text-sm text-stone-600">
-                  <span className="text-stone-900 font-semibold">{especializadoCount}</span> especializados
+                <Bot className="w-4 h-4 text-muted-foreground" />
+                <span className="text-sm text-muted-foreground">
+                  <span className="text-foreground font-semibold">{especializadoCount}</span> especializados
                 </span>
               </div>
             </div>
           </div>
 
           {isAdmin && (
-            <div className="px-8 py-4 border-b border-stone-300">
+            <div className="px-8 py-4 border-b border-border">
               <AdminPanel />
             </div>
           )}
 
           {/* Tabs */}
-          <div className="px-8 py-4 border-b border-stone-300">
+          <div className="px-8 py-4 border-b border-border">
             <div className="flex flex-wrap gap-2">
               {([
                 { id: 'todos' as TabType,        label: 'Todos',          count: totalCount },
@@ -201,13 +234,13 @@ export default function Hub() {
                   onClick={() => setActiveTab(tab.id)}
                   className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${
                     activeTab === tab.id
-                      ? 'bg-stone-900 text-white'
-                      : 'bg-white text-stone-600 border border-stone-300 hover:border-stone-400'
+                      ? 'bg-foreground text-background'
+                      : 'bg-card text-muted-foreground border border-border hover:bg-muted'
                   }`}
                 >
                   {tab.label}
                   <span className={`ml-1.5 px-1.5 py-0.5 rounded-full text-xs ${
-                    activeTab === tab.id ? 'bg-stone-700' : 'bg-stone-100 text-stone-600'
+                    activeTab === tab.id ? 'bg-foreground/20' : 'bg-muted text-muted-foreground'
                   }`}>
                     {tab.count}
                   </span>
@@ -219,7 +252,7 @@ export default function Hub() {
           {/* Agent Grid */}
           <div className="p-8">
             {isLoading ? (
-              <div className="flex items-center justify-center py-20 gap-3 text-stone-500">
+              <div className="flex items-center justify-center py-20 gap-3 text-muted-foreground">
                 <Loader2 className="w-5 h-5 animate-spin" />
                 <span className="text-sm">Carregando agentes...</span>
               </div>
@@ -252,23 +285,23 @@ export default function Hub() {
                         </div>
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-2 mb-1">
-                            <h3 className="font-medium text-sm text-stone-900 truncate">{agent.name}</h3>
+                            <h3 className="font-medium text-sm text-foreground truncate">{agent.name}</h3>
                             {isChat ? (
                               <span className="shrink-0 w-1.5 h-1.5 rounded-full bg-emerald-500" />
                             ) : (
                               <span className="shrink-0 w-1.5 h-1.5 rounded-full bg-amber-400" title="Sistema" />
                             )}
                           </div>
-                          <p className="text-xs text-stone-500 leading-relaxed line-clamp-2">{agent.role}</p>
+                          <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">{agent.role}</p>
                         </div>
                       </div>
 
                       <div className="mt-4 flex items-center justify-between">
-                        <span className="text-[10px] uppercase tracking-wider text-stone-400 font-medium">
+                        <span className="text-[10px] uppercase tracking-wider text-muted-foreground/70 font-medium">
                           {isChat ? 'Chat' : 'Sistema'}
                         </span>
                         {isChat && (
-                          <span className="text-xs text-stone-900 opacity-0 group-hover:opacity-100 transition-opacity font-medium flex items-center gap-1">
+                          <span className="text-xs text-foreground opacity-0 group-hover:opacity-100 transition-opacity font-medium flex items-center gap-1">
                             Abrir <ArrowRight className="w-3 h-3" />
                           </span>
                         )}
@@ -280,38 +313,6 @@ export default function Hub() {
             )}
           </div>
 
-          {/* Legend */}
-          <div className="px-8 py-6 border-t border-stone-300 bg-[#E5E5E0]">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="p-4 bg-card border border-border relative group overflow-hidden hover:border-primary/40 hover:shadow-[0_0_20px_-5px_hsl(var(--primary)/0.25)] transition-all duration-500">
-                <div className="flex items-center gap-2 mb-2">
-                  <Network className="w-5 h-5 text-stone-600" />
-                  <h3 className="font-medium text-stone-900">TOT - Orquestrador</h3>
-                </div>
-                <p className="text-sm text-stone-500">
-                  O orquestrador principal coordena todos os modos e agentes especializados.
-                </p>
-              </div>
-              <div className="p-4 bg-card border border-border relative group overflow-hidden hover:border-primary/40 hover:shadow-[0_0_20px_-5px_hsl(var(--primary)/0.25)] transition-all duration-500">
-                <div className="flex items-center gap-2 mb-2">
-                  <Users className="w-5 h-5 text-emerald-600" />
-                  <h3 className="font-medium text-stone-900">Modos de Operação</h3>
-                </div>
-                <p className="text-sm text-stone-500">
-                  Pablo (Executor), Data (Desenvolvedor) e Hug (Atendimento) são os três modos principais.
-                </p>
-              </div>
-              <div className="p-4 bg-card border border-border relative group overflow-hidden hover:border-primary/40 hover:shadow-[0_0_20px_-5px_hsl(var(--primary)/0.25)] transition-all duration-500">
-                <div className="flex items-center gap-2 mb-2">
-                  <Bot className="w-5 h-5 text-amber-600" />
-                  <h3 className="font-medium text-stone-900">Agentes Especializados</h3>
-                </div>
-                <p className="text-sm text-stone-500">
-                  Cada agente tem uma função específica: Giles (biblioteca), Monk (organização), Watson (análise), etc.
-                </p>
-              </div>
-            </div>
-          </div>
 
         </div>
       </div>

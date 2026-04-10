@@ -275,19 +275,6 @@ function OrgCard({
           >
             {agent.roleLabel}
           </Badge>
-
-          {/* Responsibilities (condensed) */}
-          <ul className="space-y-0.5 w-full mt-1">
-            {agent.responsibilities.slice(0, 3).map((r) => (
-              <li
-                key={r}
-                className="text-[10px] text-muted-foreground flex items-start gap-1"
-              >
-                <span className={`mt-1 w-1 h-1 rounded-full shrink-0 ${agent.color.replace("text-", "bg-")}`} />
-                <span className="line-clamp-1">{r}</span>
-              </li>
-            ))}
-          </ul>
         </CardContent>
       </Card>
     </motion.div>
@@ -474,6 +461,30 @@ export default function TeamStructure() {
           </Badge>
         </motion.div>
 
+        {/* ─── Delegation flow ─── */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          className="mb-8 p-4 rounded-xl bg-card/40 border border-border/30"
+        >
+          <h3 className="text-xs font-semibold text-foreground uppercase tracking-wider mb-3">Fluxo de Delegação</h3>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-2 text-xs text-muted-foreground flex-wrap">
+            <span className="px-3 py-1.5 rounded-lg bg-secondary">📋 Tarefa</span>
+            <span className="hidden sm:block">→</span>
+            <span className="sm:hidden">↓</span>
+            <span className="px-3 py-1.5 rounded-lg bg-primary/10 text-primary">👑 Chief</span>
+            <span className="hidden sm:block">→</span>
+            <span className="sm:hidden">↓</span>
+            <span className="px-3 py-1.5 rounded-lg bg-orange-500/10 text-orange-400">🏗️ Miguel</span>
+            <span className="px-3 py-1.5 rounded-lg bg-purple-500/10 text-purple-400">🛡️ Liz</span>
+            <span className="px-3 py-1.5 rounded-lg bg-cyan-500/10 text-cyan-400">⚡ Jarvis</span>
+            <span className="hidden sm:block">→</span>
+            <span className="sm:hidden">↓</span>
+            <span className="px-3 py-1.5 rounded-lg bg-secondary">✅ Deploy</span>
+          </div>
+        </motion.div>
+
         {/* ─── ORG CHART ─── */}
         <div className="flex flex-col items-center overflow-x-auto pb-10">
           {/* TIER 0 — Chief of Staff */}
@@ -535,29 +546,6 @@ export default function TeamStructure() {
           </div>
         </div>
 
-        {/* Delegation flow */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.6 }}
-          className="p-6 rounded-xl bg-card/40 border border-border/30"
-        >
-          <h3 className="text-sm font-semibold text-foreground mb-4">Fluxo de Delegação</h3>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 text-xs text-muted-foreground flex-wrap">
-            <span className="px-3 py-1.5 rounded-lg bg-secondary">📋 Tarefa</span>
-            <span className="hidden sm:block">→</span>
-            <span className="sm:hidden">↓</span>
-            <span className="px-3 py-1.5 rounded-lg bg-primary/10 text-primary">👑 Chief</span>
-            <span className="hidden sm:block">→</span>
-            <span className="sm:hidden">↓</span>
-            <span className="px-3 py-1.5 rounded-lg bg-orange-500/10 text-orange-400">🏗️ Miguel</span>
-            <span className="px-3 py-1.5 rounded-lg bg-purple-500/10 text-purple-400">🛡️ Liz</span>
-            <span className="px-3 py-1.5 rounded-lg bg-cyan-500/10 text-cyan-400">⚡ Jarvis</span>
-            <span className="hidden sm:block">→</span>
-            <span className="sm:hidden">↓</span>
-            <span className="px-3 py-1.5 rounded-lg bg-secondary">✅ Deploy</span>
-          </div>
-        </motion.div>
       </div>
 
       <ProfileDialog agent={selectedAgent} open={!!selectedAgent} onClose={() => setSelectedAgent(null)} />
