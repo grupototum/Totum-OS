@@ -13,6 +13,9 @@ export interface Agent {
   daily_tasks: number | null;
   success_rate: number | null;
   created_at: string;
+  slug?: string;
+  agent_group?: string;
+  description?: string;
   // UI-only derived fields
   parent_id?: string;
   is_orchestrator?: boolean;
@@ -69,7 +72,10 @@ export const useAgents = () => {
           daily_tasks: row.daily_tasks,
           success_rate: row.success_rate,
           created_at: row.created_at || new Date().toISOString(),
-          is_orchestrator: row.name?.toLowerCase().includes('tot') && !row.name?.toLowerCase().includes('totum'),
+          slug: row.slug || undefined,
+          agent_group: row.agent_group || undefined,
+          description: row.description || undefined,
+          is_orchestrator: row.is_orchestrator ?? (row.name?.toLowerCase().includes('tot') && !row.name?.toLowerCase().includes('totum')),
           hierarchy_level: row.category === 'orchestrator' ? 0 : row.category === 'mode' ? 1 : 2,
           type: row.category || 'agent',
         }));
