@@ -16,7 +16,7 @@ export default function SettingsPage() {
               <SettingsIcon className="w-5 h-5 text-primary" />
             </div>
             <div>
-              <h1 className="font-heading text-2xl font-medium text-foreground tracking-tight">
+              <h1 className="font-sans text-2xl font-medium text-foreground tracking-tight">
                 SETTINGS
               </h1>
               <p className="text-xs text-muted-foreground uppercase tracking-widest">

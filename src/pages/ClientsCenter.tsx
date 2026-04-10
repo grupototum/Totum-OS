@@ -162,7 +162,7 @@ export default function ClientsCenter() {
         {/* Header */}
         <motion.div {...anim(0)} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h1 className="font-heading text-2xl font-semibold text-foreground tracking-tight">CENTRAL DE CLIENTES</h1>
+            <h1 className="font-sans text-2xl font-semibold text-foreground tracking-tight">CENTRAL DE CLIENTES</h1>
             <p className="text-xs text-muted-foreground uppercase tracking-widest mt-1">
               {clients.length} clientes cadastrados · {clients.filter((c) => c.status === "active").length} ativos
             </p>

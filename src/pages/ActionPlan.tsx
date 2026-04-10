@@ -26,7 +26,7 @@ const ActionPlan = () => {
 
   if (!autorizado) {
     return (
-      <div className="flex min-h-screen items-center justify-center p-4" style={{ backgroundColor: '#fcfbf8' }}>
+      <div className="flex min-h-screen items-center justify-center p-4" style={{ backgroundColor: '#EAEAE5' }}>
         <div className="w-full max-w-md space-y-6">
           <div className="text-center space-y-2">
             <div className="flex justify-center">

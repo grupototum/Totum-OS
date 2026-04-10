@@ -237,7 +237,7 @@ export function TarefasWidget() {
     <Card className="bg-card/50 backdrop-blur-sm border-border/40">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-sm font-heading flex items-center gap-2">
+          <CardTitle className="text-sm font-sans flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 text-primary" />
             Tarefas
             <span className="text-xs text-muted-foreground font-normal">({estatisticas.total})</span>

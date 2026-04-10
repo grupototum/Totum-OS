@@ -155,7 +155,7 @@ export default function OfficeView() {
               <Sparkles className="w-5 h-5 text-primary" />
             </div>
             <div>
-              <h1 className="font-heading text-2xl font-medium text-foreground tracking-tight">ESCRITÓRIO DIGITAL</h1>
+              <h1 className="font-sans text-2xl font-medium text-foreground tracking-tight">ESCRITÓRIO DIGITAL</h1>
               <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Visão geral dos agentes</p>
             </div>
           </div>

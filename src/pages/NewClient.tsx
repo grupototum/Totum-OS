@@ -175,7 +175,7 @@ export default function NewClient() {
       <div className="p-6 max-w-7xl mx-auto">
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
-          <h1 className="font-heading text-2xl font-semibold text-foreground tracking-tight">NOVO CLIENTE</h1>
+          <h1 className="font-sans text-2xl font-semibold text-foreground tracking-tight">NOVO CLIENTE</h1>
           <p className="text-xs text-muted-foreground uppercase tracking-widest mt-1">Cadastro Totum · Etapa {step + 1} de 5</p>
         </motion.div>
 
@@ -404,14 +404,14 @@ export default function NewClient() {
                   {/* Logo placeholder */}
                   <div className="w-16 h-16 rounded-xl mx-auto flex items-center justify-center border-2 border-dashed border-border/60" style={{ backgroundColor: form.primary_color + "20" }}>
                     {form.company_name ? (
-                      <span className="text-2xl font-heading font-bold" style={{ color: form.primary_color }}>{form.company_name.charAt(0).toUpperCase()}</span>
+                      <span className="text-2xl font-sans font-bold" style={{ color: form.primary_color }}>{form.company_name.charAt(0).toUpperCase()}</span>
                     ) : (
                       <User className="w-6 h-6 text-muted-foreground" />
                     )}
                   </div>
 
                   <div className="text-center">
-                    <p className="font-heading font-semibold text-foreground text-sm">{form.company_name || "Nome da Empresa"}</p>
+                    <p className="font-sans font-semibold text-foreground text-sm">{form.company_name || "Nome da Empresa"}</p>
                     {form.industry && <Badge variant="outline" className="text-[10px] mt-1 bg-primary/10 text-primary border-primary/30">{form.industry}</Badge>}
                   </div>
 

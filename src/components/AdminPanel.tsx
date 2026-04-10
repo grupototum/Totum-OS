@@ -132,7 +132,7 @@ export default function AdminPanel() {
                 <Shield className="w-5 h-5 text-white" />
               </div>
               <div className="text-left">
-                <h2 className="font-heading font-bold text-foreground text-sm">
+                <h2 className="font-sans font-bold text-foreground text-sm">
                   Painel de Administração
                 </h2>
                 <p className="text-xs text-muted-foreground">

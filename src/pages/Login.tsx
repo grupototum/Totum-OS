@@ -121,7 +121,7 @@ export default function Login() {
               alt="Totum"
               className="w-10 h-10 rounded-lg"
             />
-            <span className="font-heading text-xl font-bold tracking-tight text-foreground">
+            <span className="font-sans text-xl font-bold tracking-tight text-foreground">
               Apps Totum
             </span>
           </div>
@@ -132,7 +132,7 @@ export default function Login() {
 
         {/* Heading */}
         <div className="text-center mb-8">
-          <h1 className="font-heading text-3xl font-bold text-foreground mb-2">
+          <h1 className="font-sans text-3xl font-bold text-foreground mb-2">
             Bem-vindo de volta.
           </h1>
           <p className="text-sm text-muted-foreground">
@@ -219,7 +219,7 @@ export default function Login() {
               type="button"
               onClick={handleGoogleSignIn}
               disabled={googleLoading || loading}
-              className="w-full py-3 rounded-xl font-heading font-semibold text-sm border border-border/60 text-foreground bg-card/60 backdrop-blur-sm overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:border-border disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2.5"
+              className="w-full py-3 rounded-xl font-sans font-semibold text-sm border border-border/60 text-foreground bg-card/60 backdrop-blur-sm overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:border-border disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2.5"
             >
               {googleLoading ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -239,7 +239,7 @@ export default function Login() {
           <button
             type="submit"
             disabled={loading}
-            className="relative w-full py-3 rounded-xl font-heading font-semibold text-sm text-primary-foreground bg-primary overflow-hidden transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed animate-totum-glow"
+            className="relative w-full py-3 rounded-xl font-sans font-semibold text-sm text-primary-foreground bg-primary overflow-hidden transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed animate-totum-glow"
           >
             {/* Particle dots */}
             <div className="absolute inset-0 pointer-events-none">

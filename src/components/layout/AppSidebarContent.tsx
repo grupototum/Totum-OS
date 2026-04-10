@@ -106,7 +106,7 @@ export default function AppSidebarContent({ onNavigate }: Props) {
           <div className="w-[5px] h-4 bg-primary/60 rounded-full" />
           <div className="w-[5px] h-6 bg-primary rounded-full" />
         </div>
-        <span className="font-heading text-lg font-medium text-sidebar-foreground tracking-tight">
+        <span className="font-sans text-lg font-medium text-sidebar-foreground tracking-tight">
           TOTUM
         </span>
       </div>
@@ -116,7 +116,7 @@ export default function AppSidebarContent({ onNavigate }: Props) {
         {/* Static sections */}
         {staticSections.map((section) => (
           <div key={section.title}>
-            <p className="label-industrial text-[10px] text-sidebar-foreground/40 mb-2 px-2">
+            <p className="font-mono text-xs uppercase tracking-widest text-[10px] text-sidebar-foreground/40 mb-2 px-2">
               {section.title}
             </p>
             <ul className="space-y-0.5">
@@ -148,7 +148,7 @@ export default function AppSidebarContent({ onNavigate }: Props) {
 
         {/* Agents hierarchy */}
         <div>
-          <p className="label-industrial text-[10px] text-sidebar-foreground/40 mb-2 px-2">
+          <p className="font-mono text-xs uppercase tracking-widest text-[10px] text-sidebar-foreground/40 mb-2 px-2">
             AGENTES
           </p>
           <ul className="space-y-0.5">
@@ -220,7 +220,7 @@ export default function AppSidebarContent({ onNavigate }: Props) {
 
         {/* Resources */}
         <div>
-          <p className="label-industrial text-[10px] text-sidebar-foreground/40 mb-2 px-2">
+          <p className="font-mono text-xs uppercase tracking-widest text-[10px] text-sidebar-foreground/40 mb-2 px-2">
             RECURSOS
           </p>
           <ul className="space-y-0.5">
@@ -271,7 +271,7 @@ export default function AppSidebarContent({ onNavigate }: Props) {
 
         {/* POP/SLA & Dicas */}
         <div>
-          <p className="label-industrial text-[10px] text-sidebar-foreground/40 mb-2 px-2">
+          <p className="font-mono text-xs uppercase tracking-widest text-[10px] text-sidebar-foreground/40 mb-2 px-2">
             POP / SLA
           </p>
           <ul className="space-y-0.5">
@@ -309,7 +309,7 @@ export default function AppSidebarContent({ onNavigate }: Props) {
 
         {/* Settings */}
         <div>
-          <p className="label-industrial text-[10px] text-sidebar-foreground/40 mb-2 px-2">
+          <p className="font-mono text-xs uppercase tracking-widest text-[10px] text-sidebar-foreground/40 mb-2 px-2">
             SETTINGS
           </p>
           <ul className="space-y-0.5">

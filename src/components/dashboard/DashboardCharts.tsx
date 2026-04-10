@@ -42,7 +42,7 @@ export function VpsResourceChart() {
       <Card className="bg-card/50 backdrop-blur-sm border-border/40">
         <CardContent className="p-5">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-heading font-bold text-sm text-foreground flex items-center gap-2">
+            <h3 className="font-sans font-bold text-sm text-foreground flex items-center gap-2">
               <Server className="w-4 h-4 text-primary" />
               Uso de Recursos (24h)
               <span className="text-[10px] bg-orange-500/20 text-orange-400 px-2 py-0.5 rounded">DADOS DE DEMONSTRAÇÃO</span>
@@ -101,7 +101,7 @@ export function CostHistoryChart() {
     <motion.div {...anim(12)}>
       <Card className="bg-card/50 backdrop-blur-sm border-border/40">
         <CardContent className="p-5">
-          <h3 className="font-heading font-bold text-sm text-foreground mb-4 flex items-center gap-2">
+          <h3 className="font-sans font-bold text-sm text-foreground mb-4 flex items-center gap-2">
             <DollarSign className="w-4 h-4 text-primary" />
             Evolução de Custos (6 meses)
             <span className="text-[10px] bg-orange-500/20 text-orange-400 px-2 py-0.5 rounded">DADOS DE DEMONSTRAÇÃO</span>
@@ -134,7 +134,7 @@ export function ActivityVolumeChart() {
     <motion.div {...anim(13)}>
       <Card className="bg-card/50 backdrop-blur-sm border-border/40">
         <CardContent className="p-5">
-          <h3 className="font-heading font-bold text-sm text-foreground mb-4 flex items-center gap-2">
+          <h3 className="font-sans font-bold text-sm text-foreground mb-4 flex items-center gap-2">
             <Activity className="w-4 h-4 text-primary" />
             Atividades (Últimos 7 dias)
             <span className="text-[10px] bg-orange-500/20 text-orange-400 px-2 py-0.5 rounded">DADOS DE DEMONSTRAÇÃO</span>

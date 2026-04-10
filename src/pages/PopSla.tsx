@@ -22,7 +22,7 @@ export default function PopSlaPage() {
               <FileCheck className="w-5 h-5 text-primary" />
             </div>
             <div>
-              <h1 className="font-heading text-2xl font-medium text-foreground tracking-tight">
+              <h1 className="font-sans text-2xl font-medium text-foreground tracking-tight">
                 POP E SLA
               </h1>
               <p className="text-xs text-muted-foreground uppercase tracking-widest">
@@ -43,7 +43,7 @@ export default function PopSlaPage() {
           <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 mb-4">
             EM BREVE
           </Badge>
-          <h2 className="font-heading text-xl text-foreground mb-2">
+          <h2 className="font-sans text-xl text-foreground mb-2">
             Sistema POP/SLA Interativo
           </h2>
           <p className="text-sm text-muted-foreground mb-8 max-w-md mx-auto">
