@@ -3,6 +3,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        VITE_SUPABASE_URL: https://cgpkfhrqprqptvehatad.supabase.co
+        VITE_SUPABASE_PUBLISHABLE_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNncGtmaHJxcHJxcHR2ZWhhdGFkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUyMjQyNjIsImV4cCI6MjA5MDgwMDI2Mn0.fXMvQhyLQXLgD_rK-slcHO4Jd_XF8mR_kYFTDHCsoxw
     container_name: apps-totum-oficial
     restart: unless-stopped
     ports:
@@ -10,15 +13,16 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3002
+      - SUPABASE_URL=https://cgpkfhrqprqptvehatad.supabase.co
+      - SUPABASE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNncGtmaHJxcHJxcHR2ZWhhdGFkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUyMjQyNjIsImV4cCI6MjA5MDgwMDI2Mn0.fXMvQhyLQXLgD_rK-slcHO4Jd_XF8mR_kYFTDHCsoxw
     labels:
       - "traefik.enable=true"
-      # HTTPS Router (usa certificado automático do Let's Encrypt)
+      # HTTPS Router
       - "traefik.http.routers.totum.rule=Host(`apps.grupototum.com`)"
       - "traefik.http.routers.totum.entrypoints=websecure"
       - "traefik.http.routers.totum.tls=true"
       - "traefik.http.routers.totum.tls.certresolver=letsencrypt"
       - "traefik.http.routers.totum.service=totum"
-      # Service
       - "traefik.http.services.totum.loadbalancer.server.port=3002"
     networks:
       - traefik-network
