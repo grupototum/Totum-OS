@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: apps-totum-oficial
+    restart: unless-stopped
+    ports:
+      - "3002:3002"
+    environment:
+      - NODE_ENV=production
+      - PORT=3002
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.totum.rule=Host(`apps.grupototum.com`)"
+      - "traefik.http.routers.totum.entrypoints=web"
+      - "traefik.http.services.totum.loadbalancer.server.port=3002"
+      # Descomente para HTTPS (depois de configurar SSL)
+      # - "traefik.http.routers.totum.tls=true"
+      # - "traefik.http.routers.totum.tls.certresolver=letsencrypt"
+    networks:
+      - traefik-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3002/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  traefik-network:
+    external: true
+    name: traefik-0foq-traefik-network  # Ajuste conforme sua rede Traefik

@@ -19,7 +19,7 @@ Sistema unificado de pipeline de processamento de conteúdo + aplicação React.
 └── deploy.sh             # Script de deploy
 ```
 
-## 🚀 Quick Start
+## 🚀 Quick Start (Docker Compose - Recomendado)
 
 ### Desenvolvimento Local
 
