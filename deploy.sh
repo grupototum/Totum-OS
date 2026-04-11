@@ -31,7 +31,7 @@ cd ..
 
 echo ""
 echo "🚀 Iniciando com PM2..."
-pm2 start ecosystem.config.js --env production
+pm2 start ecosystem.config.cjs --env production
 
 echo ""
 echo "📋 Status do PM2:"
