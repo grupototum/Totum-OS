@@ -9,6 +9,7 @@ import express from 'express';
 import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { setupMasterUser } from './setup.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -22,6 +23,14 @@ app.use(cors({
   credentials: true
 }));
 app.use(express.json());
+
+// ============================================================
+// SETUP ENDPOINT
+// ============================================================
+app.post('/api/setup', async (req, res) => {
+  const result = await setupMasterUser();
+  res.json(result);
+});
 
 // ============================================================
 // HEALTH CHECK
@@ -119,6 +128,13 @@ app.use(express.static(path.join(__dirname, '../dist')));
 // SPA Fallback
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../dist/index.html'));
+});
+
+// ============================================================
+// SETUP MASTER USER
+// ============================================================
+setupMasterUser().then(() => {
+  console.log('');
 });
 
 // ============================================================
