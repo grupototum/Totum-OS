@@ -1,5 +1,5 @@
 {
-  "execution_id": "wanda-1775935747505",
+  "execution_id": "wanda-1775940301287",
   "agent": "WANDA",
   "task": "Gerar conteúdo social",
   "status": "success",
@@ -28,11 +28,11 @@
       }
     ],
     "total_variations": 3,
-    "generated_at": "2026-04-11T19:29:07.505Z"
+    "generated_at": "2026-04-11T20:45:01.287Z"
   }
 }
 {
-  "execution_id": "wanda-1775935747505",
+  "execution_id": "wanda-1775940301287",
   "agent": "WANDA",
   "task": "Gerar conteúdo social",
   "status": "success",
@@ -61,6 +61,6 @@
       }
     ],
     "total_variations": 3,
-    "generated_at": "2026-04-11T19:29:07.505Z"
+    "generated_at": "2026-04-11T20:45:01.287Z"
   }
 },

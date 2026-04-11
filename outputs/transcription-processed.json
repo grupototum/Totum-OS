@@ -41,7 +41,7 @@
     ],
     "script": "{\"ctas\":[{\"texto\":\"me segue\",\"tipo\":\"explicito\",\"intencao\":\"network\"},{\"texto\":\"comenta IA\",\"tipo\":\"explicito\",\"intencao\":\"engagement\"}]}",
     "status": "success",
-    "processedAt": "2026-04-11T19:21:50.498Z"
+    "processedAt": "2026-04-11T20:34:27.013Z"
   },
   {
     "originalRecord": {
@@ -85,7 +85,7 @@
     ],
     "script": "{\"ctas\":[{\"texto\":\"me segue\",\"tipo\":\"explicito\",\"intencao\":\"network\"},{\"texto\":\"comenta IA\",\"tipo\":\"explicito\",\"intencao\":\"engagement\"}]}",
     "status": "success",
-    "processedAt": "2026-04-11T19:21:50.505Z"
+    "processedAt": "2026-04-11T20:34:27.027Z"
   },
   {
     "originalRecord": {
@@ -129,7 +129,7 @@
     ],
     "script": "{\"ctas\":[{\"texto\":\"me segue\",\"tipo\":\"explicito\",\"intencao\":\"network\"},{\"texto\":\"comenta IA\",\"tipo\":\"explicito\",\"intencao\":\"engagement\"}]}",
     "status": "success",
-    "processedAt": "2026-04-11T19:21:50.505Z"
+    "processedAt": "2026-04-11T20:34:27.029Z"
   },
   {
     "originalRecord": {
@@ -173,7 +173,7 @@
     ],
     "script": "{\"ctas\":[{\"texto\":\"me segue\",\"tipo\":\"explicito\",\"intencao\":\"network\"},{\"texto\":\"comenta IA\",\"tipo\":\"explicito\",\"intencao\":\"engagement\"}]}",
     "status": "success",
-    "processedAt": "2026-04-11T19:21:50.505Z"
+    "processedAt": "2026-04-11T20:34:27.035Z"
   },
   {
     "originalRecord": {
@@ -217,7 +217,7 @@
     ],
     "script": "{\"ctas\":[{\"texto\":\"me segue\",\"tipo\":\"explicito\",\"intencao\":\"network\"},{\"texto\":\"comenta IA\",\"tipo\":\"explicito\",\"intencao\":\"engagement\"}]}",
     "status": "success",
-    "processedAt": "2026-04-11T19:21:50.505Z"
+    "processedAt": "2026-04-11T20:34:27.038Z"
   },
   {
     "originalRecord": {
@@ -261,7 +261,7 @@
     ],
     "script": "{\"ctas\":[{\"texto\":\"me segue\",\"tipo\":\"explicito\",\"intencao\":\"network\"},{\"texto\":\"comenta IA\",\"tipo\":\"explicito\",\"intencao\":\"engagement\"}]}",
     "status": "success",
-    "processedAt": "2026-04-11T19:21:50.505Z"
+    "processedAt": "2026-04-11T20:34:27.041Z"
   },
   {
     "originalRecord": {
@@ -305,7 +305,7 @@
     ],
     "script": "{\"ctas\":[{\"texto\":\"me segue\",\"tipo\":\"explicito\",\"intencao\":\"network\"},{\"texto\":\"comenta IA\",\"tipo\":\"explicito\",\"intencao\":\"engagement\"}]}",
     "status": "success",
-    "processedAt": "2026-04-11T19:21:50.505Z"
+    "processedAt": "2026-04-11T20:34:27.043Z"
   },
   {
     "originalRecord": {
@@ -349,7 +349,7 @@
     ],
     "script": "{\"ctas\":[{\"texto\":\"me segue\",\"tipo\":\"explicito\",\"intencao\":\"network\"},{\"texto\":\"comenta IA\",\"tipo\":\"explicito\",\"intencao\":\"engagement\"}]}",
     "status": "success",
-    "processedAt": "2026-04-11T19:21:50.505Z"
+    "processedAt": "2026-04-11T20:34:27.052Z"
   },
   {
     "originalRecord": {
@@ -382,7 +382,7 @@
     ],
     "script": "{\"ctas\":[{\"texto\":\"me segue\",\"tipo\":\"explicito\",\"intencao\":\"network\"},{\"texto\":\"comenta IA\",\"tipo\":\"explicito\",\"intencao\":\"engagement\"}]}",
     "status": "success",
-    "processedAt": "2026-04-11T19:21:50.505Z"
+    "processedAt": "2026-04-11T20:34:27.054Z"
   },
   {
     "originalRecord": {
@@ -426,6 +426,6 @@
     ],
     "script": "{\"ctas\":[{\"texto\":\"me segue\",\"tipo\":\"explicito\",\"intencao\":\"network\"},{\"texto\":\"comenta IA\",\"tipo\":\"explicito\",\"intencao\":\"engagement\"}]}",
     "status": "success",
-    "processedAt": "2026-04-11T19:21:50.505Z"
+    "processedAt": "2026-04-11T20:34:27.058Z"
   }
 ]

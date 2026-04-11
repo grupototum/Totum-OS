@@ -1,7 +1,7 @@
 # 📊 RELATÓRIO DE PROCESSAMENTO
 
-**Data:** 11/04/2026, 16:21:50
-**Modo:** MOCK
+**Data:** 11/04/2026, 17:34:27
+**Modo:** REAL (Ollama)
 **OLLAMA URL:** http://localhost:11434
 
 ## Estatísticas

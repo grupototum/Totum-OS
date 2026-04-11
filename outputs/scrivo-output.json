@@ -1,5 +1,5 @@
 {
-  "execution_id": "scrivo-1775935747515",
+  "execution_id": "scrivo-1775940301308",
   "agent": "SCRIVO",
   "task": "Otimizar copy",
   "status": "success",
@@ -38,11 +38,11 @@
       }
     ],
     "best_performing": 2,
-    "generated_at": "2026-04-11T19:29:07.515Z"
+    "generated_at": "2026-04-11T20:45:01.308Z"
   }
 }
 {
-  "execution_id": "scrivo-1775935747515",
+  "execution_id": "scrivo-1775940301308",
   "agent": "SCRIVO",
   "task": "Otimizar copy",
   "status": "success",
@@ -81,6 +81,6 @@
       }
     ],
     "best_performing": 2,
-    "generated_at": "2026-04-11T19:29:07.515Z"
+    "generated_at": "2026-04-11T20:45:01.308Z"
   }
 },

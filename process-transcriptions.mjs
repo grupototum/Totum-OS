@@ -87,7 +87,7 @@ async function parseCSV(filePath) {
 // OLLAMA INTEGRATION
 // ============================================================
 
-async function callOllama(prompt, model = 'mistral') {
+async function callOllama(prompt, model = process.env.OLLAMA_MODEL || 'neural-chat') {
   if (MOCK_MODE) {
     // Return mock responses based on prompt content
     return generateMockResponse(prompt);

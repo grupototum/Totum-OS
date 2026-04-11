@@ -8,6 +8,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { randomUUID } from 'crypto';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -112,7 +113,7 @@ async function ingestToSupabase() {
       ].join('\n');
 
       return {
-        id: `doc-${index + 1}`.padEnd(10),
+        id: randomUUID(),
         title: subject,
         content: combinedContent,
         metadata: {
