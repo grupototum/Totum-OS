@@ -17,7 +17,7 @@ RUN cd api && npm ci
 # Copiar código
 COPY . .
 
-# Build do frontend
+# Build do frontend (com variáveis de ambiente)
 RUN npm run build
 
 # Expor porta
