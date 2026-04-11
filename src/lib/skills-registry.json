@@ -1,0 +1,162 @@
+{
+  "social_planning": {
+    "id": "social_planning",
+    "name": "Social Planning",
+    "emoji": "📅",
+    "description": "Planeja conteúdo social com base em trends e estratégia",
+    "version": "1.0.0",
+    "category": "content",
+    "inputs": {
+      "topic": { "type": "string", "required": true, "description": "Tema principal do conteúdo" },
+      "platforms": { "type": "array", "items": "string", "required": true, "description": "Plataformas alvo (TikTok, Instagram, etc)" },
+      "tone": { "type": "string", "default": "professional", "description": "Tom de voz (professional, casual, funny)" },
+      "count": { "type": "number", "default": 5, "description": "Quantidade de posts a gerar" }
+    },
+    "outputs": {
+      "calendar": { "type": "object", "description": "Calendário de publicação" },
+      "posts_outline": { "type": "array", "description": "Array com outline dos posts" },
+      "hashtags": { "type": "array", "description": "Hashtags sugeridas" }
+    },
+    "model_preference": "claude",
+    "cost_per_call": 0.15,
+    "success_rate": 0.94,
+    "prompt_template": "prompts/social_planning.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 3000
+  },
+
+  "trend_analysis": {
+    "id": "trend_analysis",
+    "name": "Trend Analysis",
+    "emoji": "📈",
+    "description": "Analisa trends atuais em redes sociais para informar estratégia",
+    "version": "1.0.0",
+    "category": "research",
+    "inputs": {
+      "platform": { "type": "string", "required": true, "description": "Plataforma para analisar (TikTok, Instagram, YouTube)" },
+      "timeframe": { "type": "string", "default": "7d", "description": "Período de análise (1d, 7d, 30d)" },
+      "niche": { "type": "string", "description": "Nicho específico para focar" }
+    },
+    "outputs": {
+      "trends": { "type": "array", "description": "Lista de trends identificadas" },
+      "score": { "type": "number", "description": "Score de relevância 0-100" },
+      "recommendations": { "type": "array", "description": "Recomendações de ação" }
+    },
+    "model_preference": "groq",
+    "cost_per_call": 0.02,
+    "success_rate": 0.98,
+    "prompt_template": "prompts/trend_analysis.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 1500
+  },
+
+  "stable_diffusion_prompt": {
+    "id": "stable_diffusion_prompt",
+    "name": "Stable Diffusion Prompt",
+    "emoji": "🎨",
+    "description": "Gera prompts otimizados para Stable Diffusion e geradores de imagem",
+    "version": "1.0.0",
+    "category": "image",
+    "inputs": {
+      "theme": { "type": "string", "required": true, "description": "Tema/conceito da imagem" },
+      "style": { "type": "string", "required": true, "description": "Estilo visual (photorealistic, anime, oil painting)" },
+      "aspect_ratio": { "type": "string", "default": "1:1", "description": "Proporção (1:1, 16:9, 9:16)" },
+      "negative": { "type": "string", "description": "Elementos a evitar" }
+    },
+    "outputs": {
+      "prompt": { "type": "string", "description": "Prompt otimizado positivo" },
+      "negative_prompt": { "type": "string", "description": "Prompt negativo" },
+      "parameters": { "type": "object", "description": "Parâmetros sugeridos (steps, cfg, etc)" }
+    },
+    "model_preference": "gemini",
+    "cost_per_call": 0.05,
+    "success_rate": 0.92,
+    "prompt_template": "prompts/stable_diffusion_prompt.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+
+  "content_validation": {
+    "id": "content_validation",
+    "name": "Content Validation",
+    "emoji": "✅",
+    "description": "Valida qualidade de conteúdo e sugere melhorias",
+    "version": "1.0.0",
+    "category": "validation",
+    "inputs": {
+      "content": { "type": "string", "required": true, "description": "Conteúdo a validar" },
+      "criteria": { "type": "array", "default": ["engagement", "clarity", "tone"], "description": "Critérios de validação" },
+      "platform": { "type": "string", "description": "Plataforma alvo para contexto" }
+    },
+    "outputs": {
+      "score": { "type": "number", "description": "Score geral 0-100" },
+      "feedback": { "type": "array", "description": "Lista de feedbacks específicos" },
+      "suggestions": { "type": "array", "description": "Sugestões de melhoria" },
+      "approved": { "type": "boolean", "description": "Se passou no threshold" }
+    },
+    "model_preference": "claude",
+    "cost_per_call": 0.10,
+    "success_rate": 0.96,
+    "prompt_template": "prompts/content_validation.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+
+  "hashtag_generator": {
+    "id": "hashtag_generator",
+    "name": "Hashtag Generator",
+    "emoji": "#️⃣",
+    "description": "Gera hashtags otimizadas para máximo alcance",
+    "version": "1.0.0",
+    "category": "content",
+    "inputs": {
+      "content": { "type": "string", "required": true, "description": "Conteúdo/tema para hashtags" },
+      "platform": { "type": "string", "required": true, "description": "Plataforma (Instagram, TikTok, LinkedIn)" },
+      "count": { "type": "number", "default": 10, "description": "Quantidade de hashtags" }
+    },
+    "outputs": {
+      "hashtags": { "type": "array", "description": "Array de hashtags" },
+      "categories": { "type": "object", "description": "Hashtags categorizadas por tamanho" },
+      "reach_estimate": { "type": "number", "description": "Estimativa de alcance" }
+    },
+    "model_preference": "groq",
+    "cost_per_call": 0.01,
+    "success_rate": 0.99,
+    "prompt_template": "prompts/hashtag_generator.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 800
+  },
+
+  "copywriting": {
+    "id": "copywriting",
+    "name": "Copywriting",
+    "emoji": "✍️",
+    "description": "Escreve copy persuasiva para anúncios e landing pages",
+    "version": "1.0.0",
+    "category": "content",
+    "inputs": {
+      "product": { "type": "string", "required": true, "description": "Produto/serviço" },
+      "audience": { "type": "string", "required": true, "description": "Público-alvo" },
+      "goal": { "type": "string", "required": true, "description": "Objetivo (vendas, leads, awareness)" },
+      "format": { "type": "string", "default": "social_ad", "description": "Formato do copy" }
+    },
+    "outputs": {
+      "headlines": { "type": "array", "description": "Opções de headline" },
+      "body": { "type": "string", "description": "Corpo do copy" },
+      "cta": { "type": "string", "description": "Call-to-action" },
+      "variations": { "type": "array", "description": "Variações para teste A/B" }
+    },
+    "model_preference": "claude",
+    "cost_per_call": 0.12,
+    "success_rate": 0.93,
+    "prompt_template": "prompts/copywriting.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2500
+  }
+}

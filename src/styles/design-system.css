@@ -1,0 +1,1101 @@
+/**
+ * TOTUM DESIGN SYSTEM v4 - EXACT REPLICA
+ * Baseado no Design System Digital Architect
+ * 
+ * Design Tokens Exatos:
+ * - Background: #EAEAE5
+ * - Stone 900: #1C1917
+ * - Stone 500: #78716C
+ * - Stone 300: #D6D3D1
+ * - Font: Inter (Google Fonts)
+ * - Grid: 12 colunas, max-w-[1400px]
+ * - Animações: reveal, stagger delays, cubic-bezier(0.16, 1, 0.3, 1)
+ * - Ícones: Solar (Iconify)
+ */
+
+/* ============================================================
+   GOOGLE FONTS - INTER
+   ============================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+/* ============================================================
+   CSS VARIABLES - DESIGN TOKENS
+   ============================================================ */
+:root {
+  /* Core Colors - Creative DS */
+  --totum-bg: hsl(var(--background));
+  --totum-bg-alt: hsl(var(--surface));
+  --totum-stone-50: hsl(var(--foreground));
+  --totum-stone-100: hsl(var(--foreground));
+  --totum-stone-200: hsl(var(--muted-foreground));
+  --totum-stone-300: hsl(var(--border));
+  --totum-stone-400: hsl(var(--muted-foreground));
+  --totum-stone-500: hsl(var(--muted-foreground));
+  --totum-stone-600: hsl(var(--muted-foreground));
+  --totum-stone-700: hsl(var(--border));
+  --totum-stone-800: hsl(var(--card));
+  --totum-stone-900: hsl(var(--foreground));
+  
+  /* Semantic Colors */
+  --totum-primary: #ef233c;
+  --totum-primary-foreground: #ffffff;
+  --totum-secondary: #777;
+  --totum-secondary-foreground: #ffffff;
+  --totum-muted: #3f3f46;
+  --totum-muted-foreground: #777;
+  --totum-border: #27272a;
+  --totum-border-subtle: rgba(63, 63, 70, 0.4);
+  --totum-ring: #ef233c;
+  
+  /* Status Colors */
+  --totum-success: #22C55E;
+  --totum-success-bg: rgba(34, 197, 94, 0.15);
+  --totum-success-text: #4ade80;
+  --totum-warning: #F59E0B;
+  --totum-warning-bg: rgba(245, 158, 11, 0.15);
+  --totum-warning-text: #fbbf24;
+  --totum-error: #EF4444;
+  --totum-error-bg: rgba(239, 68, 68, 0.15);
+  --totum-error-text: #f87171;
+  --totum-info: #3B82F6;
+  --totum-info-bg: rgba(59, 130, 246, 0.15);
+  --totum-info-text: #60a5fa;
+  
+  /* Typography */
+  --totum-font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --totum-font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+  
+  /* Font Sizes */
+  --totum-text-xs: 0.75rem;      /* 12px */
+  --totum-text-sm: 0.875rem;     /* 14px */
+  --totum-text-base: 1rem;       /* 16px */
+  --totum-text-lg: 1.125rem;     /* 18px */
+  --totum-text-xl: 1.25rem;      /* 20px */
+  --totum-text-2xl: 1.5rem;      /* 24px */
+  --totum-text-3xl: 1.875rem;    /* 30px */
+  --totum-text-4xl: 2.25rem;     /* 36px */
+  --totum-text-5xl: 3rem;        /* 48px */
+  --totum-text-6xl: 3.75rem;     /* 60px */
+  --totum-text-7xl: 4.5rem;      /* 72px */
+  --totum-text-8xl: 6rem;        /* 96px */
+  --totum-text-9xl: 8rem;        /* 128px */
+  
+  /* Font Weights */
+  --totum-font-light: 300;
+  --totum-font-normal: 400;
+  --totum-font-medium: 500;
+  --totum-font-semibold: 600;
+  --totum-font-bold: 700;
+  --totum-font-extrabold: 800;
+  
+  /* Letter Spacing */
+  --totum-tracking-tighter: -0.05em;
+  --totum-tracking-tight: -0.025em;
+  --totum-tracking-normal: 0;
+  --totum-tracking-wide: 0.025em;
+  --totum-tracking-wider: 0.05em;
+  --totum-tracking-widest: 0.1em;
+  
+  /* Line Heights */
+  --totum-leading-none: 1;
+  --totum-leading-tight: 1.25;
+  --totum-leading-snug: 1.375;
+  --totum-leading-normal: 1.5;
+  --totum-leading-relaxed: 1.625;
+  
+  /* Spacing */
+  --totum-space-0: 0;
+  --totum-space-1: 0.25rem;
+  --totum-space-2: 0.5rem;
+  --totum-space-3: 0.75rem;
+  --totum-space-4: 1rem;
+  --totum-space-5: 1.25rem;
+  --totum-space-6: 1.5rem;
+  --totum-space-8: 2rem;
+  --totum-space-10: 2.5rem;
+  --totum-space-12: 3rem;
+  --totum-space-16: 4rem;
+  --totum-space-20: 5rem;
+  --totum-space-24: 6rem;
+  --totum-space-32: 8rem;
+  
+  /* Border Radius */
+  --totum-radius-none: 0;
+  --totum-radius-sm: 0.125rem;
+  --totum-radius-md: 0.25rem;
+  --totum-radius-lg: 0.5rem;
+  --totum-radius-xl: 0.75rem;
+  --totum-radius-2xl: 1rem;
+  --totum-radius-3xl: 1.5rem;
+  --totum-radius-full: 9999px;
+  
+  /* Shadows */
+  --totum-shadow-sm: 0 1px 2px 0 rgba(28, 25, 23, 0.05);
+  --totum-shadow-md: 0 4px 6px -1px rgba(28, 25, 23, 0.1), 0 2px 4px -2px rgba(28, 25, 23, 0.1);
+  --totum-shadow-lg: 0 10px 15px -3px rgba(28, 25, 23, 0.1), 0 4px 6px -4px rgba(28, 25, 23, 0.1);
+  
+  /* Layout */
+  --totum-container-max: 1400px;
+  --totum-container-padding: 1.5rem;
+  --totum-grid-columns: 12;
+  --totum-grid-gap: 0;
+  
+  /* Transitions */
+  --totum-transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --totum-transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --totum-transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  --totum-transition-reveal: 1s cubic-bezier(0.16, 1, 0.3, 1);
+  --totum-transition-text-reveal: 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Base styles removed — handled by index.css @layer base */
+
+/* ============================================================
+   ANIMATIONS - REVEAL SYSTEM
+   ============================================================ */
+
+/* Base Reveal Animation (Scroll triggered) */
+@keyframes totum-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(2rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.totum-reveal {
+  opacity: 0;
+  transform: translateY(2rem);
+  transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.totum-reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Masked Text Reveal (For Hero Title) */
+.totum-text-reveal-wrapper {
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: bottom;
+}
+
+.totum-text-reveal-content {
+  transform: translateY(110%);
+  opacity: 0;
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.2s ease;
+  display: block;
+}
+
+.totum-reveal-active .totum-text-reveal-content {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Stagger Delays */
+.totum-delay-100 { transition-delay: 0.1s; }
+.totum-delay-200 { transition-delay: 0.2s; }
+.totum-delay-300 { transition-delay: 0.3s; }
+.totum-delay-400 { transition-delay: 0.4s; }
+.totum-delay-500 { transition-delay: 0.5s; }
+.totum-delay-600 { transition-delay: 0.6s; }
+.totum-delay-700 { transition-delay: 0.7s; }
+.totum-delay-800 { transition-delay: 0.8s; }
+
+/* Navigation Load Animation */
+@keyframes totum-nav-load {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.totum-nav-load {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: all 0.8s ease-out;
+}
+
+.totum-nav-load.loaded {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Marquee Animation */
+@keyframes totum-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@keyframes totum-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-100%); }
+}
+
+.totum-marquee-container {
+  display: flex;
+  overflow: hidden;
+  user-select: none;
+}
+
+.totum-marquee-content {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: space-around;
+  min-width: 100%;
+  animation: totum-scroll 40s linear infinite;
+}
+
+/* Carousel Fade & Ken Burns */
+@keyframes totum-ken-burns {
+  from { transform: scale(1); }
+  to { transform: scale(1.1); }
+}
+
+.totum-carousel-slide {
+  position: absolute;
+  inset: 0;
+  transition: opacity 1.5s ease-in-out;
+  opacity: 0;
+  overflow: hidden;
+}
+
+.totum-carousel-slide.active {
+  opacity: 1;
+}
+
+.totum-carousel-slide img {
+  transform: scale(1);
+  transition: transform 10s ease-out;
+}
+
+.totum-carousel-slide.active img {
+  transform: scale(1.1);
+}
+
+/* Fade In */
+@keyframes totum-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.totum-animate-fade-in {
+  animation: totum-fade-in var(--totum-transition-base);
+}
+
+/* Spin Slow */
+@keyframes totum-spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.totum-animate-spin-slow {
+  animation: totum-spin-slow 20s linear infinite;
+}
+
+/* Pulse */
+@keyframes totum-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.totum-animate-pulse {
+  animation: totum-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* ============================================================
+   LAYOUT - CONTAINER & GRID
+   ============================================================ */
+
+/* Main Container - max-w-[1400px] com bordas */
+.totum-container {
+  width: 100%;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+  border-left: 1px solid var(--totum-stone-300);
+  border-right: 1px solid var(--totum-stone-300);
+  position: relative;
+  background-color: var(--totum-bg);
+}
+
+/* Vertical Grid Guide Lines */
+.totum-grid-guides {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 0;
+  z-index: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.totum-grid-guides > div:nth-child(1) {
+  grid-column: span 3;
+  border-right: 1px solid var(--totum-border-subtle);
+  height: 100%;
+}
+
+.totum-grid-guides > div:nth-child(2) {
+  grid-column: span 6;
+  border-right: 1px solid var(--totum-border-subtle);
+  height: 100%;
+}
+
+.totum-grid-guides > div:nth-child(3) {
+  grid-column: span 3;
+  height: 100%;
+}
+
+/* 12 Column Grid */
+.totum-grid-12 {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 0;
+}
+
+/* Col spans */
+.totum-col-1 { grid-column: span 1; }
+.totum-col-2 { grid-column: span 2; }
+.totum-col-3 { grid-column: span 3; }
+.totum-col-4 { grid-column: span 4; }
+.totum-col-5 { grid-column: span 5; }
+.totum-col-6 { grid-column: span 6; }
+.totum-col-7 { grid-column: span 7; }
+.totum-col-8 { grid-column: span 8; }
+.totum-col-9 { grid-column: span 9; }
+.totum-col-10 { grid-column: span 10; }
+.totum-col-11 { grid-column: span 11; }
+.totum-col-12 { grid-column: span 12; }
+
+/* ============================================================
+   TYPOGRAPHY
+   ============================================================ */
+
+/* Display H1 - 6rem / 1 / tracking-tighter */
+.totum-heading-1 {
+  font-size: var(--totum-text-6xl);
+  font-weight: var(--totum-font-semibold);
+  line-height: var(--totum-leading-none);
+  letter-spacing: var(--totum-tracking-tighter);
+  color: var(--totum-stone-900);
+}
+
+@media (min-width: 768px) {
+  .totum-heading-1 {
+    font-size: var(--totum-text-8xl);
+  }
+}
+
+/* Heading H2 - 3rem / tight / tracking-tighter */
+.totum-heading-2 {
+  font-size: var(--totum-text-5xl);
+  font-weight: var(--totum-font-medium);
+  line-height: var(--totum-leading-tight);
+  letter-spacing: var(--totum-tracking-tighter);
+  color: var(--totum-stone-900);
+}
+
+/* Heading H3 - 2.25rem / tight / tracking-tight */
+.totum-heading-3 {
+  font-size: var(--totum-text-4xl);
+  font-weight: var(--totum-font-medium);
+  line-height: var(--totum-leading-tight);
+  letter-spacing: var(--totum-tracking-tight);
+  color: var(--totum-stone-900);
+}
+
+/* Heading H4 - text-3xl */
+.totum-heading-4 {
+  font-size: var(--totum-text-3xl);
+  font-weight: var(--totum-font-medium);
+  line-height: var(--totum-leading-tight);
+  letter-spacing: var(--totum-tracking-tight);
+  color: var(--totum-stone-900);
+}
+
+/* Body Large - 1.125rem / relaxed */
+.totum-body-large {
+  font-size: var(--totum-text-lg);
+  font-weight: var(--totum-font-normal);
+  line-height: var(--totum-leading-relaxed);
+  color: var(--totum-stone-800);
+}
+
+/* Body */
+.totum-body {
+  font-size: var(--totum-text-base);
+  font-weight: var(--totum-font-normal);
+  line-height: var(--totum-leading-relaxed);
+  color: var(--totum-stone-600);
+}
+
+/* Small Text */
+.totum-text-small {
+  font-size: var(--totum-text-sm);
+  font-weight: var(--totum-font-normal);
+  line-height: var(--totum-leading-normal);
+  color: var(--totum-stone-600);
+}
+
+/* Label / Mono - 0.75rem / widest / uppercase */
+.totum-label {
+  font-family: var(--totum-font-mono);
+  font-size: var(--totum-text-xs);
+  font-weight: var(--totum-font-medium);
+  line-height: var(--totum-leading-normal);
+  letter-spacing: var(--totum-tracking-widest);
+  text-transform: uppercase;
+  color: var(--totum-stone-500);
+}
+
+/* Meta / Label variantes */
+.totum-label-muted {
+  color: var(--totum-stone-400);
+}
+
+.totum-label-dark {
+  color: var(--totum-stone-900);
+}
+
+.totum-label-bold {
+  font-weight: var(--totum-font-bold);
+}
+
+/* ============================================================
+   COLORS - UTILITIES
+   ============================================================ */
+
+/* Background Colors */
+.totum-bg-main { background-color: var(--totum-bg); }
+.totum-bg-white { background-color: white; }
+.totum-bg-stone-50 { background-color: var(--totum-stone-50); }
+.totum-bg-stone-100 { background-color: var(--totum-stone-100); }
+.totum-bg-stone-200 { background-color: var(--totum-stone-200); }
+.totum-bg-stone-300 { background-color: var(--totum-stone-300); }
+.totum-bg-stone-500 { background-color: var(--totum-stone-500); }
+.totum-bg-stone-900 { background-color: var(--totum-stone-900); }
+
+/* Text Colors */
+.totum-text-stone-900 { color: var(--totum-stone-900); }
+.totum-text-stone-800 { color: var(--totum-stone-800); }
+.totum-text-stone-600 { color: var(--totum-stone-600); }
+.totum-text-stone-500 { color: var(--totum-stone-500); }
+.totum-text-stone-400 { color: var(--totum-stone-400); }
+.totum-text-white { color: white; }
+
+/* ============================================================
+   SPACING UTILITIES
+   ============================================================ */
+
+/* Padding */
+.totum-p-4 { padding: var(--totum-space-4); }
+.totum-p-6 { padding: var(--totum-space-6); }
+.totum-p-8 { padding: var(--totum-space-8); }
+.totum-p-12 { padding: var(--totum-space-12); }
+
+.totum-px-4 { padding-left: var(--totum-space-4); padding-right: var(--totum-space-4); }
+.totum-px-6 { padding-left: var(--totum-space-6); padding-right: var(--totum-space-6); }
+.totum-px-8 { padding-left: var(--totum-space-8); padding-right: var(--totum-space-8); }
+
+.totum-py-4 { padding-top: var(--totum-space-4); padding-bottom: var(--totum-space-4); }
+.totum-py-5 { padding-top: 1.25rem; padding-bottom: 1.25rem; }
+.totum-py-6 { padding-top: var(--totum-space-6); padding-bottom: var(--totum-space-6); }
+.totum-py-8 { padding-top: var(--totum-space-8); padding-bottom: var(--totum-space-8); }
+.totum-py-12 { padding-top: var(--totum-space-12); padding-bottom: var(--totum-space-12); }
+
+/* Margin */
+.totum-mb-2 { margin-bottom: var(--totum-space-2); }
+.totum-mb-4 { margin-bottom: var(--totum-space-4); }
+.totum-mb-6 { margin-bottom: var(--totum-space-6); }
+.totum-mb-8 { margin-bottom: var(--totum-space-8); }
+
+/* ============================================================
+   BORDERS - ESTILO EDITORIAL
+   ============================================================ */
+
+.totum-border { border: 1px solid var(--totum-stone-300); }
+.totum-border-t { border-top: 1px solid var(--totum-stone-300); }
+.totum-border-b { border-bottom: 1px solid var(--totum-stone-300); }
+.totum-border-l { border-left: 1px solid var(--totum-stone-300); }
+.totum-border-r { border-right: 1px solid var(--totum-stone-300); }
+
+.totum-border-subtle { border-color: var(--totum-border-subtle); }
+
+/* ============================================================
+   COMPONENTS - BUTTONS
+   ============================================================ */
+
+/* Base Button */
+.totum-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--totum-space-2);
+  font-family: var(--totum-font-sans);
+  font-size: var(--totum-text-sm);
+  font-weight: var(--totum-font-medium);
+  line-height: var(--totum-leading-none);
+  border: none;
+  cursor: pointer;
+  outline: none;
+  position: relative;
+  overflow: hidden;
+  transition: all var(--totum-transition-base);
+}
+
+.totum-btn:focus-visible {
+  outline: 2px solid var(--totum-ring);
+  outline-offset: 2px;
+}
+
+.totum-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Primary Button - bg-stone-900, text-white, rounded-md */
+.totum-btn-primary {
+  padding: var(--totum-space-3) var(--totum-space-6);
+  background-color: var(--totum-stone-900);
+  color: white;
+  border-radius: var(--totum-radius-md);
+}
+
+.totum-btn-primary:hover:not(:disabled) {
+  background-color: var(--totum-stone-700);
+}
+
+.totum-btn-primary .totum-icon {
+  transition: transform var(--totum-transition-base);
+}
+
+.totum-btn-primary:hover:not(:disabled) .totum-icon {
+  transform: translateY(2px);
+}
+
+/* Outline / Pill Button - border, rounded-full, uppercase */
+.totum-btn-outline {
+  padding: var(--totum-space-3) var(--totum-space-8);
+  background-color: transparent;
+  color: var(--totum-stone-900);
+  border: 1px solid var(--totum-stone-900);
+  border-radius: var(--totum-radius-full);
+  font-size: var(--totum-text-sm);
+  font-weight: var(--totum-font-medium);
+  text-transform: uppercase;
+  letter-spacing: var(--totum-tracking-widest);
+}
+
+.totum-btn-outline:hover:not(:disabled) {
+  background-color: var(--totum-stone-900);
+  color: white;
+}
+
+/* Text Link - border-bottom */
+.totum-link {
+  font-size: var(--totum-text-sm);
+  font-weight: var(--totum-font-medium);
+  color: var(--totum-stone-600);
+  border-bottom: 1px solid var(--totum-stone-400);
+  padding-bottom: 0.125rem;
+  text-decoration: none;
+  transition: color var(--totum-transition-base), border-color var(--totum-transition-base);
+}
+
+.totum-link:hover {
+  color: var(--totum-stone-900);
+  border-color: var(--totum-stone-900);
+}
+
+/* ============================================================
+   COMPONENTS - CARDS
+   ============================================================ */
+
+/* Project Card - hover:bg-white, border */
+.totum-card {
+  border: 1px solid var(--totum-stone-300);
+  background-color: var(--totum-bg);
+  transition: background-color 0.5s ease, box-shadow var(--totum-transition-base);
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.totum-card:hover {
+  background-color: white;
+  box-shadow: var(--totum-shadow-lg);
+}
+
+.totum-card-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  min-height: 250px;
+}
+
+.totum-card-content {
+  grid-column: span 5;
+  padding: var(--totum-space-8) var(--totum-space-12);
+  border-right: 1px solid var(--totum-stone-300);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.totum-card-image {
+  grid-column: span 7;
+  position: relative;
+  overflow: hidden;
+  background-color: var(--totum-stone-100);
+}
+
+.totum-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(0.8);
+  opacity: 0.8;
+  transition: transform 0.7s ease, filter 0.7s ease, opacity 0.7s ease;
+}
+
+.totum-card:hover .totum-card-image img {
+  transform: scale(1.05);
+  filter: grayscale(0);
+  opacity: 1;
+}
+
+.totum-card:hover .totum-card-title {
+  transform: translateX(0.5rem);
+}
+
+.totum-card-title {
+  font-size: var(--totum-text-4xl);
+  font-weight: var(--totum-font-medium);
+  line-height: var(--totum-leading-tight);
+  letter-spacing: var(--totum-tracking-tight);
+  color: var(--totum-stone-900);
+  margin-bottom: var(--totum-space-4);
+  transition: transform 0.5s ease;
+}
+
+@media (max-width: 768px) {
+  .totum-card-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .totum-card-content {
+    grid-column: span 1;
+    border-right: none;
+  }
+  
+  .totum-card-image {
+    display: none;
+  }
+  
+  .totum-card-title {
+    font-size: var(--totum-text-3xl);
+  }
+}
+
+/* ============================================================
+   COMPONENTS - BADGES
+   ============================================================ */
+
+/* Glass Badge - backdrop-blur, border, rounded-full */
+.totum-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--totum-space-1);
+  padding: var(--totum-space-1) var(--totum-space-3);
+  font-family: var(--totum-font-mono);
+  font-size: var(--totum-text-xs);
+  font-weight: var(--totum-font-medium);
+  line-height: var(--totum-leading-tight);
+  text-transform: uppercase;
+  letter-spacing: var(--totum-tracking-wider);
+  border-radius: var(--totum-radius-full);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.totum-badge-glass {
+  background-color: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: white;
+}
+
+.totum-badge-glass-dark {
+  background-color: transparent;
+  border: 1px solid var(--totum-stone-300);
+  color: var(--totum-stone-600);
+}
+
+/* Status Badges */
+.totum-badge-default {
+  background-color: var(--totum-stone-200);
+  color: var(--totum-stone-800);
+}
+
+.totum-badge-primary {
+  background-color: var(--totum-stone-900);
+  color: white;
+}
+
+.totum-badge-success {
+  background-color: var(--totum-success-bg);
+  color: var(--totum-success-text);
+}
+
+.totum-badge-warning {
+  background-color: var(--totum-warning-bg);
+  color: var(--totum-warning-text);
+}
+
+.totum-badge-error {
+  background-color: var(--totum-error-bg);
+  color: var(--totum-error-text);
+}
+
+.totum-badge-info {
+  background-color: var(--totum-info-bg);
+  color: var(--totum-info-text);
+}
+
+.totum-badge-outline {
+  background-color: transparent;
+  border: 1px solid var(--totum-stone-300);
+  color: var(--totum-stone-600);
+}
+
+/* ============================================================
+   COMPONENTS - NAVIGATION
+   ============================================================ */
+
+.totum-nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  border-bottom: 1px solid var(--totum-stone-300);
+  background-color: var(--totum-bg);
+}
+
+.totum-nav-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem var(--totum-space-6);
+}
+
+.totum-nav-link {
+  font-size: var(--totum-text-xs);
+  font-weight: var(--totum-font-medium);
+  letter-spacing: var(--totum-tracking-widest);
+  text-transform: uppercase;
+  color: var(--totum-stone-900);
+  text-decoration: none;
+  transition: color var(--totum-transition-fast);
+}
+
+.totum-nav-link:hover {
+  color: var(--totum-stone-500);
+}
+
+.totum-nav-brand {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: var(--totum-space-2);
+  cursor: pointer;
+}
+
+.totum-nav-brand-icon {
+  font-size: var(--totum-text-xl);
+  transition: transform 0.7s ease;
+}
+
+.totum-nav-brand:hover .totum-nav-brand-icon {
+  transform: rotate(180deg);
+}
+
+.totum-nav-brand-text {
+  font-weight: var(--totum-font-bold);
+  letter-spacing: var(--totum-tracking-tighter);
+  font-size: var(--totum-text-lg);
+}
+
+/* ============================================================
+   COMPONENTS - STAT CARDS
+   ============================================================ */
+
+.totum-stat {
+  padding: var(--totum-space-8);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: background-color var(--totum-transition-base);
+}
+
+.totum-stat:hover {
+  background-color: white;
+}
+
+.totum-stat-icon {
+  font-size: var(--totum-text-3xl);
+  color: var(--totum-stone-400);
+  transition: color var(--totum-transition-base);
+}
+
+.totum-stat:hover .totum-stat-icon {
+  color: var(--totum-stone-800);
+}
+
+.totum-stat-value {
+  font-size: var(--totum-text-5xl);
+  font-weight: var(--totum-font-medium);
+  line-height: var(--totum-leading-none);
+  letter-spacing: var(--totum-tracking-tighter);
+  color: var(--totum-stone-900);
+}
+
+.totum-stat-label {
+  font-family: var(--totum-font-mono);
+  font-size: var(--totum-text-xs);
+  color: var(--totum-stone-500);
+  margin-top: var(--totum-space-1);
+  display: block;
+}
+
+/* ============================================================
+   COMPONENTS - LIST ITEMS
+   ============================================================ */
+
+/* Check List Item */
+.totum-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--totum-stone-300);
+  padding-bottom: var(--totum-space-2);
+}
+
+.totum-list-item-text {
+  font-size: var(--totum-text-sm);
+  color: var(--totum-stone-600);
+}
+
+.totum-list-item-icon {
+  color: var(--totum-stone-400);
+  font-size: var(--totum-text-lg);
+}
+
+/* Journal Item - Hoverable */
+.totum-journal-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--totum-stone-300);
+  padding-bottom: var(--totum-space-4);
+  text-decoration: none;
+  transition: color var(--totum-transition-base);
+}
+
+.totum-journal-item-date {
+  font-size: var(--totum-text-xs);
+  color: var(--totum-stone-400);
+  margin-bottom: var(--totum-space-1);
+  display: block;
+}
+
+.totum-journal-item-title {
+  font-size: var(--totum-text-lg);
+  font-weight: var(--totum-font-medium);
+  color: var(--totum-stone-900);
+  transition: color var(--totum-transition-base);
+}
+
+.totum-journal-item:hover .totum-journal-item-title {
+  color: var(--totum-stone-600);
+}
+
+.totum-journal-item-icon {
+  font-size: var(--totum-text-xl);
+  color: var(--totum-stone-300);
+  transition: all var(--totum-transition-base);
+}
+
+.totum-journal-item:hover .totum-journal-item-icon {
+  color: var(--totum-stone-900);
+}
+
+/* ============================================================
+   COMPONENTS - SECTION HEADERS
+   ============================================================ */
+
+.totum-section-header {
+  padding: var(--totum-space-8) var(--totum-space-12);
+  border-bottom: 1px solid var(--totum-stone-300);
+  background-color: rgba(245, 245, 244, 0.5);
+}
+
+.totum-section-number {
+  font-family: var(--totum-font-mono);
+  font-size: var(--totum-text-xs);
+  text-transform: uppercase;
+  color: var(--totum-stone-500);
+  display: block;
+  margin-bottom: var(--totum-space-2);
+}
+
+.totum-section-title {
+  font-size: var(--totum-text-4xl);
+  font-weight: var(--totum-font-medium);
+  line-height: var(--totum-leading-tight);
+  letter-spacing: var(--totum-tracking-tight);
+  color: var(--totum-stone-900);
+}
+
+/* ============================================================
+   COMPONENTS - FOOTER
+   ============================================================ */
+
+.totum-footer {
+  background-color: var(--totum-stone-900);
+  color: var(--totum-stone-200);
+  padding-top: var(--totum-space-24);
+  padding-bottom: var(--totum-space-12);
+}
+
+.totum-footer-title {
+  font-size: var(--totum-text-5xl);
+  font-weight: var(--totum-font-medium);
+  line-height: var(--totum-leading-tight);
+  letter-spacing: var(--totum-tracking-tighter);
+  color: white;
+  margin-bottom: var(--totum-space-8);
+}
+
+@media (min-width: 768px) {
+  .totum-footer-title {
+    font-size: var(--totum-text-7xl);
+  }
+}
+
+.totum-footer-link {
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--totum-transition-fast);
+}
+
+.totum-footer-link:hover {
+  color: white;
+}
+
+/* ============================================================
+   HOVER UTILITIES
+   ============================================================ */
+
+.totum-hover-lift {
+  transition: transform var(--totum-transition-base), box-shadow var(--totum-transition-base);
+}
+
+.totum-hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--totum-shadow-lg);
+}
+
+.totum-hover-scale {
+  transition: transform var(--totum-transition-base);
+}
+
+.totum-hover-scale:hover {
+  transform: scale(1.02);
+}
+
+/* ============================================================
+   NO SCROLLBAR
+   ============================================================ */
+
+.totum-no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.totum-no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* ============================================================
+   PARALLAX
+   ============================================================ */
+
+.totum-parallax {
+  will-change: transform;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 768px) {
+  :root {
+    --totum-container-padding: 1rem;
+  }
+  
+  .totum-heading-1 {
+    font-size: var(--totum-text-5xl);
+  }
+  
+  .totum-heading-2 {
+    font-size: var(--totum-text-4xl);
+  }
+  
+  .totum-heading-3 {
+    font-size: var(--totum-text-3xl);
+  }
+  
+  .totum-section-header {
+    padding: var(--totum-space-6) var(--totum-space-8);
+  }
+  
+  .totum-card-content {
+    padding: var(--totum-space-6) var(--totum-space-8);
+  }
+  
+  .totum-stat {
+    padding: var(--totum-space-6);
+  }
+}
+
+/* Hide grid guides on mobile */
+@media (max-width: 768px) {
+  .totum-grid-guides {
+    display: none;
+  }
+}
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .totum-marquee-content {
+    animation: none;
+  }
+}
