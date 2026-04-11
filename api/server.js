@@ -235,7 +235,18 @@ const mimeTypes = {
   '.otf': 'font/otf'
 };
 
-// Middleware to set correct MIME types
+// Specific route for assets with correct MIME types
+app.use('/assets', express.static(path.join(distPath, 'assets'), {
+  setHeaders: (res, filePath) => {
+    const ext = path.extname(filePath).toLowerCase();
+    if (mimeTypes[ext]) {
+      res.setHeader('Content-Type', mimeTypes[ext]);
+    }
+  },
+  maxAge: '1d'
+}));
+
+// General static files
 app.use(express.static(distPath, {
   setHeaders: (res, filePath) => {
     const ext = path.extname(filePath).toLowerCase();
@@ -245,7 +256,7 @@ app.use(express.static(distPath, {
   }
 }));
 
-// SPA Fallback
+// SPA Fallback - must be after static files
 app.get('*', (req, res) => {
   res.sendFile(path.join(distPath, 'index.html'));
 });
