@@ -120,6 +120,40 @@ app.get('/api/outputs', (req, res) => {
   });
 });
 
+// Reset Password (Admin - sem enviar e-mail)
+app.post('/api/admin/reset-password', async (req, res) => {
+  try {
+    const { email, newPassword } = req.body;
+    
+    if (!email || !newPassword) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'Email e nova senha são obrigatórios' 
+      });
+    }
+
+    const { resetPasswordDirect } = await import('./reset-password-direct.mjs');
+    const success = await resetPasswordDirect(email, newPassword);
+    
+    if (success) {
+      res.json({ 
+        success: true, 
+        message: 'Senha redefinida com sucesso' 
+      });
+    } else {
+      res.status(500).json({ 
+        success: false, 
+        error: 'Não foi possível redefinir a senha' 
+      });
+    }
+  } catch (err) {
+    res.status(500).json({ 
+      success: false, 
+      error: err.message 
+    });
+  }
+});
+
 // ============================================================
 // STATIC FILES (Frontend)
 // ============================================================
