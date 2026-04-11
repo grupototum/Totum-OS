@@ -18,8 +18,25 @@ if [ ! -f "docker-compose.yml" ]; then
     exit 1
 fi
 
+# Detectar qual comando docker compose usar
+if docker compose version &>/dev/null; then
+    COMPOSE_CMD="docker compose"
+    echo "✅ Usando: docker compose (plugin)"
+elif docker-compose version &>/dev/null; then
+    COMPOSE_CMD="docker-compose"
+    echo "✅ Usando: docker-compose (standalone)"
+else
+    echo "❌ Docker Compose não encontrado"
+    echo "Instalando..."
+    curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+    chmod +x /usr/local/bin/docker-compose
+    COMPOSE_CMD="docker-compose"
+    echo "✅ Docker Compose instalado"
+fi
+
+echo ""
 echo "🐳 Parando container antigo (se existir)..."
-docker-compose down 2>/dev/null || docker stop apps-totum-oficial 2>/dev/null || true
+$COMPOSE_CMD down 2>/dev/null || docker stop apps-totum-oficial 2>/dev/null || true
 docker rm apps-totum-oficial 2>/dev/null || true
 
 # Remover container antigo com nome diferente
@@ -32,7 +49,7 @@ fi
 
 echo ""
 echo "🔨 Build e iniciando novo container..."
-docker-compose up -d --build
+$COMPOSE_CMD up -d --build
 
 echo ""
 echo "⏳ Aguardando container ficar healthy..."
@@ -46,7 +63,7 @@ if docker ps | grep -q "apps-totum-oficial"; then
     docker ps | grep apps-totum-oficial
 else
     echo "❌ Container não iniciou corretamente"
-    docker-compose logs
+    $COMPOSE_CMD logs
     exit 1
 fi
 
@@ -59,8 +76,8 @@ echo "   - Direto: http://187.127.4.140:3002"
 echo "   - Domínio: http://apps.grupototum.com (após configurar DNS)"
 echo ""
 echo "📋 Comandos úteis:"
-echo "   docker-compose logs -f     - Ver logs"
-echo "   docker-compose ps          - Status"
-echo "   docker-compose restart     - Reiniciar"
-echo "   docker-compose down        - Parar"
+echo "   $COMPOSE_CMD logs -f     - Ver logs"
+echo "   $COMPOSE_CMD ps          - Status"
+echo "   $COMPOSE_CMD restart     - Reiniciar"
+echo "   $COMPOSE_CMD down        - Parar"
 echo "════════════════════════════════════════════════════════════════"
