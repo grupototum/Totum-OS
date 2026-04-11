@@ -1,12 +1,13 @@
 /**
- * TOTUM BUTTON COMPONENT
- * Replica exata do design system Digital Architect
+ * TOTUM BUTTON COMPONENT v5
+ * Design System Digital Architect - Dark Only
  * 
  * Variantes:
- * - primary: bg-stone-900, text-white, rounded-md
- * - outline: border, rounded-full, uppercase tracking-widest
- * - ghost: transparente
- * - link: text com border-bottom
+ * - primary: bg-[#ef233c], text-white
+ * - outline: border-[#ef233c], text-[#ef233c], hover:bg-[#ef233c]
+ * - ghost: transparente com hover
+ * - glow: botão com efeito de brilho (novo)
+ * - beam: botão com efeito de raio vermelho (novo)
  */
 
 import * as React from "react";
@@ -16,29 +17,29 @@ import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
   // Base styles
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-400 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ef233c]/50 disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
-        // Primary: bg-stone-900, text-white, rounded-md
+        // Primary: brand red
         primary: 
-          "bg-stone-900 text-white rounded-md hover:bg-stone-700",
+          "bg-[#ef233c] text-white rounded-none hover:bg-[#dc2626]",
         
-        // Outline: border, rounded-full, uppercase
-        outline: 
-          "border border-stone-900 rounded-full bg-transparent text-stone-900 uppercase tracking-widest text-sm hover:bg-stone-900 hover:text-white",
-        
-        // Secondary: stone-200 bg
+        // Secondary: zinc background
         secondary: 
-          "bg-stone-200 text-stone-900 rounded-md hover:bg-stone-300",
+          "bg-zinc-800 text-white rounded-none hover:bg-zinc-700",
+        
+        // Outline: brand red border
+        outline: 
+          "border border-[#ef233c] bg-transparent text-[#ef233c] rounded-none uppercase tracking-widest text-xs font-bold hover:bg-[#ef233c] hover:text-white",
         
         // Ghost: transparente
         ghost: 
-          "hover:bg-stone-200 text-stone-700 rounded-md",
+          "bg-transparent text-zinc-400 rounded-none hover:text-white hover:bg-zinc-900",
         
-        // Link: text com border-bottom
+        // Link: text com underline
         link: 
-          "text-stone-600 border-b border-stone-400 pb-0.5 rounded-none hover:text-stone-900 hover:border-stone-900 underline-offset-0",
+          "text-zinc-400 underline-offset-4 hover:text-white hover:underline rounded-none bg-transparent",
       },
       size: {
         default: "px-6 py-3 text-sm",
@@ -75,13 +76,13 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {...props}
       >
         {icon && iconPosition === "left" && (
-          <span className="inline-flex items-center justify-center transition-transform duration-200 group-hover:translate-y-0.5">
+          <span className="inline-flex items-center justify-center transition-transform duration-200 group-hover:translate-x-0.5">
             {icon}
           </span>
         )}
         <Slottable>{children}</Slottable>
         {icon && iconPosition === "right" && (
-          <span className="inline-flex items-center justify-center transition-transform duration-200 group-hover:translate-y-0.5">
+          <span className="inline-flex items-center justify-center transition-transform duration-200 group-hover:translate-x-0.5">
             {icon}
           </span>
         )}

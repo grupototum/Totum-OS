@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "sonner";
-import { Eye, EyeOff, Loader2, Sun, Moon } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { lovable } from "@/integrations/lovable/index";
 import { motion } from "framer-motion";
-import { useTheme } from "@/contexts/ThemeContext";
 import { validateLoginForm, type ValidationErrors } from "@/lib/validation";
 
 export default function Login() {
@@ -17,7 +16,6 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [errors, setErrors] = useState<ValidationErrors>({});
-  const { theme, toggleTheme } = useTheme();
 
   const handleGoogleSignIn = async () => {
     setGoogleLoading(true);
@@ -59,15 +57,7 @@ export default function Login() {
   };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background">
-      {/* Theme toggle */}
-      <button
-        onClick={toggleTheme}
-        className="absolute top-4 right-4 z-20 p-2.5 rounded-xl bg-card/60 border border-border/40 backdrop-blur-sm text-muted-foreground hover:text-foreground transition-colors"
-        title={theme === "dark" ? "Modo Claro" : "Modo Escuro"}
-      >
-        {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-      </button>
+    <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-black">
       {/* Grid lines background */}
       <div className="absolute inset-0 pointer-events-none">
         {[1, 2, 3, 4, 5].map((i) => (
@@ -76,7 +66,7 @@ export default function Login() {
             className="absolute top-0 bottom-0 w-px"
             style={{
               left: `${i * 20}%`,
-              background: "linear-gradient(to bottom, transparent, hsl(var(--border) / 0.15), transparent)",
+              background: "linear-gradient(to bottom, transparent, rgba(39, 39, 42, 0.15), transparent)",
               animation: `grid-line-pulse ${3 + i * 0.5}s ease-in-out infinite`,
             }}
           />
@@ -87,7 +77,7 @@ export default function Login() {
             className="absolute left-0 right-0 h-px"
             style={{
               top: `${i * 25}%`,
-              background: "linear-gradient(to right, transparent, hsl(var(--border) / 0.1), transparent)",
+              background: "linear-gradient(to right, transparent, rgba(39, 39, 42, 0.1), transparent)",
             }}
           />
         ))}
@@ -121,33 +111,32 @@ export default function Login() {
               alt="Totum"
               className="w-10 h-10 rounded-lg"
             />
-            <span className="font-sans text-xl font-bold tracking-tight text-foreground">
+            <span className="font-manrope text-xl font-bold tracking-tight text-white">
               Apps Totum
             </span>
           </div>
-          <span className="text-xs font-medium tracking-widest uppercase text-muted-foreground">
+          <span className="text-xs font-medium tracking-widest uppercase text-zinc-500">
             Central de Agentes IA
           </span>
         </div>
 
         {/* Heading */}
         <div className="text-center mb-8">
-          <h1 className="font-sans text-3xl font-bold text-foreground mb-2">
+          <h1 className="font-manrope text-3xl font-bold text-white mb-2">
             Bem-vindo de volta.
           </h1>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-zinc-400">
             Acesse a central de agentes de IA da Totum
           </p>
         </div>
 
         {/* Form card */}
         <form onSubmit={handleSubmit} className="space-y-5">
-          <div className="rounded-2xl border border-border/60 p-6 space-y-4"
-            style={{ background: "hsl(var(--card) / 0.6)", backdropFilter: "blur(12px)" }}
+          <div className="rounded-none border border-zinc-800 p-6 space-y-4 bg-zinc-950/60 backdrop-blur-sm"
           >
             {/* Email */}
             <div className="space-y-1.5">
-              <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+              <label className="text-xs font-medium text-zinc-500 uppercase tracking-wider">
                 Usuário ou E-mail
               </label>
               <input
@@ -160,18 +149,18 @@ export default function Login() {
                 placeholder="Totum ou seu@email.com"
                 disabled={loading}
                 autoComplete="username"
-                className={`w-full px-3.5 py-2.5 text-sm rounded-xl bg-input border text-foreground placeholder:text-muted-foreground/50 outline-none transition-all duration-200 focus:border-primary/50 focus:ring-2 focus:ring-primary/10 ${
-                  errors.email ? "border-destructive focus:border-destructive focus:ring-destructive/10" : "border-border"
+                className={`w-full px-3.5 py-2.5 text-sm rounded-none bg-zinc-900 border text-white placeholder:text-zinc-600 outline-none transition-all duration-200 focus:border-[#ef233c]/50 focus:ring-2 focus:ring-[#ef233c]/10 ${
+                  errors.email ? "border-[#ef233c] focus:border-[#ef233c] focus:ring-[#ef233c]/10" : "border-zinc-800"
                 }`}
               />
               {errors.email && (
-                <p className="text-xs text-destructive mt-1">{errors.email}</p>
+                <p className="text-xs text-[#ef233c] mt-1">{errors.email}</p>
               )}
             </div>
 
             {/* Password */}
             <div className="space-y-1.5">
-              <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+              <label className="text-xs font-medium text-zinc-500 uppercase tracking-wider">
                 Senha
               </label>
               <div className="relative">
@@ -185,33 +174,33 @@ export default function Login() {
                   placeholder="••••••••"
                   disabled={loading}
                   autoComplete="current-password"
-                  className={`w-full px-3.5 py-2.5 pr-11 text-sm rounded-xl bg-input border text-foreground placeholder:text-muted-foreground/50 outline-none transition-all duration-200 focus:border-primary/50 focus:ring-2 focus:ring-primary/10 ${
-                    errors.password ? "border-destructive focus:border-destructive focus:ring-destructive/10" : "border-border"
+                  className={`w-full px-3.5 py-2.5 pr-11 text-sm rounded-none bg-zinc-900 border text-white placeholder:text-zinc-600 outline-none transition-all duration-200 focus:border-[#ef233c]/50 focus:ring-2 focus:ring-[#ef233c]/10 ${
+                    errors.password ? "border-[#ef233c] focus:border-[#ef233c] focus:ring-[#ef233c]/10" : "border-zinc-800"
                   }`}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPass(!showPass)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground/40 hover:text-muted-foreground/70 transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 transition-colors"
                 >
                   {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
               {errors.password && (
-                <p className="text-xs text-destructive mt-1">{errors.password}</p>
+                <p className="text-xs text-[#ef233c] mt-1">{errors.password}</p>
               )}
             </div>
             <div className="flex justify-end">
-              <Link to="/forgot-password" className="text-xs text-primary hover:underline">
+              <Link to="/forgot-password" className="text-xs text-[#ef233c] hover:underline">
                 Esqueci minha senha
               </Link>
             </div>
 
             {/* Divider */}
             <div className="flex items-center gap-3">
-              <div className="flex-1 h-px bg-border/40" />
-              <span className="text-xs text-muted-foreground/50 uppercase tracking-wider">ou</span>
-              <div className="flex-1 h-px bg-border/40" />
+              <div className="flex-1 h-px bg-zinc-800" />
+              <span className="text-xs text-zinc-600 uppercase tracking-wider">ou</span>
+              <div className="flex-1 h-px bg-zinc-800" />
             </div>
 
             {/* Google Sign In */}
@@ -219,7 +208,7 @@ export default function Login() {
               type="button"
               onClick={handleGoogleSignIn}
               disabled={googleLoading || loading}
-              className="w-full py-3 rounded-xl font-sans font-semibold text-sm border border-border/60 text-foreground bg-card/60 backdrop-blur-sm overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:border-border disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2.5"
+              className="w-full py-3 rounded-none font-manrope font-semibold text-sm border border-zinc-800 text-white bg-zinc-900/60 backdrop-blur-sm overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:border-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2.5"
             >
               {googleLoading ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -239,14 +228,14 @@ export default function Login() {
           <button
             type="submit"
             disabled={loading}
-            className="relative w-full py-3 rounded-xl font-sans font-semibold text-sm text-primary-foreground bg-primary overflow-hidden transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed animate-totum-glow"
+            className="relative w-full py-3 rounded-none font-manrope font-semibold text-sm text-white bg-[#ef233c] overflow-hidden transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {/* Particle dots */}
             <div className="absolute inset-0 pointer-events-none">
               {[1, 2, 3, 4, 5].map((i) => (
                 <div
                   key={i}
-                  className="absolute w-0.5 h-0.5 rounded-full bg-primary-foreground/20"
+                  className="absolute w-0.5 h-0.5 rounded-full bg-white/20"
                   style={{
                     left: `${15 + i * 14}%`,
                     top: `${30 + (i % 3) * 20}%`,
@@ -261,13 +250,13 @@ export default function Login() {
 
         {/* Footer */}
         <div className="mt-6 space-y-3 text-center">
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-zinc-400">
             Não tem conta?{" "}
-            <Link to="/signup" className="text-primary hover:underline font-medium">
+            <Link to="/signup" className="text-[#ef233c] hover:underline font-medium">
               Cadastre-se
             </Link>
           </p>
-          <p className="text-xs text-muted-foreground/40">
+          <p className="text-xs text-zinc-600">
             © {new Date().getFullYear()} Grupo Totum · Sistema de Agentes IA
           </p>
         </div>

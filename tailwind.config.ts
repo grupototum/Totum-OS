@@ -14,35 +14,38 @@ export default {
     },
     extend: {
       /* ============================================================
-         FONTS - Inter (exatamente como no design system)
+         FONTS - Manrope + Inter (Design System v5)
          ============================================================ */
       fontFamily: {
         sans: ["Inter", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "sans-serif"],
+        manrope: ["Manrope", "Inter", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "sans-serif"],
         mono: ["SF Mono", "Monaco", "Inconsolata", "Fira Code", "monospace"],
       },
       
       /* ============================================================
-         COLORS - Design System Totum v4
+         COLORS - Design System Totum v5 (Dark Only)
          ============================================================ */
       colors: {
-        // Core Colors - exatas
-        totum: {
-          bg: "hsl(var(--background))",
-          "bg-alt": "hsl(var(--surface))",
+        // Core brand colors
+        brand: {
+          red: "#ef233c",
+          "red-dark": "#dc2626",
+          "red-light": "#f87171",
         },
         
-        // Stone scale exata
-        stone: {
-          50: "#FAFAF9",
-          100: "#F5F5F4",
-          200: "#E7E5E4",
-          300: "#D6D3D1",
-          400: "#A8A29E",
-          500: "#78716C",
-          600: "#57534E",
-          700: "#44403C",
-          800: "#292524",
-          900: "#1C1917",
+        // Zinc scale for dark UI
+        zinc: {
+          50: "#FAFAFA",
+          100: "#F4F4F5",
+          200: "#E4E4E7",
+          300: "#D4D4D8",
+          400: "#A1A1AA",
+          500: "#71717A",
+          600: "#52525B",
+          700: "#3F3F46",
+          800: "#27272A",
+          900: "#18181B",
+          950: "#09090B",
         },
         
         // Shadcn UI semantic colors
@@ -97,7 +100,7 @@ export default {
       },
       
       /* ============================================================
-         LETTER SPACING - tracking-tighter para títulos
+         LETTER SPACING
          ============================================================ */
       letterSpacing: {
         tighter: "-0.05em",
@@ -118,7 +121,7 @@ export default {
       },
       
       /* ============================================================
-         ANIMATIONS - cubic-bezier(0.16, 1, 0.3, 1)
+         ANIMATIONS - Design System v5
          ============================================================ */
       keyframes: {
         "accordion-down": {
@@ -128,6 +131,20 @@ export default {
         "accordion-up": {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
+        },
+        
+        // fadeSlideIn - main entrance animation
+        "fade-slide-in": {
+          "0%": { 
+            opacity: "0", 
+            transform: "translateY(30px)",
+            filter: "blur(8px)"
+          },
+          "100%": { 
+            opacity: "1", 
+            transform: "translateY(0)",
+            filter: "blur(0px)"
+          },
         },
         
         // Reveal animation (scroll triggered)
@@ -166,6 +183,18 @@ export default {
           },
         },
         
+        // Column reveal
+        "column-reveal": {
+          "0%": {
+            clipPath: "inset(0 0 100% 0)",
+            opacity: "0",
+          },
+          "100%": {
+            clipPath: "inset(0 0 0% 0)",
+            opacity: "1",
+          },
+        },
+        
         // Marquee
         marquee: {
           from: { transform: "translateX(0)" },
@@ -189,6 +218,12 @@ export default {
           to: { transform: "rotate(360deg)" },
         },
         
+        // Spin for border effects
+        spin: {
+          from: { transform: "rotate(0deg)" },
+          to: { transform: "rotate(360deg)" },
+        },
+        
         // Fade in
         "fade-in": {
           from: { opacity: "0" },
@@ -200,16 +235,31 @@ export default {
           "0%, 100%": { opacity: "1" },
           "50%": { opacity: "0.5" },
         },
+        
+        // Shimmer
+        shimmer: {
+          to: { transform: "translate(-50%, -50%) rotate(360deg)" },
+        },
+        
+        // Breathe
+        breathe: {
+          "0%, 100%": { transform: "translate(-50%, -50%) scale(1)" },
+          "50%": { transform: "translate(-50%, -50%) scale(1.20)" },
+        },
       },
       
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         
+        // fadeSlideIn - main entrance animation
+        "fade-slide-in": "fade-slide-in 1s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+        
         // Reveal com easing exato
         reveal: "reveal 1s cubic-bezier(0.16, 1, 0.3, 1) forwards",
         "text-reveal": "text-reveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards",
         "nav-load": "nav-load 0.8s ease-out forwards",
+        "column-reveal": "column-reveal 1.4s cubic-bezier(0.16, 1, 0.3, 1) backwards",
         
         // Marquee
         marquee: "marquee 30s linear infinite",
@@ -220,12 +270,19 @@ export default {
         
         // Spin
         "spin-slow": "spin-slow 20s linear infinite",
+        spin: "spin 4s linear infinite",
         
         // Fade
         "fade-in": "fade-in 0.2s ease-out",
         
         // Pulse
         pulse: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+        
+        // Shimmer
+        shimmer: "shimmer 4s linear infinite",
+        
+        // Breathe
+        breathe: "breathe 4.5s linear infinite",
       },
       
       /* ============================================================
@@ -233,6 +290,7 @@ export default {
          ============================================================ */
       transitionTimingFunction: {
         "totum-reveal": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "totum-smooth": "cubic-bezier(0.25, 1, 0.5, 1)",
       },
       
       /* ============================================================
@@ -240,6 +298,13 @@ export default {
          ============================================================ */
       maxWidth: {
         "container": "1400px",
+      },
+      
+      /* ============================================================
+         BACKDROP BLUR
+         ============================================================ */
+      backdropBlur: {
+        xs: "2px",
       },
     },
   },
