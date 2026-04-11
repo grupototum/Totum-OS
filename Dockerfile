@@ -18,7 +18,7 @@ COPY . .
 RUN npm run build
 
 # Expor porta
-EXPOSE 3001
+EXPOSE 3002
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \

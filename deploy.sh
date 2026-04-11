@@ -35,15 +35,15 @@ if command -v docker &> /dev/null; then
     docker run -d \
         --name totum-app \
         --restart unless-stopped \
-        -p 3001:3001 \
+        -p 3002:3002 \
         -e NODE_ENV=production \
-        -e PORT=3001 \
+        -e PORT=3002 \
         totum-app:latest
     
     echo ""
     echo "✅ Deploy Docker concluído!"
     echo ""
-    echo "🌐 Acesse: http://187.127.4.140:3001"
+    echo "🌐 Acesse: http://187.127.4.140:3002"
     echo ""
     echo "Comandos úteis:"
     echo "  docker logs totum-app     - Ver logs"
@@ -79,7 +79,7 @@ else
     echo ""
     echo "✅ Deploy PM2 concluído!"
     echo ""
-    echo "🌐 Acesse: http://187.127.4.140:3001"
+    echo "🌐 Acesse: http://187.127.4.140:3002"
     echo ""
     echo "Comandos úteis:"
     echo "  pm2 logs totum-api        - Ver logs"
