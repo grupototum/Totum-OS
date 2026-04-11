@@ -1,0 +1,66 @@
+{
+  "execution_id": "wanda-1775940301287",
+  "agent": "WANDA",
+  "task": "Gerar conteúdo social",
+  "status": "success",
+  "output": {
+    "variations": [
+      {
+        "id": 1,
+        "platform": "Instagram",
+        "copy": "🚀 IA que revoluciona produtividade\n\nAutomação economiza 10h por semana\n\n✨ Teams com IA deliveram 40% mais\n\n👉 me segue\n\n#IA #Produtividade #Trabalho #Automação #Tech",
+        "engagement_score": 8.5,
+        "recommended_time": "19:00 - 21:00"
+      },
+      {
+        "id": 2,
+        "platform": "TikTok",
+        "copy": "Relaxa que eu exp   lico! 🎯\n\nFerramentas de IA estão mudando como trabalhamos\n\nInsights:\n• Automação economiza 10h por semana\n• Teams com IA deliveram 40% mais\n\n→ me segue\n\n#IA #Produtividade #Trabalho",
+        "engagement_score": 9.2,
+        "recommended_time": "Qualquer hora"
+      },
+      {
+        "id": 3,
+        "platform": "LinkedIn",
+        "copy": "💡 Reflexão: IA que revoluciona produtividade\n\nFerramentas de IA estão mudando como trabalhamos\n\n3 takeaways principais:\n1️⃣ Automação economiza 10h por semana\n2️⃣ Teams com IA deliveram 40% mais\n3️⃣ Treinamento leva só 2 dias\n\nO que você acha?\n\n#IA #Produtividade #Trabalho",
+        "engagement_score": 7.8,
+        "recommended_time": "09:00 - 11:00"
+      }
+    ],
+    "total_variations": 3,
+    "generated_at": "2026-04-11T20:45:01.287Z"
+  }
+}
+{
+  "execution_id": "wanda-1775940301287",
+  "agent": "WANDA",
+  "task": "Gerar conteúdo social",
+  "status": "success",
+  "output": {
+    "variations": [
+      {
+        "id": 1,
+        "platform": "Instagram",
+        "copy": "🚀 IA que revoluciona produtividade\n\nAutomação economiza 10h por semana\n\n✨ Teams com IA deliveram 40% mais\n\n👉 me segue\n\n#IA #Produtividade #Trabalho #Automação #Tech",
+        "engagement_score": 8.5,
+        "recommended_time": "19:00 - 21:00"
+      },
+      {
+        "id": 2,
+        "platform": "TikTok",
+        "copy": "Relaxa que eu exp   lico! 🎯\n\nFerramentas de IA estão mudando como trabalhamos\n\nInsights:\n• Automação economiza 10h por semana\n• Teams com IA deliveram 40% mais\n\n→ me segue\n\n#IA #Produtividade #Trabalho",
+        "engagement_score": 9.2,
+        "recommended_time": "Qualquer hora"
+      },
+      {
+        "id": 3,
+        "platform": "LinkedIn",
+        "copy": "💡 Reflexão: IA que revoluciona produtividade\n\nFerramentas de IA estão mudando como trabalhamos\n\n3 takeaways principais:\n1️⃣ Automação economiza 10h por semana\n2️⃣ Teams com IA deliveram 40% mais\n3️⃣ Treinamento leva só 2 dias\n\nO que você acha?\n\n#IA #Produtividade #Trabalho",
+        "engagement_score": 7.8,
+        "recommended_time": "09:00 - 11:00"
+      }
+    ],
+    "total_variations": 3,
+    "generated_at": "2026-04-11T20:45:01.287Z"
+  }
+},
