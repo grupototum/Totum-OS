@@ -12,16 +12,12 @@ services:
       - PORT=3002
     labels:
       - "traefik.enable=true"
-      # HTTP Router
+      # HTTPS Router (usa certificado automático do Let's Encrypt)
       - "traefik.http.routers.totum.rule=Host(`apps.grupototum.com`)"
-      - "traefik.http.routers.totum.entrypoints=web"
+      - "traefik.http.routers.totum.entrypoints=websecure"
+      - "traefik.http.routers.totum.tls=true"
+      - "traefik.http.routers.totum.tls.certresolver=letsencrypt"
       - "traefik.http.routers.totum.service=totum"
-      # HTTPS Router (descomente após configurar SSL no Traefik)
-      # - "traefik.http.routers.totum-secure.rule=Host(`apps.grupototum.com`)"
-      # - "traefik.http.routers.totum-secure.entrypoints=websecure"
-      # - "traefik.http.routers.totum-secure.tls=true"
-      # - "traefik.http.routers.totum-secure.tls.certresolver=letsencrypt"
-      # - "traefik.http.routers.totum-secure.service=totum"
       # Service
       - "traefik.http.services.totum.loadbalancer.server.port=3002"
     networks:
