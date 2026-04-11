@@ -81,12 +81,11 @@ export default function ClaudeCode() {
     ]);
 
     try {
-      // Try to connect to local API first, fallback to mock
-      const response = await fetch("http://187.127.4.140:8002/api/claude/ask", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: input, context: messages.slice(-5) }),
-      }).catch(() => null);
+      // API call disabled to avoid Mixed Content (HTTPS page calling HTTP API)
+      // const response = await fetch("http://187.127.4.140:8002/api/claude/ask", {...});
+      
+      // Always use mock response for now
+      const response = null;
 
       if (response?.ok) {
         const data = await response.json();

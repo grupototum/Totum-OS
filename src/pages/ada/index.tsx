@@ -69,7 +69,13 @@ export default function AdaPage() {
       // Extrair owner/repo da URL ou usar direto
       const repo = repoUrl.replace('https://github.com/', '').replace('.git', '');
       
-      const response = await fetch('http://187.127.4.140:8002/api/parse', {
+      // API call disabled to avoid Mixed Content (HTTPS page calling HTTP API)
+      // const response = await fetch('http://187.127.4.140:8002/api/parse', {...});
+      
+      throw new Error('Serviço temporariamente indisponível. Use a análise local.');
+      
+      /*
+      const response = await fetch('/api/ada/analyze', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ repo })
@@ -81,6 +87,7 @@ export default function AdaPage() {
       setResult(data);
       setHistory(prev => [repo, ...prev.slice(0, 4)]);
       toast.success('Análise completa! ADA encontrou ' + data.functions?.length + ' funções');
+      */
     } catch (error) {
       toast.error('ADA encontrou um problema: ' + (error as Error).message);
     } finally {

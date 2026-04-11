@@ -11,10 +11,11 @@ interface ServiceStatus {
   lastChecked: Date;
 }
 
+// Serviços monitorados - usar HTTPS ou deixar vazio para evitar Mixed Content
 const SERVICES = [
-  { name: 'Beszel', url: import.meta.env.VITE_BESZEL_URL || 'http://187.127.4.140:8090' },
-  { name: 'Uptime Kuma', url: import.meta.env.VITE_UPTIME_KUMA_URL || 'http://187.127.4.140:3001' },
-];
+  // { name: 'Beszel', url: import.meta.env.VITE_BESZEL_URL },
+  // { name: 'Uptime Kuma', url: import.meta.env.VITE_UPTIME_KUMA_URL },
+].filter(s => s?.url);
 
 export default function ServerStatus() {
   const [services, setServices] = useState<ServiceStatus[]>(
