@@ -36,6 +36,7 @@ import { useAdmin } from "@/hooks/useAdmin";
 import AdminPanel from "@/components/AdminPanel";
 import { Button } from "@/components/ui/button";
 import { useAgents } from "@/hooks/useAgents";
+import { Card, TechCard, ListItemCard } from "@/components/ui/card";
 
 // Configuração visual de UI — apenas ícone e cor, sem dados de negócio
 const AGENT_UI_CONFIG: Record<string, { icon: LucideIcon; color: string; group: 'chat' | 'orquestrador' | 'modos' | 'especializados' }> = {
@@ -97,21 +98,22 @@ export default function Hub() {
   return (
     <AppLayout>
       <div className="min-h-screen bg-black">
-        <div className="max-w-[1400px] mx-auto border-l border-r border-zinc-800 min-h-screen">
-
+        {/* Header Section */}
+        <div className="ds-container border-l border-r border-zinc-800 min-h-screen">
+          
           {/* Header */}
-          <div className="p-8 border-b border-zinc-800">
+          <div className="p-8 border-b border-zinc-800 animate-fade-slide-in">
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
               <div>
                 <div className="flex items-center gap-3 mb-2">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-zinc-800 to-zinc-900 flex items-center justify-center">
+                  <div className="w-12 h-12 bg-gradient-to-br from-zinc-800 to-zinc-900 flex items-center justify-center">
                     <Sparkles className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <h1 className="text-3xl font-semibold text-white tracking-tight font-manrope">
+                    <h1 className="font-manrope text-3xl font-medium text-white tracking-tight">
                       Hub de Agentes
                     </h1>
-                    <p className="text-xs uppercase tracking-widest text-zinc-500">
+                    <p className="font-mono text-[10px] uppercase tracking-widest text-zinc-500 mt-1">
                       Central de Agentes · {totalCount} agentes disponíveis
                     </p>
                   </div>
@@ -119,16 +121,16 @@ export default function Hub() {
               </div>
 
               <div className="flex items-center gap-3">
-                <div className="flex items-center bg-zinc-900 rounded-none p-1 border border-zinc-800">
+                <div className="flex items-center bg-zinc-900 p-1 border border-zinc-800">
                   <button
-                    className="flex items-center gap-2 px-3 py-1.5 rounded-none text-sm font-medium transition-all bg-zinc-800 shadow-sm text-white"
+                    className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium transition-all bg-zinc-800 text-white"
                   >
                     <Grid3X3 className="w-4 h-4" />
                     Grid
                   </button>
                   <button
                     onClick={() => navigate('/agents')}
-                    className="flex items-center gap-2 px-3 py-1.5 rounded-none text-sm font-medium transition-all text-zinc-400 hover:text-white"
+                    className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium transition-all text-zinc-400 hover:text-white"
                   >
                     <Network className="w-4 h-4" />
                     Dashboard
@@ -153,36 +155,38 @@ export default function Hub() {
             </div>
           </div>
 
-          {/* Painel TOT — logo abaixo do header */}
+          {/* Painel TOT — Tech Cards */}
           <div className="px-8 py-4 border-b border-zinc-800 bg-zinc-900/20">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="p-3 bg-zinc-900 border border-zinc-800 relative group overflow-hidden hover:border-[#ef233c]/40 hover:shadow-[0_0_20px_-5px_rgba(239,35,60,0.25)] transition-all duration-500">
+              <TechCard label="System Status" className="min-h-[160px]">
                 <div className="flex items-center gap-2 mb-1">
                   <Network className="w-4 h-4 text-zinc-400" />
-                  <h3 className="font-medium text-sm text-white">TOT - Orquestrador</h3>
+                  <h3 className="font-manrope text-sm font-normal text-white">TOT - Orquestrador</h3>
                 </div>
                 <p className="text-xs text-zinc-400">
                   Coordena todos os modos e agentes especializados.
                 </p>
-              </div>
-              <div className="p-3 bg-zinc-900 border border-zinc-800 relative group overflow-hidden hover:border-[#ef233c]/40 hover:shadow-[0_0_20px_-5px_rgba(239,35,60,0.25)] transition-all duration-500">
+              </TechCard>
+              
+              <TechCard label="System Status" className="min-h-[160px]">
                 <div className="flex items-center gap-2 mb-1">
                   <Users className="w-4 h-4 text-emerald-500" />
-                  <h3 className="font-medium text-sm text-white">Modos de Operação</h3>
+                  <h3 className="font-manrope text-sm font-normal text-white">Modos de Operação</h3>
                 </div>
                 <p className="text-xs text-zinc-400">
                   Pablo (Executor), Data (Dev) e Hug (Atendimento).
                 </p>
-              </div>
-              <div className="p-3 bg-zinc-900 border border-zinc-800 relative group overflow-hidden hover:border-[#ef233c]/40 hover:shadow-[0_0_20px_-5px_rgba(239,35,60,0.25)] transition-all duration-500">
+              </TechCard>
+              
+              <TechCard label="System Status" className="min-h-[160px]">
                 <div className="flex items-center gap-2 mb-1">
                   <Bot className="w-4 h-4 text-amber-500" />
-                  <h3 className="font-medium text-sm text-white">Agentes Especializados</h3>
+                  <h3 className="font-manrope text-sm font-normal text-white">Agentes Especializados</h3>
                 </div>
                 <p className="text-xs text-zinc-400">
                   Giles, Monk, Watson, WALL·E, EVE e mais.
                 </p>
-              </div>
+              </TechCard>
             </div>
           </div>
 
@@ -190,7 +194,7 @@ export default function Hub() {
           <div className="px-8 py-4 border-b border-zinc-800 bg-zinc-900/10">
             <div className="flex items-center gap-6 flex-wrap">
               <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <div className="w-1.5 h-1.5 bg-[#ef233c] animate-pulse" />
                 <span className="text-sm text-zinc-400">
                   <span className="text-white font-semibold">{totalCount}</span> agentes disponíveis
                 </span>
@@ -230,14 +234,14 @@ export default function Hub() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`px-4 py-2 text-sm font-medium rounded-none transition-all ${
+                  className={`px-4 py-2 text-sm font-medium transition-all ${
                     activeTab === tab.id
                       ? 'bg-white text-black'
                       : 'bg-zinc-900 text-zinc-400 border border-zinc-800 hover:bg-zinc-800'
                   }`}
                 >
                   {tab.label}
-                  <span className={`ml-1.5 px-1.5 py-0.5 rounded-none text-xs ${
+                  <span className={`ml-1.5 px-1.5 py-0.5 text-xs ${
                     activeTab === tab.id ? 'bg-black/20' : 'bg-zinc-800 text-zinc-400'
                   }`}>
                     {tab.count}
@@ -260,21 +264,13 @@ export default function Hub() {
                   const Icon = agent.ui.icon;
                   const isChat = agent.ui.group === 'chat';
                   return (
-                    <button
+                    <Card
                       key={agent.id}
-                      onClick={() => isChat ? navigate(`/agents/${agent.id}/chat`) : undefined}
-                      className={`relative w-full text-left group border border-zinc-800 bg-zinc-900 hover:border-[#ef233c]/40 hover:shadow-[0_0_20px_-5px_rgba(239,35,60,0.25)] transition-all duration-500 p-5 overflow-hidden ${
-                        !isChat ? 'cursor-default opacity-80' : 'cursor-pointer'
-                      }`}
+                      cornerAccents={true}
+                      className={`p-5 ${!isChat ? 'cursor-default opacity-80' : 'cursor-pointer'}`}
                     >
-                      {/* Corner marks */}
-                      <span className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-[#ef233c]/60 transition-all duration-500 group-hover:w-5 group-hover:h-5 group-hover:border-[#ef233c] pointer-events-none" />
-                      <span className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-[#ef233c]/60 transition-all duration-500 group-hover:w-5 group-hover:h-5 group-hover:border-[#ef233c] pointer-events-none" />
-                      <span className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-[#ef233c]/60 transition-all duration-500 group-hover:w-5 group-hover:h-5 group-hover:border-[#ef233c] pointer-events-none" />
-                      <span className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-[#ef233c]/60 transition-all duration-500 group-hover:w-5 group-hover:h-5 group-hover:border-[#ef233c] pointer-events-none" />
-
                       <div className="flex items-start gap-4">
-                        <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${agent.ui.color} flex items-center justify-center shrink-0 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                        <div className={`w-12 h-12 bg-gradient-to-br ${agent.ui.color} flex items-center justify-center shrink-0 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
                           {agent.emoji && agent.ui.group !== 'chat' ? (
                             <span className="text-2xl">{agent.emoji}</span>
                           ) : (
@@ -283,11 +279,11 @@ export default function Hub() {
                         </div>
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-2 mb-1">
-                            <h3 className="font-medium text-sm text-white truncate">{agent.name}</h3>
+                            <h3 className="font-manrope text-sm font-normal text-white truncate">{agent.name}</h3>
                             {isChat ? (
-                              <span className="shrink-0 w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                              <span className="shrink-0 w-1.5 h-1.5 bg-emerald-500" />
                             ) : (
-                              <span className="shrink-0 w-1.5 h-1.5 rounded-full bg-amber-400" title="Sistema" />
+                              <span className="shrink-0 w-1.5 h-1.5 bg-amber-400" title="Sistema" />
                             )}
                           </div>
                           <p className="text-xs text-zinc-400 leading-relaxed line-clamp-2">{agent.role}</p>
@@ -295,7 +291,7 @@ export default function Hub() {
                       </div>
 
                       <div className="mt-4 flex items-center justify-between">
-                        <span className="text-[10px] uppercase tracking-wider text-zinc-500 font-medium">
+                        <span className="font-mono text-[10px] uppercase tracking-wider text-zinc-500">
                           {isChat ? 'Chat' : 'Sistema'}
                         </span>
                         {isChat && (
@@ -304,13 +300,12 @@ export default function Hub() {
                           </span>
                         )}
                       </div>
-                    </button>
+                    </Card>
                   );
                 })}
               </div>
             )}
           </div>
-
 
         </div>
       </div>

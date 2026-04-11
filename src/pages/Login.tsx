@@ -6,6 +6,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { lovable } from "@/integrations/lovable/index";
 import { motion } from "framer-motion";
 import { validateLoginForm, type ValidationErrors } from "@/lib/validation";
+import { GlowButton, BeamButton } from "@/components/ui/button";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -37,7 +38,6 @@ export default function Login() {
     const validationErrors = validateLoginForm(email, password);
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
-      // Mostra o primeiro erro
       const firstError = Object.values(validationErrors)[0];
       toast.error(firstError);
       return;
@@ -106,37 +106,37 @@ export default function Login() {
         {/* Logo */}
         <div className="flex flex-col items-center mb-8">
           <div className="flex items-center gap-3 mb-3">
-            <img
-              src="https://d2xsxph8kpxj0f.cloudfront.net/310419663032548632/bvUyrRtbH5C9bH6F2BSBEC/totum-icon_c601ad50.png"
-              alt="Totum"
-              className="w-10 h-10 rounded-lg"
-            />
+            <div className="grid grid-cols-2 w-8 h-8 gap-1">
+              <div className="bg-[#ef233c] w-full h-full" />
+              <div className="bg-zinc-700 w-full h-full" />
+              <div className="bg-zinc-800 w-full h-full" />
+              <div className="bg-white w-full h-full shadow-[0_0_10px_rgba(255,255,255,0.4)]" />
+            </div>
             <span className="font-manrope text-xl font-bold tracking-tight text-white">
-              Apps Totum
+              Totum
             </span>
           </div>
-          <span className="text-xs font-medium tracking-widest uppercase text-zinc-500">
-            Central de Agentes IA
+          <span className="font-mono text-[10px] uppercase tracking-widest text-zinc-500">
+            Live Design System
           </span>
         </div>
 
         {/* Heading */}
         <div className="text-center mb-8">
-          <h1 className="font-manrope text-3xl font-bold text-white mb-2">
-            Bem-vindo de volta.
+          <h1 className="font-manrope text-4xl font-medium text-white tracking-tighter mb-2">
+            Design System
           </h1>
-          <p className="text-sm text-zinc-400">
+          <p className="paragraph-lg text-zinc-400">
             Acesse a central de agentes de IA da Totum
           </p>
         </div>
 
         {/* Form card */}
         <form onSubmit={handleSubmit} className="space-y-5">
-          <div className="rounded-none border border-zinc-800 p-6 space-y-4 bg-zinc-950/60 backdrop-blur-sm"
-          >
+          <div className="border border-zinc-800 p-6 space-y-4 bg-black">
             {/* Email */}
             <div className="space-y-1.5">
-              <label className="text-xs font-medium text-zinc-500 uppercase tracking-wider">
+              <label className="label-mono text-zinc-500">
                 Usuário ou E-mail
               </label>
               <input
@@ -149,8 +149,8 @@ export default function Login() {
                 placeholder="Totum ou seu@email.com"
                 disabled={loading}
                 autoComplete="username"
-                className={`w-full px-3.5 py-2.5 text-sm rounded-none bg-zinc-900 border text-white placeholder:text-zinc-600 outline-none transition-all duration-200 focus:border-[#ef233c]/50 focus:ring-2 focus:ring-[#ef233c]/10 ${
-                  errors.email ? "border-[#ef233c] focus:border-[#ef233c] focus:ring-[#ef233c]/10" : "border-zinc-800"
+                className={`input-ds ${
+                  errors.email ? "border-[#ef233c]" : "border-zinc-800"
                 }`}
               />
               {errors.email && (
@@ -160,7 +160,7 @@ export default function Login() {
 
             {/* Password */}
             <div className="space-y-1.5">
-              <label className="text-xs font-medium text-zinc-500 uppercase tracking-wider">
+              <label className="label-mono text-zinc-500">
                 Senha
               </label>
               <div className="relative">
@@ -174,14 +174,14 @@ export default function Login() {
                   placeholder="••••••••"
                   disabled={loading}
                   autoComplete="current-password"
-                  className={`w-full px-3.5 py-2.5 pr-11 text-sm rounded-none bg-zinc-900 border text-white placeholder:text-zinc-600 outline-none transition-all duration-200 focus:border-[#ef233c]/50 focus:ring-2 focus:ring-[#ef233c]/10 ${
-                    errors.password ? "border-[#ef233c] focus:border-[#ef233c] focus:ring-[#ef233c]/10" : "border-zinc-800"
+                  className={`input-ds pr-11 ${
+                    errors.password ? "border-[#ef233c]" : "border-zinc-800"
                   }`}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPass(!showPass)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 transition-colors"
+                  className="absolute right-0 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 transition-colors"
                 >
                   {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
@@ -190,6 +190,7 @@ export default function Login() {
                 <p className="text-xs text-[#ef233c] mt-1">{errors.password}</p>
               )}
             </div>
+            
             <div className="flex justify-end">
               <Link to="/forgot-password" className="text-xs text-[#ef233c] hover:underline">
                 Esqueci minha senha
@@ -199,7 +200,7 @@ export default function Login() {
             {/* Divider */}
             <div className="flex items-center gap-3">
               <div className="flex-1 h-px bg-zinc-800" />
-              <span className="text-xs text-zinc-600 uppercase tracking-wider">ou</span>
+              <span className="font-mono text-[10px] uppercase tracking-widest text-zinc-600">ou</span>
               <div className="flex-1 h-px bg-zinc-800" />
             </div>
 
@@ -208,7 +209,7 @@ export default function Login() {
               type="button"
               onClick={handleGoogleSignIn}
               disabled={googleLoading || loading}
-              className="w-full py-3 rounded-none font-manrope font-semibold text-sm border border-zinc-800 text-white bg-zinc-900/60 backdrop-blur-sm overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:border-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2.5"
+              className="w-full py-3 font-manrope font-semibold text-sm border border-zinc-800 text-white bg-zinc-900 overflow-hidden transition-all duration-300 hover:border-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2.5"
             >
               {googleLoading ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -224,28 +225,15 @@ export default function Login() {
             </button>
           </div>
 
-          {/* Submit */}
-          <button
+          {/* Submit - Primary Glow Button */}
+          <GlowButton
             type="submit"
             disabled={loading}
-            className="relative w-full py-3 rounded-none font-manrope font-semibold text-sm text-white bg-[#ef233c] overflow-hidden transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full"
           >
-            {/* Particle dots */}
-            <div className="absolute inset-0 pointer-events-none">
-              {[1, 2, 3, 4, 5].map((i) => (
-                <div
-                  key={i}
-                  className="absolute w-0.5 h-0.5 rounded-full bg-white/20"
-                  style={{
-                    left: `${15 + i * 14}%`,
-                    top: `${30 + (i % 3) * 20}%`,
-                  }}
-                />
-              ))}
-            </div>
-            {loading && <Loader2 className="inline-block w-4 h-4 mr-2 animate-spin" />}
+            {loading && <Loader2 className="w-4 h-4 animate-spin" />}
             {loading ? "Entrando..." : "Entrar"}
-          </button>
+          </GlowButton>
         </form>
 
         {/* Footer */}
@@ -256,7 +244,7 @@ export default function Login() {
               Cadastre-se
             </Link>
           </p>
-          <p className="text-xs text-zinc-600">
+          <p className="font-mono text-[10px] text-zinc-600">
             © {new Date().getFullYear()} Grupo Totum · Sistema de Agentes IA
           </p>
         </div>
