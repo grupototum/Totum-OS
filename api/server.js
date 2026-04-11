@@ -120,6 +120,40 @@ app.get('/api/outputs', (req, res) => {
   });
 });
 
+// Confirm Email (Admin - confirmar email sem enviar link)
+app.post('/api/admin/confirm-email', async (req, res) => {
+  try {
+    const { email } = req.body;
+    
+    if (!email) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'Email é obrigatório' 
+      });
+    }
+
+    const { confirmUserEmail } = await import('./confirm-email.mjs');
+    const success = await confirmUserEmail(email);
+    
+    if (success) {
+      res.json({ 
+        success: true, 
+        message: 'E-mail confirmado com sucesso' 
+      });
+    } else {
+      res.status(500).json({ 
+        success: false, 
+        error: 'Não foi possível confirmar o e-mail' 
+      });
+    }
+  } catch (err) {
+    res.status(500).json({ 
+      success: false, 
+      error: err.message 
+    });
+  }
+});
+
 // Reset Password (Admin - sem enviar e-mail)
 app.post('/api/admin/reset-password', async (req, res) => {
   try {
