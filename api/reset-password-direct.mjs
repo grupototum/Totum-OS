@@ -8,7 +8,7 @@
  */
 
 const SUPABASE_URL = 'https://cgpkfhrqprqptvehatad.supabase.co';
-const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_KEY || '';
+const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNncGtmaHJxcHJxcHR2ZWhhdGFkIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NDA4NjQwMCwiZXhwIjoyMDU5NjYyNDAwfQ.placeholder';
 
 async function resetPasswordDirect(email, newPassword) {
   console.log('🔑 Redefinindo senha para:', email);
