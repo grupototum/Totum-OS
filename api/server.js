@@ -235,16 +235,21 @@ const mimeTypes = {
   '.otf': 'font/otf'
 };
 
-// Specific route for assets with correct MIME types
-app.use('/assets', express.static(path.join(distPath, 'assets'), {
-  setHeaders: (res, filePath) => {
-    const ext = path.extname(filePath).toLowerCase();
-    if (mimeTypes[ext]) {
-      res.setHeader('Content-Type', mimeTypes[ext]);
-    }
-  },
-  maxAge: '1d'
-}));
+// Specific route for assets with correct MIME types - MUST be before general static
+const assetsPath = path.join(distPath, 'assets');
+
+// Explicit middleware for /assets with proper MIME type handling
+app.use('/assets', (req, res, next) => {
+  const filePath = path.join(assetsPath, req.path);
+  const ext = path.extname(filePath).toLowerCase();
+  
+  // Set Content-Type header before serving
+  if (mimeTypes[ext]) {
+    res.setHeader('Content-Type', mimeTypes[ext]);
+  }
+  
+  next();
+}, express.static(assetsPath, { maxAge: '1d' }));
 
 // General static files
 app.use(express.static(distPath, {
