@@ -256,12 +256,146 @@ async function validateSupabase() {
 // MAIN
 // ============================================================
 
+async function mockIngestToSupabase() {
+  console.log('\n📤 INGESTÃO EM SUPABASE (MODO MOCK)');
+  console.log('='.repeat(50));
+
+  // 1. Validar arquivo de entrada
+  if (!fs.existsSync(PROCESSED_FILE)) {
+    throw new Error(`Arquivo não encontrado: ${PROCESSED_FILE}`);
+  }
+
+  const processed = JSON.parse(fs.readFileSync(PROCESSED_FILE, 'utf8'));
+  console.log(`\n📂 Carregado: ${processed.length} registros processados`);
+
+  // 2. Preparar documentos para ingestão
+  const documents = processed
+    .filter(record => record.status === 'success')
+    .map((record, index) => {
+      const { subject, transcricao, criador } = record.originalRecord;
+      const { insights, summary, tags, category, ctas, trendingTopics, script } = record;
+
+      const combinedContent = [
+        subject,
+        summary,
+        transcricao.substring(0, 500),
+        insights.join(' '),
+        tags.join(' '),
+      ].join('\n');
+
+      return {
+        id: `doc-${index + 1}`.padEnd(10),
+        title: subject,
+        content: combinedContent,
+        metadata: {
+          creator: criador,
+          category,
+          video_url: subject,
+          insights,
+          tags,
+          ctas,
+          trending_topics: trendingTopics,
+          summary,
+          script,
+          processed_at: record.processedAt,
+          source: 'tiktok',
+        },
+        embedding: generateMockEmbedding(combinedContent),
+      };
+    });
+
+  console.log(`✅ Preparados: ${documents.length} documentos para ingestão\n`);
+
+  // 3. Simular ingestão em lotes
+  const BATCH_SIZE = 5;
+  let successCount = 0;
+
+  for (let i = 0; i < documents.length; i += BATCH_SIZE) {
+    const batch = documents.slice(i, i + BATCH_SIZE);
+    const batchNum = Math.floor(i / BATCH_SIZE) + 1;
+    const totalBatches = Math.ceil(documents.length / BATCH_SIZE);
+
+    console.log(`\n[${batchNum}/${totalBatches}] Ingerindo ${batch.length} documentos...`);
+
+    for (const doc of batch) {
+      console.log(`  ✓ ${doc.id} ingerido com sucesso`);
+      successCount++;
+    }
+
+    // Pequeno delay entre batches
+    if (i + BATCH_SIZE < documents.length) {
+      await new Promise(resolve => setTimeout(resolve, 200));
+    }
+  }
+
+  console.log('\n' + '='.repeat(50));
+  console.log(`✅ Ingestão concluída! (MODO MOCK)`);
+  console.log(`  ✓ Sucesso: ${successCount}/${documents.length}`);
+  console.log('='.repeat(50) + '\n');
+
+  // 4. Salvar relatório
+  const report = `# 📊 RELATÓRIO DE INGESTÃO SUPABASE
+
+**Data:** ${new Date().toLocaleString('pt-BR')}
+**Projeto:** cgpkfhrqprqptvehatad
+**Tabela:** rag_documents
+**Modo:** 🔄 MOCK (credenciais não configuradas)
+
+## Estatísticas
+
+- Total de documentos: ${documents.length}
+- Ingestões simuladas: ${successCount}
+- Taxa de sucesso: 100%
+
+## Campos ingeridos (Simulado)
+
+- ✓ title (assunto do vídeo)
+- ✓ content (conteúdo combinado para busca)
+- ✓ metadata (insights, tags, CTAs, etc)
+- ✓ embedding (vetor 1536D para busca semântica)
+- ✓ created_at (timestamp)
+
+## Próximas etapas
+
+1. Configurar \`SUPABASE_KEY\` em .env
+2. Re-executar: \`node ingest-supabase.mjs\`
+3. Testar busca com \`match_documents()\`
+4. Validar embeddings em Supabase
+5. Conectar com agentes WANDA e SCRIVO
+6. Executar workflow N8N
+
+## Documentos Processados
+
+\`\`\`json
+${JSON.stringify(documents.slice(0, 2), null, 2)}
+\`\`\`
+`;
+
+  const reportFile = path.join(OUTPUT_DIR, 'SUPABASE_REPORT.md');
+  fs.writeFileSync(reportFile, report);
+  console.log(`📄 Relatório: ${reportFile}\n`);
+
+  // 5. Salvar embeddings para referência
+  const embeddingsFile = path.join(OUTPUT_DIR, 'embeddings-1536d.json');
+  fs.writeFileSync(embeddingsFile, JSON.stringify({
+    count: documents.length,
+    dimension: 1536,
+    documents: documents.map(d => ({
+      id: d.id,
+      title: d.title,
+      embedding_sample: d.embedding.slice(0, 10), // Primeiros 10 valores
+    })),
+  }, null, 2));
+  console.log(`🔢 Embeddings: ${embeddingsFile}\n`);
+}
+
 async function main() {
   try {
     // Validar Supabase
     const isValid = await validateSupabase();
     if (!isValid) {
-      console.log('⚠️  Continuando com MOCK server (dados não serão ingeridos)\n');
+      console.log('⚠️  Entrando em MODO MOCK para simular ingestão\n');
+      await mockIngestToSupabase();
       return;
     }
 
