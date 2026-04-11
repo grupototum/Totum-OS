@@ -120,6 +120,30 @@ app.get('/api/outputs', (req, res) => {
   });
 });
 
+// Confirm User (Admin - confirma email de usuário automaticamente)
+app.post('/api/admin/confirm-user', async (req, res) => {
+  try {
+    const { email } = req.body;
+    
+    if (!email) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'Email é obrigatório' 
+      });
+    }
+
+    const { confirmUserByEmail } = await import('./confirm-user.mjs');
+    const result = await confirmUserByEmail(email);
+    
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ 
+      success: false, 
+      error: err.message 
+    });
+  }
+});
+
 // Confirm Email (Admin - confirmar email sem enviar link)
 app.post('/api/admin/confirm-email', async (req, res) => {
   try {

@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface AuthContextType {
   session: Session | null;
@@ -36,9 +37,46 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => subscription.unsubscribe();
   }, []);
 
+  const confirmEmailViaAPI = async (email: string): Promise<boolean> => {
+    try {
+      const response = await fetch('/api/admin/confirm-user', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+      
+      const data = await response.json();
+      return data.success;
+    } catch (err) {
+      console.error('Erro ao confirmar email:', err);
+      return false;
+    }
+  };
+
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) throw error;
+    try {
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      
+      // Se o erro for "Email not confirmed", tentar confirmar automaticamente
+      if (error && error.message && error.message.toLowerCase().includes('email not confirmed')) {
+        toast.info('Confirmando email automaticamente...');
+        
+        const confirmed = await confirmEmailViaAPI(email);
+        
+        if (confirmed) {
+          toast.success('Email confirmado! Tentando login novamente...');
+          // Tentar login novamente
+          const { error: retryError } = await supabase.auth.signInWithPassword({ email, password });
+          if (retryError) throw retryError;
+        } else {
+          throw new Error('Não foi possível confirmar o email automaticamente. Entre em contato com o administrador.');
+        }
+      } else if (error) {
+        throw error;
+      }
+    } catch (err: any) {
+      throw err;
+    }
   };
 
   const signUp = async (email: string, password: string, name?: string) => {
