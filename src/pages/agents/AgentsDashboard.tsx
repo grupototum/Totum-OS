@@ -334,7 +334,7 @@ export default function AgentsDashboard() {
                 <p className="text-[10px] text-muted-foreground">Interações por agente</p>
               </CardHeader>
               <CardContent className="pt-0">
-                <div className="h-[260px] w-full">
+                <div className="h-[200px] w-full">
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={chartData}>
                       <XAxis
