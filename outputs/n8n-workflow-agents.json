@@ -1,0 +1,203 @@
+{
+  "name": "TikTok-to-Social-Pipeline",
+  "nodes": [
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=http://localhost:3333/webhook/tot"
+      },
+      "name": "Get Data Source",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [250, 300],
+      "continueOnFail": false
+    },
+    {
+      "parameters": {
+        "filePath": "={{ $json.data_source }}",
+        "dataPropertyName": "data"
+      },
+      "name": "Load Data for Wanda",
+      "type": "n8n-nodes-base.readBinaryFile",
+      "typeVersion": 1,
+      "position": [450, 200]
+    },
+    {
+      "parameters": {
+        "filePath": "={{ $json.data_source }}",
+        "dataPropertyName": "data"
+      },
+      "name": "Load Data for Scrivo",
+      "type": "n8n-nodes-base.readBinaryFile",
+      "typeVersion": 1,
+      "position": [450, 400]
+    },
+    {
+      "parameters": {
+        "loopDataPath": "data"
+      },
+      "name": "Loop - For Each Record",
+      "type": "n8n-nodes-base.itemLists",
+      "typeVersion": 3,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://localhost:3333/webhook/tot",
+        "sendBody": true,
+        "bodyParameters": [
+          {
+            "name": "agent",
+            "value": "wanda"
+          },
+          {
+            "name": "task",
+            "value": "Gerar conteúdo social"
+          },
+          {
+            "name": "data",
+            "value": "={{ {subject: $json.subject, summary: $json.summary, insights: $json.insights, tags: $json.tags, ctas: $json.ctas} }}"
+          }
+        ]
+      },
+      "name": "Send to WANDA",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [850, 150]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://localhost:3333/webhook/tot",
+        "sendBody": true,
+        "bodyParameters": [
+          {
+            "name": "agent",
+            "value": "scrivo"
+          },
+          {
+            "name": "task",
+            "value": "Otimizar copy"
+          },
+          {
+            "name": "data",
+            "value": "={{ {subject: $json.subject, script: $json.script, ctas: $json.ctas, toneOfVoice: $json.category} }}"
+          }
+        ]
+      },
+      "name": "Send to SCRIVO",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [850, 450]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.OUTPUT_API_URL }}/results",
+        "sendBody": true,
+        "bodyParameters": [
+          {
+            "name": "wanda_output",
+            "value": "={{ $nodes['Send to WANDA'].json.output }}"
+          },
+          {
+            "name": "scrivo_output",
+            "value": "={{ $nodes['Send to SCRIVO'].json.output }}"
+          },
+          {
+            "name": "timestamp",
+            "value": "={{ Date.now() }}"
+          }
+        ]
+      },
+      "name": "Save Results",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1050, 300]
+    }
+  ],
+  "connections": {
+    "Get Data Source": {
+      "main": [
+        [
+          {
+            "node": "Load Data for Wanda",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Load Data for Scrivo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load Data for Wanda": {
+      "main": [
+        [
+          {
+            "node": "Loop - For Each Record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load Data for Scrivo": {
+      "main": [
+        [
+          {
+            "node": "Loop - For Each Record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop - For Each Record": {
+      "main": [
+        [
+          {
+            "node": "Send to WANDA",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send to SCRIVO",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send to WANDA": {
+      "main": [
+        [
+          {
+            "node": "Save Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send to SCRIVO": {
+      "main": [
+        [
+          {
+            "node": "Save Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1"
+}

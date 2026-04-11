@@ -1,0 +1,86 @@
+{
+  "execution_id": "scrivo-1775935747515",
+  "agent": "SCRIVO",
+  "task": "Otimizar copy",
+  "status": "success",
+  "output": {
+    "original_script": "Esse novo agente faz tudo automaticamente. Escreve código, testa, corrige bugs. Tudo em minutos.",
+    "optimized_scripts": [
+      {
+        "version": 1,
+        "hook": "🎯 Quer saber o segredo que os profissionais não querem que você saiba?",
+        "body": "Esse novo agente faz tudo automaticamente. Escreve código, testa, corrige bugs. Tudo em minutos.",
+        "cta": "me segue",
+        "closing": "Deixa um comentário: você já conhecia essa técnica?",
+        "tone": "informativo",
+        "duration": "30-45s",
+        "performance_prediction": 8.7
+      },
+      {
+        "version": 2,
+        "hook": "Isso vai mudar tudo para você... 🚀",
+        "body": "Esse novo agente faz tudo automaticamente. Escreve código, testa, corrige bugs. Tudo em minutos.",
+        "cta": "me segue",
+        "closing": "Compartilha com quem precisa aprender isso",
+        "tone": "informativo",
+        "duration": "30-45s",
+        "performance_prediction": 8.9
+      },
+      {
+        "version": 3,
+        "hook": "Claude Code revoluciona desenvolvimento - Ninguém te falou isso antes",
+        "body": "Esse novo agente faz tudo automaticamente. Escreve código, testa, corrige bugs. Tudo em minutos.",
+        "cta": "me segue",
+        "closing": "Compartilhe com 3 amigos que precisam saber disso",
+        "tone": "informativo",
+        "duration": "30-45s",
+        "performance_prediction": 8.5
+      }
+    ],
+    "best_performing": 2,
+    "generated_at": "2026-04-11T19:29:07.515Z"
+  }
+}
+{
+  "execution_id": "scrivo-1775935747515",
+  "agent": "SCRIVO",
+  "task": "Otimizar copy",
+  "status": "success",
+  "output": {
+    "original_script": "Esse novo agente faz tudo automaticamente. Escreve código, testa, corrige bugs. Tudo em minutos.",
+    "optimized_scripts": [
+      {
+        "version": 1,
+        "hook": "🎯 Quer saber o segredo que os profissionais não querem que você saiba?",
+        "body": "Esse novo agente faz tudo automaticamente. Escreve código, testa, corrige bugs. Tudo em minutos.",
+        "cta": "me segue",
+        "closing": "Deixa um comentário: você já conhecia essa técnica?",
+        "tone": "informativo",
+        "duration": "30-45s",
+        "performance_prediction": 8.7
+      },
+      {
+        "version": 2,
+        "hook": "Isso vai mudar tudo para você... 🚀",
+        "body": "Esse novo agente faz tudo automaticamente. Escreve código, testa, corrige bugs. Tudo em minutos.",
+        "cta": "me segue",
+        "closing": "Compartilha com quem precisa aprender isso",
+        "tone": "informativo",
+        "duration": "30-45s",
+        "performance_prediction": 8.9
+      },
+      {
+        "version": 3,
+        "hook": "Claude Code revoluciona desenvolvimento - Ninguém te falou isso antes",
+        "body": "Esse novo agente faz tudo automaticamente. Escreve código, testa, corrige bugs. Tudo em minutos.",
+        "cta": "me segue",
+        "closing": "Compartilhe com 3 amigos que precisam saber disso",
+        "tone": "informativo",
+        "duration": "30-45s",
+        "performance_prediction": 8.5
+      }
+    ],
+    "best_performing": 2,
+    "generated_at": "2026-04-11T19:29:07.515Z"
+  }
+},

@@ -1,0 +1,8 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "/^cd /Users/israellemos/Documents/Totum\\\\ Dev && node process-transcriptions\\.mjs$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    }
+}
