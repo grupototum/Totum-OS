@@ -44,7 +44,7 @@ cd Apps_totum_Oficial
 
 ## 🌐 URLs
 
-- **Local:** http://localhost:5173 (frontend), http://localhost:3000 (api)
+- **Local:** http://localhost:5173 (frontend), http://localhost:3001 (api)
 - **Produção:** http://apps.grupototum.com
 
 ## 📡 API Endpoints
