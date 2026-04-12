@@ -56,7 +56,7 @@ import Operadores from "./pages/settings/Operadores";
 import WikiAlexandria from "./pages/WikiAlexandria";
 import GilesChat from "./pages/GilesChat";
 import AlexandriaPage from "./pages/alexandria";
-import ContextHub from "./pages/alexandria/ContextHub";
+import ContextHubPage from "./pages/alexandria/ContextHubPage";
 import PopsPortal from "./pages/alexandria/PopsPortal";
 import SkillsCentral from "./pages/alexandria/SkillsCentral";
 import OpenClawDashboard from "./pages/alexandria/OpenClawDashboard";
@@ -163,7 +163,7 @@ const App = () => (
             <Route path="/giles" element={<GilesChat />} />
             <Route path="/alexandria" element={<AlexandriaPage />} />
             <Route path="/alexandria/pops" element={<PopsPortal />} />
-            <Route path="/alexandria/context" element={<ContextHub />} />
+            <Route path="/alexandria/context" element={<ContextHubPage />} />
             <Route path="/alexandria/skills" element={<SkillsCentral />} />
             <Route path="/alexandria/openclaw" element={<OpenClawDashboard />} />
 

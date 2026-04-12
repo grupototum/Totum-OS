@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import AppLayout from '@/components/layout/AppLayout';
+import { PageBreadcrumb } from '@/components/navigation/PageBreadcrumb';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -83,7 +85,9 @@ export default function SkillsCentral() {
   });
 
   return (
-    <div className="p-8 space-y-6">
+    <AppLayout>
+      <PageBreadcrumb />
+      <div className="p-8 space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -267,5 +271,6 @@ export default function SkillsCentral() {
         </CardContent>
       </Card>
     </div>
+    </AppLayout>
   );
 }

@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import AppLayout from '@/components/layout/AppLayout';
+import { PageBreadcrumb } from '@/components/navigation/PageBreadcrumb';
 import { useAlexandria } from '@/hooks/useAlexandria';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card } from '@/components/ui/card';
@@ -42,7 +44,9 @@ export default function AlexandriaPage() {
   }
 
   return (
-    <div className="space-y-6 p-6">
+    <AppLayout>
+      <PageBreadcrumb />
+      <div className="space-y-6 p-6">
       {/* Cabeçalho */}
       <div className="flex items-center justify-between">
         <div>
@@ -98,5 +102,6 @@ export default function AlexandriaPage() {
         </TabsContent>
       </Tabs>
     </div>
+    </AppLayout>
   );
 }
