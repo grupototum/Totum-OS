@@ -19,7 +19,7 @@ import {
   SecurityTab,
   AppearanceTab,
   SystemTab,
-} from "./Settings/tabs";
+} from "./settings/tabs";
 
 interface Tab {
   id: string;
