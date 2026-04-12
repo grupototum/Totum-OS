@@ -5,7 +5,7 @@ import {
   LayoutDashboard, Bot, KanbanSquare, GitBranch, Building2,
   Terminal, Users, Settings, LogOut,
   ChevronDown, ChevronRight, Notebook, FileCheck, Lightbulb, ClipboardList, UserPlus, Contact,
-  BookOpen, Server,
+  BookOpen, Server, Library, Brain, Cloud, FileText, Sparkles,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { mainAgents, centralResources } from "@/data/agentHierarchy";
@@ -28,7 +28,6 @@ const staticSections: NavSection[] = [
       { label: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },
       { label: "Hub de Agentes", icon: Bot, path: "/hub" },
       { label: "Painel de Agentes", icon: Bot, path: "/agents-dashboard" },
-      { label: "Alexandria", icon: BookOpen, path: "/alexandria" },
     ],
   },
   {
@@ -57,6 +56,16 @@ const staticSections: NavSection[] = [
   },
 ];
 
+// Alexandria submenu items
+const alexandriaItems: NavItem[] = [
+  { label: "Dashboard", icon: LayoutDashboard, path: "/alexandria" },
+  { label: "Portal POPs", icon: FileText, path: "/alexandria/pops" },
+  { label: "Context HUB", icon: Brain, path: "/alexandria/context" },
+  { label: "Skills", icon: Sparkles, path: "/alexandria/skills" },
+  { label: "OpenClaw", icon: Cloud, path: "/alexandria/openclaw" },
+  { label: "Documentos", icon: Library, path: "/wiki" },
+];
+
 interface Props {
   onNavigate?: () => void;
 }
@@ -68,10 +77,12 @@ export default function AppSidebarContent({ onNavigate }: Props) {
 
   const [expandedAgents, setExpandedAgents] = useState<Record<string, boolean>>({});
   const [expandedResources, setExpandedResources] = useState(false);
+  const [expandedAlexandria, setExpandedAlexandria] = useState(false);
   const [isNavigating, setIsNavigating] = useState(false);
 
   const isActive = (path: string) => location.pathname === path;
   const isChildActive = (parentId: string) => location.pathname.startsWith(`/agentes/${parentId}/`);
+  const isAlexandriaActive = () => location.pathname.startsWith("/alexandria") || location.pathname === "/wiki" || location.pathname === "/giles";
 
   const handleNav = (path: string) => {
     // Previne navegação se já estiver navegando
@@ -143,6 +154,60 @@ export default function AppSidebarContent({ onNavigate }: Props) {
             </ul>
           </div>
         ))}
+
+        {/* Alexandria Section */}
+        <div>
+          <p className="font-mono text-xs uppercase tracking-widest text-[10px] text-sidebar-foreground/40 mb-2 px-2">
+            ALEXANDRIA
+          </p>
+          <ul className="space-y-0.5">
+            <li>
+              <div className="flex items-center">
+                <button
+                  onClick={() => setExpandedAlexandria(!expandedAlexandria)}
+                  className="p-1 text-sidebar-foreground/40 hover:text-sidebar-foreground shrink-0"
+                >
+                  {expandedAlexandria ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
+                </button>
+                <button
+                  onClick={() => handleNav("/alexandria")}
+                  className={cn(
+                    "flex-1 flex items-center gap-2.5 px-2 py-2 rounded-lg transition-all duration-200",
+                    isAlexandriaActive()
+                      ? "bg-sidebar-accent text-primary"
+                      : "text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent/50"
+                  )}
+                >
+                  <BookOpen className="w-4 h-4 shrink-0" />
+                  <span className="text-[12px] font-medium truncate">Alexandria</span>
+                </button>
+              </div>
+              {expandedAlexandria && (
+                <ul className="ml-5 pl-3 border-l border-sidebar-border/50 space-y-0.5 mt-0.5">
+                  {alexandriaItems.map((item) => {
+                    const subActive = isActive(item.path);
+                    return (
+                      <li key={item.path}>
+                        <button
+                          onClick={() => handleNav(item.path)}
+                          className={cn(
+                            "w-full flex items-center gap-2 px-2 py-1.5 rounded-md transition-all duration-200 text-[11px]",
+                            subActive
+                              ? "bg-sidebar-accent text-primary font-medium"
+                              : "text-sidebar-foreground/50 hover:text-sidebar-foreground hover:bg-sidebar-accent/30"
+                          )}
+                        >
+                          <item.icon className="w-3.5 h-3.5 shrink-0" />
+                          <span className="truncate">{item.label}</span>
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+            </li>
+          </ul>
+        </div>
 
         {/* Agents hierarchy */}
         <div>

@@ -52,10 +52,9 @@ import CraudioCodete from "./pages/iatools/CraudioCodete";
 import HostingPanel from "./pages/HostingPanel";
 import Operadores from "./pages/settings/Operadores";
 
-// Alexandria
+// Alexandria - Agora integrado no sistema unificado (sem layout separado)
 import WikiAlexandria from "./pages/WikiAlexandria";
 import GilesChat from "./pages/GilesChat";
-import AlexandriaLayout from "./components/layout/AlexandriaLayout";
 import AlexandriaPage from "./pages/alexandria";
 import ContextHub from "./pages/alexandria/ContextHub";
 import PopsPortal from "./pages/alexandria/PopsPortal";
@@ -67,13 +66,6 @@ const RedirectToAgentDetail = () => {
   const { agentId, agenteId } = useParams();
   return <Navigate to={`/agents/${agentId || agenteId}`} replace />;
 };
-
-// Wrapper para páginas do Alexandria com layout
-const AlexandriaRoutes = () => (
-  <AlexandriaLayout>
-    <Outlet />
-  </AlexandriaLayout>
-);
 
 const queryClient = new QueryClient();
 
@@ -164,17 +156,16 @@ const App = () => (
             <Route path="/hosting" element={<HostingPanel />} />
 
             {/* ============================
-                ALEXANDRIA
+                ALEXANDRIA - INTEGRADO NO SISTEMA UNIFICADO
+                Rotas planas (sem layout aninhado)
                 ============================ */}
             <Route path="/wiki" element={<WikiAlexandria />} />
             <Route path="/giles" element={<GilesChat />} />
-            <Route path="/alexandria" element={<AlexandriaRoutes />}>
-              <Route index element={<AlexandriaPage />} />
-              <Route path="pops" element={<PopsPortal />} />
-              <Route path="context" element={<ContextHub />} />
-              <Route path="skills" element={<SkillsCentral />} />
-              <Route path="openclaw" element={<OpenClawDashboard />} />
-            </Route>
+            <Route path="/alexandria" element={<AlexandriaPage />} />
+            <Route path="/alexandria/pops" element={<PopsPortal />} />
+            <Route path="/alexandria/context" element={<ContextHub />} />
+            <Route path="/alexandria/skills" element={<SkillsCentral />} />
+            <Route path="/alexandria/openclaw" element={<OpenClawDashboard />} />
 
             <Route path="*" element={<NotFound />} />
           </Routes>
