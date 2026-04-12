@@ -27,3 +27,29 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# === GHOST FILES PREVENTION ===
+# Arquivos duplicados do macOS
+* 2
+* 2.*
+
+# Arquivos de backup
+*.bak
+*.backup
+*.tmp
+*~
+
+# Submódulos problemáticos (caso recrie)
+Apps_totum_Oficial/
+
+# Logs e dumps
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+dump.rdb
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+desktop.ini
