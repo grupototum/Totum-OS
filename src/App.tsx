@@ -21,6 +21,7 @@ import NotFound from "./pages/NotFound";
 import AgentsDashboard from "./pages/agents/AgentsDashboard";
 import AgentDetail from "./pages/agents/AgentDetail";
 import AgentChatLayout from "./components/chat/AgentChatLayout";
+import AgentElizaOSEdit from "./pages/agents/AgentElizaOSEdit";
 
 // Tasks - Unificado (QuadroTarefas é a versão com Supabase)
 import QuadroTarefas from "./pages/QuadroTarefas";
@@ -91,6 +92,7 @@ const App = () => (
             <Route path="/agents" element={<AgentsDashboard />} />
             <Route path="/agents/:agentId" element={<AgentDetail />} />
             <Route path="/agents/:agentId/chat" element={<AgentChatLayout />} />
+            <Route path="/agents/elizaos/:agentId/edit" element={<AgentElizaOSEdit />} />
 
             {/* ============================
                 REDIRECTS DE COMPATIBILIDADE (Agentes)
