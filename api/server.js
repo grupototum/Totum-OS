@@ -47,6 +47,63 @@ app.get('/api/health', (req, res) => {
 // API ROUTES
 // ============================================================
 
+// ===== AGENTS (elizaOS-compatible) =====
+
+// GET /api/agents - List all agents
+app.get("/api/agents", async (req, res) => {
+  try {
+    const { listAgents } = await import("./services/agentsService.js");
+    const result = await listAgents();
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// POST /api/agents - Create new agent
+app.post("/api/agents", async (req, res) => {
+  try {
+    const { createAgent } = await import("./services/agentsService.js");
+    const result = await createAgent(req.body);
+    res.status(result.success ? 201 : 400).json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// GET /api/agents/:id - Get single agent
+app.get("/api/agents/:id", async (req, res) => {
+  try {
+    const { getAgent } = await import("./services/agentsService.js");
+    const result = await getAgent(req.params.id);
+    res.status(result.success ? 200 : 404).json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// PATCH /api/agents/:id - Update agent
+app.patch("/api/agents/:id", async (req, res) => {
+  try {
+    const { updateAgent } = await import("./services/agentsService.js");
+    const result = await updateAgent(req.params.id, req.body);
+    res.status(result.success ? 200 : 400).json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// DELETE /api/agents/:id - Delete agent
+app.delete("/api/agents/:id", async (req, res) => {
+  try {
+    const { deleteAgent } = await import("./services/agentsService.js");
+    const result = await deleteAgent(req.params.id);
+    res.status(result.success ? 200 : 404).json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 // Transcribe Pipeline
 app.post('/api/transcribe', async (req, res) => {
   try {
