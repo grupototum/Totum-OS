@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { usePageTransition } from '@/hooks/usePageTransition';
 import AppLayout from '@/components/layout/AppLayout';
 import { Search, BookOpen, Tag, FileText, Database, Server, Users, Settings, ChevronRight } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -29,6 +31,7 @@ const DOMAIN_COLORS: Record<string, string> = {
 };
 
 export default function WikiAlexandria() {
+  const pageTransition = usePageTransition();
   const [searchQuery, setSearchQuery] = useState('');
   const [results, setResults] = useState<GilesChunk[]>([]);
   const [domains, setDomains] = useState<string[]>([]);
@@ -81,7 +84,7 @@ export default function WikiAlexandria() {
 
   return (
     <AppLayout>
-    <div className="min-h-screen bg-background p-6">
+    <motion.div {...pageTransition} className="min-h-screen bg-background p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
@@ -308,7 +311,7 @@ export default function WikiAlexandria() {
           </CardContent>
         </Card>
       </div>
-    </div>
+    </motion.div>
     </AppLayout>
   );
 }

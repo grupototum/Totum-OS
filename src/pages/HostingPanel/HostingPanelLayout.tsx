@@ -1,4 +1,6 @@
 import React, { useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { usePageTransition } from '@/hooks/usePageTransition';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Globe, Container, DollarSign, Shield, Users } from 'lucide-react';
 import AppLayout from '@/components/layout/AppLayout';
@@ -13,6 +15,7 @@ import {
 
 export default function HostingPanelLayout() {
   const { user, loading: authLoading } = useAuth();
+  const pageTransition = usePageTransition();
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -29,7 +32,7 @@ export default function HostingPanelLayout() {
 
   return (
     <AppLayout>
-      <div className="p-6 space-y-6 bg-black min-h-screen">
+      <motion.div {...pageTransition} className="p-6 space-y-6 bg-black min-h-screen">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
@@ -99,7 +102,7 @@ export default function HostingPanelLayout() {
             <AuditTab />
           </TabsContent>
         </Tabs>
-      </div>
+      </motion.div>
     </AppLayout>
   );
 }

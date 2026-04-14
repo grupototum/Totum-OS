@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
+import { usePageTransition } from "@/hooks/usePageTransition";
 import { ArrowLeft, ChevronLeft, ChevronRight, Check, Loader2, Building2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -23,6 +24,7 @@ import type { FormData } from "./hooks";
 export function EditClientLayout() {
   const { clientId } = useParams<{ clientId: string }>();
   const navigate = useNavigate();
+  const pageTransition = usePageTransition();
   const [step, setStep] = React.useState(0);
   const [errors, setErrors] = React.useState<ValidationErrors>({});
 
@@ -32,11 +34,11 @@ export function EditClientLayout() {
   if (loading) {
     return (
       <AppLayout>
-        <div className="p-6 max-w-7xl mx-auto space-y-6">
+        <motion.div {...pageTransition} className="p-6 max-w-7xl mx-auto space-y-6">
           <Skeleton className="h-10 w-64" />
           <Skeleton className="h-12 w-full rounded-xl" />
           <Skeleton className="h-96 rounded-xl" />
-        </div>
+        </motion.div>
       </AppLayout>
     );
   }
@@ -45,7 +47,7 @@ export function EditClientLayout() {
   if (!form) {
     return (
       <AppLayout>
-        <div className="p-6 max-w-7xl mx-auto flex flex-col items-center justify-center min-h-[60vh]">
+        <motion.div {...pageTransition} className="p-6 max-w-7xl mx-auto flex flex-col items-center justify-center min-h-[60vh]">
           <Building2 className="w-16 h-16 text-muted-foreground/40 mb-4" />
           <p className="text-muted-foreground">Cliente não encontrado</p>
           <Button
@@ -55,7 +57,7 @@ export function EditClientLayout() {
           >
             <ArrowLeft className="w-4 h-4 mr-2" /> Voltar
           </Button>
-        </div>
+        </motion.div>
       </AppLayout>
     );
   }
@@ -148,7 +150,7 @@ export function EditClientLayout() {
 
   return (
     <AppLayout>
-      <div className="p-6 max-w-7xl mx-auto">
+      <motion.div {...pageTransition} className="p-6 max-w-7xl mx-auto">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
@@ -260,7 +262,7 @@ export function EditClientLayout() {
             <EditClientPreview form={form} step={step} />
           </div>
         </div>
-      </div>
+      </motion.div>
     </AppLayout>
   );
 }

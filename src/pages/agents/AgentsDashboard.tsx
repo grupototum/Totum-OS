@@ -1,6 +1,7 @@
 import AppLayout from "@/components/layout/AppLayout";
 import { motion } from "framer-motion";
 import { useState, useEffect, useMemo } from "react";
+import { usePageTransition } from "@/hooks/usePageTransition";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -50,6 +51,7 @@ const anim = (i: number) => ({
 /* ─── component ─── */
 export default function AgentsDashboard() {
   const navigate = useNavigate();
+  const pageTransition = usePageTransition();
   const [agents, setAgents] = useState<Agent[]>([]);
   const [interactions, setInteractions] = useState<Interaction[]>([]);
   const [loading, setLoading] = useState(true);
@@ -197,7 +199,7 @@ export default function AgentsDashboard() {
   if (loading) {
     return (
       <AppLayout>
-        <div className="p-6 max-w-7xl mx-auto space-y-6 bg-background min-h-screen">
+        <motion.div {...pageTransition} className="p-6 max-w-7xl mx-auto space-y-6 bg-background min-h-screen">
           <Skeleton className="h-10 w-64" />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {[...Array(4)].map((_, i) => <Skeleton key={i} className="h-28 rounded-xl" />)}
@@ -206,14 +208,14 @@ export default function AgentsDashboard() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {[...Array(6)].map((_, i) => <Skeleton key={i} className="h-40 rounded-xl" />)}
           </div>
-        </div>
+        </motion.div>
       </AppLayout>
     );
   }
 
   return (
     <AppLayout>
-      <div className="min-h-screen bg-background">
+      <motion.div {...pageTransition} className="min-h-screen bg-background">
         <div className="max-w-7xl mx-auto p-6 space-y-8">
 
           {/* ─── Header ─── */}
@@ -404,7 +406,7 @@ export default function AgentsDashboard() {
           </motion.div>
 
         </div>
-      </div>
+      </motion.div>
     </AppLayout>
   );
 }

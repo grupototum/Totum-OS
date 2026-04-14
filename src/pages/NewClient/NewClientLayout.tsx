@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { usePageTransition } from "@/hooks/usePageTransition";
 import { ArrowLeft, ChevronLeft, ChevronRight, Check, Loader2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -21,6 +22,7 @@ import type { FormData } from "./hooks";
  */
 export function NewClientLayout() {
   const navigate = useNavigate();
+  const pageTransition = usePageTransition();
   const [step, setStep] = React.useState(0);
   const [errors, setErrors] = React.useState<ValidationErrors>({});
 
@@ -110,7 +112,7 @@ export function NewClientLayout() {
 
   return (
     <AppLayout>
-      <div className="p-6 max-w-7xl mx-auto">
+      <motion.div {...pageTransition} className="p-6 max-w-7xl mx-auto">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
@@ -222,7 +224,7 @@ export function NewClientLayout() {
             <NewClientPreview form={form} step={step} />
           </div>
         </div>
-      </div>
+      </motion.div>
     </AppLayout>
   );
 }
