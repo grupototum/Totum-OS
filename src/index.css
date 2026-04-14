@@ -45,6 +45,12 @@
     --brand-red-dark: #dc2626;
     --brand-red-light: #f87171;
 
+    /* Secondary Accent Colors */
+    --color-success: #10b981;
+    --color-warning: #f59e0b;
+    --color-error: #ef4444;
+    --color-brand: #ef233c;
+
     /* Navigation Pillars */
     --pillar-agents: linear-gradient(135deg, #2563eb, #1d4ed8);
     --pillar-knowledge: linear-gradient(135deg, #9333ea, #7e22ce);
@@ -79,7 +85,8 @@
   }
 
   body {
-    @apply bg-black text-white;
+    @apply bg-black;
+    color: #d4d4d8; /* zinc-300: improved legibility */
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     font-size: 14px;
     line-height: 1.5;
@@ -815,7 +822,14 @@
     scrollbar-width: none;
   }
 
-  /* Border gradient utility */
+  /* Border gradient with brand red */
+  .border-gradient {
+    position: relative;
+    border: 1px solid transparent;
+    background: linear-gradient(#000, #000) padding-box,
+                linear-gradient(90deg, #ef233c, rgba(239, 35, 60, 0.5)) border-box;
+  }
+
   .border-gradient::before {
     content: '';
     position: absolute;
@@ -826,6 +840,25 @@
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  /* Dashboard background gradient */
+  .bg-dashboard-gradient {
+    background:
+      radial-gradient(circle at 50% 20%, rgba(239, 35, 60, 0.1) 0%, transparent 50%),
+      #000;
+  }
+
+  /* Card background gradient */
+  .bg-card-gradient {
+    background: linear-gradient(135deg, rgba(239, 35, 60, 0.05), transparent);
+  }
+
+  /* Noise texture overlay */
+  .noise-texture {
+    background-image:
+      url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" result="noise"/><feColorMatrix in="noise" type="saturate" values="0"/></filter><rect width="100" height="100" filter="url(%23noise)" opacity="0.03"/></svg>');
     pointer-events: none;
   }
 
@@ -977,5 +1010,25 @@
   }
   50% {
     opacity: 0.3;
+  }
+}
+
+@keyframes pageEnter {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
   }
 }

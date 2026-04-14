@@ -33,6 +33,12 @@ export default {
           "red-dark": "#dc2626",
           "red-light": "#f87171",
         },
+
+        // Secondary accent colors
+        success: "#10b981",
+        warning: "#f59e0b",
+        error: "#ef4444",
+        "brand-red": "#ef233c",
         
         // Zinc scale exact
         zinc: {
@@ -99,7 +105,15 @@ export default {
           ring: "hsl(var(--sidebar-ring))",
         },
       },
-      
+
+      /* ============================================================
+         BACKGROUND IMAGES - Gradients
+         ============================================================ */
+      backgroundImage: {
+        "dashboard-gradient": "radial-gradient(circle at 50% 20%, rgba(239, 35, 60, 0.1) 0%, transparent 50%)",
+        "card-gradient": "linear-gradient(135deg, rgba(239, 35, 60, 0.05), transparent)",
+      },
+
       /* ============================================================
          FONT SIZES - Design System Exact
          ============================================================ */
@@ -209,6 +223,18 @@ export default {
           "0%, 100%": { transform: "scale(1)", opacity: "1" },
           "50%": { transform: "scale(0.8)", opacity: "0.5" },
         },
+
+        // Page transitions
+        "page-enter": {
+          "0%": { opacity: "0", transform: "translateY(10px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+
+        // Fade in
+        "fade-in": {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
       },
 
       animation: {
@@ -235,6 +261,10 @@ export default {
         // Pulse
         "pulse": "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
         "industrial-pulse": "industrial-pulse 1.5s ease-in-out infinite",
+
+        // Page transitions
+        "page-enter": "page-enter 0.4s ease-out",
+        "fade-in": "fade-in 0.3s ease-out",
       },
       
       /* ============================================================
