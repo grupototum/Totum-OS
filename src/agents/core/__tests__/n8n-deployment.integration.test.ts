@@ -13,7 +13,7 @@ import { ContextManager } from '../context-manager';
 vi.mock('axios', () => ({
   default: {
     create: vi.fn(() => ({
-      post: vi.fn().mockResolvedValue({ data: { id: 'wf-123', status: 'success' } }),
+      post: vi.fn().mockResolvedValue({ data: { id: 'wf-123', execution_id: 'exec-123', status: 'success' } }),
       get: vi.fn().mockResolvedValue({ data: { id: 'wf-123', active: true } }),
       patch: vi.fn().mockResolvedValue({ data: { id: 'wf-123' } }),
       delete: vi.fn().mockResolvedValue({ data: {} }),
@@ -37,8 +37,11 @@ vi.mock('@supabase/supabase-js', () => ({
 
 vi.mock('ioredis', () => ({
   default: vi.fn(() => ({
+    get: vi.fn().mockResolvedValue(null),
+    set: vi.fn().mockResolvedValue('OK'),
     setex: vi.fn().mockResolvedValue('OK'),
     quit: vi.fn().mockResolvedValue('OK'),
+    disconnect: vi.fn(),
   })),
 }));
 
@@ -80,6 +83,7 @@ describe('n8n Deployment Integration', () => {
     it('should create basic workflow with webhook trigger', () => {
       const builder = new N8nWorkflowBuilder('Test Workflow', 'Test Description');
       builder.addWebhookTrigger('/webhook/test');
+      builder.addAgentNode('agent-1', 'ARTEMIS', { elizaOsUrl: 'http://localhost:3001', apiKey: 'test-key' });
 
       const workflow = builder.build();
 
@@ -91,6 +95,7 @@ describe('n8n Deployment Integration', () => {
     it('should create workflow with cron trigger', () => {
       const builder = new N8nWorkflowBuilder('Scheduled Workflow');
       builder.addCronTrigger('0 9 * * *');
+      builder.addAgentNode('agent-1', 'ARTEMIS', { elizaOsUrl: 'http://localhost:3001', apiKey: 'test-key' });
 
       const workflow = builder.build();
 
@@ -207,6 +212,7 @@ describe('n8n Deployment Integration', () => {
     it('should export to JSON', () => {
       const builder = new N8nWorkflowBuilder('JSON Test');
       builder.addWebhookTrigger('/webhook');
+      builder.addAgentNode('agent-1', 'ARTEMIS', { elizaOsUrl: 'http://localhost:3001', apiKey: 'test-key' });
 
       const json = builder.toJSON();
 
@@ -226,6 +232,7 @@ describe('n8n Deployment Integration', () => {
     it('should deploy workflow', async () => {
       const builder = new N8nWorkflowBuilder('Deploy Test');
       builder.addWebhookTrigger('/test');
+      builder.addAgentNode('agent-1', 'ARTEMIS', { elizaOsUrl: 'http://localhost:3001', apiKey: 'test-key' });
       const workflow = builder.build();
 
       const workflowId = await n8nClient.deployWorkflow('Test Workflow', workflow, {
@@ -236,7 +243,9 @@ describe('n8n Deployment Integration', () => {
     });
 
     it('should execute workflow', async () => {
-      const execution = await n8nClient.executeWorkflow('exec-123', 'wf-123', {
+      const ctx = await contextManager.create('N8N', 'test execution', 'integration', undefined, { initial: true });
+
+      const execution = await n8nClient.executeWorkflow(ctx.executionId, 'wf-123', {
         message: 'test',
       });
 

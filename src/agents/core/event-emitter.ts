@@ -159,8 +159,11 @@ class WorkflowEventEmitter {
     this.metrics.totalEmitted++;
     this.metrics.byType.set(eventType, (this.metrics.byType.get(eventType) || 0) + 1);
 
-    // Emit to EventEmitter
-    this.eventEmitter.emit(eventType, event);
+    // Execute handlers in priority order synchronously
+    const subs = this.subscriptions.get(eventType) || [];
+    for (const subscription of subs) {
+      await this.handleEvent(subscription, event);
+    }
 
     this.logger.debug(executionId, agentId, `Event emitted: ${eventType}`, { metadata });
   }

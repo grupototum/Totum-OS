@@ -7,25 +7,22 @@ import { ErrorHandler, ErrorCategory, AgentError } from '../error-handler';
 import { ContextManager } from '../context-manager';
 
 // Mock Supabase
+const createMockChainable = (finalValue: any = { data: [], error: null }) => {
+  const promise = Promise.resolve(finalValue);
+  const chainable: any = function() { return promise; };
+  chainable.then = promise.then.bind(promise);
+  chainable.catch = promise.catch.bind(promise);
+  chainable.eq = vi.fn().mockReturnValue(chainable);
+  chainable.gte = vi.fn().mockReturnValue(chainable);
+  chainable.order = vi.fn().mockReturnValue(chainable);
+  chainable.limit = vi.fn().mockReturnValue(chainable);
+  return chainable;
+};
+
 vi.mock('@supabase/supabase-js', () => ({
   createClient: vi.fn(() => ({
     from: vi.fn(() => ({
-      select: vi.fn().mockReturnValue({
-        eq: vi.fn().mockReturnValue({
-          order: vi.fn().mockReturnValue({
-            gte: vi.fn().mockResolvedValue({
-              data: [],
-              error: null,
-            }),
-          }),
-          gte: vi.fn().mockReturnValue({
-            order: vi.fn().mockResolvedValue({
-              data: [],
-              error: null,
-            }),
-          }),
-        }),
-      }),
+      select: vi.fn().mockImplementation(() => createMockChainable()),
       insert: vi.fn().mockResolvedValue({ error: null }),
     })),
   })),
@@ -279,7 +276,7 @@ describe('ErrorHandler', () => {
       expect(strategy.configuration.retryCount).toBe(1);
     });
 
-    it('should suggest fallback when fallback agent available', async () => {
+    it('should suggest fallback when fallback agent available and retries exhausted', async () => {
       const error = new Error('Agent failed');
       const agentError = await errorHandler.handleError(
         error,
@@ -288,6 +285,9 @@ describe('ErrorHandler', () => {
         0,
         'LOKI'
       );
+
+      // Exhaust retries
+      agentError.retryCount = 999;
 
       const context: any = {
         executionId: 'exec-123',

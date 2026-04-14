@@ -6,27 +6,22 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { Logger, LogLevel } from '../logger';
 
 // Mock Supabase and Redis
+const createMockChainable = (finalValue: any = { data: [], error: null }) => {
+  const promise = Promise.resolve(finalValue);
+  const chainable: any = function() { return promise; };
+  chainable.then = promise.then.bind(promise);
+  chainable.catch = promise.catch.bind(promise);
+  chainable.eq = vi.fn().mockReturnValue(chainable);
+  chainable.gte = vi.fn().mockReturnValue(chainable);
+  chainable.order = vi.fn().mockReturnValue(chainable);
+  chainable.limit = vi.fn().mockReturnValue(chainable);
+  return chainable;
+};
+
 vi.mock('@supabase/supabase-js', () => ({
   createClient: vi.fn(() => ({
     from: vi.fn(() => ({
-      select: vi.fn().mockReturnValue({
-        eq: vi.fn().mockReturnValue({
-          gte: vi.fn().mockReturnValue({
-            order: vi.fn().mockReturnValue({
-              limit: vi.fn().mockResolvedValue({
-                data: [],
-                error: null,
-              }),
-            }),
-          }),
-          order: vi.fn().mockReturnValue({
-            limit: vi.fn().mockResolvedValue({
-              data: [],
-              error: null,
-            }),
-          }),
-        }),
-      }),
+      select: vi.fn().mockImplementation(() => createMockChainable()),
       insert: vi.fn().mockResolvedValue({ error: null }),
       delete: vi.fn().mockReturnValue({
         lt: vi.fn().mockResolvedValue({ error: null }),
@@ -60,6 +55,7 @@ describe('Logger', () => {
 
   beforeEach(() => {
     logger = new Logger('https://test.supabase.co', 'test-key', {
+      level: LogLevel.DEBUG,
       enableConsole: true,
       enableDatabase: true,
       enableFile: true,

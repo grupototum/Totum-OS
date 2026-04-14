@@ -115,6 +115,8 @@ class AlertManager {
       severity,
       status: AlertStatus.OPEN,
       source,
+      agentId: metadata.agentId,
+      workflowId: metadata.workflowId,
       timestamp: new Date(),
       metadata,
     };

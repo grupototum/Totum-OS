@@ -595,6 +595,16 @@ class ContextManager {
       console.error('Failed to log context event:', error);
     }
   }
+
+  /**
+   * Destroy the context manager and clean up resources
+   */
+  async destroy(): Promise<void> {
+    this.contextCache.clear();
+    if (this.redisClient && this.redisClient.disconnect) {
+      this.redisClient.disconnect();
+    }
+  }
 }
 
 export { ContextManager, ExecutionContext, Task, MemoryEntry };

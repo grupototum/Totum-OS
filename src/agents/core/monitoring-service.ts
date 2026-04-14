@@ -251,7 +251,7 @@ class MonitoringService {
         p95ResponseTimeMs: responseTimes[Math.floor(total * 0.95)],
         p99ResponseTimeMs: responseTimes[Math.floor(total * 0.99)],
         errorRate: parseFloat(errorRate.toFixed(2)),
-        uptimePercent: successRate,
+        uptimePercent: parseFloat(successRate.toFixed(2)),
         lastExecutionTime: new Date(data[0].recorded_at),
         lastError: data.find((d: any) => d.error)?.error,
       };

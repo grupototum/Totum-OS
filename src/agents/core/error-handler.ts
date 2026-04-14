@@ -227,7 +227,7 @@ class ErrorHandler {
     const classification = this.classifyError(error);
 
     const agentError: AgentError = {
-      code: `${classification.category}_${Date.now()}`,
+      code: `${classification.category}_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
       message: error.message,
       category: classification.category,
       severity: classification.severity,

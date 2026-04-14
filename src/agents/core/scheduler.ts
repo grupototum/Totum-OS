@@ -65,6 +65,19 @@ class Scheduler extends EventEmitter {
   }
 
   /**
+   * Add a task to the pending queue
+   */
+  private enqueueTask(task: ScheduledTask): void {
+    this.queue.pending.push(task);
+    const priorities = { critical: 4, high: 3, normal: 2, low: 1 };
+    this.queue.pending.sort((a, b) => {
+      const priorityDiff = (priorities[b.priority] || 0) - (priorities[a.priority] || 0);
+      if (priorityDiff !== 0) return priorityDiff;
+      return a.scheduledTime.getTime() - b.scheduledTime.getTime();
+    });
+  }
+
+  /**
    * Schedule a task for execution
    */
   async scheduleTask(
