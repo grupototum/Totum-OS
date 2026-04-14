@@ -203,31 +203,38 @@ export default {
           "0%, 100%": { opacity: "1" },
           "50%": { opacity: "0.5" },
         },
+
+        // Industrial pulse for loaders
+        "industrial-pulse": {
+          "0%, 100%": { transform: "scale(1)", opacity: "1" },
+          "50%": { transform: "scale(0.8)", opacity: "0.5" },
+        },
       },
-      
+
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        
+
         // fadeSlideIn with delays
         "fade-slide-in": "fade-slide-in 1s cubic-bezier(0.16, 1, 0.3, 1) forwards",
         "fade-slide-in-800": "fade-slide-in 1s cubic-bezier(0.16, 1, 0.3, 1) 0.8s forwards",
         "fade-slide-in-1000": "fade-slide-in 1s cubic-bezier(0.16, 1, 0.3, 1) 1s forwards",
         "fade-slide-in-1200": "fade-slide-in 1s cubic-bezier(0.16, 1, 0.3, 1) 1.2s forwards",
         "fade-slide-in-1400": "fade-slide-in 1s cubic-bezier(0.16, 1, 0.3, 1) 1.4s forwards",
-        
+
         // Column reveal
         "column-reveal": "column-reveal 1.4s cubic-bezier(0.16, 1, 0.3, 1) backwards",
-        
+
         // Nav load
         "nav-load": "nav-load 0.8s ease-out forwards",
-        
+
         // Spin
         "spin": "spin 4s linear infinite",
         "spin-slow": "spin 3s linear infinite",
-        
+
         // Pulse
         "pulse": "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+        "industrial-pulse": "industrial-pulse 1.5s ease-in-out infinite",
       },
       
       /* ============================================================

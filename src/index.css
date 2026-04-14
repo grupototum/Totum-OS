@@ -44,7 +44,13 @@
     --brand-red: #ef233c;
     --brand-red-dark: #dc2626;
     --brand-red-light: #f87171;
-    
+
+    /* Navigation Pillars */
+    --pillar-agents: linear-gradient(135deg, #2563eb, #1d4ed8);
+    --pillar-knowledge: linear-gradient(135deg, #9333ea, #7e22ce);
+    --pillar-content: linear-gradient(135deg, #16a34a, #15803d);
+    --pillar-operations: linear-gradient(135deg, #ea580c, #dc2626);
+
     /* Zinc scale */
     --zinc-50: #fafafa;
     --zinc-100: #f4f4f5;
@@ -200,6 +206,21 @@
 }
 
 @layer components {
+  /* ============================================
+     TRANSITIONS - Consistent easing
+     ============================================ */
+  .transition-smooth {
+    @apply transition-all duration-300 ease-out;
+  }
+
+  .transition-reveal {
+    @apply transition-all duration-500 cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .transition-fast {
+    @apply transition-all duration-150 ease-in-out;
+  }
+
   /* ============================================
      CONTAINER
      ============================================ */
