@@ -1,0 +1,925 @@
+{
+  "project": "Totum elizaOS - Agent Division Mapping",
+  "timestamp": "2026-04-13T00:00:00Z",
+  "total_agents": 57,
+  "total_divisions": 7,
+  "divisions": [
+    {
+      "division_id": "DIV-001",
+      "division_name": "Growth & Sales Pipeline",
+      "description": "Lead scoring, analysis, and pipeline management",
+      "agents": [
+        {
+          "agent_id": "ARTEMIS",
+          "agent_name": "Growth Hacker",
+          "type": "MVP - Tier 1",
+          "primary_role": "Lead scoring & qualification",
+          "capabilities": [
+            "Lead scoring (0-10)",
+            "Growth opportunity detection",
+            "Expansion potential analysis"
+          ],
+          "input_schema": {
+            "message": "Lead description",
+            "context": {
+              "source": "string",
+              "industry": "string",
+              "budget": "number"
+            }
+          },
+          "output_schema": {
+            "score": "0-10",
+            "recommendation": "string",
+            "reasoning": "string"
+          },
+          "timeout_seconds": 30,
+          "retry_attempts": 2,
+          "success_criteria": "score returned between 0-10",
+          "fallback_agent": "LOKI",
+          "slack_channel": "#sales-growth",
+          "dependencies": [],
+          "parallelizable": true,
+          "sla": {
+            "success_rate_target": 0.95,
+            "avg_response_time_ms": 3000,
+            "max_tokens": 2000
+          }
+        },
+        {
+          "agent_id": "LOKI",
+          "agent_name": "Lead Investigator",
+          "type": "Base (39)",
+          "primary_role": "Deep lead analysis",
+          "capabilities": [
+            "Company research",
+            "Decision maker profiling",
+            "Competitive intelligence"
+          ],
+          "timeout_seconds": 30,
+          "success_criteria": "detailed analysis provided",
+          "fallback_agent": "ANALYZER",
+          "slack_channel": "#sales-growth",
+          "dependencies": ["ARTEMIS"],
+          "parallelizable": false,
+          "sla": {
+            "success_rate_target": 0.93,
+            "avg_response_time_ms": 5000,
+            "max_tokens": 3000
+          }
+        },
+        {
+          "agent_id": "WANDA",
+          "agent_name": "Ideation Agent",
+          "type": "Base (39)",
+          "primary_role": "Creative idea generation",
+          "capabilities": [
+            "Campaign ideas",
+            "Content concepts",
+            "Messaging frameworks"
+          ],
+          "timeout_seconds": 25,
+          "success_criteria": "3+ unique ideas generated",
+          "fallback_agent": "ECHO",
+          "slack_channel": "#sales-growth",
+          "dependencies": ["LOKI"],
+          "parallelizable": true,
+          "sla": {
+            "success_rate_target": 0.94,
+            "avg_response_time_ms": 4000,
+            "max_tokens": 2500
+          }
+        },
+        {
+          "agent_id": "KVIRTUALOSO",
+          "agent_name": "Virtual Expert",
+          "type": "Base (39)",
+          "primary_role": "Industry insights",
+          "capabilities": [
+            "Industry trends",
+            "Competitive benchmarking",
+            "Market analysis"
+          ],
+          "timeout_seconds": 30,
+          "success_criteria": "relevant insights provided",
+          "fallback_agent": "ANALYZER",
+          "slack_channel": "#sales-growth",
+          "dependencies": ["ARTEMIS"],
+          "parallelizable": true,
+          "sla": {
+            "success_rate_target": 0.92,
+            "avg_response_time_ms": 5000,
+            "max_tokens": 3000
+          }
+        },
+        {
+          "agent_id": "SCRAPER-WEB",
+          "agent_name": "Web Scraper",
+          "type": "Base (39)",
+          "primary_role": "Data collection",
+          "capabilities": [
+            "Web scraping",
+            "Content extraction",
+            "Data collection"
+          ],
+          "timeout_seconds": 45,
+          "success_criteria": "data extracted without errors",
+          "fallback_agent": null,
+          "slack_channel": "#data-ops",
+          "dependencies": [],
+          "parallelizable": true,
+          "sla": {
+            "success_rate_target": 0.90,
+            "avg_response_time_ms": 8000,
+            "max_tokens": 1000
+          }
+        },
+        {
+          "agent_id": "ANALYZER",
+          "agent_name": "Analysis Agent",
+          "type": "Base (39)",
+          "primary_role": "Pattern & insight detection",
+          "capabilities": [
+            "Pattern recognition",
+            "Trend analysis",
+            "Data insights"
+          ],
+          "timeout_seconds": 30,
+          "success_criteria": "analysis provided",
+          "fallback_agent": "KVIRTUALOSO",
+          "slack_channel": "#sales-growth",
+          "dependencies": ["SCRAPER-WEB"],
+          "parallelizable": true,
+          "sla": {
+            "success_rate_target": 0.94,
+            "avg_response_time_ms": 4000,
+            "max_tokens": 2000
+          }
+        },
+        {
+          "agent_id": "FORMATTER",
+          "agent_name": "Output Formatter",
+          "type": "Base (39)",
+          "primary_role": "Output standardization",
+          "capabilities": [
+            "Format conversion",
+            "Data standardization",
+            "Output optimization"
+          ],
+          "timeout_seconds": 15,
+          "success_criteria": "formatted output valid",
+          "fallback_agent": null,
+          "slack_channel": "#data-ops",
+          "dependencies": ["ANALYZER"],
+          "parallelizable": true,
+          "sla": {
+            "success_rate_target": 0.97,
+            "avg_response_time_ms": 2000,
+            "max_tokens": 1000
+          }
+        },
+        {
+          "agent_id": "CLEANER",
+          "agent_name": "Data Cleaner",
+          "type": "Base (39)",
+          "primary_role": "Data quality assurance",
+          "capabilities": [
+            "Data cleaning",
+            "Outlier detection",
+            "Standardization"
+          ],
+          "timeout_seconds": 20,
+          "success_criteria": "clean data returned",
+          "fallback_agent": null,
+          "slack_channel": "#data-ops",
+          "dependencies": ["FORMATTER"],
+          "parallelizable": true,
+          "sla": {
+            "success_rate_target": 0.96,
+            "avg_response_time_ms": 3000,
+            "max_tokens": 1500
+          }
+        },
+        {
+          "agent_id": "VALIDATOR",
+          "agent_name": "Data Validator",
+          "type": "Base (39)",
+          "primary_role": "Accuracy validation",
+          "capabilities": [
+            "Data validation",
+            "Quality checks",
+            "Accuracy verification"
+          ],
+          "timeout_seconds": 20,
+          "success_criteria": "validation result provided",
+          "fallback_agent": null,
+          "slack_channel": "#data-ops",
+          "dependencies": ["CLEANER"],
+          "parallelizable": false,
+          "sla": {
+            "success_rate_target": 0.96,
+            "avg_response_time_ms": 3000,
+            "max_tokens": 1000
+          }
+        },
+        {
+          "agent_id": "DEDUPE",
+          "agent_name": "Deduplication Agent",
+          "type": "Base (39)",
+          "primary_role": "Remove duplicates",
+          "capabilities": [
+            "Deduplication",
+            "Merge records",
+            "Data consolidation"
+          ],
+          "timeout_seconds": 25,
+          "success_criteria": "duplicates removed",
+          "fallback_agent": null,
+          "slack_channel": "#data-ops",
+          "dependencies": ["VALIDATOR"],
+          "parallelizable": false,
+          "sla": {
+            "success_rate_target": 0.97,
+            "avg_response_time_ms": 3500,
+            "max_tokens": 2000
+          }
+        },
+        {
+          "agent_id": "VISU",
+          "agent_name": "Visualization Agent",
+          "type": "Base (39)",
+          "primary_role": "Image generation",
+          "capabilities": [
+            "Image generation",
+            "Visual creation",
+            "Design synthesis"
+          ],
+          "timeout_seconds": 40,
+          "success_criteria": "image URL returned",
+          "fallback_agent": null,
+          "slack_channel": "#marketing-creative",
+          "dependencies": [],
+          "parallelizable": true,
+          "sla": {
+            "success_rate_target": 0.90,
+            "avg_response_time_ms": 8000,
+            "max_tokens": 500
+          }
+        }
+      ]
+    },
+    {
+      "division_id": "DIV-002",
+      "division_name": "Brand & Marketing",
+      "description": "Brand monitoring, content creation, and marketing automation",
+      "agent_count": 8,
+      "agents": [
+        {
+          "agent_id": "GUARDIAN",
+          "agent_name": "Brand Guardian",
+          "type": "MVP - Tier 1",
+          "primary_role": "Brand sentiment monitoring",
+          "capabilities": [
+            "Mention tracking",
+            "Sentiment analysis",
+            "Crisis detection"
+          ],
+          "timeout_seconds": 30,
+          "success_criteria": "sentiment score between -1 and 1",
+          "fallback_agent": null,
+          "slack_channel": "#brand-monitoring",
+          "dependencies": [],
+          "parallelizable": true,
+          "sla": {
+            "success_rate_target": 0.95,
+            "avg_response_time_ms": 4000,
+            "max_tokens": 2000
+          }
+        },
+        {
+          "agent_id": "ECHO",
+          "agent_name": "Content Strategist",
+          "type": "MVP - Tier 2",
+          "primary_role": "Content strategy planning",
+          "capabilities": [
+            "Strategy development",
+            "Trend analysis",
+            "Content planning"
+          ],
+          "timeout_seconds": 30,
+          "success_criteria": "strategy document generated",
+          "fallback_agent": "KVIRTUALOSO",
+          "slack_channel": "#content-strategy",
+          "dependencies": [],
+          "parallelizable": true,
+          "sla": {
+            "success_rate_target": 0.93,
+            "avg_response_time_ms": 5000,
+            "max_tokens": 3000
+          }
+        },
+        {
+          "agent_id": "NEXUS",
+          "agent_name": "Community Builder",
+          "type": "MVP - Tier 2",
+          "primary_role": "Community engagement",
+          "capabilities": [
+            "Engagement scoring",
+            "Community moderation",
+            "Discussion analysis"
+          ],
+          "timeout_seconds": 30,
+          "success_criteria": "engagement metrics returned",
+          "fallback_agent": null,
+          "slack_channel": "#community",
+          "dependencies": [],
+          "parallelizable": true,
+          "sla": {
+            "success_rate_target": 0.92,
+            "avg_response_time_ms": 4000,
+            "max_tokens": 2000
+          }
+        },
+        {
+          "agent_id": "HERALD",
+          "agent_name": "Email Marketing Specialist",
+          "type": "MVP - Tier 2",
+          "primary_role": "Email campaign creation",
+          "capabilities": [
+            "Campaign design",
+            "Personalization",
+            "A/B testing"
+          ],
+          "timeout_seconds": 30,
+          "success_criteria": "email template generated",
+          "fallback_agent": "FORMATTER",
+          "slack_channel": "#email-marketing",
+          "dependencies": [],
+          "parallelizable": true,
+          "sla": {
+            "success_rate_target": 0.94,
+            "avg_response_time_ms": 4000,
+            "max_tokens": 2500
+          }
+        },
+        {
+          "agent_id": "CREATOR",
+          "agent_name": "LinkedIn Specialist",
+          "type": "MVP - Tier 2",
+          "primary_role": "LinkedIn content optimization",
+          "capabilities": [
+            "Post optimization",
+            "Platform expertise",
+            "Content adaptation"
+          ],
+          "timeout_seconds": 25,
+          "success_criteria": "optimized post returned",
+          "fallback_agent": "FORMATTER",
+          "slack_channel": "#social-content",
+          "dependencies": ["WANDA"],
+          "parallelizable": true,
+          "sla": {
+            "success_rate_target": 0.94,
+            "avg_response_time_ms": 3500,
+            "max_tokens": 1500
+          }
+        },
+        {
+          "agent_id": "OPTIMIZER",
+          "agent_name": "App Store Optimizer",
+          "type": "MVP - Tier 2",
+          "primary_role": "App Store optimization",
+          "capabilities": [
+            "ASO strategy",
+            "Review analysis",
+            "Metadata optimization"
+          ],
+          "timeout_seconds": 30,
+          "success_criteria": "ASO recommendations provided",
+          "fallback_agent": "ANALYZER",
+          "slack_channel": "#app-growth",
+          "dependencies": [],
+          "parallelizable": true,
+          "sla": {
+            "success_rate_target": 0.91,
+            "avg_response_time_ms": 4500,
+            "max_tokens": 2500
+          }
+        },
+        {
+          "agent_id": "SOLVER",
+          "agent_name": "Solutions Consultant",
+          "type": "MVP - Tier 2",
+          "primary_role": "Product-solution matching",
+          "capabilities": [
+            "Fit scoring",
+            "Recommendations",
+            "Proposal generation"
+          ],
+          "timeout_seconds": 30,
+          "success_criteria": "fit score and recommendations",
+          "fallback_agent": "LOKI",
+          "slack_channel": "#sales-solutions",
+          "dependencies": ["ARTEMIS"],
+          "parallelizable": true,
+          "sla": {
+            "success_rate_target": 0.92,
+            "avg_response_time_ms": 4000,
+            "max_tokens": 2500
+          }
+        },
+        {
+          "agent_id": "BACKUP-B1",
+          "agent_name": "Backup Agent 1",
+          "type": "Future - Tier 3",
+          "primary_role": "TBD",
+          "capabilities": [],
+          "timeout_seconds": 30,
+          "success_criteria": "TBD",
+          "fallback_agent": null,
+          "slack_channel": "#backup",
+          "dependencies": [],
+          "parallelizable": true,
+          "sla": {
+            "success_rate_target": 0.90,
+            "avg_response_time_ms": 5000,
+            "max_tokens": 2000
+          }
+        }
+      ]
+    },
+    {
+      "division_id": "DIV-003",
+      "division_name": "Customer Success & Operations",
+      "description": "Customer retention, health monitoring, and operational excellence",
+      "agent_count": 8,
+      "agents": [
+        {
+          "agent_id": "ATLAS",
+          "agent_name": "Customer Success Manager",
+          "type": "MVP - Tier 1",
+          "primary_role": "Customer health & retention",
+          "capabilities": [
+            "Churn prediction",
+            "Health scoring",
+            "Expansion opportunities"
+          ],
+          "timeout_seconds": 30,
+          "success_criteria": "health and churn scores",
+          "fallback_agent": "ANALYZER",
+          "slack_channel": "#customer-success",
+          "dependencies": [],
+          "parallelizable": true,
+          "sla": {
+            "success_rate_target": 0.95,
+            "avg_response_time_ms": 4000,
+            "max_tokens": 2500
+          }
+        },
+        {
+          "agent_id": "ARCHITECT",
+          "agent_name": "Product Manager",
+          "type": "MVP - Tier 2",
+          "primary_role": "Product roadmap prioritization",
+          "capabilities": [
+            "Roadmap planning",
+            "Feature prioritization",
+            "Strategic planning"
+          ],
+          "timeout_seconds": 30,
+          "success_criteria": "prioritized roadmap",
+          "fallback_agent": "KVIRTUALOSO",
+          "slack_channel": "#product",
+          "dependencies": [],
+          "parallelizable": false,
+          "sla": {
+            "success_rate_target": 0.91,
+            "avg_response_time_ms": 5000,
+            "max_tokens": 3000
+          }
+        },
+        {
+          "agent_id": "ANALYZER-EXP",
+          "agent_name": "Experiment Tracker",
+          "type": "MVP - Tier 2",
+          "primary_role": "A/B testing & analysis",
+          "capabilities": [
+            "Statistical analysis",
+            "Test design",
+            "Result interpretation"
+          ],
+          "timeout_seconds": 30,
+          "success_criteria": "statistical results",
+          "fallback_agent": "ANALYZER",
+          "slack_channel": "#experimentation",
+          "dependencies": [],
+          "parallelizable": true,
+          "sla": {
+            "success_rate_target": 0.93,
+            "avg_response_time_ms": 4500,
+            "max_tokens": 2500
+          }
+        },
+        {
+          "agent_id": "BACKUP-C1",
+          "agent_name": "Backup Agent 2",
+          "type": "Future - Tier 3",
+          "primary_role": "TBD",
+          "capabilities": [],
+          "timeout_seconds": 30,
+          "success_criteria": "TBD",
+          "fallback_agent": null,
+          "slack_channel": "#backup",
+          "dependencies": [],
+          "parallelizable": true,
+          "sla": {
+            "success_rate_target": 0.90,
+            "avg_response_time_ms": 5000,
+            "max_tokens": 2000
+          }
+        },
+        {
+          "agent_id": "BACKUP-C2",
+          "agent_name": "Backup Agent 3",
+          "type": "Future - Tier 3",
+          "primary_role": "TBD",
+          "capabilities": [],
+          "timeout_seconds": 30,
+          "success_criteria": "TBD",
+          "fallback_agent": null,
+          "slack_channel": "#backup",
+          "dependencies": [],
+          "parallelizable": true,
+          "sla": {
+            "success_rate_target": 0.90,
+            "avg_response_time_ms": 5000,
+            "max_tokens": 2000
+          }
+        },
+        {
+          "agent_id": "BACKUP-C3",
+          "agent_name": "Backup Agent 4",
+          "type": "Future - Tier 3",
+          "primary_role": "TBD",
+          "capabilities": [],
+          "timeout_seconds": 30,
+          "success_criteria": "TBD",
+          "fallback_agent": null,
+          "slack_channel": "#backup",
+          "dependencies": [],
+          "parallelizable": true,
+          "sla": {
+            "success_rate_target": 0.90,
+            "avg_response_time_ms": 5000,
+            "max_tokens": 2000
+          }
+        },
+        {
+          "agent_id": "BACKUP-C4",
+          "agent_name": "Backup Agent 5",
+          "type": "Future - Tier 3",
+          "primary_role": "TBD",
+          "capabilities": [],
+          "timeout_seconds": 30,
+          "success_criteria": "TBD",
+          "fallback_agent": null,
+          "slack_channel": "#backup",
+          "dependencies": [],
+          "parallelizable": true,
+          "sla": {
+            "success_rate_target": 0.90,
+            "avg_response_time_ms": 5000,
+            "max_tokens": 2000
+          }
+        },
+        {
+          "agent_id": "BACKUP-C5",
+          "agent_name": "Backup Agent 6",
+          "type": "Future - Tier 3",
+          "primary_role": "TBD",
+          "capabilities": [],
+          "timeout_seconds": 30,
+          "success_criteria": "TBD",
+          "fallback_agent": null,
+          "slack_channel": "#backup",
+          "dependencies": [],
+          "parallelizable": true,
+          "sla": {
+            "success_rate_target": 0.90,
+            "avg_response_time_ms": 5000,
+            "max_tokens": 2000
+          }
+        }
+      ]
+    },
+    {
+      "division_id": "DIV-004",
+      "division_name": "Analytics & Reporting",
+      "description": "Business intelligence, reporting, and data insights",
+      "agent_count": 6,
+      "agents": [
+        {
+          "agent_id": "ANALYST-1",
+          "agent_name": "BI Agent",
+          "type": "Future - Tier 3",
+          "primary_role": "Business intelligence",
+          "capabilities": [],
+          "timeout_seconds": 30,
+          "success_criteria": "TBD",
+          "fallback_agent": null,
+          "slack_channel": "#analytics",
+          "dependencies": [],
+          "parallelizable": true,
+          "sla": {
+            "success_rate_target": 0.90,
+            "avg_response_time_ms": 5000,
+            "max_tokens": 2000
+          }
+        },
+        {
+          "agent_id": "ANALYST-2",
+          "agent_name": "Report Generator",
+          "type": "Future - Tier 3",
+          "primary_role": "Report generation",
+          "capabilities": [],
+          "timeout_seconds": 30,
+          "success_criteria": "TBD",
+          "fallback_agent": null,
+          "slack_channel": "#reporting",
+          "dependencies": [],
+          "parallelizable": true,
+          "sla": {
+            "success_rate_target": 0.90,
+            "avg_response_time_ms": 5000,
+            "max_tokens": 2000
+          }
+        },
+        {
+          "agent_id": "ANALYST-3",
+          "agent_name": "Dashboard Agent",
+          "type": "Future - Tier 3",
+          "primary_role": "Dashboard creation",
+          "capabilities": [],
+          "timeout_seconds": 30,
+          "success_criteria": "TBD",
+          "fallback_agent": null,
+          "slack_channel": "#analytics",
+          "dependencies": [],
+          "parallelizable": true,
+          "sla": {
+            "success_rate_target": 0.90,
+            "avg_response_time_ms": 5000,
+            "max_tokens": 2000
+          }
+        },
+        {
+          "agent_id": "ANALYST-4",
+          "agent_name": "Insight Generator",
+          "type": "Future - Tier 3",
+          "primary_role": "Business insights",
+          "capabilities": [],
+          "timeout_seconds": 30,
+          "success_criteria": "TBD",
+          "fallback_agent": null,
+          "slack_channel": "#analytics",
+          "dependencies": [],
+          "parallelizable": true,
+          "sla": {
+            "success_rate_target": 0.90,
+            "avg_response_time_ms": 5000,
+            "max_tokens": 2000
+          }
+        },
+        {
+          "agent_id": "ANALYST-5",
+          "agent_name": "Trend Analyzer",
+          "type": "Future - Tier 3",
+          "primary_role": "Trend analysis",
+          "capabilities": [],
+          "timeout_seconds": 30,
+          "success_criteria": "TBD",
+          "fallback_agent": null,
+          "slack_channel": "#analytics",
+          "dependencies": [],
+          "parallelizable": true,
+          "sla": {
+            "success_rate_target": 0.90,
+            "avg_response_time_ms": 5000,
+            "max_tokens": 2000
+          }
+        },
+        {
+          "agent_id": "ANALYST-6",
+          "agent_name": "Forecaster",
+          "type": "Future - Tier 3",
+          "primary_role": "Forecasting",
+          "capabilities": [],
+          "timeout_seconds": 30,
+          "success_criteria": "TBD",
+          "fallback_agent": null,
+          "slack_channel": "#forecasting",
+          "dependencies": [],
+          "parallelizable": true,
+          "sla": {
+            "success_rate_target": 0.90,
+            "avg_response_time_ms": 5000,
+            "max_tokens": 2000
+          }
+        }
+      ]
+    },
+    {
+      "division_id": "DIV-005",
+      "division_name": "Integration & APIs",
+      "description": "External integrations and API management",
+      "agent_count": 3,
+      "agents": [
+        {
+          "agent_id": "INTEGRATOR-1",
+          "agent_name": "API Integrator",
+          "type": "Future - Tier 3",
+          "primary_role": "API integrations",
+          "capabilities": [],
+          "timeout_seconds": 30,
+          "success_criteria": "TBD",
+          "fallback_agent": null,
+          "slack_channel": "#integrations",
+          "dependencies": [],
+          "parallelizable": true,
+          "sla": {
+            "success_rate_target": 0.90,
+            "avg_response_time_ms": 5000,
+            "max_tokens": 2000
+          }
+        },
+        {
+          "agent_id": "INTEGRATOR-2",
+          "agent_name": "Data Sync Agent",
+          "type": "Future - Tier 3",
+          "primary_role": "Data synchronization",
+          "capabilities": [],
+          "timeout_seconds": 30,
+          "success_criteria": "TBD",
+          "fallback_agent": null,
+          "slack_channel": "#integrations",
+          "dependencies": [],
+          "parallelizable": true,
+          "sla": {
+            "success_rate_target": 0.90,
+            "avg_response_time_ms": 5000,
+            "max_tokens": 2000
+          }
+        },
+        {
+          "agent_id": "INTEGRATOR-3",
+          "agent_name": "Webhook Manager",
+          "type": "Future - Tier 3",
+          "primary_role": "Webhook management",
+          "capabilities": [],
+          "timeout_seconds": 30,
+          "success_criteria": "TBD",
+          "fallback_agent": null,
+          "slack_channel": "#integrations",
+          "dependencies": [],
+          "parallelizable": true,
+          "sla": {
+            "success_rate_target": 0.90,
+            "avg_response_time_ms": 5000,
+            "max_tokens": 2000
+          }
+        }
+      ]
+    },
+    {
+      "division_id": "DIV-006",
+      "division_name": "QA & Validation",
+      "description": "Quality assurance and data validation",
+      "agent_count": 2,
+      "agents": [
+        {
+          "agent_id": "QA-AGENT-1",
+          "agent_name": "Quality Assurance",
+          "type": "Future - Tier 3",
+          "primary_role": "QA processes",
+          "capabilities": [],
+          "timeout_seconds": 30,
+          "success_criteria": "TBD",
+          "fallback_agent": null,
+          "slack_channel": "#qa",
+          "dependencies": [],
+          "parallelizable": true,
+          "sla": {
+            "success_rate_target": 0.90,
+            "avg_response_time_ms": 5000,
+            "max_tokens": 2000
+          }
+        },
+        {
+          "agent_id": "QA-AGENT-2",
+          "agent_name": "Compliance Checker",
+          "type": "Future - Tier 3",
+          "primary_role": "Compliance validation",
+          "capabilities": [],
+          "timeout_seconds": 30,
+          "success_criteria": "TBD",
+          "fallback_agent": null,
+          "slack_channel": "#compliance",
+          "dependencies": [],
+          "parallelizable": true,
+          "sla": {
+            "success_rate_target": 0.90,
+            "avg_response_time_ms": 5000,
+            "max_tokens": 2000
+          }
+        }
+      ]
+    },
+    {
+      "division_id": "DIV-007",
+      "division_name": "Future & Innovation",
+      "description": "Experimental and research agents",
+      "agent_count": 1,
+      "agents": [
+        {
+          "agent_id": "RESEARCH-AI",
+          "agent_name": "Research Agent",
+          "type": "Future - Tier 3",
+          "primary_role": "Research & experimentation",
+          "capabilities": [],
+          "timeout_seconds": 60,
+          "success_criteria": "TBD",
+          "fallback_agent": null,
+          "slack_channel": "#research",
+          "dependencies": [],
+          "parallelizable": true,
+          "sla": {
+            "success_rate_target": 0.85,
+            "avg_response_time_ms": 10000,
+            "max_tokens": 4000
+          }
+        }
+      ]
+    }
+  ],
+  "agent_summary": {
+    "tier_1_mvp": 3,
+    "tier_2_mvp": 8,
+    "tier_2_base_39": 28,
+    "tier_3_future": 18,
+    "total": 57
+  },
+  "division_summary": {
+    "growth_sales": 11,
+    "brand_marketing": 8,
+    "customer_ops": 8,
+    "analytics_reporting": 6,
+    "integration_apis": 3,
+    "qa_validation": 2,
+    "future_innovation": 1
+  },
+  "global_sla_targets": {
+    "success_rate_minimum": 0.90,
+    "avg_response_time_max_ms": 5000,
+    "max_concurrent_executions": 10,
+    "daily_execution_target": 50,
+    "daily_execution_max": 500,
+    "token_usage_avg_per_exec": 2000,
+    "token_usage_max_per_exec": 4000
+  },
+  "critical_dependencies": {
+    "ARTEMIS": ["LOKI", "WANDA", "SOLVER"],
+    "LOKI": ["ARTEMIS"],
+    "WANDA": ["LOKI"],
+    "SCRAPER-WEB": ["ANALYZER"],
+    "ANALYZER": ["SCRAPER-WEB"],
+    "FORMATTER": ["ANALYZER"],
+    "CLEANER": ["FORMATTER"],
+    "VALIDATOR": ["CLEANER"],
+    "DEDUPE": ["VALIDATOR"],
+    "CREATOR": ["WANDA"],
+    "SOLVER": ["ARTEMIS"],
+    "ATLAS": [],
+    "ARCHITECT": [],
+    "ANALYZER-EXP": []
+  },
+  "slack_channels": {
+    "sales_growth": "#sales-growth",
+    "brand_monitoring": "#brand-monitoring",
+    "content_strategy": "#content-strategy",
+    "community": "#community",
+    "email_marketing": "#email-marketing",
+    "social_content": "#social-content",
+    "app_growth": "#app-growth",
+    "sales_solutions": "#sales-solutions",
+    "customer_success": "#customer-success",
+    "product": "#product",
+    "experimentation": "#experimentation",
+    "data_ops": "#data-ops",
+    "analytics": "#analytics",
+    "reporting": "#reporting",
+    "integrations": "#integrations",
+    "qa": "#qa",
+    "compliance": "#compliance",
+    "research": "#research",
+    "backup": "#backup"
+  }
+}

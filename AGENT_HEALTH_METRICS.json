@@ -1,0 +1,650 @@
+{
+  "title": "Agent Health Metrics & SLA Targets",
+  "timestamp": "2026-04-13",
+  "total_agents": 57,
+  "metrics_period_days": 30,
+  "health_metrics": {
+    "ARTEMIS": {
+      "division": "Growth & Sales",
+      "tier": "MVP-1",
+      "health_score_target": 95,
+      "sla_metrics": {
+        "success_rate_target": 0.95,
+        "avg_response_time_ms": 3000,
+        "max_response_time_ms": 10000,
+        "error_rate_max": 0.05,
+        "availability_uptime_percent": 99.5
+      },
+      "resource_metrics": {
+        "avg_tokens_per_exec": 1800,
+        "max_tokens_per_exec": 2500,
+        "cpu_usage_percent": 25,
+        "memory_usage_mb": 256
+      },
+      "performance_metrics": {
+        "daily_executions_target": 20,
+        "daily_executions_max": 200,
+        "concurrent_executions_max": 5,
+        "queue_depth_max": 50
+      },
+      "reliability": {
+        "mtbf_hours": 720,
+        "mttr_minutes": 5,
+        "incident_rate_per_1k_exec": 5
+      }
+    },
+    "LOKI": {
+      "division": "Growth & Sales",
+      "tier": "Base-39",
+      "health_score_target": 93,
+      "sla_metrics": {
+        "success_rate_target": 0.93,
+        "avg_response_time_ms": 5000,
+        "max_response_time_ms": 15000,
+        "error_rate_max": 0.07,
+        "availability_uptime_percent": 99
+      },
+      "resource_metrics": {
+        "avg_tokens_per_exec": 2500,
+        "max_tokens_per_exec": 3500,
+        "cpu_usage_percent": 35,
+        "memory_usage_mb": 512
+      },
+      "performance_metrics": {
+        "daily_executions_target": 10,
+        "daily_executions_max": 100,
+        "concurrent_executions_max": 3,
+        "queue_depth_max": 30
+      },
+      "reliability": {
+        "mtbf_hours": 480,
+        "mttr_minutes": 10,
+        "incident_rate_per_1k_exec": 8
+      }
+    },
+    "GUARDIAN": {
+      "division": "Brand & Marketing",
+      "tier": "MVP-1",
+      "health_score_target": 95,
+      "sla_metrics": {
+        "success_rate_target": 0.95,
+        "avg_response_time_ms": 4000,
+        "max_response_time_ms": 12000,
+        "error_rate_max": 0.05,
+        "availability_uptime_percent": 99.5
+      },
+      "resource_metrics": {
+        "avg_tokens_per_exec": 1500,
+        "max_tokens_per_exec": 2000,
+        "cpu_usage_percent": 20,
+        "memory_usage_mb": 256
+      },
+      "performance_metrics": {
+        "daily_executions_target": 24,
+        "daily_executions_max": 300,
+        "concurrent_executions_max": 6,
+        "queue_depth_max": 100
+      },
+      "reliability": {
+        "mtbf_hours": 720,
+        "mttr_minutes": 5,
+        "incident_rate_per_1k_exec": 5
+      }
+    },
+    "ATLAS": {
+      "division": "Customer Success",
+      "tier": "MVP-1",
+      "health_score_target": 95,
+      "sla_metrics": {
+        "success_rate_target": 0.95,
+        "avg_response_time_ms": 4000,
+        "max_response_time_ms": 12000,
+        "error_rate_max": 0.05,
+        "availability_uptime_percent": 99.5
+      },
+      "resource_metrics": {
+        "avg_tokens_per_exec": 2000,
+        "max_tokens_per_exec": 2500,
+        "cpu_usage_percent": 30,
+        "memory_usage_mb": 512
+      },
+      "performance_metrics": {
+        "daily_executions_target": 2,
+        "daily_executions_max": 50,
+        "concurrent_executions_max": 2,
+        "queue_depth_max": 20
+      },
+      "reliability": {
+        "mtbf_hours": 720,
+        "mttr_minutes": 5,
+        "incident_rate_per_1k_exec": 5
+      }
+    },
+    "ECHO": {
+      "division": "Brand & Marketing",
+      "tier": "MVP-2",
+      "health_score_target": 93,
+      "sla_metrics": {
+        "success_rate_target": 0.93,
+        "avg_response_time_ms": 5000,
+        "max_response_time_ms": 15000,
+        "error_rate_max": 0.07,
+        "availability_uptime_percent": 99
+      },
+      "resource_metrics": {
+        "avg_tokens_per_exec": 2500,
+        "max_tokens_per_exec": 3000,
+        "cpu_usage_percent": 35,
+        "memory_usage_mb": 512
+      },
+      "performance_metrics": {
+        "daily_executions_target": 2,
+        "daily_executions_max": 20,
+        "concurrent_executions_max": 2,
+        "queue_depth_max": 10
+      },
+      "reliability": {
+        "mtbf_hours": 480,
+        "mttr_minutes": 10,
+        "incident_rate_per_1k_exec": 8
+      }
+    },
+    "WANDA": {
+      "division": "Growth & Sales",
+      "tier": "Base-39",
+      "health_score_target": 94,
+      "sla_metrics": {
+        "success_rate_target": 0.94,
+        "avg_response_time_ms": 4000,
+        "max_response_time_ms": 12000,
+        "error_rate_max": 0.06,
+        "availability_uptime_percent": 99.2
+      },
+      "resource_metrics": {
+        "avg_tokens_per_exec": 2000,
+        "max_tokens_per_exec": 2500,
+        "cpu_usage_percent": 30,
+        "memory_usage_mb": 512
+      },
+      "performance_metrics": {
+        "daily_executions_target": 5,
+        "daily_executions_max": 50,
+        "concurrent_executions_max": 3,
+        "queue_depth_max": 30
+      },
+      "reliability": {
+        "mtbf_hours": 600,
+        "mttr_minutes": 7,
+        "incident_rate_per_1k_exec": 6
+      }
+    },
+    "KVIRTUALOSO": {
+      "division": "Growth & Sales",
+      "tier": "Base-39",
+      "health_score_target": 92,
+      "sla_metrics": {
+        "success_rate_target": 0.92,
+        "avg_response_time_ms": 5000,
+        "max_response_time_ms": 15000,
+        "error_rate_max": 0.08,
+        "availability_uptime_percent": 98.8
+      },
+      "resource_metrics": {
+        "avg_tokens_per_exec": 2500,
+        "max_tokens_per_exec": 3000,
+        "cpu_usage_percent": 35,
+        "memory_usage_mb": 512
+      },
+      "performance_metrics": {
+        "daily_executions_target": 3,
+        "daily_executions_max": 30,
+        "concurrent_executions_max": 2,
+        "queue_depth_max": 15
+      },
+      "reliability": {
+        "mtbf_hours": 480,
+        "mttr_minutes": 10,
+        "incident_rate_per_1k_exec": 8
+      }
+    },
+    "CREATOR": {
+      "division": "Brand & Marketing",
+      "tier": "MVP-2",
+      "health_score_target": 94,
+      "sla_metrics": {
+        "success_rate_target": 0.94,
+        "avg_response_time_ms": 3500,
+        "max_response_time_ms": 10000,
+        "error_rate_max": 0.06,
+        "availability_uptime_percent": 99.2
+      },
+      "resource_metrics": {
+        "avg_tokens_per_exec": 1500,
+        "max_tokens_per_exec": 2000,
+        "cpu_usage_percent": 25,
+        "memory_usage_mb": 256
+      },
+      "performance_metrics": {
+        "daily_executions_target": 2,
+        "daily_executions_max": 20,
+        "concurrent_executions_max": 2,
+        "queue_depth_max": 10
+      },
+      "reliability": {
+        "mtbf_hours": 600,
+        "mttr_minutes": 7,
+        "incident_rate_per_1k_exec": 6
+      }
+    },
+    "HERALD": {
+      "division": "Brand & Marketing",
+      "tier": "MVP-2",
+      "health_score_target": 94,
+      "sla_metrics": {
+        "success_rate_target": 0.94,
+        "avg_response_time_ms": 4000,
+        "max_response_time_ms": 12000,
+        "error_rate_max": 0.06,
+        "availability_uptime_percent": 99.2
+      },
+      "resource_metrics": {
+        "avg_tokens_per_exec": 2000,
+        "max_tokens_per_exec": 2500,
+        "cpu_usage_percent": 30,
+        "memory_usage_mb": 256
+      },
+      "performance_metrics": {
+        "daily_executions_target": 1,
+        "daily_executions_max": 20,
+        "concurrent_executions_max": 2,
+        "queue_depth_max": 10
+      },
+      "reliability": {
+        "mtbf_hours": 600,
+        "mttr_minutes": 7,
+        "incident_rate_per_1k_exec": 6
+      }
+    },
+    "OPTIMIZER": {
+      "division": "Brand & Marketing",
+      "tier": "MVP-2",
+      "health_score_target": 91,
+      "sla_metrics": {
+        "success_rate_target": 0.91,
+        "avg_response_time_ms": 4500,
+        "max_response_time_ms": 13000,
+        "error_rate_max": 0.09,
+        "availability_uptime_percent": 98.8
+      },
+      "resource_metrics": {
+        "avg_tokens_per_exec": 2000,
+        "max_tokens_per_exec": 2500,
+        "cpu_usage_percent": 30,
+        "memory_usage_mb": 256
+      },
+      "performance_metrics": {
+        "daily_executions_target": 0.2,
+        "daily_executions_max": 5,
+        "concurrent_executions_max": 1,
+        "queue_depth_max": 5
+      },
+      "reliability": {
+        "mtbf_hours": 480,
+        "mttr_minutes": 10,
+        "incident_rate_per_1k_exec": 8
+      }
+    },
+    "SOLVER": {
+      "division": "Brand & Marketing",
+      "tier": "MVP-2",
+      "health_score_target": 92,
+      "sla_metrics": {
+        "success_rate_target": 0.92,
+        "avg_response_time_ms": 4000,
+        "max_response_time_ms": 12000,
+        "error_rate_max": 0.08,
+        "availability_uptime_percent": 99
+      },
+      "resource_metrics": {
+        "avg_tokens_per_exec": 2000,
+        "max_tokens_per_exec": 2500,
+        "cpu_usage_percent": 30,
+        "memory_usage_mb": 256
+      },
+      "performance_metrics": {
+        "daily_executions_target": 5,
+        "daily_executions_max": 50,
+        "concurrent_executions_max": 2,
+        "queue_depth_max": 20
+      },
+      "reliability": {
+        "mtbf_hours": 540,
+        "mttr_minutes": 8,
+        "incident_rate_per_1k_exec": 7
+      }
+    },
+    "NEXUS": {
+      "division": "Brand & Marketing",
+      "tier": "MVP-2",
+      "health_score_target": 92,
+      "sla_metrics": {
+        "success_rate_target": 0.92,
+        "avg_response_time_ms": 4000,
+        "max_response_time_ms": 12000,
+        "error_rate_max": 0.08,
+        "availability_uptime_percent": 99
+      },
+      "resource_metrics": {
+        "avg_tokens_per_exec": 1500,
+        "max_tokens_per_exec": 2000,
+        "cpu_usage_percent": 25,
+        "memory_usage_mb": 256
+      },
+      "performance_metrics": {
+        "daily_executions_target": 4,
+        "daily_executions_max": 50,
+        "concurrent_executions_max": 2,
+        "queue_depth_max": 20
+      },
+      "reliability": {
+        "mtbf_hours": 540,
+        "mttr_minutes": 8,
+        "incident_rate_per_1k_exec": 7
+      }
+    },
+    "ARCHITECT": {
+      "division": "Customer Success",
+      "tier": "MVP-2",
+      "health_score_target": 91,
+      "sla_metrics": {
+        "success_rate_target": 0.91,
+        "avg_response_time_ms": 5000,
+        "max_response_time_ms": 15000,
+        "error_rate_max": 0.09,
+        "availability_uptime_percent": 98.8
+      },
+      "resource_metrics": {
+        "avg_tokens_per_exec": 2500,
+        "max_tokens_per_exec": 3000,
+        "cpu_usage_percent": 35,
+        "memory_usage_mb": 512
+      },
+      "performance_metrics": {
+        "daily_executions_target": 0.033,
+        "daily_executions_max": 1,
+        "concurrent_executions_max": 1,
+        "queue_depth_max": 5
+      },
+      "reliability": {
+        "mtbf_hours": 480,
+        "mttr_minutes": 10,
+        "incident_rate_per_1k_exec": 8
+      }
+    },
+    "ANALYZER-EXP": {
+      "division": "Customer Success",
+      "tier": "MVP-2",
+      "health_score_target": 93,
+      "sla_metrics": {
+        "success_rate_target": 0.93,
+        "avg_response_time_ms": 4500,
+        "max_response_time_ms": 13000,
+        "error_rate_max": 0.07,
+        "availability_uptime_percent": 99
+      },
+      "resource_metrics": {
+        "avg_tokens_per_exec": 2000,
+        "max_tokens_per_exec": 2500,
+        "cpu_usage_percent": 30,
+        "memory_usage_mb": 256
+      },
+      "performance_metrics": {
+        "daily_executions_target": 0.2,
+        "daily_executions_max": 5,
+        "concurrent_executions_max": 1,
+        "queue_depth_max": 5
+      },
+      "reliability": {
+        "mtbf_hours": 600,
+        "mttr_minutes": 7,
+        "incident_rate_per_1k_exec": 6
+      }
+    },
+    "SCRAPER-WEB": {
+      "division": "Growth & Sales",
+      "tier": "Base-39",
+      "health_score_target": 90,
+      "sla_metrics": {
+        "success_rate_target": 0.90,
+        "avg_response_time_ms": 8000,
+        "max_response_time_ms": 20000,
+        "error_rate_max": 0.10,
+        "availability_uptime_percent": 98.5
+      },
+      "resource_metrics": {
+        "avg_tokens_per_exec": 1000,
+        "max_tokens_per_exec": 1500,
+        "cpu_usage_percent": 40,
+        "memory_usage_mb": 512
+      },
+      "performance_metrics": {
+        "daily_executions_target": 5,
+        "daily_executions_max": 50,
+        "concurrent_executions_max": 2,
+        "queue_depth_max": 30
+      },
+      "reliability": {
+        "mtbf_hours": 360,
+        "mttr_minutes": 15,
+        "incident_rate_per_1k_exec": 10
+      }
+    },
+    "ANALYZER": {
+      "division": "Growth & Sales",
+      "tier": "Base-39",
+      "health_score_target": 94,
+      "sla_metrics": {
+        "success_rate_target": 0.94,
+        "avg_response_time_ms": 4000,
+        "max_response_time_ms": 12000,
+        "error_rate_max": 0.06,
+        "availability_uptime_percent": 99.2
+      },
+      "resource_metrics": {
+        "avg_tokens_per_exec": 1500,
+        "max_tokens_per_exec": 2000,
+        "cpu_usage_percent": 30,
+        "memory_usage_mb": 256
+      },
+      "performance_metrics": {
+        "daily_executions_target": 3,
+        "daily_executions_max": 30,
+        "concurrent_executions_max": 2,
+        "queue_depth_max": 20
+      },
+      "reliability": {
+        "mtbf_hours": 600,
+        "mttr_minutes": 7,
+        "incident_rate_per_1k_exec": 6
+      }
+    },
+    "FORMATTER": {
+      "division": "Growth & Sales",
+      "tier": "Base-39",
+      "health_score_target": 97,
+      "sla_metrics": {
+        "success_rate_target": 0.97,
+        "avg_response_time_ms": 2000,
+        "max_response_time_ms": 5000,
+        "error_rate_max": 0.03,
+        "availability_uptime_percent": 99.5
+      },
+      "resource_metrics": {
+        "avg_tokens_per_exec": 800,
+        "max_tokens_per_exec": 1000,
+        "cpu_usage_percent": 15,
+        "memory_usage_mb": 128
+      },
+      "performance_metrics": {
+        "daily_executions_target": 10,
+        "daily_executions_max": 100,
+        "concurrent_executions_max": 4,
+        "queue_depth_max": 50
+      },
+      "reliability": {
+        "mtbf_hours": 1000,
+        "mttr_minutes": 3,
+        "incident_rate_per_1k_exec": 2
+      }
+    },
+    "CLEANER": {
+      "division": "Growth & Sales",
+      "tier": "Base-39",
+      "health_score_target": 96,
+      "sla_metrics": {
+        "success_rate_target": 0.96,
+        "avg_response_time_ms": 3000,
+        "max_response_time_ms": 8000,
+        "error_rate_max": 0.04,
+        "availability_uptime_percent": 99.3
+      },
+      "resource_metrics": {
+        "avg_tokens_per_exec": 1000,
+        "max_tokens_per_exec": 1500,
+        "cpu_usage_percent": 20,
+        "memory_usage_mb": 256
+      },
+      "performance_metrics": {
+        "daily_executions_target": 1,
+        "daily_executions_max": 20,
+        "concurrent_executions_max": 1,
+        "queue_depth_max": 10
+      },
+      "reliability": {
+        "mtbf_hours": 800,
+        "mttr_minutes": 5,
+        "incident_rate_per_1k_exec": 4
+      }
+    },
+    "VALIDATOR": {
+      "division": "Growth & Sales",
+      "tier": "Base-39",
+      "health_score_target": 96,
+      "sla_metrics": {
+        "success_rate_target": 0.96,
+        "avg_response_time_ms": 3000,
+        "max_response_time_ms": 8000,
+        "error_rate_max": 0.04,
+        "availability_uptime_percent": 99.3
+      },
+      "resource_metrics": {
+        "avg_tokens_per_exec": 800,
+        "max_tokens_per_exec": 1000,
+        "cpu_usage_percent": 15,
+        "memory_usage_mb": 128
+      },
+      "performance_metrics": {
+        "daily_executions_target": 1,
+        "daily_executions_max": 20,
+        "concurrent_executions_max": 1,
+        "queue_depth_max": 10
+      },
+      "reliability": {
+        "mtbf_hours": 800,
+        "mttr_minutes": 5,
+        "incident_rate_per_1k_exec": 4
+      }
+    },
+    "DEDUPE": {
+      "division": "Growth & Sales",
+      "tier": "Base-39",
+      "health_score_target": 97,
+      "sla_metrics": {
+        "success_rate_target": 0.97,
+        "avg_response_time_ms": 3500,
+        "max_response_time_ms": 10000,
+        "error_rate_max": 0.03,
+        "availability_uptime_percent": 99.5
+      },
+      "resource_metrics": {
+        "avg_tokens_per_exec": 1200,
+        "max_tokens_per_exec": 2000,
+        "cpu_usage_percent": 25,
+        "memory_usage_mb": 256
+      },
+      "performance_metrics": {
+        "daily_executions_target": 1,
+        "daily_executions_max": 10,
+        "concurrent_executions_max": 1,
+        "queue_depth_max": 5
+      },
+      "reliability": {
+        "mtbf_hours": 900,
+        "mttr_minutes": 4,
+        "incident_rate_per_1k_exec": 3
+      }
+    },
+    "VISU": {
+      "division": "Growth & Sales",
+      "tier": "Base-39",
+      "health_score_target": 90,
+      "sla_metrics": {
+        "success_rate_target": 0.90,
+        "avg_response_time_ms": 8000,
+        "max_response_time_ms": 20000,
+        "error_rate_max": 0.10,
+        "availability_uptime_percent": 98.5
+      },
+      "resource_metrics": {
+        "avg_tokens_per_exec": 500,
+        "max_tokens_per_exec": 1000,
+        "cpu_usage_percent": 45,
+        "memory_usage_mb": 1024
+      },
+      "performance_metrics": {
+        "daily_executions_target": 1,
+        "daily_executions_max": 20,
+        "concurrent_executions_max": 1,
+        "queue_depth_max": 10
+      },
+      "reliability": {
+        "mtbf_hours": 360,
+        "mttr_minutes": 15,
+        "incident_rate_per_1k_exec": 10
+      }
+    }
+  },
+  "tier_3_future_agents": {
+    "note": "Tier 3 agents (18 agents) use default SLA targets until fully deployed",
+    "default_tier_3_sla": {
+      "success_rate_target": 0.90,
+      "avg_response_time_ms": 5000,
+      "max_response_time_ms": 15000,
+      "error_rate_max": 0.10,
+      "availability_uptime_percent": 98.5
+    }
+  },
+  "global_sla": {
+    "system_success_rate_target": 0.933,
+    "system_avg_response_time_ms": 4300,
+    "system_uptime_target_percent": 99.1,
+    "max_daily_executions": 50,
+    "max_concurrent_executions": 10,
+    "avg_tokens_per_day": 150000,
+    "max_tokens_per_day": 500000
+  },
+  "alerting_thresholds": {
+    "warning": {
+      "success_rate_below": 0.90,
+      "response_time_above_ms": 6000,
+      "error_rate_above": 0.08,
+      "queue_depth_above": 50
+    },
+    "critical": {
+      "success_rate_below": 0.80,
+      "response_time_above_ms": 15000,
+      "error_rate_above": 0.20,
+      "queue_depth_above": 100
+    }
+  }
+}

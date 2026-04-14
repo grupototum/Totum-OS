@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { AgentAdapter } from '@/lib/agents/adapter';
 
 export interface ChannelConfig {
   type: 'telegram' | 'discord' | 'twitter' | 'whatsapp' | 'email';
@@ -109,7 +110,7 @@ export const useAgentForm = (initialData?: Partial<AgentFormData>) => {
 
     try {
       const agentPayload = {
-        agent_id: formData.name.toLowerCase().replace(/\s+/g, '-'),
+        agent_id: AgentAdapter.generateAgentId(formData.name),
         name: formData.name,
         bio: formData.bio,
         emoji: formData.emoji,

@@ -126,11 +126,37 @@ export class AgentAdapter {
    */
   static defaultModelForTier(tier: number): string {
     const models: Record<number, string> = {
-      1: 'claude-3-5-sonnet',
-      2: 'groq-mixtral-8x7b',
-      3: 'ollama-qwen3-coder',
+      1: 'anthropic/claude-3-5-sonnet-20241022',
+      2: 'groq/llama-3.3-70b-versatile',
+      3: 'ollama/qwen3-coder:latest',
     };
-    return models[tier] || 'claude-3-5-sonnet';
+    return models[tier] || 'anthropic/claude-3-5-sonnet-20241022';
+  }
+
+  /**
+   * Lista todos os modelos disponíveis por tier
+   */
+  static getModelsByTier(tier: number): string[] {
+    const models: Record<number, string[]> = {
+      1: [
+        'anthropic/claude-3-5-sonnet-20241022',
+        'anthropic/claude-3-opus-20240229',
+        'google/gemini-2.5-pro',
+      ],
+      2: [
+        'groq/llama-3.3-70b-versatile',
+        'groq/mixtral-8x7b-32768',
+        'groq/gemma-7b-it',
+        'groq/llama-3.1-8b-instant',
+      ],
+      3: [
+        'ollama/qwen3-coder:latest',
+        'ollama/mistral:7b',
+        'ollama/llama3.1:8b',
+        'ollama/deepseek-coder:6.7b',
+      ],
+    };
+    return models[tier] || models[1];
   }
 
   /**

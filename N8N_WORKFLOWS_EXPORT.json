@@ -1,0 +1,558 @@
+{
+  "workflows": [
+    {
+      "name": "Lead Intake Analysis",
+      "id": "workflow_lead_intake",
+      "version": "1.0",
+      "description": "Recebe lead via webhook, analisa com LOKI, notifica Slack se score > 7",
+      "trigger": "webhook",
+      "frequency": "real-time",
+      "agentes_usados": ["LOKI"],
+      "estimado_tempo_exec": "3-5s",
+      "nodes": [
+        {
+          "id": "1",
+          "name": "Lead Intake Webhook",
+          "type": "webhook",
+          "config": {
+            "method": "POST",
+            "path": "/lead-intake",
+            "authentication": "none",
+            "description": "Recebe dados de lead"
+          }
+        },
+        {
+          "id": "2",
+          "name": "LOKI Execute",
+          "type": "http",
+          "config": {
+            "method": "POST",
+            "url": "{{ $vars.elizaOS_base_url }}/api/agents/loki/execute",
+            "headers": {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer {{ $vars.elizaOS_api_key }}"
+            },
+            "body": {
+              "message": "{{ $node['Lead Intake Webhook'].json.lead_info }}",
+              "context": {
+                "source": "n8n",
+                "workflow": "lead-intake",
+                "timestamp": "{{ now().toIso() }}"
+              }
+            },
+            "timeout": 30000,
+            "error_handling": "continue"
+          }
+        },
+        {
+          "id": "3",
+          "name": "Score Check",
+          "type": "if",
+          "config": {
+            "condition": "$node['LOKI Execute'].json.metadata.score > 7",
+            "conditionType": "number",
+            "operator": "greater",
+            "value": 7,
+            "trueNext": "4a",
+            "falseNext": "4b"
+          }
+        },
+        {
+          "id": "4a",
+          "name": "Notify Slack (Qualified)",
+          "type": "slack",
+          "config": {
+            "channel": "#sales",
+            "message": "🔥 LEAD QUALIFICADO!\n\n{{ $node['LOKI Execute'].json.response }}\n\nScore: {{ $node['LOKI Execute'].json.metadata.score }}/10"
+          }
+        },
+        {
+          "id": "4b",
+          "name": "Archive Low Score",
+          "type": "supabase",
+          "config": {
+            "operation": "insert",
+            "table": "agent_executions",
+            "record": {
+              "agent_id": "loki",
+              "workflow_name": "lead-intake",
+              "status": "archived",
+              "input_data": "{{ $node['Lead Intake Webhook'].json }}",
+              "output_data": "{{ $node['LOKI Execute'].json }}",
+              "metadata": {
+                "reason": "low_score",
+                "score": "{{ $node['LOKI Execute'].json.metadata.score }}"
+              },
+              "created_at": "{{ now().toIso() }}"
+            }
+          }
+        },
+        {
+          "id": "5",
+          "name": "Log Execution",
+          "type": "supabase",
+          "config": {
+            "operation": "insert",
+            "table": "agent_executions",
+            "record": {
+              "agent_id": "loki",
+              "workflow_name": "lead-intake",
+              "status": "{{ $node['LOKI Execute'].json.success ? 'success' : 'error' }}",
+              "input_data": "{{ $node['Lead Intake Webhook'].json }}",
+              "output_data": "{{ $node['LOKI Execute'].json }}",
+              "error_message": "{{ $node['LOKI Execute'].json.error || null }}",
+              "metadata": {
+                "tokens_used": "{{ $node['LOKI Execute'].json.metadata.tokens_used }}",
+                "duration_ms": "{{ $node['LOKI Execute'].json.metadata.duration_ms }}",
+                "model": "{{ $node['LOKI Execute'].json.metadata.model }}",
+                "score": "{{ $node['LOKI Execute'].json.metadata.score }}"
+              },
+              "created_at": "{{ now().toIso() }}",
+              "completed_at": "{{ now().toIso() }}"
+            }
+          }
+        }
+      ],
+      "export_notes": "Copie e cole no n8n canvas. Configure credenciais Supabase e Slack antes."
+    },
+    {
+      "name": "Daily News Digest",
+      "id": "workflow_daily_digest",
+      "version": "1.0",
+      "description": "Todo dia às 8h: busca notícias, analisa, formata e envia por email",
+      "trigger": "cron",
+      "cron": "0 8 * * *",
+      "timezone": "UTC",
+      "frequency": "daily",
+      "agentes_usados": ["SCRAPER-WEB", "ANALYZER", "FORMATTER"],
+      "estimado_tempo_exec": "60-120s",
+      "nodes": [
+        {
+          "id": "1",
+          "name": "Daily Trigger",
+          "type": "cron",
+          "config": {
+            "cron": "0 8 * * *",
+            "timezone": "UTC",
+            "description": "Dispara todo dia às 8h UTC"
+          }
+        },
+        {
+          "id": "2",
+          "name": "Get News",
+          "type": "http",
+          "config": {
+            "method": "GET",
+            "url": "https://newsapi.org/v2/top-headlines?country=br&apiKey={{ $vars.newsapi_key }}&pageSize=10",
+            "timeout": 10000
+          }
+        },
+        {
+          "id": "3",
+          "name": "For Each Article",
+          "type": "loop",
+          "config": {
+            "items": "{{ $node['Get News'].json.articles }}",
+            "max_iterations": 10
+          }
+        },
+        {
+          "id": "3a",
+          "name": "SCRAPER-WEB",
+          "type": "http",
+          "config": {
+            "method": "POST",
+            "url": "{{ $vars.elizaOS_base_url }}/api/agents/scraper-web/execute",
+            "body": {
+              "message": "Extrair conteúdo relevante: {{ $items().current().title }} - {{ $items().current().url }}",
+              "context": {
+                "source": "n8n",
+                "workflow": "daily-digest"
+              }
+            }
+          }
+        },
+        {
+          "id": "3b",
+          "name": "ANALYZER",
+          "type": "http",
+          "config": {
+            "method": "POST",
+            "url": "{{ $vars.elizaOS_base_url }}/api/agents/analyzer-metrics/execute",
+            "body": {
+              "message": "Criar insights e resumo executivo do texto: {{ $node['SCRAPER-WEB'].json.response }}",
+              "context": {
+                "source": "n8n",
+                "workflow": "daily-digest"
+              }
+            }
+          }
+        },
+        {
+          "id": "4",
+          "name": "Aggregate Results",
+          "type": "aggregate",
+          "config": {
+            "aggregate_field": "{{ $node['ANALYZER'].json.response }}",
+            "mode": "append"
+          }
+        },
+        {
+          "id": "5",
+          "name": "FORMATTER",
+          "type": "http",
+          "config": {
+            "method": "POST",
+            "url": "{{ $vars.elizaOS_base_url }}/api/agents/formatter/execute",
+            "body": {
+              "message": "Formatar como HTML email bonitão: {{ $node['Aggregate Results'].json }}",
+              "context": {
+                "source": "n8n",
+                "workflow": "daily-digest"
+              }
+            }
+          }
+        },
+        {
+          "id": "6",
+          "name": "Send Email",
+          "type": "email",
+          "config": {
+            "to": "israel@totumdev.com",
+            "subject": "📰 Daily News Digest - {{ now().format('YYYY-MM-DD') }}",
+            "htmlBody": "{{ $node['FORMATTER'].json.response }}"
+          }
+        },
+        {
+          "id": "7",
+          "name": "Log Workflow",
+          "type": "supabase",
+          "config": {
+            "operation": "insert",
+            "table": "agent_executions",
+            "record": {
+              "agent_id": "formatter,analyzer,scraper-web",
+              "workflow_name": "daily-digest",
+              "status": "success",
+              "input_data": {
+                "articles_count": "{{ $node['Get News'].json.articles.length }}"
+              },
+              "output_data": {
+                "email_sent": true,
+                "formatted_html": "{{ $node['FORMATTER'].json.response.substring(0, 100) }}..."
+              },
+              "created_at": "{{ now().toIso() }}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Social Content Generator",
+      "id": "workflow_social_content",
+      "version": "1.0",
+      "description": "2x/semana (seg+qui 14h): gera ideias, escreve posts, cria prompts de imagem",
+      "trigger": "cron",
+      "cron": "0 14 * * 1,4",
+      "frequency": "2x per week (Mon + Thu)",
+      "agentes_usados": ["WANDA", "KVIRTUALOSO", "VISU"],
+      "estimado_tempo_exec": "30-45s",
+      "nodes": [
+        {
+          "id": "1",
+          "name": "Content Generation Trigger",
+          "type": "cron",
+          "config": {
+            "cron": "0 14 * * 1,4",
+            "timezone": "UTC"
+          }
+        },
+        {
+          "id": "2",
+          "name": "Get Trending Topics",
+          "type": "http",
+          "config": {
+            "method": "GET",
+            "url": "https://api.twitter.com/2/trends/place.json?id=23424768&apiKey={{ $vars.twitter_key }}"
+          }
+        },
+        {
+          "id": "3",
+          "name": "WANDA Ideate",
+          "type": "http",
+          "config": {
+            "method": "POST",
+            "url": "{{ $vars.elizaOS_base_url }}/api/agents/wanda/execute",
+            "body": {
+              "message": "Ideias de conteúdo social baseado em trending topics: {{ $node['Get Trending Topics'].json.trends.slice(0,5).map(t => t.name).join(', ') }}",
+              "context": {
+                "source": "n8n",
+                "workflow": "social-content-gen"
+              }
+            }
+          }
+        },
+        {
+          "id": "4",
+          "name": "KVIRTUALOSO Posts",
+          "type": "http",
+          "config": {
+            "method": "POST",
+            "url": "{{ $vars.elizaOS_base_url }}/api/agents/kvirtualoso/execute",
+            "body": {
+              "message": "Escrever 3 posts criativas baseado nas ideias: {{ $node['WANDA Ideate'].json.response }}",
+              "context": {
+                "source": "n8n",
+                "workflow": "social-content-gen",
+                "channel": "twitter"
+              }
+            }
+          }
+        },
+        {
+          "id": "5",
+          "name": "VISU Image Prompts",
+          "type": "http",
+          "config": {
+            "method": "POST",
+            "url": "{{ $vars.elizaOS_base_url }}/api/agents/visu/execute",
+            "body": {
+              "message": "Criar 3 prompts detalhados para gerar imagens dos posts: {{ $node['KVIRTUALOSO Posts'].json.response }}",
+              "context": {
+                "source": "n8n",
+                "workflow": "social-content-gen"
+              }
+            }
+          }
+        },
+        {
+          "id": "6",
+          "name": "Insert Google Sheets",
+          "type": "google-sheets",
+          "config": {
+            "spreadsheet": "{{ $vars.google_sheets_content_id }}",
+            "sheet": "Content Queue",
+            "append": true,
+            "values": {
+              "date": "{{ now().format('YYYY-MM-DD') }}",
+              "posts": "{{ $node['KVIRTUALOSO Posts'].json.response }}",
+              "image_prompts": "{{ $node['VISU Image Prompts'].json.response }}",
+              "status": "ready_to_post"
+            }
+          }
+        },
+        {
+          "id": "7",
+          "name": "Notify Slack",
+          "type": "slack",
+          "config": {
+            "channel": "#content",
+            "message": "✅ Social content gerado!\n\n{{ $node['KVIRTUALOSO Posts'].json.response }}\n\nImage prompts em sheets 👉"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CRM Lead Sync (Pipedrive)",
+      "id": "workflow_crm_sync",
+      "version": "1.0",
+      "description": "Webhook Pipedrive → analisa com LOKI → atualiza CRM → notifica team",
+      "trigger": "webhook",
+      "frequency": "real-time",
+      "agentes_usados": ["LOKI", "NOTIFIER-SLACK"],
+      "estimado_tempo_exec": "5-8s",
+      "nodes": [
+        {
+          "id": "1",
+          "name": "Pipedrive Webhook",
+          "type": "webhook",
+          "config": {
+            "method": "POST",
+            "path": "/pipedrive-lead",
+            "authentication": "webhook_token",
+            "description": "Recebe novo deal do Pipedrive"
+          }
+        },
+        {
+          "id": "2",
+          "name": "Extract Lead Info",
+          "type": "set",
+          "config": {
+            "leadInfo": "{{ $node['Pipedrive Webhook'].json.current.data.title }}, Company: {{ $node['Pipedrive Webhook'].json.current.data.org_id.name }}"
+          }
+        },
+        {
+          "id": "3",
+          "name": "LOKI Analyze",
+          "type": "http",
+          "config": {
+            "method": "POST",
+            "url": "{{ $vars.elizaOS_base_url }}/api/agents/loki/execute",
+            "body": {
+              "message": "{{ $node['Extract Lead Info'].json.leadInfo }}",
+              "context": {
+                "source": "n8n",
+                "workflow": "crm-sync",
+                "crm": "pipedrive",
+                "deal_id": "{{ $node['Pipedrive Webhook'].json.current.data.id }}"
+              }
+            }
+          }
+        },
+        {
+          "id": "4",
+          "name": "IF High Score",
+          "type": "if",
+          "config": {
+            "condition": "$node['LOKI Analyze'].json.metadata.score > 8",
+            "trueNext": "5a",
+            "falseNext": "5b"
+          }
+        },
+        {
+          "id": "5a",
+          "name": "Update Pipedrive (Hot Lead)",
+          "type": "pipedrive",
+          "config": {
+            "method": "update",
+            "resource": "deals",
+            "id": "{{ $node['Pipedrive Webhook'].json.current.data.id }}",
+            "fields": {
+              "label": "hot_lead",
+              "custom_score": "{{ $node['LOKI Analyze'].json.metadata.score }}",
+              "analysis": "{{ $node['LOKI Analyze'].json.response }}"
+            }
+          }
+        },
+        {
+          "id": "5b",
+          "name": "Update Pipedrive (Regular)",
+          "type": "pipedrive",
+          "config": {
+            "method": "update",
+            "resource": "deals",
+            "id": "{{ $node['Pipedrive Webhook'].json.current.data.id }}",
+            "fields": {
+              "label": "regular_lead",
+              "custom_score": "{{ $node['LOKI Analyze'].json.metadata.score }}"
+            }
+          }
+        },
+        {
+          "id": "6",
+          "name": "Notify Sales Team",
+          "type": "slack",
+          "config": {
+            "channel": "#sales",
+            "message": "{{ $node['LOKI Analyze'].json.metadata.score > 8 ? '🔥 HOT LEAD!' : '📌 New Lead' }} - {{ $node['Extract Lead Info'].json.leadInfo }}\n\nScore: {{ $node['LOKI Analyze'].json.metadata.score }}/10\n\n{{ $node['LOKI Analyze'].json.response }}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Nightly Data Cleaning",
+      "id": "workflow_data_cleaning",
+      "version": "1.0",
+      "description": "Todo dia 23h: limpa, valida, desduplicá dados",
+      "trigger": "cron",
+      "cron": "0 23 * * *",
+      "frequency": "daily",
+      "agentes_usados": ["CLEANER", "VALIDATOR", "DEDUPE"],
+      "estimado_tempo_exec": "120-180s",
+      "nodes": [
+        {
+          "id": "1",
+          "name": "Nightly Trigger",
+          "type": "cron",
+          "config": {
+            "cron": "0 23 * * *",
+            "timezone": "UTC"
+          }
+        },
+        {
+          "id": "2",
+          "name": "Get Yesterday Data",
+          "type": "supabase",
+          "config": {
+            "operation": "select",
+            "table": "agent_executions",
+            "filters": {
+              "created_at": ">= yesterday",
+              "status": "success"
+            }
+          }
+        },
+        {
+          "id": "3",
+          "name": "CLEANER Remove Junk",
+          "type": "http",
+          "config": {
+            "method": "POST",
+            "url": "{{ $vars.elizaOS_base_url }}/api/agents/cleaner/execute",
+            "body": {
+              "message": "Limpar {{ $node['Get Yesterday Data'].json.length }} registros de execução: remover campos nulos, texto duplicado, formatar campos",
+              "context": {
+                "source": "n8n",
+                "workflow": "data-cleaning",
+                "data_count": "{{ $node['Get Yesterday Data'].json.length }}"
+              }
+            }
+          }
+        },
+        {
+          "id": "4",
+          "name": "VALIDATOR Quality Check",
+          "type": "http",
+          "config": {
+            "method": "POST",
+            "url": "{{ $vars.elizaOS_base_url }}/api/agents/validator/execute",
+            "body": {
+              "message": "Validar qualidade dos dados limpos: {{ $node['CLEANER Remove Junk'].json.response }}",
+              "context": {
+                "source": "n8n",
+                "workflow": "data-cleaning"
+              }
+            }
+          }
+        },
+        {
+          "id": "5",
+          "name": "DEDUPE Merge Similar",
+          "type": "http",
+          "config": {
+            "method": "POST",
+            "url": "{{ $vars.elizaOS_base_url }}/api/agents/dedupe/execute",
+            "body": {
+              "message": "Desduplicar e mesclar registros similares: {{ $node['VALIDATOR Quality Check'].json.response }}",
+              "context": {
+                "source": "n8n",
+                "workflow": "data-cleaning"
+              }
+            }
+          }
+        },
+        {
+          "id": "6",
+          "name": "Archive Old Records",
+          "type": "supabase",
+          "config": {
+            "operation": "insert",
+            "table": "agent_executions_archive",
+            "values": "{{ $node['DEDUPE Merge Similar'].json.response }}"
+          }
+        },
+        {
+          "id": "7",
+          "name": "Email Admin Report",
+          "type": "email",
+          "config": {
+            "to": "israel@totumdev.com",
+            "subject": "🧹 Data Cleaning Report - {{ now().format('YYYY-MM-DD') }}",
+            "htmlBody": "<h2>Data Cleaning Summary</h2><p>{{ $node['VALIDATOR Quality Check'].json.response }}</p><p>Deduped: {{ $node['DEDUPE Merge Similar'].json.metadata.merged_count || 0 }} records</p>"
+          }
+        }
+      ]
+    }
+  ],
+  "note": "IMPORT INSTRUCTIONS:\n1. Em n8n, clique 'Create new workflow'\n2. Menu → Import\n3. Cole cada workflow JSON individualmente\n4. Configure credenciais antes de ativar\n5. Teste com dados reais"
+}
