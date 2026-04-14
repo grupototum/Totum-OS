@@ -1,6 +1,7 @@
 import AppLayout from "@/components/layout/AppLayout";
 import { motion } from "framer-motion";
 import { Sparkles } from "lucide-react";
+import { usePageTransition } from "@/hooks/usePageTransition";
 import { VpsResourceChart, CostHistoryChart, ActivityVolumeChart } from "@/components/dashboard/DashboardCharts";
 import {
   OverviewCards,
@@ -16,11 +17,12 @@ import { useDashboardData } from "@/hooks/useDashboardData";
 
 export default function Dashboard() {
   const dashboardData = useDashboardData();
+  const pageTransition = usePageTransition();
 
   return (
     <AppLayout>
       <DashboardProvider value={dashboardData}>
-        <div className="p-6 max-w-7xl mx-auto">
+        <motion.div {...pageTransition} className="p-6 max-w-7xl mx-auto">
           {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: -10 }}
@@ -80,7 +82,7 @@ export default function Dashboard() {
               Apps Totum v2.0.0 · Último deploy: {new Date().toLocaleDateString("pt-BR")}
             </p>
           </motion.footer>
-        </div>
+        </motion.div>
       </DashboardProvider>
     </AppLayout>
   );
