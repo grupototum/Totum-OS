@@ -1,20 +1,10 @@
-import React from "react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import React from 'react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-/**
- * Design System Components for HostingPanel
- * Extracted to reduce main component size
- */
-
+// DS Card - Base container with optional accent corners
 export const DSCard = ({
   children,
-  className = "",
+  className = '',
   accent = false,
 }: {
   children: React.ReactNode;
@@ -36,43 +26,44 @@ export const DSCard = ({
   </div>
 );
 
+// DS Label - Mono uppercase label with brand red accent
 export const DSLabel = ({ children }: { children: React.ReactNode }) => (
   <span className="font-mono text-[10px] text-[#ef233c] tracking-widest uppercase font-bold">
     [ {children} ]
   </span>
 );
 
+// DS Button - Multiple variants with transitions
 export const DSButton = ({
   children,
   onClick,
   disabled,
-  variant = "primary",
-  className = "",
-  size = "default",
+  variant = 'primary',
+  className = '',
+  size = 'default',
 }: {
   children: React.ReactNode;
   onClick?: () => void;
   disabled?: boolean;
-  variant?: "primary" | "ghost" | "outline" | "danger";
+  variant?: 'primary' | 'ghost' | 'outline' | 'danger';
   className?: string;
-  size?: "default" | "sm" | "icon";
+  size?: 'default' | 'sm' | 'icon';
 }) => {
   const base =
-    "transition-all uppercase font-bold tracking-widest flex items-center justify-center gap-2 rounded-none cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed";
+    'transition-all uppercase font-bold tracking-widest flex items-center justify-center gap-2 rounded-none cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed';
   const sizes = {
-    default: "text-[11px] py-3 px-5",
-    sm: "text-[10px] py-2 px-3",
-    icon: "p-2",
+    default: 'text-[11px] py-3 px-5',
+    sm: 'text-[10px] py-2 px-3',
+    icon: 'p-2',
   };
   const variants = {
     primary:
-      "bg-transparent border border-[#ef233c] text-[#ef233c] hover:bg-[#ef233c] hover:text-white",
+      'bg-transparent border border-[#ef233c] text-[#ef233c] hover:bg-[#ef233c] hover:text-white',
     outline:
-      "bg-transparent border border-zinc-700 text-zinc-400 hover:border-zinc-500 hover:text-white",
-    ghost:
-      "bg-transparent text-zinc-400 hover:text-white hover:bg-white/5",
+      'bg-transparent border border-zinc-700 text-zinc-400 hover:border-zinc-500 hover:text-white',
+    ghost: 'bg-transparent text-zinc-400 hover:text-white hover:bg-white/5',
     danger:
-      "bg-transparent border border-red-800 text-red-500 hover:bg-red-600 hover:text-white",
+      'bg-transparent border border-red-800 text-red-500 hover:bg-red-600 hover:text-white',
   };
   return (
     <button
@@ -85,8 +76,9 @@ export const DSButton = ({
   );
 };
 
+// DS Input - Minimal input with underline style
 export const DSInput = ({
-  className = "",
+  className = '',
   ...props
 }: React.InputHTMLAttributes<HTMLInputElement> & { className?: string }) => (
   <input
@@ -95,6 +87,7 @@ export const DSInput = ({
   />
 );
 
+// DS Select - Custom select with underline style
 export const DSSelect = ({
   value,
   onValueChange,
@@ -116,6 +109,7 @@ export const DSSelect = ({
   </Select>
 );
 
+// DS Badge - Status indicator with color coding
 export const DSBadge = ({
   status,
   label,
@@ -124,64 +118,49 @@ export const DSBadge = ({
   label?: string;
 }) => {
   const colors: Record<string, string> = {
-    ativo: "bg-emerald-500/10 text-emerald-400 border-emerald-500/30",
-    inativo: "bg-zinc-500/10 text-zinc-500 border-zinc-600/30",
-    running: "bg-emerald-500/10 text-emerald-400 border-emerald-500/30",
-    stopped: "bg-red-500/10 text-red-400 border-red-500/30",
-    pago: "bg-emerald-500/10 text-emerald-400 border-emerald-500/30",
-    pendente: "bg-amber-500/10 text-amber-400 border-amber-500/30",
-    atrasado: "bg-red-500/10 text-red-400 border-red-500/30",
+    ativo: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30',
+    inativo: 'bg-zinc-500/10 text-zinc-500 border-zinc-600/30',
+    running: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30',
+    stopped: 'bg-red-500/10 text-red-400 border-red-500/30',
+    pago: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30',
+    pendente: 'bg-amber-500/10 text-amber-400 border-amber-500/30',
+    atrasado: 'bg-red-500/10 text-red-400 border-red-500/30',
   };
   return (
     <span
       className={`inline-flex items-center gap-1.5 px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider border rounded-none ${
-        colors[status] || "bg-zinc-500/10 text-zinc-400 border-zinc-600/30"
+        colors[status] || 'bg-zinc-500/10 text-zinc-400 border-zinc-600/30'
       }`}
     >
-      <span
-        className={`w-1.5 h-1.5 rounded-none ${
-          status === "running" || status === "ativo" || status === "pago"
-            ? "bg-emerald-400 animate-pulse"
-            : status === "stopped" || status === "atrasado"
-              ? "bg-red-400"
-              : "bg-amber-400"
-        }`}
-      />
+      <span className="w-1.5 h-1.5 rounded-full bg-current opacity-60" />
       {label || status}
     </span>
   );
 };
 
-export const DSDot = ({ active }: { active?: boolean }) => (
-  <div className="flex gap-1.5">
-    <div
-      className={`w-1.5 h-1.5 rounded-none ${
-        active ? "bg-[#ef233c] animate-pulse" : "bg-zinc-800"
-      }`}
-    />
-    <div className="w-1.5 h-1.5 bg-zinc-800 rounded-none" />
-    <div className="w-1.5 h-1.5 bg-zinc-800 rounded-none" />
-  </div>
+// DS Dot - Small status indicator
+export const DSDot = ({ active = false }: { active?: boolean }) => (
+  <div
+    className={`w-2 h-2 rounded-full ${
+      active ? 'bg-[#ef233c]' : 'bg-zinc-700'
+    } animate-pulse`}
+  />
 );
 
+// DS Table - Generic table container
 export const DSTable = ({
   headers,
   children,
-  empty,
-  loading,
+  loading = false,
+  empty = <div>No data</div>,
 }: {
   headers: string[];
-  children: React.ReactNode;
-  empty?: React.ReactNode;
+  children?: React.ReactNode;
   loading?: boolean;
+  empty?: React.ReactNode;
 }) => (
-  <div className="border border-zinc-800 rounded-none overflow-hidden">
-    <div
-      className="grid border-b border-zinc-800 px-4 py-3 bg-zinc-900/20"
-      style={{
-        gridTemplateColumns: `repeat(${headers.length}, minmax(0, 1fr))`,
-      }}
-    >
+  <DSCard className="overflow-hidden">
+    <div className="grid gap-2 px-4 py-3 border-b border-zinc-800 border-dashed bg-white/[0.02]">
       {headers.map((h) => (
         <div
           key={h}
@@ -200,9 +179,10 @@ export const DSTable = ({
     ) : (
       empty
     )}
-  </div>
+  </DSCard>
 );
 
+// DS Stat Card - Statistics display card
 export const DSStatCard = ({
   label,
   value,
@@ -222,7 +202,7 @@ export const DSStatCard = ({
     <div className="flex items-baseline gap-2">
       <p
         className={`text-3xl font-medium tracking-tighter font-sans ${
-          accent ? "text-[#ef233c]" : "text-white"
+          accent ? 'text-[#ef233c]' : 'text-white'
         }`}
       >
         {value}
