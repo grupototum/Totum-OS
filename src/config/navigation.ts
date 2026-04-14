@@ -82,6 +82,14 @@ const knowledgePillar: NavigationPillarConfig = {
   color: 'from-purple-600 to-purple-500',
   routes: [
     {
+      id: 'docs',
+      label: 'Documentation',
+      icon: 'BookMarked',
+      path: '/docs',
+      pillar: 'knowledge',
+      beta: true,
+    },
+    {
       id: 'alexandria',
       label: 'Alexandria',
       icon: 'BookOpen',

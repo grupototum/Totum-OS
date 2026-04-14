@@ -43,6 +43,7 @@ import NewClient from "./pages/NewClient";
 import ClientsCenter from "./pages/ClientsCenter";
 import EditClient from "./pages/EditClient";
 import AdaPage from "./pages/ada";
+import DocsPage from "./pages/docs";
 
 // Stark Industries + Workspace + IA Tools
 import StarkIndustries from "./pages/dashboard/StarkIndustries";
@@ -120,6 +121,7 @@ const App = () => (
                 ============================ */}
             <Route path="/hub" element={<Hub />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/docs" element={<DocsPage />} />
             <Route path="/content" element={<ContentPipeline />} />
             <Route path="/office" element={<OfficeView />} />
             <Route path="/team" element={<TeamStructure />} />
