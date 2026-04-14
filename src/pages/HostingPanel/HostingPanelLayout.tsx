@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { usePageTransition } from '@/hooks/usePageTransition';
+import { LoadingSpinner } from '@/components/loading';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Globe, Container, DollarSign, Shield, Users } from 'lucide-react';
 import AppLayout from '@/components/layout/AppLayout';
@@ -25,9 +26,11 @@ export default function HostingPanelLayout() {
 
   if (authLoading)
     return (
-      <div className="flex items-center justify-center h-screen bg-black text-zinc-600 font-mono text-xs uppercase tracking-wider">
-        Carregando...
-      </div>
+      <AppLayout>
+        <div className="flex items-center justify-center h-screen">
+          <LoadingSpinner size="lg" message="Carregando Painel..." />
+        </div>
+      </AppLayout>
     );
 
   return (

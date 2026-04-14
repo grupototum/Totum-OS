@@ -2,6 +2,7 @@ import AppLayout from "@/components/layout/AppLayout";
 import { motion } from "framer-motion";
 import { Sparkles } from "lucide-react";
 import { usePageTransition } from "@/hooks/usePageTransition";
+import { PageSkeleton } from "@/components/loading";
 import { VpsResourceChart, CostHistoryChart, ActivityVolumeChart } from "@/components/dashboard/DashboardCharts";
 import {
   OverviewCards,
@@ -18,6 +19,16 @@ import { useDashboardData } from "@/hooks/useDashboardData";
 export default function Dashboard() {
   const dashboardData = useDashboardData();
   const pageTransition = usePageTransition();
+
+  if (dashboardData.loading) {
+    return (
+      <AppLayout>
+        <motion.div {...pageTransition}>
+          <PageSkeleton />
+        </motion.div>
+      </AppLayout>
+    );
+  }
 
   return (
     <AppLayout>

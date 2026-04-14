@@ -2,12 +2,12 @@ import AppLayout from "@/components/layout/AppLayout";
 import { motion } from "framer-motion";
 import { useState, useEffect, useMemo } from "react";
 import { usePageTransition } from "@/hooks/usePageTransition";
+import { PageSkeleton } from "@/components/loading";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Skeleton } from "@/components/ui/skeleton";
 import {
   Bot, Zap, Users, TrendingUp, Search, LayoutGrid, List, BarChart3,
   Plus, FileText,
@@ -199,15 +199,8 @@ export default function AgentsDashboard() {
   if (loading) {
     return (
       <AppLayout>
-        <motion.div {...pageTransition} className="p-6 max-w-7xl mx-auto space-y-6 bg-background min-h-screen">
-          <Skeleton className="h-10 w-64" />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {[...Array(4)].map((_, i) => <Skeleton key={i} className="h-28 rounded-xl" />)}
-          </div>
-          <Skeleton className="h-[260px] w-full rounded-xl" />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[...Array(6)].map((_, i) => <Skeleton key={i} className="h-40 rounded-xl" />)}
-          </div>
+        <motion.div {...pageTransition}>
+          <PageSkeleton />
         </motion.div>
       </AppLayout>
     );

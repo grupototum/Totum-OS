@@ -2,10 +2,10 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePageTransition } from "@/hooks/usePageTransition";
+import { PageSkeleton } from "@/components/loading";
 import { Plus, Building2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 import AppLayout from "@/components/layout/AppLayout";
 import {
   ClientFilters,
@@ -63,14 +63,8 @@ export function ClientsCenterLayout() {
   if (loading) {
     return (
       <AppLayout>
-        <motion.div {...pageTransition} className="p-6 max-w-7xl mx-auto space-y-6">
-          <Skeleton className="h-10 w-64" />
-          <Skeleton className="h-12 w-full rounded-xl" />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[...Array(6)].map((_, i) => (
-              <Skeleton key={i} className="h-48 rounded-xl" />
-            ))}
-          </div>
+        <motion.div {...pageTransition}>
+          <PageSkeleton />
         </motion.div>
       </AppLayout>
     );

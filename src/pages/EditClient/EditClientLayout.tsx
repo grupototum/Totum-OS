@@ -2,10 +2,10 @@ import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { usePageTransition } from "@/hooks/usePageTransition";
+import { PageSkeleton } from "@/components/loading";
 import { ArrowLeft, ChevronLeft, ChevronRight, Check, Loader2, Building2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 import AppLayout from "@/components/layout/AppLayout";
 import { toast } from "@/hooks/use-toast";
 import { validateClientBasicInfo, type ValidationErrors } from "@/lib/validation";
@@ -34,10 +34,8 @@ export function EditClientLayout() {
   if (loading) {
     return (
       <AppLayout>
-        <motion.div {...pageTransition} className="p-6 max-w-7xl mx-auto space-y-6">
-          <Skeleton className="h-10 w-64" />
-          <Skeleton className="h-12 w-full rounded-xl" />
-          <Skeleton className="h-96 rounded-xl" />
+        <motion.div {...pageTransition}>
+          <PageSkeleton />
         </motion.div>
       </AppLayout>
     );
