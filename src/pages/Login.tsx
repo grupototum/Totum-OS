@@ -136,10 +136,11 @@ export default function Login() {
           <div className="border border-zinc-800 p-6 space-y-4 bg-black">
             {/* Email */}
             <div className="space-y-1.5">
-              <label className="label-mono text-zinc-500">
+              <label htmlFor="email" className="label-mono text-zinc-500">
                 Usuário ou E-mail
               </label>
               <input
+                id="email"
                 type="text"
                 value={email}
                 onChange={(e) => {
@@ -149,22 +150,24 @@ export default function Login() {
                 placeholder="Totum ou seu@email.com"
                 disabled={loading}
                 autoComplete="username"
-                className={`input-ds ${
+                aria-describedby={errors.email ? "email-error" : undefined}
+                className={`input-ds focus:outline-2 focus:outline-[#ef233c] focus:outline-offset-2 ${
                   errors.email ? "border-[#ef233c]" : "border-zinc-800"
                 }`}
               />
               {errors.email && (
-                <p className="text-xs text-[#ef233c] mt-1">{errors.email}</p>
+                <p id="email-error" className="text-xs text-[#ef233c] mt-1">{errors.email}</p>
               )}
             </div>
 
             {/* Password */}
             <div className="space-y-1.5">
-              <label className="label-mono text-zinc-500">
+              <label htmlFor="password" className="label-mono text-zinc-500">
                 Senha
               </label>
               <div className="relative">
                 <input
+                  id="password"
                   type={showPass ? "text" : "password"}
                   value={password}
                   onChange={(e) => {
@@ -174,20 +177,22 @@ export default function Login() {
                   placeholder="••••••••"
                   disabled={loading}
                   autoComplete="current-password"
-                  className={`input-ds pr-11 ${
+                  aria-describedby={errors.password ? "password-error" : undefined}
+                  className={`input-ds pr-11 focus:outline-2 focus:outline-[#ef233c] focus:outline-offset-2 ${
                     errors.password ? "border-[#ef233c]" : "border-zinc-800"
                   }`}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPass(!showPass)}
-                  className="absolute right-0 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 transition-colors"
+                  aria-label={showPass ? "Ocultar senha" : "Mostrar senha"}
+                  className="absolute right-0 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 transition-colors focus:outline-2 focus:outline-[#ef233c] focus:outline-offset-2 rounded px-1"
                 >
                   {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
               {errors.password && (
-                <p className="text-xs text-[#ef233c] mt-1">{errors.password}</p>
+                <p id="password-error" className="text-xs text-[#ef233c] mt-1">{errors.password}</p>
               )}
             </div>
             
