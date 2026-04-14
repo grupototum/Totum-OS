@@ -1,0 +1,177 @@
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { motion } from "framer-motion";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import AppLayout from "@/components/layout/AppLayout";
+import { ContentBoard, STAGES, ContentForm } from "./components";
+import { useContentPipeline, useContentForm } from "./hooks";
+import type { StageId } from "./hooks";
+
+/**
+ * ContentPipeline Container Component
+ * Orchestrates data fetching, state management, and layout
+ */
+export function ContentPipelineLayout() {
+  const { user, loading: authLoading } = useAuth();
+  const navigate = useNavigate();
+
+  // Data management
+  const {
+    board,
+    loading,
+    createCard,
+    deleteCard,
+    cycleApproval,
+    updateCardPosition,
+  } = useContentPipeline();
+
+  // Form management
+  const form = useContentForm(() => {
+    setDialogOpen(false);
+  });
+
+  // Dialog state
+  const [dialogOpen, setDialogOpen] = React.useState(false);
+  const [selectedStage, setSelectedStage] = React.useState<StageId>("ideas");
+
+  // Redirect unauthenticated users
+  useEffect(() => {
+    if (!authLoading && !user) {
+      navigate("/login");
+    }
+  }, [user, authLoading, navigate]);
+
+  // Handle drag end
+  const handleDragEnd = async (result: any) => {
+    const { source, destination } = result;
+    if (!destination) return;
+    if (
+      source.droppableId === destination.droppableId &&
+      source.index === destination.index
+    )
+      return;
+
+    const srcStage = source.droppableId as StageId;
+    const dstStage = destination.droppableId as StageId;
+    const cardId = result.draggableId;
+
+    await updateCardPosition(cardId, srcStage, dstStage, destination.index);
+  };
+
+  // Handle create card
+  const handleCreateCard = async () => {
+    if (!form.validate()) return;
+
+    await createCard(
+      form.title,
+      form.description,
+      selectedStage,
+      form.assignee,
+      form.approvalStatus,
+      form.uploadedUrl
+    );
+
+    form.reset();
+  };
+
+  // Handle dialog open for specific stage
+  const handleAddClick = (stage: StageId) => {
+    setSelectedStage(stage);
+    form.reset();
+    setDialogOpen(true);
+  };
+
+  // Loading state
+  if (authLoading || loading) {
+    return (
+      <AppLayout>
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+        </div>
+      </AppLayout>
+    );
+  }
+
+  return (
+    <AppLayout>
+      <div className="h-[calc(100vh)] flex flex-col overflow-hidden">
+        {/* Header */}
+        <motion.header
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="shrink-0 border-b border-border px-4 sm:px-6 py-3 flex items-center gap-4"
+        >
+          <div className="flex-1">
+            <h1 className="font-sans text-xl font-medium text-foreground tracking-tight">
+              CONTENT PIPELINE
+            </h1>
+            <p className="text-[10px] text-muted-foreground uppercase tracking-widest">
+              Pipeline de produção de conteúdo
+            </p>
+          </div>
+
+          {/* Stage legend */}
+          <div className="hidden lg:flex items-center gap-3">
+            {STAGES.map((s) => (
+              <div key={s.id} className="flex items-center gap-1.5">
+                <span className={`w-2 h-2 rounded-full ${s.accent}`} />
+                <span className="text-[10px] text-muted-foreground">
+                  {s.title}
+                </span>
+              </div>
+            ))}
+          </div>
+        </motion.header>
+
+        {/* Board */}
+        <ContentBoard
+          board={board}
+          onDragEnd={handleDragEnd}
+          onAddClick={handleAddClick}
+          onDeleteCard={deleteCard}
+          onCycleApproval={cycleApproval}
+        />
+
+        {/* New Card Dialog */}
+        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+          <DialogContent className="bg-card border-border sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle className="text-foreground">
+                Novo Conteúdo —{" "}
+                {STAGES.find((s) => s.id === selectedStage)?.title}
+              </DialogTitle>
+            </DialogHeader>
+            <ContentForm
+              title={form.title}
+              onTitleChange={form.setTitle}
+              description={form.description}
+              onDescriptionChange={form.setDescription}
+              assignee={form.assignee}
+              onAssigneeChange={form.setAssignee}
+              approvalStatus={form.approvalStatus}
+              onApprovalStatusChange={form.setApprovalStatus}
+              uploadingImage={form.uploadingImage}
+              previewUrl={form.previewUrl}
+              onImageUpload={form.handleImageUpload}
+              onClearImage={form.clearImage}
+              onImageClick={form.openFilePicker}
+              fileInputRef={form.fileInputRef}
+              errors={form.errors}
+              onClearError={(field) =>
+                form.setErrors((prev) => ({ ...prev, [field]: "" }))
+              }
+              onSubmit={handleCreateCard}
+              isLoading={false}
+            />
+          </DialogContent>
+        </Dialog>
+      </div>
+    </AppLayout>
+  );
+}
