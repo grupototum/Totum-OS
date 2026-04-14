@@ -1,6 +1,10 @@
 /**
- * Global Types for Agents and Skills System
+ * Skills and Execution Types
+ * Core types for skill execution and agent orchestration
+ * Agent config types are in agents-elizaos.ts (TotumAgentConfig)
  */
+
+import { AgentSkillConfig } from './agents-elizaos';
 
 // ============================================
 // SKILLS
@@ -37,35 +41,9 @@ export interface Skill {
   estimated_duration_ms: number;
 }
 
-// ============================================
-// AGENT CONFIG
-// ============================================
-
-export interface AgentSkillConfig {
-  skill_id: string;
-  position: number;
-  custom_config?: Record<string, any>;
-}
-
-export interface AgentConfig {
-  id: string;
-  agent_id: string;
-  name: string;
-  emoji: string;
-  tier: 1 | 2 | 3;
-  model_override?: string;
-  system_prompt: string;
-  skills: AgentSkillConfig[];
-  metadata: {
-    tier?: number;
-    team?: string;
-    description?: string;
-    [key: string]: any;
-  };
-  status: 'active' | 'inactive' | 'error';
-  created_at: string;
-  updated_at: string;
-}
+// Re-export unified agent config type from agents-elizaos
+export type { TotumAgentConfig as AgentConfig } from './agents-elizaos';
+export type { AgentSkillConfig };
 
 // ============================================
 // EXECUTION

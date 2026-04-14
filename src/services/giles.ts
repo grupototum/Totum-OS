@@ -1,9 +1,6 @@
-import { createClient } from '@supabase/supabase-js';
-
-const SUPABASE_URL = 'https://cgpkfhrqprqptvehatad.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNncGtmaHJxcHJxcHR2ZWhhdGFkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUyMjQyNjIsImV4cCI6MjA5MDgwMDI2Mn0.fXMvQhyLQXLgD_rK-slcHO4Jd_XF8mR_kYFTDHCsoxw';
-
-export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// GILES Knowledge Service
+// Uses unified Supabase client from src/integrations/supabase/client.ts
+export { supabase } from '@/integrations/supabase/client';
 
 // Tipos para o GILES
 export interface GilesChunk {

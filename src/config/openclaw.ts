@@ -18,7 +18,8 @@ export const OPENCLAW_CONFIG = {
   
   // Modo mock para desenvolvimento
   // Quando true, simula respostas sem chamar VPS real
-  MOCK_MODE: import.meta.env.VITE_OPENCLAW_MOCK === 'true' || true,
+  // Defaults to false - set VITE_OPENCLAW_MOCK=true to enable mock mode
+  MOCK_MODE: import.meta.env.VITE_OPENCLAW_MOCK === 'true',
   
   // Logging
   ENABLE_LOGS: true,
