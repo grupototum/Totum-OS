@@ -249,7 +249,7 @@ export function AgentGraph({ agents, onAgentClick, selectedAgentId }: AgentGraph
                     cx="35"
                     cy="35"
                     r="4"
-                    fill={statusColors[node.agent.status].replace('bg-', '').replace('emerald', '#10B981').replace('stone', '#A8A29E').replace('amber', '#F59E0B').replace('red', '#EF4444')}
+                    fill={(statusColors[node.agent.status] ?? 'bg-stone-400').replace('bg-', '').replace('emerald', '#10B981').replace('stone', '#A8A29E').replace('amber', '#F59E0B').replace('red', '#EF4444')}
                     stroke="#FFFFFF"
                     strokeWidth="1"
                   />
