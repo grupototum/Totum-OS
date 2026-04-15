@@ -38,7 +38,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { listDocuments, addDocument } from '@/services/embeddingService';
-import type { RagDocument } from '@/types/rag';
+import type { RagDocument } from '@/types/alexandria';
 
 const documentTypeIcons = {
   design_system: Palette,

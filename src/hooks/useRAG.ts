@@ -9,7 +9,7 @@ import {
   buildContext, 
   saveExecutionContext 
 } from '@/services/embeddingService';
-import type { RagSearchResult, RagQueryOptions } from '@/types/rag';
+import type { RagSearchResult, RagQueryOptions } from '@/types/alexandria';
 
 interface UseRAGReturn {
   context: string;
