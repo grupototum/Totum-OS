@@ -1,40 +1,34 @@
 import { ReactNode } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 
 interface ProtectedRouteProps {
-  children: ReactNode;
-  requiredRole?: string;
+  children?: ReactNode;
 }
 
 /**
- * ProtectedRoute - Wraps routes that require authentication
- * Redirects unauthenticated users to /login
+ * ProtectedRoute - Protege rotas que exigem autenticação.
+ * Uso como layout route (sem children): <Route element={<ProtectedRoute />}>
+ * Uso direto (com children): <ProtectedRoute><Component /></ProtectedRoute>
+ * Redireciona usuários não autenticados para /login.
  */
-export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) {
+export function ProtectedRoute({ children }: ProtectedRouteProps) {
   const { user, loading } = useAuth();
 
-  // Show loading state
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      <div className="flex items-center justify-center h-screen bg-background">
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary" />
       </div>
     );
   }
 
-  // Redirect to login if not authenticated
   if (!user) {
     return <Navigate to="/login" replace />;
   }
 
-  // Future: Add role-based access control here
-  if (requiredRole) {
-    // TODO: Implement role checking when user roles are stored in Supabase
-    console.warn(`Role-based access control not yet implemented. Required role: ${requiredRole}`);
-  }
-
-  return <>{children}</>;
+  // Suporta tanto layout route (Outlet) quanto wrapper direto (children)
+  return children ? <>{children}</> : <Outlet />;
 }
 
 export default ProtectedRoute;
