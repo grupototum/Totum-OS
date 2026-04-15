@@ -43,9 +43,9 @@ export function DocumentationLayout({
   const [showMobileChat, setShowMobileChat] = React.useState(false);
 
   return (
-    <div className="h-full flex bg-zinc-950">
-      {/* Documentation Browser - Desktop */}
-      <div className="hidden lg:flex w-80 flex-col border-r border-zinc-800">
+    <div className="h-full flex flex-col lg:flex-row bg-zinc-950 overflow-hidden">
+      {/* Documentation Browser - Desktop (1024px+) */}
+      <div className="hidden lg:flex w-80 flex-col flex-shrink-0 border-r border-zinc-800 overflow-hidden">
         <DocumentationBrowser
           docs={docs}
           selectedDoc={selectedDoc}
@@ -55,13 +55,13 @@ export function DocumentationLayout({
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col lg:flex-row min-h-screen">
+      <div className="flex-1 flex flex-col lg:flex-row w-full min-h-0">
         {/* Documentation Viewer */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.3 }}
-          className="flex-1 overflow-y-auto p-6 lg:p-8 lg:border-r lg:border-zinc-800"
+          className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 border-b lg:border-b-0 lg:border-r border-zinc-800 min-h-0"
         >
           {docsLoading ? (
             <div className="space-y-4 max-w-3xl">
@@ -94,8 +94,8 @@ export function DocumentationLayout({
           )}
         </motion.div>
 
-        {/* Chat Sidebar - Desktop */}
-        <div className="hidden lg:flex w-96 flex-col">
+        {/* Chat Sidebar - Desktop (1024px+) */}
+        <div className="hidden lg:flex w-96 flex-col flex-shrink-0 border-l border-zinc-800 overflow-hidden min-h-0">
           <DocumentationChat
             messages={messages}
             loading={chatLoading}
@@ -106,19 +106,19 @@ export function DocumentationLayout({
         </div>
       </div>
 
-      {/* Mobile Chat Button */}
+      {/* Mobile Chat Button - Touch target >= 44px */}
       <motion.button
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
         transition={{ delay: 0.2 }}
         onClick={() => setShowMobileChat(!showMobileChat)}
-        className="lg:hidden fixed bottom-6 right-6 w-14 h-14 bg-[#ef233c] hover:bg-[#d91e2f] rounded-full flex items-center justify-center text-white shadow-lg z-40"
-        aria-label="Toggle chat"
+        className="lg:hidden fixed bottom-6 right-6 w-16 h-16 min-h-[44px] min-w-[44px] bg-[#ef233c] hover:bg-[#d91e2f] rounded-full flex items-center justify-center text-white shadow-lg z-40 transition-all active:scale-95"
+        aria-label={showMobileChat ? "Close chat" : "Open chat"}
       >
         {showMobileChat ? (
           <X className="w-6 h-6" />
         ) : (
-          <span className="text-xl">💬</span>
+          <span className="text-2xl">💬</span>
         )}
       </motion.button>
 

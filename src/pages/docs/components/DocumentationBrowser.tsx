@@ -59,7 +59,7 @@ export function DocumentationBrowser({
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.05 }}
                 onClick={() => onSelectDoc(doc)}
-                className={`w-full px-3 py-2.5 rounded text-left text-sm transition-all duration-200 flex items-center justify-between group ${
+                className={`w-full px-3 py-3 min-h-[44px] rounded text-left text-sm transition-all duration-200 flex items-center justify-between group active:scale-95 ${
                   selectedDoc?.id === doc.id
                     ? 'bg-[#ef233c] text-white'
                     : 'text-zinc-300 hover:bg-zinc-800/50'

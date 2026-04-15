@@ -55,8 +55,9 @@ export function DocumentationChat({
           {messages.length > 0 && (
             <button
               onClick={onClearChat}
-              className="p-1.5 hover:bg-zinc-800 rounded transition-colors"
-              title="Clear chat"
+              className="p-2 min-h-[44px] min-w-[44px] hover:bg-zinc-800 rounded transition-colors active:scale-95 flex items-center justify-center"
+              title="Clear chat history"
+              aria-label="Clear chat history"
             >
               <Trash2 className="w-4 h-4 text-zinc-500 hover:text-zinc-300" />
             </button>
@@ -164,18 +165,18 @@ export function DocumentationChat({
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="flex gap-2">
+        <form onSubmit={handleSubmit} className="flex gap-2 items-end">
           <Input
             value={input}
             onChange={e => setInput(e.target.value)}
             placeholder="Ask about documentation..."
             disabled={loading}
-            className="flex-1 bg-zinc-900 border-zinc-700 text-white placeholder-zinc-500 focus:border-[#ef233c]"
+            className="flex-1 bg-zinc-900 border-zinc-700 text-white placeholder-zinc-500 focus:border-[#ef233c] min-h-[44px] py-2"
           />
           <Button
             type="submit"
             disabled={loading || !input.trim()}
-            className="bg-[#ef233c] hover:bg-[#d91e2f] text-white disabled:opacity-50"
+            className="bg-[#ef233c] hover:bg-[#d91e2f] text-white disabled:opacity-50 min-h-[44px] min-w-[44px] px-3 py-2 active:scale-95 transition-transform"
           >
             <Send className="w-4 h-4" />
           </Button>
