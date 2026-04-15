@@ -24,21 +24,34 @@ export default defineConfig(({ mode }) => ({
     rollupOptions: {
       output: {
         manualChunks: (id) => {
-          // Vendor bundles - React core
           if (id.includes('node_modules')) {
-            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router')) {
+            // React core (verificação estrita para não pegar @radix-ui/react-* etc)
+            if (
+              id.includes('node_modules/react/') ||
+              id.includes('node_modules/react-dom/') ||
+              id.includes('node_modules/react-router')
+            ) {
               return 'vendor-react';
             }
-            if (id.includes('framer-motion')) {
+            if (id.includes('node_modules/framer-motion')) {
               return 'vendor-motion';
             }
-            if (id.includes('supabase')) {
+            if (id.includes('node_modules/@supabase')) {
               return 'vendor-supabase';
             }
-            if (id.includes('@radix-ui') || id.includes('recharts')) {
+            if (
+              id.includes('node_modules/@radix-ui') ||
+              id.includes('node_modules/recharts') ||
+              id.includes('node_modules/lucide-react') ||
+              id.includes('node_modules/class-variance-authority') ||
+              id.includes('node_modules/clsx') ||
+              id.includes('node_modules/tailwind-merge')
+            ) {
               return 'vendor-ui';
             }
-            return 'vendor-other';
+            // Demais libs ficam com o gerenciamento automático do Rollup
+            // (evita chunks circulares causados por catch-all genérico)
+            return;
           }
 
           // Page-based chunks for lazy loading
