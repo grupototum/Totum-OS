@@ -24,6 +24,7 @@ import {
   Cpu,
   UserCog,
   CheckSquare,
+  BookMarked,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
@@ -71,6 +72,7 @@ const sections: NavSection[] = [
   {
     title: "FERRAMENTAS IA",
     items: [
+      { label: "Documentação", icon: BookMarked, path: "/docs" },
       { label: "Alexandria", icon: BookOpen, path: "/alexandria" },
       { label: "Cráudio Codete", icon: Cpu, path: "/craudio-codete" },
       { label: "Claudio Code", icon: Terminal, path: "/claude-code" },

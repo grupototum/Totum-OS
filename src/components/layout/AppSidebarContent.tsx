@@ -5,7 +5,7 @@ import {
   LayoutDashboard, Bot, KanbanSquare, GitBranch, Building2,
   Terminal, Users, Settings, LogOut,
   ChevronDown, ChevronRight, Notebook, FileCheck, Lightbulb, ClipboardList, UserPlus, Contact,
-  BookOpen, Server, Library, Brain, Cloud, FileText, Sparkles,
+  BookOpen, Server, Library, Brain, Cloud, FileText, Sparkles, BookMarked,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { mainAgents, centralResources } from "@/data/agentHierarchy";
@@ -44,6 +44,7 @@ const staticSections: NavSection[] = [
   {
     title: "FERRAMENTAS IA",
     items: [
+      { label: "Documentação", icon: BookMarked, path: "/docs" },
       { label: "Claudio Code", icon: Terminal, path: "/claude-code" },
       { label: "Estrutura do Time", icon: Users, path: "/team" },
     ],
