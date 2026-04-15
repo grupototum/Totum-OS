@@ -1,10 +1,12 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes, Navigate, Outlet, useParams } from "react-router-dom";
+import { Suspense, lazy } from "react";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
+import { PageSkeleton } from "@/components/loading/PageSkeleton";
 
 // Auth Pages
 import Login from "./pages/Login";
@@ -43,7 +45,9 @@ import NewClient from "./pages/NewClient";
 import ClientsCenter from "./pages/ClientsCenter";
 import EditClient from "./pages/EditClient";
 import AdaPage from "./pages/ada";
-import DocsPage from "./pages/docs";
+
+// Lazy load documentation page for performance
+const DocsPage = lazy(() => import("./pages/docs"));
 
 // Stark Industries + Workspace + IA Tools
 import StarkIndustries from "./pages/dashboard/StarkIndustries";
@@ -121,7 +125,11 @@ const App = () => (
                 ============================ */}
             <Route path="/hub" element={<Hub />} />
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/docs" element={<DocsPage />} />
+            <Route path="/docs" element={
+              <Suspense fallback={<PageSkeleton />}>
+                <DocsPage />
+              </Suspense>
+            } />
             <Route path="/content" element={<ContentPipeline />} />
             <Route path="/office" element={<OfficeView />} />
             <Route path="/team" element={<TeamStructure />} />
