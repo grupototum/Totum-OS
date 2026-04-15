@@ -119,7 +119,7 @@ const knowledgePillar: NavigationPillarConfig = {
     },
     {
       id: 'giles-chat',
-      label: 'GILES Chat',
+      label: 'Hermione',
       icon: 'MessageSquare',
       path: '/giles',
       pillar: 'knowledge',

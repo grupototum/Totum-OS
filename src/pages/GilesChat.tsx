@@ -31,7 +31,7 @@ export default function GilesChat() {
     {
       id: 'welcome',
       role: 'assistant',
-      content: 'Olá! Eu sou o **GILES**, Cientista da Informação e Bibliotecário da Totum.\n\nPosso ajudar você a:\n• 🔍 Buscar conhecimento na Alexandria\n• 📚 Encontrar documentação\n• 🔗 Conectar informações relacionadas\n• 📖 Responder perguntas baseadas no nosso banco de dados\n\nO que gostaria de saber?',
+      content: 'Olá! Eu sou a **Hermione**, Cientista da Informação e Guardiã do Conhecimento da Totum.\n\nPosso ajudar você a:\n• 🔍 Buscar conhecimento na Alexandria\n• 📚 Encontrar documentação\n• 🔗 Conectar informações relacionadas\n• 📖 Responder perguntas baseadas no nosso banco de dados\n\nO que gostaria de saber?',
       timestamp: new Date()
     }
   ]);
@@ -175,9 +175,9 @@ export default function GilesChat() {
               <BookOpen className="w-5 h-5 text-amber-500" />
             </div>
             <div>
-              <h1 className="font-sans text-2xl font-medium text-foreground tracking-tight">GILES</h1>
+              <h1 className="font-sans text-2xl font-medium text-foreground tracking-tight">Hermione</h1>
               <p className="text-xs text-muted-foreground uppercase tracking-widest">
-                Cientista da Informação · Alexandria
+                Guardiã do Conhecimento · Alexandria
               </p>
             </div>
           </div>
@@ -211,7 +211,7 @@ export default function GilesChat() {
                   <div className="w-3 h-3 rounded-full bg-emerald-500/60" />
                 </div>
                 <span className="text-[11px] text-muted-foreground font-mono">
-                  giles — alexandria — {formatDuration(sessionDuration)}
+                  hermione — alexandria — {formatDuration(sessionDuration)}
                 </span>
                 {/* History toggle */}
                 <button
@@ -346,7 +346,7 @@ export default function GilesChat() {
                   </Button>
                 </div>
                 <p className="text-[10px] text-muted-foreground mt-2">
-                  GILES consulta a Alexandria em tempo real · Powered by Gemini
+                  Hermione consulta a Alexandria em tempo real · Powered by Gemini
                 </p>
               </div>
             </div>
