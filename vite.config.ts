@@ -71,10 +71,8 @@ export default defineConfig(({ mode }) => ({
             return 'page-dashboard';
           }
 
-          // Component chunks
-          if (id.includes('/components/')) {
-            return 'components';
-          }
+          // Componentes ficam no chunk da página que os importa
+          // (evita circularidade com vendor chunks)
         },
         chunkFileNames: 'assets/[name]-[hash].js',
         entryFileNames: 'assets/[name]-[hash].js',
