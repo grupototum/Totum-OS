@@ -33,7 +33,7 @@ export default function Dashboard() {
   return (
     <AppLayout>
       <DashboardProvider value={dashboardData}>
-        <motion.div {...pageTransition} className="p-6 max-w-7xl mx-auto">
+        <motion.main {...pageTransition} className="p-6 max-w-7xl mx-auto" aria-label="Dashboard content">
           {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: -10 }}
@@ -93,7 +93,7 @@ export default function Dashboard() {
               Apps Totum v2.0.0 · Último deploy: {new Date().toLocaleDateString("pt-BR")}
             </p>
           </motion.footer>
-        </motion.div>
+        </motion.main>
       </DashboardProvider>
     </AppLayout>
   );

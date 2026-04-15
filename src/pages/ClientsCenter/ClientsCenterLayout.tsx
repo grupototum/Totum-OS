@@ -72,9 +72,9 @@ export function ClientsCenterLayout() {
 
   return (
     <AppLayout>
-      <motion.div {...pageTransition} className="p-6 max-w-7xl mx-auto space-y-6">
+      <motion.main {...pageTransition} className="p-6 max-w-7xl mx-auto space-y-6" aria-label="Clients center">
         {/* Header */}
-        <motion.div
+        <motion.header
           {...anim(0)}
           className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
         >
@@ -90,10 +90,11 @@ export function ClientsCenterLayout() {
           <Button
             onClick={() => navigate("/new-client")}
             className="bg-primary hover:bg-primary/90 text-primary-foreground text-sm"
+            aria-label="Create new client"
           >
             <Plus className="w-4 h-4 mr-2" /> Novo Cliente
           </Button>
-        </motion.div>
+        </motion.header>
 
         {/* Filters */}
         <ClientFilters
@@ -170,7 +171,7 @@ export function ClientsCenterLayout() {
           onOpenChange={setDetailOpen}
           onEdit={(client) => navigate(`/edit-client/${client.id}`)}
         />
-      </motion.div>
+      </motion.main>
     </AppLayout>
   );
 }

@@ -208,11 +208,11 @@ export default function AgentsDashboard() {
 
   return (
     <AppLayout>
-      <motion.div {...pageTransition} className="min-h-screen bg-background">
+      <motion.main {...pageTransition} className="min-h-screen bg-background" aria-label="Agents dashboard">
         <div className="max-w-7xl mx-auto p-6 space-y-8">
 
           {/* ─── Header ─── */}
-          <motion.div {...anim(0)} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <motion.header {...anim(0)} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
               <h1 className="text-2xl font-semibold text-foreground tracking-tight">
                 TOTUM AGENTS
@@ -246,7 +246,7 @@ export default function AgentsDashboard() {
                 Ver Relatórios
               </Button>
             </div>
-          </motion.div>
+          </motion.header>
 
           {/* ─── Stats ─── */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -399,7 +399,7 @@ export default function AgentsDashboard() {
           </motion.div>
 
         </div>
-      </motion.div>
+      </motion.main>
     </AppLayout>
   );
 }
