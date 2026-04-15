@@ -16,14 +16,14 @@ import ResetPassword from "./pages/ResetPassword";
 
 // Core Pages
 import Hub from "./pages/Hub";
-import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
 
-// Agents - Estrutura Unificada
-import AgentsDashboard from "./pages/agents/AgentsDashboard";
-import AgentDetail from "./pages/agents/AgentDetail";
-import AgentChatLayout from "./components/chat/AgentChatLayout";
-import AgentElizaOSEdit from "./pages/agents/AgentElizaOSEdit";
+// Lazy load major pages for performance
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const AgentsDashboard = lazy(() => import("./pages/agents/AgentsDashboard"));
+const AgentDetail = lazy(() => import("./pages/agents/AgentDetail"));
+const AgentElizaOSEdit = lazy(() => import("./pages/agents/AgentElizaOSEdit"));
+const AgentChatLayout = lazy(() => import("./components/chat/AgentChatLayout"));
 
 // Tasks - Unificado (QuadroTarefas é a versão com Supabase)
 import QuadroTarefas from "./pages/QuadroTarefas";
@@ -34,6 +34,12 @@ import OfficeView from "./pages/OfficeView";
 import TeamStructure from "./pages/TeamStructure";
 import EstruturaTime from "./pages/EstruturaTime";
 
+// Lazy load secondary pages
+const DocsPage = lazy(() => import("./pages/docs"));
+const ClientsCenter = lazy(() => import("./pages/ClientsCenter"));
+const EditClient = lazy(() => import("./pages/EditClient"));
+const AlexandriaPage = lazy(() => import("./pages/alexandria"));
+
 // Other Pages
 import ClaudeCode from "./pages/ClaudeCode";
 import SettingsPage from "./pages/Settings";
@@ -42,12 +48,7 @@ import DicasPage from "./pages/DicasPage";
 import RecursosPage from "./pages/RecursosPage";
 import ActionPlan from "./pages/ActionPlan";
 import NewClient from "./pages/NewClient";
-import ClientsCenter from "./pages/ClientsCenter";
-import EditClient from "./pages/EditClient";
 import AdaPage from "./pages/ada";
-
-// Lazy load documentation page for performance
-const DocsPage = lazy(() => import("./pages/docs"));
 
 // Stark Industries + Workspace + IA Tools
 import StarkIndustries from "./pages/dashboard/StarkIndustries";
@@ -61,7 +62,6 @@ import Operadores from "./pages/settings/Operadores";
 // Alexandria - Agora integrado no sistema unificado (sem layout separado)
 import WikiAlexandria from "./pages/WikiAlexandria";
 import GilesChat from "./pages/GilesChat";
-import AlexandriaPage from "./pages/alexandria";
 import ContextHubPage from "./pages/alexandria/ContextHubPage";
 import PopsPortal from "./pages/alexandria/PopsPortal";
 import SkillsCentral from "./pages/alexandria/SkillsCentral";
@@ -94,10 +94,26 @@ const App = () => (
             {/* ============================
                 ESTRUTURA UNIFICADA DE AGENTES
                 ============================ */}
-            <Route path="/agents" element={<AgentsDashboard />} />
-            <Route path="/agents/:agentId" element={<AgentDetail />} />
-            <Route path="/agents/:agentId/chat" element={<AgentChatLayout />} />
-            <Route path="/agents/elizaos/:agentId/edit" element={<AgentElizaOSEdit />} />
+            <Route path="/agents" element={
+              <Suspense fallback={<PageSkeleton />}>
+                <AgentsDashboard />
+              </Suspense>
+            } />
+            <Route path="/agents/:agentId" element={
+              <Suspense fallback={<PageSkeleton />}>
+                <AgentDetail />
+              </Suspense>
+            } />
+            <Route path="/agents/:agentId/chat" element={
+              <Suspense fallback={<PageSkeleton />}>
+                <AgentChatLayout />
+              </Suspense>
+            } />
+            <Route path="/agents/elizaos/:agentId/edit" element={
+              <Suspense fallback={<PageSkeleton />}>
+                <AgentElizaOSEdit />
+              </Suspense>
+            } />
 
             {/* ============================
                 REDIRECTS DE COMPATIBILIDADE (Agentes)
@@ -124,7 +140,11 @@ const App = () => (
                 CORE PAGES
                 ============================ */}
             <Route path="/hub" element={<Hub />} />
-            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/dashboard" element={
+              <Suspense fallback={<PageSkeleton />}>
+                <Dashboard />
+              </Suspense>
+            } />
             <Route path="/docs" element={
               <Suspense fallback={<PageSkeleton />}>
                 <DocsPage />
@@ -152,8 +172,16 @@ const App = () => (
             <Route path="/recursos/:resourceId" element={<RecursosPage />} />
             <Route path="/action-plan" element={<ActionPlan />} />
             <Route path="/new-client" element={<NewClient />} />
-            <Route path="/clients" element={<ClientsCenter />} />
-            <Route path="/edit-client/:clientId" element={<EditClient />} />
+            <Route path="/clients" element={
+              <Suspense fallback={<PageSkeleton />}>
+                <ClientsCenter />
+              </Suspense>
+            } />
+            <Route path="/edit-client/:clientId" element={
+              <Suspense fallback={<PageSkeleton />}>
+                <EditClient />
+              </Suspense>
+            } />
             <Route path="/ada" element={<AdaPage />} />
 
             {/* ============================
@@ -173,7 +201,11 @@ const App = () => (
                 ============================ */}
             <Route path="/wiki" element={<WikiAlexandria />} />
             <Route path="/giles" element={<GilesChat />} />
-            <Route path="/alexandria" element={<AlexandriaPage />} />
+            <Route path="/alexandria" element={
+              <Suspense fallback={<PageSkeleton />}>
+                <AlexandriaPage />
+              </Suspense>
+            } />
             <Route path="/alexandria/pops" element={<PopsPortal />} />
             <Route path="/alexandria/context" element={<ContextHubPage />} />
             <Route path="/alexandria/skills" element={<SkillsCentral />} />

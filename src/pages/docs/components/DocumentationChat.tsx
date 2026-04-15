@@ -171,12 +171,13 @@ export function DocumentationChat({
             onChange={e => setInput(e.target.value)}
             placeholder="Ask about documentation..."
             disabled={loading}
-            className="flex-1 bg-zinc-900 border-zinc-700 text-white placeholder-zinc-500 focus:border-[#ef233c] min-h-[44px] py-2"
+            className="flex-1 bg-zinc-900 border-zinc-700 text-white placeholder-zinc-500 focus:border-[#ef233c] min-h-[48px] py-3"
           />
           <Button
             type="submit"
             disabled={loading || !input.trim()}
-            className="bg-[#ef233c] hover:bg-[#d91e2f] text-white disabled:opacity-50 min-h-[44px] min-w-[44px] px-3 py-2 active:scale-95 transition-transform"
+            className="bg-[#ef233c] hover:bg-[#d91e2f] text-white disabled:opacity-50 min-h-[48px] min-w-[48px] px-3 py-3 active:scale-95 transition-transform"
+            aria-label="Send message"
           >
             <Send className="w-4 h-4" />
           </Button>

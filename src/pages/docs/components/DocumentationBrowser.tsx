@@ -22,7 +22,7 @@ export function DocumentationBrowser({
   loading,
 }: DocumentationBrowserProps) {
   return (
-    <div className="h-full flex flex-col bg-zinc-900 border-r border-zinc-800 overflow-hidden">
+    <div className="h-full flex flex-col bg-zinc-900 border-r border-zinc-800 overflow-hidden" role="navigation" aria-label="Documentation navigation">
       {/* Header */}
       <div className="p-4 border-b border-zinc-800 bg-black/50 sticky top-0 z-10">
         <h2 className="font-semibold text-white flex items-center gap-2">
@@ -35,7 +35,7 @@ export function DocumentationBrowser({
       </div>
 
       {/* Doc List */}
-      <div className="flex-1 overflow-y-auto p-2">
+      <div className="flex-1 overflow-y-auto p-2" role="list">
         {loading ? (
           <div className="space-y-2 p-2">
             {[...Array(6)].map((_, i) => (
@@ -59,11 +59,13 @@ export function DocumentationBrowser({
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.05 }}
                 onClick={() => onSelectDoc(doc)}
-                className={`w-full px-3 py-3 min-h-[44px] rounded text-left text-sm transition-all duration-200 flex items-center justify-between group active:scale-95 ${
+                className={`w-full px-3 py-3 min-h-[48px] rounded text-left text-sm transition-all duration-200 flex items-center justify-between group active:scale-95 ${
                   selectedDoc?.id === doc.id
                     ? 'bg-[#ef233c] text-white'
                     : 'text-zinc-300 hover:bg-zinc-800/50'
                 }`}
+                aria-current={selectedDoc?.id === doc.id ? 'page' : undefined}
+                aria-label={`View ${doc.title} documentation`}
               >
                 <span className="font-medium truncate flex-1">{doc.title}</span>
                 {selectedDoc?.id === doc.id && (

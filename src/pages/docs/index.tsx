@@ -3,13 +3,13 @@
  * Main page for documentation browsing and AI chat assistance
  */
 
-import React, { useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import { PageSkeleton } from '@/components/loading/PageSkeleton';
 import { useDocumentation } from './hooks/useDocumentation';
 import { DocumentationLayout } from './components/DocumentationLayout';
-import { PageSkeleton } from '@/components/loading/PageSkeleton';
 
-export function DocsPage() {
+export default function DocsPage() {
   const {
     // Documentation
     docs,
@@ -41,7 +41,7 @@ export function DocsPage() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsReady(true);
-    }, 2000);
+    }, 1000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -54,8 +54,8 @@ export function DocsPage() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.2 }}
-      className="h-screen bg-zinc-950"
+      transition={{ duration: 0.15 }}
+      className="h-screen bg-zinc-950 overflow-hidden"
     >
       <DocumentationLayout
         // Documentation props
@@ -73,5 +73,3 @@ export function DocsPage() {
     </motion.div>
   );
 }
-
-export default DocsPage;
