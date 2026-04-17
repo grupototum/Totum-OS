@@ -9,8 +9,9 @@ export const OPENCLAW_CONFIG = {
   // VPS: 43.98.170.199:18789 (requer Cloudflare Tunnel para acesso externo)
   VPS_URL: import.meta.env.VITE_OPENCLAW_URL || 'http://localhost:3000',
 
-  // Auth token do gateway OpenClaw
-  AUTH_TOKEN: import.meta.env.VITE_OPENCLAW_TOKEN || 'a363a1abd70457da6b5e3abcf59517e5eabbd86ebce066fb',
+  // Auth token do gateway OpenClaw — deve ser configurado via VITE_OPENCLAW_TOKEN no Vercel
+  // NUNCA colocar o token real como fallback em repositório público
+  AUTH_TOKEN: import.meta.env.VITE_OPENCLAW_TOKEN || '',
 
   // Endpoints
   WEBHOOK_PATH: '/webhook/agents/execute',

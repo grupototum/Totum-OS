@@ -4,8 +4,10 @@
  * Falls back to Groq API if Ollama is unavailable
  */
 
-const OLLAMA_BASE_URL = 'http://localhost:11434/api';
-const GROQ_API_KEY = process.env.REACT_APP_GROQ_API_KEY;
+// Use VITE_OLLAMA_URL env var; fall back to localhost only for local dev
+const OLLAMA_BASE_URL = (import.meta.env.VITE_OLLAMA_URL || 'http://localhost:11434') + '/api';
+// Must use import.meta.env in Vite (process.env.REACT_APP_* is CRA syntax — doesn't work here)
+const GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY || '';
 const GROQ_BASE_URL = 'https://api.groq.com/openai/v1/chat/completions';
 
 export interface OllamaMessage {
