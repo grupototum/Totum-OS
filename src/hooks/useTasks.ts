@@ -17,16 +17,16 @@ export interface Tarefa {
   responsavel?: string | null;
   prioridade: PrioridadeTarefa;
   status: StatusTarefa;
-  deadline?: string | null;
+  // DB column is data_limite (timestamptz)
+  data_limite?: string | null;
+  deadline?: string | null; // kept for backward compat
   proxima_execucao?: string | null;
   ultima_execucao?: string | null;
   ultimo_resultado?: string | null;
   created_at?: string;
   updated_at?: string;
-  // Client-side only (not in DB)
   subtarefas: Subtarefa[];
   tags: string[];
-  data_limite?: string | null;
   projeto_id?: string | null;
 }
 
@@ -108,32 +108,26 @@ export const useTasks = () => {
     setError(null);
 
     try {
-      let query = supabase
+      let query = (supabase as any)
         .from('tarefas')
-        .select('*')
+        .select('*, subtarefas(*)')
         .order('created_at', { ascending: false });
 
-      if (filtros?.responsavel) {
-        query = query.eq('responsavel', filtros.responsavel);
-      }
-      if (filtros?.status) {
-        query = query.eq('status', filtros.status);
-      }
-      if (filtros?.prioridade) {
-        query = query.eq('prioridade', filtros.prioridade);
-      }
+      if (filtros?.responsavel) query = query.eq('responsavel', filtros.responsavel);
+      if (filtros?.status)      query = query.eq('status', filtros.status);
+      if (filtros?.prioridade)  query = query.eq('prioridade', filtros.prioridade);
 
       const { data, error: supaError } = await query;
-
       if (supaError) throw supaError;
 
       const tarefasFormatadas: Tarefa[] = (data || []).map((t: any) => ({
         ...t,
         prioridade: t.prioridade as PrioridadeTarefa,
         status: t.status as StatusTarefa,
-        data_limite: t.deadline,
-        subtarefas: [],
-        tags: [],
+        data_limite: t.data_limite,
+        deadline: t.data_limite,        // backward compat alias
+        subtarefas: Array.isArray(t.subtarefas) ? t.subtarefas : [],
+        tags: Array.isArray(t.tags) ? t.tags : [],
       }));
 
       setTarefas(tarefasFormatadas);
@@ -155,10 +149,11 @@ export const useTasks = () => {
         responsavel: tarefa.responsavel,
         prioridade: tarefa.prioridade || 'media',
         status: tarefa.status || 'pendente',
-        deadline: tarefa.data_limite || tarefa.deadline,
+        data_limite: tarefa.data_limite || tarefa.deadline || null,
+        tags: tarefa.tags || [],
       };
 
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('tarefas')
         .insert([dbData])
         .select()
@@ -176,20 +171,21 @@ export const useTasks = () => {
   }, [fetchTarefas]);
 
   const atualizarTarefa = useCallback(async (
-    id: string, 
+    id: string,
     updates: Partial<Tarefa>
   ): Promise<boolean> => {
     try {
       const dbUpdates: any = {};
-      if (updates.titulo !== undefined) dbUpdates.titulo = updates.titulo;
-      if (updates.descricao !== undefined) dbUpdates.descricao = updates.descricao;
+      if (updates.titulo     !== undefined) dbUpdates.titulo      = updates.titulo;
+      if (updates.descricao  !== undefined) dbUpdates.descricao   = updates.descricao;
       if (updates.responsavel !== undefined) dbUpdates.responsavel = updates.responsavel;
-      if (updates.prioridade !== undefined) dbUpdates.prioridade = updates.prioridade;
-      if (updates.status !== undefined) dbUpdates.status = updates.status;
-      if (updates.data_limite !== undefined) dbUpdates.deadline = updates.data_limite;
-      if (updates.deadline !== undefined) dbUpdates.deadline = updates.deadline;
+      if (updates.prioridade  !== undefined) dbUpdates.prioridade  = updates.prioridade;
+      if (updates.status      !== undefined) dbUpdates.status      = updates.status;
+      if (updates.data_limite !== undefined) dbUpdates.data_limite = updates.data_limite;
+      if (updates.deadline    !== undefined) dbUpdates.data_limite = updates.deadline;
+      if (updates.tags        !== undefined) dbUpdates.tags        = updates.tags;
 
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('tarefas')
         .update(dbUpdates)
         .eq('id', id);
@@ -207,7 +203,7 @@ export const useTasks = () => {
 
   const deletarTarefa = useCallback(async (id: string): Promise<boolean> => {
     try {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('tarefas')
         .delete()
         .eq('id', id);
@@ -223,7 +219,7 @@ export const useTasks = () => {
     }
   }, [fetchTarefas]);
 
-  // Projetos - stub (no DB table yet)
+  // ── Projetos (stub — tabela não existe ainda) ───────────────────────────────
   const fetchProjetos = useCallback(async (): Promise<Projeto[]> => {
     setProjetos([]);
     return [];
@@ -244,45 +240,146 @@ export const useTasks = () => {
     return false;
   }, []);
 
-  // Comentários - stub
-  const adicionarComentario = useCallback(async (
-    _tarefaId: string, 
-    _conteudo: string, 
-    _autorId?: string
-  ): Promise<Comentario | null> => {
-    toast.info('Comentários em desenvolvimento');
-    return null;
+  // ── Comentários ─────────────────────────────────────────────────────────────
+  const fetchComentarios = useCallback(async (tarefaId: string): Promise<Comentario[]> => {
+    const { data, error } = await (supabase as any)
+      .from('comentarios_tarefa')
+      .select('*')
+      .eq('tarefa_id', tarefaId)
+      .order('criado_em', { ascending: true });
+
+    if (error) {
+      toast.error('Erro ao carregar comentários');
+      return [];
+    }
+    return (data || []).map((c: any) => ({
+      ...c,
+      autor_nome: c.autor,
+      created_at: c.criado_em,
+    }));
   }, []);
 
-  // Subtarefas - stub
-  const adicionarSubtarefa = useCallback(async (
-    _tarefaId: string, 
-    _titulo: string
-  ): Promise<boolean> => {
-    toast.info('Subtarefas em desenvolvimento');
-    return false;
+  const adicionarComentario = useCallback(async (
+    tarefaId: string,
+    conteudo: string,
+    autorId?: string
+  ): Promise<Comentario | null> => {
+    try {
+      const { data, error } = await (supabase as any)
+        .from('comentarios_tarefa')
+        .insert({
+          tarefa_id: tarefaId,
+          conteudo,
+          autor: autorId || 'Usuário',
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      toast.success('Comentário adicionado');
+      return data as Comentario;
+    } catch (_err: any) {
+      toast.error('Erro ao adicionar comentário');
+      return null;
+    }
   }, []);
+
+  const removerComentario = useCallback(async (comentarioId: string): Promise<boolean> => {
+    try {
+      const { error } = await (supabase as any)
+        .from('comentarios_tarefa')
+        .delete()
+        .eq('id', comentarioId);
+
+      if (error) throw error;
+      return true;
+    } catch {
+      toast.error('Erro ao remover comentário');
+      return false;
+    }
+  }, []);
+
+  // ── Subtarefas ──────────────────────────────────────────────────────────────
+  const adicionarSubtarefa = useCallback(async (
+    tarefaId: string,
+    titulo: string
+  ): Promise<boolean> => {
+    try {
+      const { error } = await (supabase as any)
+        .from('subtarefas')
+        .insert({ tarefa_id: tarefaId, titulo, concluida: false });
+
+      if (error) throw error;
+
+      toast.success('Subtarefa adicionada');
+      await fetchTarefas();
+      return true;
+    } catch (_err: any) {
+      toast.error('Erro ao adicionar subtarefa');
+      return false;
+    }
+  }, [fetchTarefas]);
 
   const toggleSubtarefa = useCallback(async (
-    _tarefaId: string, 
-    _subtarefaId: string
+    _tarefaId: string,
+    subtarefaId: string,
+    concluida?: boolean
   ): Promise<boolean> => {
-    return false;
-  }, []);
+    try {
+      // If concluida not passed, fetch current state and flip it
+      let newValue = concluida;
+      if (newValue === undefined) {
+        const { data } = await (supabase as any)
+          .from('subtarefas')
+          .select('concluida')
+          .eq('id', subtarefaId)
+          .single();
+        newValue = !data?.concluida;
+      }
+
+      const { error } = await (supabase as any)
+        .from('subtarefas')
+        .update({ concluida: newValue, updated_at: new Date().toISOString() })
+        .eq('id', subtarefaId);
+
+      if (error) throw error;
+
+      await fetchTarefas();
+      return true;
+    } catch {
+      toast.error('Erro ao atualizar subtarefa');
+      return false;
+    }
+  }, [fetchTarefas]);
 
   const removerSubtarefa = useCallback(async (
-    _tarefaId: string, 
-    _subtarefaId: string
+    _tarefaId: string,
+    subtarefaId: string
   ): Promise<boolean> => {
-    return false;
-  }, []);
+    try {
+      const { error } = await (supabase as any)
+        .from('subtarefas')
+        .delete()
+        .eq('id', subtarefaId);
 
+      if (error) throw error;
+
+      await fetchTarefas();
+      return true;
+    } catch {
+      toast.error('Erro ao remover subtarefa');
+      return false;
+    }
+  }, [fetchTarefas]);
+
+  // ── Estatísticas ─────────────────────────────────────────────────────────────
   const getEstatisticas = useCallback(() => {
-    const total = tarefas.length;
-    const pendentes = tarefas.filter(t => t.status === 'pendente').length;
+    const total       = tarefas.length;
+    const pendentes   = tarefas.filter(t => t.status === 'pendente').length;
     const emAndamento = tarefas.filter(t => t.status === 'em_andamento').length;
-    const concluidas = tarefas.filter(t => t.status === 'concluida').length;
-    const urgentes = tarefas.filter(t => t.prioridade === 'urgente').length;
+    const concluidas  = tarefas.filter(t => t.status === 'concluida').length;
+    const urgentes    = tarefas.filter(t => t.prioridade === 'urgente').length;
 
     return {
       total,
@@ -290,7 +387,7 @@ export const useTasks = () => {
       emAndamento,
       concluidas,
       urgentes,
-      taxaConclusao: total > 0 ? Math.round((concluidas / total) * 100) : 0
+      taxaConclusao: total > 0 ? Math.round((concluidas / total) * 100) : 0,
     };
   }, [tarefas]);
 
@@ -312,11 +409,13 @@ export const useTasks = () => {
     criarProjeto,
     atualizarProjeto,
     deletarProjeto,
+    fetchComentarios,
     adicionarComentario,
+    removerComentario,
     adicionarSubtarefa,
     toggleSubtarefa,
     removerSubtarefa,
-    getEstatisticas
+    getEstatisticas,
   };
 };
 

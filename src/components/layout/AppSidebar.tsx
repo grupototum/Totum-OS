@@ -29,10 +29,12 @@ import {
   UserCog,
   Network,
   Zap,
+  ShieldCheck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSidebarCollapse } from "@/contexts/SidebarContext";
+import { supabase } from "@/integrations/supabase/client";
 
 // ─── Sub-items para seções expansíveis ────────────────────────────────────────
 
@@ -77,10 +79,11 @@ const clientsItems = [
 ];
 
 const configItems = [
-  { label: "Configurações",   icon: Settings,  path: "/settings" },
-  { label: "Time",            icon: Users,     path: "/estrutura-time" },
-  { label: "Operadores",      icon: UserCog,   path: "/operadores" },
-  { label: "Hosting",         icon: Network,   path: "/hosting" },
+  { label: "Configurações",   icon: Settings,    path: "/settings" },
+  { label: "Time",            icon: Users,       path: "/estrutura-time" },
+  { label: "Operadores",      icon: UserCog,     path: "/operadores" },
+  { label: "Hosting",         icon: Network,     path: "/hosting" },
+  { label: "Aprovações",      icon: ShieldCheck, path: "/admin/approvals" },
 ];
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -90,9 +93,24 @@ export default function AppSidebar() {
   const navigate = useNavigate();
   const location = useLocation();
   const { collapsed, toggle: toggleCollapsed } = useSidebarCollapse();
-  const [expandedAgents, setExpandedAgents] = useState(true); // aberto por padrão
+  const [expandedAgents, setExpandedAgents] = useState(true);
   const [expandedAlexandria, setExpandedAlexandria] = useState(false);
   const [isNavigating, setIsNavigating] = useState(false);
+  const [pendingApprovals, setPendingApprovals] = useState(0);
+
+  // Busca contagem de aprovações pendentes
+  useEffect(() => {
+    const fetchPending = async () => {
+      const { count } = await (supabase as any)
+        .from("user_approvals")
+        .select("id", { count: "exact", head: true })
+        .eq("status", "pending");
+      setPendingApprovals(count || 0);
+    };
+    fetchPending();
+    const interval = setInterval(fetchPending, 60000); // atualiza a cada 1 min
+    return () => clearInterval(interval);
+  }, []);
 
   const openCommandPalette = () =>
     window.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true, bubbles: true }));
@@ -113,7 +131,7 @@ export default function AppSidebar() {
 
   // ── helpers ──────────────────────────────────────────────────────────────────
 
-  const NavItem = ({ item }: { item: { label: string; icon: React.ElementType; path: string } }) => {
+  const NavItem = ({ item, badge }: { item: { label: string; icon: React.ElementType; path: string }; badge?: number }) => {
     const active = isActive(item.path);
     return (
       <li>
@@ -130,9 +148,23 @@ export default function AppSidebar() {
           {active && !collapsed && (
             <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 bg-primary rounded-r-full" />
           )}
-          <item.icon className={cn("w-[18px] h-[18px] shrink-0", active && "text-primary")} />
+          <div className="relative shrink-0">
+            <item.icon className={cn("w-[18px] h-[18px]", active && "text-primary")} />
+            {!!badge && collapsed && (
+              <span className="absolute -top-1.5 -right-1.5 min-w-[14px] h-[14px] rounded-full bg-primary text-white text-[9px] font-bold flex items-center justify-center px-0.5">
+                {badge > 9 ? "9+" : badge}
+              </span>
+            )}
+          </div>
           {!collapsed && (
-            <span className="text-[13px] font-medium tracking-wide truncate">{item.label}</span>
+            <>
+              <span className="text-[13px] font-medium tracking-wide truncate flex-1">{item.label}</span>
+              {!!badge && (
+                <span className="ml-auto min-w-[18px] h-[18px] rounded-full bg-primary text-white text-[10px] font-bold flex items-center justify-center px-1 shrink-0">
+                  {badge > 9 ? "9+" : badge}
+                </span>
+              )}
+            </>
           )}
         </button>
       </li>
@@ -349,7 +381,13 @@ export default function AppSidebar() {
         <div>
           <SectionLabel title="Config" />
           <ul className="space-y-0.5">
-            {configItems.map((item) => <NavItem key={item.path} item={item} />)}
+            {configItems.map((item) => (
+              <NavItem
+                key={item.path}
+                item={item}
+                badge={item.path === "/admin/approvals" ? pendingApprovals : undefined}
+              />
+            ))}
           </ul>
         </div>
 
