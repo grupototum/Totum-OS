@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { toast } from "sonner";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
-import { lovable } from "@/integrations/lovable/index";
+import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
 import { validateSignUpForm, type ValidationErrors } from "@/lib/validation";
 
@@ -22,12 +22,16 @@ export default function SignUp() {
   const handleGoogleSignIn = async () => {
     setGoogleLoading(true);
     try {
-      const { error } = await lovable.auth.signInWithOAuth("google", {
-        redirect_uri: window.location.origin,
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
       });
       if (error) throw error;
+      // Redirect handled by Supabase — no need to setGoogleLoading(false)
     } catch (err: any) {
-      toast.error(err.message || "Erro ao entrar com Google.");
+      toast.error(err.message || "Erro ao cadastrar com Google.");
       setGoogleLoading(false);
     }
   };
@@ -48,9 +52,16 @@ export default function SignUp() {
     setErrors({});
     setLoading(true);
     try {
-      await signUp(email, password, name || undefined);
-      toast.success("Conta criada com sucesso!");
-      navigate("/hub");
+      const result = await signUp(email, password, name || undefined);
+      if (result.pending) {
+        toast.success("Cadastro enviado! Aguardando aprovação do administrador.", {
+          duration: 6000,
+        });
+        navigate("/pending-approval", { replace: true });
+      } else {
+        toast.success("Conta criada com sucesso!");
+        navigate("/hub");
+      }
     } catch (err: any) {
       toast.error(err.message || "Erro ao criar conta.");
     } finally {

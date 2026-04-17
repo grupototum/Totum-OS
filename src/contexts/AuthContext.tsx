@@ -2,17 +2,41 @@ import { createContext, useContext, useEffect, useState, ReactNode } from "react
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { notifyNewUserPending } from "@/lib/telegram";
+
+type ApprovalStatus = "pending" | "approved" | "rejected" | null;
+
+interface SignUpResult {
+  pending: boolean;
+}
 
 interface AuthContextType {
   session: Session | null;
   user: User | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string, name?: string) => Promise<void>;
+  signUp: (email: string, password: string, name?: string) => Promise<SignUpResult>;
   signOut: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+/**
+ * Returns the user's approval status.
+ * Returns null if no record exists (legacy user — treated as approved).
+ */
+async function fetchApprovalStatus(userId: string): Promise<ApprovalStatus> {
+  const { data } = await (supabase as any)
+    .from("user_approvals")
+    .select("status")
+    .eq("user_id", userId)
+    .maybeSingle();
+  return data?.status ?? null;
+}
+
+// ─── Provider ─────────────────────────────────────────────────────────────────
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
@@ -37,60 +61,82 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => subscription.unsubscribe();
   }, []);
 
-  const confirmEmailViaAPI = async (email: string): Promise<boolean> => {
-    try {
-      const response = await fetch('/api/admin/confirm-user', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email })
-      });
-      
-      const data = await response.json();
-      return data.success;
-    } catch (err) {
-      console.error('Erro ao confirmar email:', err);
-      return false;
-    }
-  };
-
+  // ── signIn ──────────────────────────────────────────────────────────────────
   const signIn = async (email: string, password: string) => {
-    try {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
-      
-      // Se o erro for "Email not confirmed", tentar confirmar automaticamente
-      if (error && error.message && error.message.toLowerCase().includes('email not confirmed')) {
-        toast.info('Confirmando email automaticamente...');
-        
-        const confirmed = await confirmEmailViaAPI(email);
-        
-        if (confirmed) {
-          toast.success('Email confirmado! Tentando login novamente...');
-          // Tentar login novamente
-          const { error: retryError } = await supabase.auth.signInWithPassword({ email, password });
-          if (retryError) throw retryError;
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+
+    // Auto-confirm email workaround (legacy behaviour)
+    if (error?.message?.toLowerCase().includes("email not confirmed")) {
+      toast.info("Confirmando email automaticamente...");
+      try {
+        const res = await fetch("/api/admin/confirm-user", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        });
+        const result = await res.json();
+        if (result.success) {
+          toast.success("Email confirmado! Tentando login novamente...");
+          const { data: retryData, error: retryErr } = await supabase.auth.signInWithPassword({
+            email,
+            password,
+          });
+          if (retryErr) throw retryErr;
+          if (retryData.user) await guardApproval(retryData.user.id);
         } else {
-          throw new Error('Não foi possível confirmar o email automaticamente. Entre em contato com o administrador.');
+          throw new Error(
+            "Não foi possível confirmar o email. Entre em contato com o administrador."
+          );
         }
-      } else if (error) {
-        throw error;
+      } catch (err) {
+        throw err;
       }
-    } catch (err: any) {
-      throw err;
+      return;
     }
+
+    if (error) throw error;
+
+    // Approval gate
+    if (data.user) await guardApproval(data.user.id);
   };
 
-  const signUp = async (email: string, password: string, name?: string) => {
-    const { error } = await supabase.auth.signUp({
+  // ── signUp ──────────────────────────────────────────────────────────────────
+  const signUp = async (
+    email: string,
+    password: string,
+    name?: string
+  ): Promise<SignUpResult> => {
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        emailRedirectTo: window.location.origin,
+        emailRedirectTo: `${window.location.origin}/auth/callback`,
         data: name ? { full_name: name } : undefined,
       },
     });
     if (error) throw error;
+
+    if (data.user) {
+      // Create pending approval record
+      await (supabase as any).from("user_approvals").insert({
+        user_id: data.user.id,
+        email,
+        name: name || null,
+        status: "pending",
+        provider: "email",
+      });
+
+      // Notify admin via Telegram
+      await notifyNewUserPending(email, name, "email");
+
+      // Sign out immediately — they must wait for approval
+      await supabase.auth.signOut();
+    }
+
+    return { pending: true };
   };
 
+  // ── signOut ─────────────────────────────────────────────────────────────────
   const signOut = async () => {
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
@@ -107,4 +153,24 @@ export function useAuth() {
   const context = useContext(AuthContext);
   if (!context) throw new Error("useAuth must be used within AuthProvider");
   return context;
+}
+
+// ─── Internal guard (throws on pending/rejected) ──────────────────────────────
+async function guardApproval(userId: string): Promise<void> {
+  const status = await fetchApprovalStatus(userId);
+
+  if (status === "pending") {
+    await supabase.auth.signOut();
+    throw new Error(
+      "Seu cadastro ainda está aguardando aprovação do administrador. Você será notificado quando o acesso for liberado."
+    );
+  }
+
+  if (status === "rejected") {
+    await supabase.auth.signOut();
+    throw new Error(
+      "Seu cadastro foi rejeitado. Entre em contato com o administrador para mais informações."
+    );
+  }
+  // null (no record) = legacy user, approved
 }

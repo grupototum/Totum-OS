@@ -16,6 +16,8 @@ import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import AuthCallback from "./pages/AuthCallback";
+import PendingApproval from "./pages/PendingApproval";
 import NotFound from "./pages/NotFound";
 
 // Lazy load — todas as páginas (reduz bundle inicial)
@@ -54,6 +56,7 @@ const PopsPortal        = lazy(() => import("./pages/alexandria/PopsPortal"));
 const SkillsCentral     = lazy(() => import("./pages/alexandria/SkillsCentral"));
 const OpenClawDashboard = lazy(() => import("./pages/alexandria/OpenClawDashboard"));
 const SunaPage          = lazy(() => import("./pages/suna"));
+const UserApprovals     = lazy(() => import("./pages/admin/UserApprovals"));
 
 // Per-page error boundary + suspense wrapper
 const Page = ({ children }: { children: ReactNode }) => (
@@ -83,6 +86,8 @@ const AppWithRouter = () => {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/auth/callback" element={<AuthCallback />} />
+        <Route path="/pending-approval" element={<PendingApproval />} />
 
         {/* ============================
             ROTAS PROTEGIDAS — exigem login
@@ -144,6 +149,7 @@ const AppWithRouter = () => {
           <Route path="/deployment" element={<Page><DeploymentChecklist /></Page>} />
           <Route path="/craudio-codete" element={<Page><CraudioCodete /></Page>} />
           <Route path="/operadores" element={<Page><Operadores /></Page>} />
+          <Route path="/admin/approvals" element={<Page><UserApprovals /></Page>} />
           <Route path="/hosting" element={<Page><HostingPanel /></Page>} />
 
           {/* Alexandria */}
