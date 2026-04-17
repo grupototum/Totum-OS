@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
+import { usePageTransition } from "@/hooks/usePageTransition";
 import {
   Dialog,
   DialogContent,
@@ -20,6 +21,7 @@ import type { StageId } from "./hooks";
 export function ContentPipelineLayout() {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
+  const pageTransition = usePageTransition();
 
   // Data management
   const {
@@ -100,7 +102,7 @@ export function ContentPipelineLayout() {
 
   return (
     <AppLayout>
-      <div className="h-[calc(100vh)] flex flex-col overflow-hidden">
+      <motion.div {...pageTransition} className="h-[calc(100vh)] flex flex-col overflow-hidden">
         {/* Header */}
         <motion.header
           initial={{ opacity: 0, y: -10 }}
@@ -171,7 +173,7 @@ export function ContentPipelineLayout() {
             />
           </DialogContent>
         </Dialog>
-      </div>
+      </motion.div>
     </AppLayout>
   );
 }

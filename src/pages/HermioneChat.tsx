@@ -1,21 +1,33 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
-import { Send, BookOpen, User, Sparkles, History, X, Loader2, RotateCcw, Plus, Zap, Database, Search } from 'lucide-react';
+import { usePageTransition } from '@/hooks/usePageTransition';
+import {
+  Send, BookOpen, User, Sparkles, History, X, Loader2, RotateCcw,
+  Plus, Zap, Database, Search, Upload, Github, CheckCircle2,
+  AlertCircle, FileText, FolderInput,
+} from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { searchGiles, GilesChunk, logQuery } from '@/services/giles';
-import { askGeminiAsGiles, isGeminiConfigured, GEMINI_MODELS } from '@/services/gemini';
+import { searchHermione, HermioneChunk, logQuery } from '@/services/hermione';
+import { askGeminiAsHermione, isGeminiConfigured, GEMINI_MODELS } from '@/services/gemini';
+import { MarkdownRenderer } from '@/components/ui/MarkdownRenderer';
+import {
+  ingestBatch,
+  ingestGithubRepo,
+  type IngestProgress,
+  type IngestResult,
+} from '@/services/alexandriaIngestion';
 
 interface Message {
   id: string;
   role: 'user' | 'assistant';
   content: string;
   timestamp: Date;
-  context?: GilesChunk[];
+  context?: HermioneChunk[];
   isLoading?: boolean;
 }
 
@@ -26,7 +38,8 @@ interface ChatSession {
   messageCount: number;
 }
 
-export default function GilesChat() {
+export default function HermioneChat() {
+  const pageTransition = usePageTransition();
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 'welcome',
@@ -100,7 +113,7 @@ export default function GilesChat() {
         return;
       }
 
-      const contextResults = await searchGiles(userMessage.content, { limit: 5 });
+      const contextResults = await searchHermione(userMessage.content, { limit: 5 });
 
       const conversationHistory = messages
         .filter(m => m.id !== 'welcome')
@@ -109,7 +122,7 @@ export default function GilesChat() {
           text: m.content
         }));
 
-      const geminiResponse = await askGeminiAsGiles(
+      const geminiResponse = await askGeminiAsHermione(
         userMessage.content,
         contextResults.map(r => ({ content: r.content, dominio: r.dominio, categoria: r.categoria })),
         conversationHistory
@@ -160,9 +173,61 @@ export default function GilesChat() {
 
   const messageCount = messages.filter(m => m.role !== 'assistant' || m.id !== 'welcome').length;
 
+  // ─── Ingestion State ────────────────────────────────────────────────────────
+  const [showIngest, setShowIngest] = useState(false);
+  const [githubUrl, setGithubUrl] = useState('');
+  const [isIngesting, setIsIngesting] = useState(false);
+  const [ingestProgress, setIngestProgress] = useState<IngestProgress[]>([]);
+  const [ingestResult, setIngestResult] = useState<IngestResult | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleIngestProgress = useCallback((progress: IngestProgress) => {
+    setIngestProgress(prev => {
+      const idx = prev.findIndex(p => p.fileName === progress.fileName);
+      if (idx >= 0) {
+        const next = [...prev];
+        next[idx] = progress;
+        return next;
+      }
+      return [...prev, progress];
+    });
+  }, []);
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
+    setIsIngesting(true);
+    setIngestProgress([]);
+    setIngestResult(null);
+
+    const parsed = await Promise.all(
+      files.map(f => f.text().then(content => ({ name: f.name, content })))
+    );
+
+    const result = await ingestBatch(parsed, handleIngestProgress);
+    setIngestResult(result);
+    setIsIngesting(false);
+    if (e.target) e.target.value = '';
+  };
+
+  const handleGithubIngest = async () => {
+    if (!githubUrl.trim()) return;
+    setIsIngesting(true);
+    setIngestProgress([]);
+    setIngestResult(null);
+    try {
+      const result = await ingestGithubRepo(githubUrl.trim(), handleIngestProgress);
+      setIngestResult(result);
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Erro ao buscar repositório';
+      setIngestResult({ succeeded: 0, failed: 1, totalChunks: 0, documents: [], errors: [msg] });
+    }
+    setIsIngesting(false);
+  };
+
   return (
     <AppLayout>
-      <div className="p-6 max-w-7xl mx-auto h-[calc(100vh-4rem)]">
+      <motion.div {...pageTransition} className="p-6 max-w-7xl mx-auto h-[calc(100vh-4rem)]">
 
         {/* Header */}
         <motion.div
@@ -182,6 +247,15 @@ export default function GilesChat() {
             </div>
           </div>
           <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowIngest(!showIngest)}
+              className={showIngest ? 'border-amber-500/50 text-amber-400' : ''}
+            >
+              <FolderInput className="w-4 h-4 mr-2" />
+              Catalogar
+            </Button>
             <Button variant="outline" size="sm" onClick={clearChat}>
               <RotateCcw className="w-4 h-4 mr-2" />
               Limpar
@@ -295,7 +369,10 @@ export default function GilesChat() {
                             </div>
                           ) : (
                             <>
-                              <div className="whitespace-pre-wrap text-sm">{message.content}</div>
+                              {message.role === 'assistant'
+                                ? <MarkdownRenderer content={message.content} />
+                                : <div className="text-sm">{message.content}</div>
+                              }
                               {message.context && message.context.length > 0 && (
                                 <div className="mt-3 pt-3 border-t border-border/50">
                                   <p className="text-[10px] text-muted-foreground mb-1.5 uppercase tracking-wider">Fontes</p>
@@ -450,9 +527,133 @@ export default function GilesChat() {
               <Plus className="w-4 h-4 mr-2" />
               Novo Chat
             </Button>
+
+            {/* ── Ingestion Panel ── */}
+            <AnimatePresence>
+              {showIngest && (
+                <motion.div
+                  initial={{ opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.2 }}
+                  className="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-4 space-y-4"
+                >
+                  <div className="flex items-center justify-between">
+                    <p className="font-mono text-[10px] uppercase tracking-widest text-amber-400">
+                      📥 Catalogar na Alexandria
+                    </p>
+                    <button onClick={() => setShowIngest(false)}>
+                      <X className="w-3.5 h-3.5 text-muted-foreground hover:text-foreground" />
+                    </button>
+                  </div>
+
+                  {/* File Upload */}
+                  <div>
+                    <p className="text-[11px] text-muted-foreground mb-2">Arquivos .md</p>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept=".md,.txt"
+                      multiple
+                      className="hidden"
+                      onChange={handleFileUpload}
+                    />
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full border-dashed justify-start gap-2 text-xs"
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={isIngesting}
+                    >
+                      <Upload className="w-3.5 h-3.5" />
+                      Enviar arquivos .md
+                    </Button>
+                  </div>
+
+                  {/* GitHub URL */}
+                  <div>
+                    <p className="text-[11px] text-muted-foreground mb-2">Repositório GitHub</p>
+                    <div className="flex gap-2">
+                      <Input
+                        placeholder="https://github.com/owner/repo"
+                        value={githubUrl}
+                        onChange={e => setGithubUrl(e.target.value)}
+                        className="text-xs font-mono h-8"
+                        disabled={isIngesting}
+                        onKeyDown={e => e.key === 'Enter' && handleGithubIngest()}
+                      />
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={handleGithubIngest}
+                        disabled={isIngesting || !githubUrl.trim()}
+                        className="h-8 px-2 shrink-0"
+                      >
+                        {isIngesting ? (
+                          <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                        ) : (
+                          <Github className="w-3.5 h-3.5" />
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Progress */}
+                  {ingestProgress.length > 0 && (
+                    <div className="space-y-1.5">
+                      <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Progresso</p>
+                      <div className="space-y-1 max-h-36 overflow-y-auto">
+                        {ingestProgress.map((p, i) => (
+                          <div key={i} className="flex items-center gap-2 text-[11px]">
+                            {p.status === 'processing' && (
+                              <Loader2 className="w-3 h-3 animate-spin text-amber-400 shrink-0" />
+                            )}
+                            {p.status === 'done' && (
+                              <CheckCircle2 className="w-3 h-3 text-emerald-500 shrink-0" />
+                            )}
+                            {p.status === 'error' && (
+                              <AlertCircle className="w-3 h-3 text-destructive shrink-0" />
+                            )}
+                            <span className={`truncate ${p.status === 'error' ? 'text-destructive' : 'text-muted-foreground'}`}>
+                              {p.fileName}
+                            </span>
+                            {p.chunksCreated !== undefined && (
+                              <span className="ml-auto text-emerald-500 shrink-0">{p.chunksCreated}✓</span>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Result */}
+                  {ingestResult && !isIngesting && (
+                    <div className={`rounded-lg p-3 text-xs space-y-1 ${
+                      ingestResult.failed === 0
+                        ? 'bg-emerald-500/10 border border-emerald-500/20'
+                        : 'bg-yellow-500/10 border border-yellow-500/20'
+                    }`}>
+                      <p className="font-semibold text-foreground">
+                        {ingestResult.failed === 0 ? '✅ Ingestão concluída!' : '⚠️ Concluído com erros'}
+                      </p>
+                      <p className="text-muted-foreground">
+                        📚 {ingestResult.succeeded} documento{ingestResult.succeeded !== 1 ? 's' : ''} catalogado{ingestResult.succeeded !== 1 ? 's' : ''}
+                      </p>
+                      <p className="text-muted-foreground">
+                        🔗 {ingestResult.totalChunks} chunks criados na Alexandria
+                      </p>
+                      {ingestResult.errors.length > 0 && (
+                        <p className="text-destructive">{ingestResult.errors[0]}</p>
+                      )}
+                    </div>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
+
           </motion.div>
         </div>
-      </div>
+      </motion.div>
     </AppLayout>
   );
 }

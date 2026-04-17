@@ -1,9 +1,9 @@
-// GILES Knowledge Service
+// Hermione Knowledge Service
 // Uses unified Supabase client from src/integrations/supabase/client.ts
 export { supabase } from '@/integrations/supabase/client';
 
-// Tipos para o GILES
-export interface GilesChunk {
+// Tipos para o Hermione
+export interface HermioneChunk {
   id: string;
   chunk_id: string;
   content: string;
@@ -23,16 +23,16 @@ export interface GilesChunk {
   pai_id?: string;
 }
 
-export interface GilesConsulta {
+export interface HermioneConsulta {
   id: string;
   query: string;
   agente: string;
-  resultados: GilesChunk[];
+  resultados: HermioneChunk[];
   created_at: string;
 }
 
-// Busca híbrida no GILES (semântica + full-text)
-export async function searchGiles(
+// Busca híbrida no Hermione (semântica + full-text)
+export async function searchHermione(
   query: string,
   options: {
     dominio?: string;
@@ -40,7 +40,7 @@ export async function searchGiles(
     limit?: number;
     threshold?: number;
   } = {}
-): Promise<GilesChunk[]> {
+): Promise<HermioneChunk[]> {
   const { dominio, categoria, limit = 10, threshold = 0.7 } = options;
 
   try {
@@ -63,13 +63,13 @@ export async function searchGiles(
     const { data, error } = await query_builder;
 
     if (error) {
-      console.error('Erro na busca GILES:', error);
+      console.error('Erro na busca Hermione:', error);
       return [];
     }
 
     return data || [];
   } catch (err) {
-    console.error('Erro ao buscar no GILES:', err);
+    console.error('Erro ao buscar no Hermione:', err);
     return [];
   }
 }
@@ -79,7 +79,7 @@ export async function searchByDomain(
   query: string,
   dominio: string,
   limit: number = 5
-): Promise<GilesChunk[]> {
+): Promise<HermioneChunk[]> {
   try {
     const { data, error } = await supabase
       .from('giles_knowledge')
@@ -143,7 +143,7 @@ export async function listCategories(dominio: string): Promise<string[]> {
 }
 
 // Buscar chunks por ID
-export async function getChunkById(id: string): Promise<GilesChunk | null> {
+export async function getChunkById(id: string): Promise<HermioneChunk | null> {
   try {
     const { data, error } = await supabase
       .from('giles_knowledge')
@@ -164,7 +164,7 @@ export async function getChunkById(id: string): Promise<GilesChunk | null> {
 }
 
 // Buscar chunks relacionados
-export async function getRelatedChunks(chunkId: string): Promise<GilesChunk[]> {
+export async function getRelatedChunks(chunkId: string): Promise<HermioneChunk[]> {
   try {
     // Primeiro busca o chunk original para pegar tags/domínio
     const chunk = await getChunkById(chunkId);
@@ -235,11 +235,88 @@ export async function insertKnowledge(
   }
 }
 
+/**
+ * Semantic search using pgvector cosine similarity.
+ * Calls the match_knowledge RPC function in Supabase.
+ */
+export async function searchHermioneSemantic(
+  query: string,
+  options: { limit?: number; threshold?: number } = {}
+): Promise<HermioneChunk[]> {
+  const { limit = 8, threshold = 0.45 } = options;
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY || '';
+  if (!apiKey) return [];
+
+  try {
+    // Generate query embedding
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/text-embedding-004:embedContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'models/text-embedding-004',
+          content: { parts: [{ text: query.substring(0, 500) }] },
+        }),
+      }
+    );
+    if (!res.ok) return [];
+    const embData = await res.json();
+    const embedding: number[] = embData?.embedding?.values ?? [];
+    if (!embedding.length) return [];
+
+    // Call RPC
+    const { data, error } = await supabase.rpc('match_knowledge', {
+      query_embedding: embedding,
+      match_threshold: threshold,
+      match_count: limit,
+    });
+
+    if (error) {
+      console.error('Semantic search error:', error);
+      return [];
+    }
+
+    return (data ?? []) as HermioneChunk[];
+  } catch (err) {
+    console.error('Semantic search failed:', err);
+    return [];
+  }
+}
+
+/**
+ * Hybrid search: semantic first, falls back to / merges with text search.
+ * Deduplicates by id.
+ */
+export async function searchHermioneHybrid(
+  query: string,
+  options: { limit?: number; dominio?: string } = {}
+): Promise<HermioneChunk[]> {
+  const { limit = 8, dominio } = options;
+
+  // Run both in parallel
+  const [semantic, text] = await Promise.all([
+    searchHermioneSemantic(query, { limit, threshold: 0.45 }),
+    searchHermione(query, { limit: Math.ceil(limit / 2), dominio }),
+  ]);
+
+  // Merge & deduplicate (semantic results first = higher priority)
+  const seen = new Set<string>();
+  const merged: HermioneChunk[] = [];
+  for (const chunk of [...semantic, ...text]) {
+    if (!seen.has(chunk.id)) {
+      seen.add(chunk.id);
+      merged.push(chunk);
+    }
+  }
+  return merged.slice(0, limit);
+}
+
 // Log de consulta
 export async function logQuery(
   query: string,
   agente: string,
-  resultados: GilesChunk[]
+  resultados: HermioneChunk[]
 ): Promise<void> {
   try {
     await supabase
@@ -254,10 +331,10 @@ export async function logQuery(
   }
 }
 
-// Função para o chat com GILES - resposta simulada (até ter IA)
-export async function askGiles(
+// Função para o chat com Hermione - resposta simulada (até ter IA)
+export async function askHermione(
   question: string,
-  context: GilesChunk[]
+  context: HermioneChunk[]
 ): Promise<string> {
   // Aqui futuramente integraríamos com uma IA
   // Por enquanto, retorna uma resposta baseada nos contextos encontrados

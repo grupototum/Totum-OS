@@ -3,7 +3,8 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Loader2, Key, Eye, EyeOff, Server, Zap, Bot } from "lucide-react";
+import { Loader2, Key, Eye, EyeOff, Server, Zap, Bot, Sparkles, RotateCcw, CheckCircle, XCircle } from "lucide-react";
+import { isGeminiConfigured } from "@/services/gemini";
 
 interface ApiKeys {
   claudeApiKey: string;
@@ -15,6 +16,8 @@ const STORAGE_KEY = "totum-api-keys";
 
 export function SystemTab() {
   const [loading, setLoading] = useState(false);
+  const [testingGemini, setTestingGemini] = useState(false);
+  const [geminiStatus, setGeminiStatus] = useState<'idle' | 'ok' | 'error'>('idle');
   const [showKeys, setShowKeys] = useState<Record<string, boolean>>({
     claude: false,
     openai: false,
@@ -62,6 +65,37 @@ export function SystemTab() {
       ollamaHost: "http://localhost:11434",
     });
     toast.success("Configurações limpas!");
+  };
+
+  const testGemini = async () => {
+    setTestingGemini(true);
+    setGeminiStatus('idle');
+    try {
+      const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || '';
+      if (!GEMINI_API_KEY) throw new Error('VITE_GEMINI_API_KEY não configurada');
+      const res = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: 'ping' }] }] }),
+        }
+      );
+      const data = await res.json();
+      if (data.error) throw new Error(data.error.message);
+      setGeminiStatus('ok');
+      toast.success('Gemini conectada e respondendo!');
+    } catch (e: any) {
+      setGeminiStatus('error');
+      toast.error('Gemini: ' + (e.message || 'Erro desconhecido'));
+    } finally {
+      setTestingGemini(false);
+    }
+  };
+
+  const resetOnboarding = () => {
+    localStorage.removeItem('totum_onboarded_v1');
+    toast.success('Onboarding resetado! Atualize a página para ver o wizard.');
   };
 
   const maskKey = (key: string) => {
@@ -190,6 +224,60 @@ export function SystemTab() {
               URL do servidor Ollama local
             </p>
           </div>
+        </div>
+      </div>
+
+      {/* Gemini API Status */}
+      <div className="space-y-4">
+        <div className="flex items-center gap-3">
+          <Sparkles className="w-5 h-5 text-amber-400" />
+          <h4 className="font-medium">Gemini (Google AI)</h4>
+          {isGeminiConfigured() ? (
+            <span className="text-xs bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full">Configurada</span>
+          ) : (
+            <span className="text-xs bg-red-500/20 text-red-400 px-2 py-0.5 rounded-full">Não configurada</span>
+          )}
+        </div>
+        <div className="pl-8">
+          <p className="text-xs text-zinc-500 mb-3">
+            A Gemini é usada pela Hermione (chat de conhecimento) e embeddings da Alexandria.
+            A chave é configurada via variável de ambiente <code className="bg-muted px-1 rounded">VITE_GEMINI_API_KEY</code>.
+          </p>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={testGemini}
+            disabled={testingGemini || !isGeminiConfigured()}
+            className="gap-2"
+          >
+            {testingGemini ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : geminiStatus === 'ok' ? (
+              <CheckCircle className="w-4 h-4 text-emerald-400" />
+            ) : geminiStatus === 'error' ? (
+              <XCircle className="w-4 h-4 text-red-400" />
+            ) : (
+              <Sparkles className="w-4 h-4" />
+            )}
+            Testar Conexão Gemini
+          </Button>
+        </div>
+      </div>
+
+      {/* Onboarding Reset */}
+      <div className="space-y-4">
+        <div className="flex items-center gap-3">
+          <RotateCcw className="w-5 h-5 text-zinc-400" />
+          <h4 className="font-medium">Onboarding</h4>
+        </div>
+        <div className="pl-8">
+          <p className="text-xs text-zinc-500 mb-3">
+            O wizard de boas-vindas aparece uma vez para novos usuários. Clique abaixo para resetar e vê-lo novamente.
+          </p>
+          <Button variant="outline" size="sm" onClick={resetOnboarding} className="gap-2">
+            <RotateCcw className="w-4 h-4" />
+            Resetar Onboarding
+          </Button>
         </div>
       </div>
 

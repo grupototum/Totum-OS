@@ -1,5 +1,7 @@
 import AppLayout from "@/components/layout/AppLayout";
 import { useState } from "react";
+import { motion } from "framer-motion";
+import { usePageTransition } from "@/hooks/usePageTransition";
 import {
   Search,
   TrendingUp,
@@ -52,6 +54,7 @@ const AGENT_UI_CONFIG: Record<string, { icon: LucideIcon; color: string; group: 
   data:          { icon: Database,     color: "from-green-600 to-green-800",    group: "modos" },
   hug:           { icon: Heart,        color: "from-rose-500 to-rose-700",      group: "modos" },
   giles:         { icon: Library,      color: "from-amber-600 to-amber-800",    group: "especializados" },
+  hermione:      { icon: Library,      color: "from-amber-600 to-amber-800",    group: "especializados" },
   monk:          { icon: FolderTree,   color: "from-indigo-500 to-indigo-700",  group: "especializados" },
   watson:        { icon: SearchCheck,  color: "from-teal-500 to-teal-700",      group: "especializados" },
   walle:         { icon: RefreshCw,    color: "from-orange-500 to-red-500",     group: "especializados" },
@@ -71,6 +74,7 @@ export default function Hub() {
   const { isAdmin } = useAdmin();
   const { agents, isLoading } = useAgents();
   const [activeTab, setActiveTab] = useState<TabType>('todos');
+  const pageTransition = usePageTransition();
 
   // Enriches each agent from DB with its UI config
   const enrichedAgents = agents.map((agent) => ({
@@ -94,13 +98,14 @@ export default function Hub() {
   const chatCount        = byGroup.chat.length;
   const especializadoCount = byGroup.especializados.length;
   const totalCount       = enrichedAgents.length;
+  const onlineCount      = enrichedAgents.filter(a => a.status === 'online').length;
 
   return (
     <AppLayout>
-      <div className="min-h-screen bg-black">
+      <motion.div {...pageTransition} className="min-h-screen bg-background">
         {/* Header Section */}
-        <div className="ds-container border-l border-r border-zinc-800 min-h-screen">
-          
+        <div className="ds-container border-l border-r border-zinc-800/60 min-h-screen">
+
           {/* Header */}
           <div className="p-8 border-b border-zinc-800 animate-fade-slide-in">
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
@@ -156,7 +161,7 @@ export default function Hub() {
           </div>
 
           {/* Painel TOT — Tech Cards */}
-          <div className="px-8 py-4 border-b border-zinc-800 bg-zinc-900/20">
+          <div className="px-8 py-4 border-b border-zinc-800 bg-zinc-900/10">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <TechCard label="System Status" className="min-h-[160px]">
                 <div className="flex items-center gap-2 mb-1">
@@ -167,7 +172,7 @@ export default function Hub() {
                   Coordena todos os modos e agentes especializados.
                 </p>
               </TechCard>
-              
+
               <TechCard label="System Status" className="min-h-[160px]">
                 <div className="flex items-center gap-2 mb-1">
                   <Users className="w-4 h-4 text-emerald-500" />
@@ -177,7 +182,7 @@ export default function Hub() {
                   Pablo (Executor), Data (Dev) e Hug (Atendimento).
                 </p>
               </TechCard>
-              
+
               <TechCard label="System Status" className="min-h-[160px]">
                 <div className="flex items-center gap-2 mb-1">
                   <Bot className="w-4 h-4 text-amber-500" />
@@ -211,6 +216,13 @@ export default function Hub() {
                 <Bot className="w-4 h-4 text-zinc-400" />
                 <span className="text-sm text-zinc-400">
                   <span className="text-white font-semibold">{especializadoCount}</span> especializados
+                </span>
+              </div>
+              <div className="h-4 w-px bg-zinc-800" />
+              <div className="flex items-center gap-2">
+                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(52,211,153,0.6)]" />
+                <span className="text-sm text-zinc-400">
+                  <span className="text-white font-semibold">{onlineCount}</span> online
                 </span>
               </div>
             </div>
@@ -267,7 +279,8 @@ export default function Hub() {
                     <Card
                       key={agent.id}
                       cornerAccents={true}
-                      className={`p-5 ${!isChat ? 'cursor-default opacity-80' : 'cursor-pointer'}`}
+                      className={`p-5 ${!isChat ? 'cursor-default opacity-70' : 'cursor-pointer'} ${isChat && agent.status === 'online' ? 'ring-1 ring-[#ef233c]/25 shadow-[0_0_16px_rgba(239,35,60,0.12)]' : ''}`}
+                      onClick={() => isChat && agent.slug && navigate(`/agents/${agent.slug}/chat`)}
                     >
                       <div className="flex items-start gap-4">
                         <div className={`w-12 h-12 bg-gradient-to-br ${agent.ui.color} flex items-center justify-center shrink-0 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
@@ -280,13 +293,15 @@ export default function Hub() {
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-2 mb-1">
                             <h3 className="font-manrope text-sm font-normal text-white truncate">{agent.name}</h3>
-                            {isChat ? (
-                              <span className="shrink-0 w-1.5 h-1.5 bg-emerald-500" />
+                            {isChat && agent.status === 'online' ? (
+                              <span className="shrink-0 w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(52,211,153,0.8)]" />
+                            ) : isChat ? (
+                              <span className="shrink-0 w-1.5 h-1.5 rounded-full bg-zinc-600" />
                             ) : (
-                              <span className="shrink-0 w-1.5 h-1.5 bg-amber-400" title="Sistema" />
+                              <span className="shrink-0 w-1.5 h-1.5 rounded-full bg-amber-400/60" title="Sistema" />
                             )}
                           </div>
-                          <p className="text-xs text-zinc-400 leading-relaxed line-clamp-2">{agent.role}</p>
+                          <p className="text-xs text-zinc-300 leading-relaxed line-clamp-2">{agent.role}</p>
                         </div>
                       </div>
 
@@ -308,7 +323,7 @@ export default function Hub() {
           </div>
 
         </div>
-      </div>
+      </motion.div>
     </AppLayout>
   );
 }

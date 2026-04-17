@@ -15,6 +15,8 @@ import {
   Puzzle,
   Workflow,
   Shield,
+  ImageIcon,
+  FlaskConical,
   ChevronRight,
   Loader2,
   Edit,
@@ -22,65 +24,80 @@ import {
   CheckCircle2,
   XCircle
 } from 'lucide-react';
+import { listSkills, getSkillCategories } from '@/services/skillsService';
+import type { Skill } from '@/types/agents';
+
+// Load real data from skills-registry.json
+const allSkills: Skill[] = listSkills();
+const allCategories: string[] = getSkillCategories();
+const allModels: string[] = [...new Set(allSkills.map(s => s.model_preference).filter(Boolean))].sort();
 
 const categoriaIcons: Record<string, React.ElementType> = {
   automacao: Workflow,
+  automation: Workflow,
   analise: BarChart3,
+  analytics: BarChart3,
   criacao: Puzzle,
+  content: Puzzle,
   integracao: Settings,
-  validacao: Shield
+  validacao: Shield,
+  validation: Shield,
+  image: ImageIcon,
+  research: FlaskConical
 };
 
 const categoriaLabels: Record<string, string> = {
   automacao: 'Automação',
+  automation: 'Automação',
   analise: 'Análise',
+  analytics: 'Análise',
   criacao: 'Criação',
+  content: 'Conteúdo',
   integracao: 'Integração',
-  validacao: 'Validação'
+  validacao: 'Validação',
+  validation: 'Validação',
+  image: 'Imagem',
+  research: 'Pesquisa'
 };
 
 const categoriaColors: Record<string, string> = {
   automacao: 'bg-blue-100 text-blue-700 border-blue-200',
+  automation: 'bg-blue-100 text-blue-700 border-blue-200',
   analise: 'bg-purple-100 text-purple-700 border-purple-200',
+  analytics: 'bg-purple-100 text-purple-700 border-purple-200',
   criacao: 'bg-orange-100 text-orange-700 border-orange-200',
+  content: 'bg-orange-100 text-orange-700 border-orange-200',
   integracao: 'bg-green-100 text-green-700 border-green-200',
-  validacao: 'bg-red-100 text-red-700 border-red-200'
+  validacao: 'bg-red-100 text-red-700 border-red-200',
+  validation: 'bg-red-100 text-red-700 border-red-200',
+  image: 'bg-pink-100 text-pink-700 border-pink-200',
+  research: 'bg-teal-100 text-teal-700 border-teal-200'
 };
 
-// Mock data
-const mockCategorias = ['automacao', 'analise', 'criacao', 'integracao', 'validacao'];
-const mockAgents = ['TOT', 'Jarvis', 'Radar', 'Pablo', 'ADA'];
-const mockSkills = [
-  { id: '1', nome: 'Criar Tarefa', agente: 'TOT', categoria: 'automacao', descricao: 'Cria tarefas automaticamente', ativa: true },
-  { id: '2', nome: 'Analisar Dados', agente: 'Radar', categoria: 'analise', descricao: 'Análise de métricas', ativa: true },
-  { id: '3', nome: 'Gerar Conteúdo', agente: 'Pablo', categoria: 'criacao', descricao: 'Gera posts e textos', ativa: true },
-  { id: '4', nome: 'Integrar Feishu', agente: 'Jarvis', categoria: 'integracao', descricao: 'Conecta com Feishu', ativa: false },
-  { id: '5', nome: 'Validar Lead', agente: 'ADA', categoria: 'validacao', descricao: 'Qualifica leads', ativa: true },
-];
-const mockStats = {
-  byCategory: {
-    automacao: 3,
-    analise: 2,
-    criacao: 4,
-    integracao: 2,
-    validacao: 1
-  }
+const modelColors: Record<string, string> = {
+  claude: 'bg-violet-100 text-violet-700 border-violet-200',
+  groq: 'bg-cyan-100 text-cyan-700 border-cyan-200',
+  gemini: 'bg-indigo-100 text-indigo-700 border-indigo-200',
+  kimi: 'bg-amber-100 text-amber-700 border-amber-200'
 };
 
 export default function SkillsCentral() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategoria, setSelectedCategoria] = useState<string | null>(null);
   const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
-  const [isLoading] = useState(false);
-  const [categorias] = useState(mockCategorias);
-  const [agents] = useState(mockAgents);
-  const [skills] = useState(mockSkills);
-  const [stats] = useState(mockStats);
+  const [selectedModel, setSelectedModel] = useState<string | null>(null);
 
-  const filteredSkills = skills.filter(skill => {
-    if (selectedCategoria && skill.categoria !== selectedCategoria) return false;
-    if (selectedAgent && skill.agente !== selectedAgent) return false;
-    if (searchQuery && !skill.nome.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+  // Stats: count per category from real data
+  const statsByCategory = allCategories.reduce<Record<string, number>>((acc, cat) => {
+    acc[cat] = allSkills.filter(s => s.category === cat).length;
+    return acc;
+  }, {});
+
+  const filteredSkills = allSkills.filter(skill => {
+    if (selectedCategoria && skill.category !== selectedCategoria) return false;
+    if (selectedModel && skill.model_preference !== selectedModel) return false;
+    if (searchQuery && !skill.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
+      !skill.description.toLowerCase().includes(searchQuery.toLowerCase())) return false;
     return true;
   });
 
@@ -88,189 +105,207 @@ export default function SkillsCentral() {
     <AppLayout>
       <PageBreadcrumb />
       <div className="p-8 space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-slate-900">Central de Skills</h1>
-          <p className="text-slate-600 mt-1">
-            Catálogo de habilidades com recomendações inteligentes
-          </p>
-        </div>
-        <Button>
-          <Plus size={18} className="mr-2" />
-          Nova Skill
-        </Button>
-      </div>
-
-      {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-        {['automacao', 'analise', 'criacao', 'integracao', 'validacao'].map((cat) => {
-          const Icon = categoriaIcons[cat];
-          const count = stats?.byCategory?.[cat as keyof typeof stats.byCategory] || 0;
-          return (
-            <Card
-              key={cat}
-              className={`cursor-pointer transition-all ${
-                selectedCategoria === cat ? 'ring-2 ring-purple-500' : ''
-              }`}
-              onClick={() => setSelectedCategoria(selectedCategoria === cat ? null : cat)}
-            >
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between">
-                  <Icon size={20} className="text-slate-400" />
-                  <span className="text-2xl font-bold">{count}</span>
-                </div>
-                <p className="text-sm text-slate-600 mt-2">{categoriaLabels[cat]}</p>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
-
-      {/* Search */}
-      <Card>
-        <CardContent className="p-4">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" size={18} />
-            <Input
-              placeholder="Buscar skills..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
-            />
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-slate-900">Central de Skills</h1>
+            <p className="text-slate-600 mt-1">
+              Catálogo de habilidades com recomendações inteligentes
+            </p>
           </div>
-        </CardContent>
-      </Card>
+          <Button>
+            <Plus size={18} className="mr-2" />
+            Nova Skill
+          </Button>
+        </div>
 
-      {/* Filters */}
-      <Tabs defaultValue="departamentos" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="departamentos">Departamentos</TabsTrigger>
-          <TabsTrigger value="tarefas">Tarefas</TabsTrigger>
-          <TabsTrigger value="clientes">Clientes</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="departamentos" className="space-y-4">
-          <div className="flex gap-2 flex-wrap">
-            {categorias?.map((cat) => (
-              <Button
+        {/* Stats cards — one per real category */}
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+          {allCategories.map((cat) => {
+            const Icon = categoriaIcons[cat] || Zap;
+            const count = statsByCategory[cat] || 0;
+            return (
+              <Card
                 key={cat}
-                variant={selectedCategoria === cat ? 'secondary' : 'outline'}
-                size="sm"
+                className={`cursor-pointer transition-all ${
+                  selectedCategoria === cat ? 'ring-2 ring-purple-500' : ''
+                }`}
                 onClick={() => setSelectedCategoria(selectedCategoria === cat ? null : cat)}
               >
-                {categoriaLabels[cat] || cat}
-              </Button>
-            ))}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="tarefas">
-          <Card>
-            <CardContent className="p-6">
-              <p className="text-slate-500">Filtros por tipo de tarefa serão implementados aqui.</p>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="clientes">
-          <Card>
-            <CardContent className="p-6">
-              <p className="text-slate-500">Filtros por cliente serão implementados aqui.</p>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
-
-      {/* Agent Filter */}
-      <div className="flex gap-2 flex-wrap">
-        <Button
-          variant={selectedAgent === null ? 'secondary' : 'outline'}
-          size="sm"
-          onClick={() => setSelectedAgent(null)}
-        >
-          Todos Agentes
-        </Button>
-        {agents?.map((agent) => (
-          <Button
-            key={agent}
-            variant={selectedAgent === agent ? 'secondary' : 'outline'}
-            size="sm"
-            onClick={() => setSelectedAgent(agent)}
-          >
-            {agent}
-          </Button>
-        ))}
-      </div>
-
-      {/* Skills List */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Skills</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {isLoading ? (
-            <div className="flex items-center justify-center py-12">
-              <Loader2 className="animate-spin mr-2" />
-              Carregando...
-            </div>
-          ) : filteredSkills?.length === 0 ? (
-            <div className="text-center py-12 text-slate-500">
-              <Zap size={48} className="mx-auto mb-4 text-slate-300" />
-              <p>Nenhuma skill encontrada</p>
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {filteredSkills?.map((skill: any) => {
-                const Icon = categoriaIcons[skill.categoria] || Zap;
-                return (
-                  <div
-                    key={skill.id}
-                    className="flex items-center justify-between p-4 border rounded-lg hover:bg-slate-50 transition-colors"
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                        categoriaColors[skill.categoria]?.split(' ')[0] || 'bg-slate-100'
-                      }`}>
-                        <Icon className={categoriaColors[skill.categoria]?.split(' ')[1] || 'text-slate-600'} size={20} />
-                      </div>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <h4 className="font-medium text-slate-900">{skill.nome}</h4>
-                          {skill.ativa ? (
-                            <CheckCircle2 size={16} className="text-green-500" />
-                          ) : (
-                            <XCircle size={16} className="text-red-500" />
-                          )}
-                        </div>
-                        <p className="text-sm text-slate-500">{skill.descricao}</p>
-                        <div className="flex items-center gap-2 mt-1">
-                          <Badge variant="outline">{skill.agente}</Badge>
-                          <Badge className={categoriaColors[skill.categoria] || 'bg-slate-100'}>
-                            {categoriaLabels[skill.categoria] || skill.categoria}
-                          </Badge>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Button variant="ghost" size="sm">
-                        <Edit size={16} />
-                      </Button>
-                      <Button variant="ghost" size="sm" className="text-red-600">
-                        <Trash2 size={16} />
-                      </Button>
-                      <Button variant="ghost" size="sm">
-                        <ChevronRight size={18} />
-                      </Button>
-                    </div>
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between">
+                    <Icon size={20} className="text-slate-400" />
+                    <span className="text-2xl font-bold">{count}</span>
                   </div>
-                );
-              })}
+                  <p className="text-sm text-slate-600 mt-2">{categoriaLabels[cat] || cat}</p>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+
+        {/* Search */}
+        <Card>
+          <CardContent className="p-4">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" size={18} />
+              <Input
+                placeholder="Buscar skills..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10"
+              />
             </div>
-          )}
-        </CardContent>
-      </Card>
-    </div>
+          </CardContent>
+        </Card>
+
+        {/* Filters — replaced Tarefas/Clientes with Por Agente/Por Modelo */}
+        <Tabs defaultValue="categoria" className="w-full">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="categoria">Por Categoria</TabsTrigger>
+            <TabsTrigger value="agente">Por Agente</TabsTrigger>
+            <TabsTrigger value="modelo">Por Modelo</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="categoria" className="space-y-4">
+            <div className="flex gap-2 flex-wrap pt-2">
+              <Button
+                variant={selectedCategoria === null ? 'secondary' : 'outline'}
+                size="sm"
+                onClick={() => setSelectedCategoria(null)}
+              >
+                Todas
+              </Button>
+              {allCategories.map((cat) => (
+                <Button
+                  key={cat}
+                  variant={selectedCategoria === cat ? 'secondary' : 'outline'}
+                  size="sm"
+                  onClick={() => setSelectedCategoria(selectedCategoria === cat ? null : cat)}
+                >
+                  {categoriaLabels[cat] || cat}
+                </Button>
+              ))}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="agente" className="pt-2">
+            <div className="flex gap-2 flex-wrap">
+              <Button
+                variant={selectedAgent === null ? 'secondary' : 'outline'}
+                size="sm"
+                onClick={() => setSelectedAgent(null)}
+              >
+                Todos
+              </Button>
+              {allModels.map((model) => (
+                <Button
+                  key={model}
+                  variant={selectedModel === model ? 'secondary' : 'outline'}
+                  size="sm"
+                  onClick={() => setSelectedModel(selectedModel === model ? null : model)}
+                  className="capitalize"
+                >
+                  {model}
+                </Button>
+              ))}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="modelo" className="pt-2">
+            <div className="flex gap-2 flex-wrap">
+              <Button
+                variant={selectedModel === null ? 'secondary' : 'outline'}
+                size="sm"
+                onClick={() => setSelectedModel(null)}
+              >
+                Todos
+              </Button>
+              {allModels.map((model) => (
+                <Button
+                  key={model}
+                  variant={selectedModel === model ? 'secondary' : 'outline'}
+                  size="sm"
+                  onClick={() => setSelectedModel(selectedModel === model ? null : model)}
+                  className="capitalize"
+                >
+                  {model}
+                </Button>
+              ))}
+            </div>
+          </TabsContent>
+        </Tabs>
+
+        {/* Skills List */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Skills ({filteredSkills.length})</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {filteredSkills.length === 0 ? (
+              <div className="text-center py-12 text-slate-500">
+                <Zap size={48} className="mx-auto mb-4 text-slate-300" />
+                <p>Nenhuma skill encontrada</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {filteredSkills.map((skill) => {
+                  const Icon = categoriaIcons[skill.category] || Zap;
+                  const isActive = skill.status === 'active';
+                  return (
+                    <div
+                      key={skill.id}
+                      className="flex items-center justify-between p-4 border rounded-lg hover:bg-slate-50 transition-colors"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                          categoriaColors[skill.category]?.split(' ')[0] || 'bg-slate-100'
+                        }`}>
+                          <Icon className={categoriaColors[skill.category]?.split(' ')[1] || 'text-slate-600'} size={20} />
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="mr-1">{skill.emoji}</span>
+                            <h4 className="font-medium text-slate-900">{skill.name}</h4>
+                            {isActive ? (
+                              <CheckCircle2 size={16} className="text-green-500" />
+                            ) : (
+                              <XCircle size={16} className="text-red-500" />
+                            )}
+                          </div>
+                          <p className="text-sm text-slate-500">{skill.description}</p>
+                          <div className="flex items-center gap-2 mt-1 flex-wrap">
+                            <Badge variant="outline" className={`capitalize ${modelColors[skill.model_preference] || 'bg-slate-100'}`}>
+                              {skill.model_preference}
+                            </Badge>
+                            <Badge className={categoriaColors[skill.category] || 'bg-slate-100'}>
+                              {categoriaLabels[skill.category] || skill.category}
+                            </Badge>
+                            <span className="text-xs text-slate-400">
+                              v{skill.version} · ${skill.cost_per_call.toFixed(2)}/call · {Math.round(skill.success_rate * 100)}% sucesso
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 flex-shrink-0">
+                        <Button variant="ghost" size="sm">
+                          <Edit size={16} />
+                        </Button>
+                        <Button variant="ghost" size="sm" className="text-red-600">
+                          <Trash2 size={16} />
+                        </Button>
+                        <Button variant="ghost" size="sm">
+                          <ChevronRight size={18} />
+                        </Button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
     </AppLayout>
   );
 }

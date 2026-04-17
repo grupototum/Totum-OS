@@ -1,5 +1,5 @@
 // src/components/chat/AgentChatLayout.tsx
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAgentExecution } from '@/hooks/useAgentExecution';
 import { ExecutionResult } from '@/types/agents';
@@ -8,17 +8,33 @@ import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { 
-  Loader2, 
-  AlertCircle, 
-  CheckCircle2, 
-  Send, 
+import {
+  Loader2,
+  AlertCircle,
+  CheckCircle2,
+  Send,
   BookOpen,
   ChevronRight,
   ChevronLeft,
-  BrainCircuit
+  BrainCircuit,
+  Circle,
 } from 'lucide-react';
 import AppLayout from '@/components/layout/AppLayout';
+import { MarkdownRenderer } from '@/components/ui/MarkdownRenderer';
+
+// ─── Prompt Chips ────────────────────────────────────────────────────────────
+
+const PROMPT_CHIPS: Record<string, string[]> = {
+  radar:     ['Análise competitiva', 'Radar de mercado', 'Tendências do setor', 'Benchmark de concorrentes'],
+  gestor:    ['Relatório semanal', 'KPIs do mês', 'Análise de performance', 'Meta vs realizado'],
+  social:    ['Criar post LinkedIn', 'Calendário editorial', 'Campanha de engajamento', 'Copy para anúncio'],
+  atendente: ['Responder reclamação', 'Escalada de suporte', 'FAQ automático', 'Tom empático'],
+  sdr:       ['Qualificar lead', 'Script de abordagem', 'Follow-up de proposta', 'Objeções comuns'],
+  kimi:      ['Resumir documento', 'Extrair pontos-chave', 'Análise SWOT', 'Comparar versões'],
+};
+const DEFAULT_CHIPS = ['Fazer análise', 'Gerar relatório', 'Resumir em tópicos', 'Responder dúvida'];
+
+// ─── Types ────────────────────────────────────────────────────────────────────
 
 interface Message {
   id: string;
@@ -30,6 +46,20 @@ interface Message {
   ragDocuments?: string[];
 }
 
+type StepStatus = 'waiting' | 'running' | 'done';
+interface ExecStep {
+  label: string;
+  status: StepStatus;
+}
+
+const INITIAL_STEPS: Omit<ExecStep, 'status'>[] = [
+  { label: 'Recuperando contexto...' },
+  { label: 'Executando skills...' },
+  { label: 'Gerando resposta...' },
+];
+
+// ─── Component ────────────────────────────────────────────────────────────────
+
 export const AgentChatLayout: React.FC = () => {
   const { agentId } = useParams<{ agentId: string }>();
   const [messages, setMessages] = useState<Message[]>([]);
@@ -37,6 +67,16 @@ export const AgentChatLayout: React.FC = () => {
   const [isSending, setIsSending] = useState(false);
   const [showRagPanel, setShowRagPanel] = useState(false);
   const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
+
+  // Step-progress timeline
+  const [execSteps, setExecSteps] = useState<ExecStep[]>([]);
+  const stepTimersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  // Streaming typing animation
+  const [streamingMsgId, setStreamingMsgId] = useState<string | null>(null);
+  const [streamingText, setStreamingText] = useState('');
+  const streamingCursorRef = useRef(0);
+  const streamingIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const {
     agentConfig,
@@ -53,12 +93,12 @@ export const AgentChatLayout: React.FC = () => {
     isReady,
   } = useAgentExecution({
     agentId: agentId || '',
-    enableRAG: true, // 🧠 Habilitar Alexandria RAG
+    enableRAG: true,
     onSuccess: (result) => {
-      console.log('✅ Execução com sucesso:', result);
+      console.log('Execução com sucesso:', result);
     },
     onError: (error) => {
-      console.error('❌ Erro na execução:', error);
+      console.error('Erro na execução:', error);
     },
   });
 
@@ -68,6 +108,84 @@ export const AgentChatLayout: React.FC = () => {
     }
   }, [agentId, loadAgentConfig]);
 
+  // ── Step-progress timeline effect ──────────────────────────────────────────
+  useEffect(() => {
+    // Clear any pending timers
+    stepTimersRef.current.forEach(clearTimeout);
+    stepTimersRef.current = [];
+
+    if (isExecuting) {
+      // Initialise all steps as waiting then kick off the first one immediately
+      setExecSteps([
+        { label: INITIAL_STEPS[0].label, status: 'running' },
+        { label: INITIAL_STEPS[1].label, status: 'waiting' },
+        { label: INITIAL_STEPS[2].label, status: 'waiting' },
+      ]);
+
+      const t1 = setTimeout(() => {
+        setExecSteps([
+          { label: INITIAL_STEPS[0].label, status: 'done' },
+          { label: INITIAL_STEPS[1].label, status: 'running' },
+          { label: INITIAL_STEPS[2].label, status: 'waiting' },
+        ]);
+      }, 1200);
+
+      const t2 = setTimeout(() => {
+        setExecSteps([
+          { label: INITIAL_STEPS[0].label, status: 'done' },
+          { label: INITIAL_STEPS[1].label, status: 'done' },
+          { label: INITIAL_STEPS[2].label, status: 'running' },
+        ]);
+      }, 2500);
+
+      stepTimersRef.current = [t1, t2];
+    } else if (execSteps.length > 0) {
+      // Mark all done and clear after 600 ms
+      setExecSteps((prev) => prev.map((s) => ({ ...s, status: 'done' })));
+      const t = setTimeout(() => setExecSteps([]), 600);
+      stepTimersRef.current = [t];
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isExecuting]);
+
+  // ── Streaming typing animation effect ──────────────────────────────────────
+  useEffect(() => {
+    if (!streamingMsgId) return;
+
+    streamingCursorRef.current = 0;
+
+    if (streamingIntervalRef.current) {
+      clearInterval(streamingIntervalRef.current);
+    }
+
+    streamingIntervalRef.current = setInterval(() => {
+      streamingCursorRef.current += 4;
+      const cursor = streamingCursorRef.current;
+
+      setMessages((prev) =>
+        prev.map((m) =>
+          m.id === streamingMsgId
+            ? { ...m, content: streamingText.slice(0, cursor) }
+            : m
+        )
+      );
+
+      if (cursor >= streamingText.length) {
+        clearInterval(streamingIntervalRef.current!);
+        streamingIntervalRef.current = null;
+        setStreamingMsgId(null);
+      }
+    }, 16);
+
+    return () => {
+      if (streamingIntervalRef.current) {
+        clearInterval(streamingIntervalRef.current);
+        streamingIntervalRef.current = null;
+      }
+    };
+  }, [streamingMsgId, streamingText]);
+
+  // ── Send message ──────────────────────────────────────────────────────────
   const handleSendMessage = useCallback(async () => {
     if (!inputValue.trim() || !isReady || isSending) {
       return;
@@ -88,17 +206,46 @@ export const AgentChatLayout: React.FC = () => {
       const result = await execute(inputValue, {});
 
       if (result) {
+        const res = result.result;
+        let fullContent = '';
+        if (typeof res === 'string') {
+          fullContent = res;
+        } else if (res?.text) {
+          fullContent = res.text;
+        } else if (res?.message) {
+          fullContent = res.message;
+        } else if (res?.output) {
+          fullContent = Array.isArray(res.output)
+            ? res.output
+                .map((o: any) => (typeof o === 'string' ? o : JSON.stringify(o, null, 2)))
+                .join('\n\n')
+            : typeof res.output === 'string'
+            ? res.output
+            : JSON.stringify(res.output, null, 2);
+        } else if (res) {
+          fullContent = '```json\n' + JSON.stringify(res, null, 2) + '\n```';
+        } else {
+          fullContent = result.success
+            ? `Execução concluída em ${result.duration_ms}ms`
+            : 'Não foi possível obter uma resposta.';
+        }
+
         const assistantMessage: Message = {
           id: crypto.randomUUID(),
           role: 'assistant',
-          content: `Execução concluída em ${result.duration_ms}ms`,
+          content: '', // start empty — will be filled by streaming effect
           timestamp: new Date(),
           executionResult: result,
           ragContext: ragContext,
-          ragDocuments: ragDocuments?.map(d => d.document.id),
+          ragDocuments: ragDocuments?.map((d) => d.document.id),
         };
+
         setMessages((prev) => [...prev, assistantMessage]);
         setSelectedMessage(assistantMessage);
+
+        // Kick off streaming animation
+        setStreamingText(fullContent);
+        setStreamingMsgId(assistantMessage.id);
       }
     } finally {
       setIsSending(false);
@@ -111,6 +258,20 @@ export const AgentChatLayout: React.FC = () => {
       handleSendMessage();
     }
   };
+
+  // ── Step icon helper ──────────────────────────────────────────────────────
+  const StepIcon: React.FC<{ status: StepStatus }> = ({ status }) => {
+    if (status === 'done') return <CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" />;
+    if (status === 'running') return <Loader2 className="h-4 w-4 animate-spin text-primary flex-shrink-0" />;
+    return <Circle className="h-4 w-4 text-muted-foreground/50 flex-shrink-0" />;
+  };
+
+  // ── Chips for the current agent ───────────────────────────────────────────
+  const chips = (agentId && PROMPT_CHIPS[agentId]) ? PROMPT_CHIPS[agentId] : DEFAULT_CHIPS;
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // Loading / error screens
+  // ─────────────────────────────────────────────────────────────────────────
 
   if (isLoading) {
     return (
@@ -143,11 +304,15 @@ export const AgentChatLayout: React.FC = () => {
     );
   }
 
+  // ─────────────────────────────────────────────────────────────────────────
+  // Main render
+  // ─────────────────────────────────────────────────────────────────────────
+
   return (
     <AppLayout>
       <div className="flex h-[calc(100vh-4rem)] bg-background">
         {/* Main Chat Area */}
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col min-w-0">
           {/* Header */}
           <div className="border-b bg-card p-4">
             <div className="flex items-center justify-between">
@@ -160,7 +325,7 @@ export const AgentChatLayout: React.FC = () => {
                   </p>
                 </div>
               </div>
-              
+
               {/* Alexandria RAG Toggle */}
               <Button
                 variant="outline"
@@ -170,7 +335,11 @@ export const AgentChatLayout: React.FC = () => {
               >
                 <BrainCircuit className="h-4 w-4" />
                 Alexandria
-                {showRagPanel ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+                {showRagPanel ? (
+                  <ChevronRight className="h-4 w-4" />
+                ) : (
+                  <ChevronLeft className="h-4 w-4" />
+                )}
               </Button>
             </div>
           </div>
@@ -182,7 +351,7 @@ export const AgentChatLayout: React.FC = () => {
                 <div>
                   <p className="text-lg font-semibold mb-2">Comece uma conversa</p>
                   <p className="text-sm">Digite uma mensagem para começar</p>
-                  
+
                   {/* Alexandria Status */}
                   <div className="mt-6 flex items-center justify-center gap-2">
                     <Badge variant="secondary" className="gap-1">
@@ -193,77 +362,113 @@ export const AgentChatLayout: React.FC = () => {
                 </div>
               </div>
             ) : (
-              messages.map((message) => (
-                <div
-                  key={message.id}
-                  className={`flex gap-3 ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
-                >
-                  <Card
-                    className={`max-w-md p-4 cursor-pointer transition-colors ${
-                      message.role === 'user'
-                        ? 'bg-primary text-primary-foreground'
-                        : selectedMessage?.id === message.id
-                        ? 'bg-muted border-primary'
-                        : 'bg-muted hover:bg-muted/80'
-                    }`}
-                    onClick={() => message.role === 'assistant' && setSelectedMessage(message)}
-                  >
-                    <p className="text-sm">{message.content}</p>
+              messages.map((message) => {
+                const isStreaming = message.id === streamingMsgId;
+                const displayContent = isStreaming ? message.content : message.content;
 
-                    {message.executionResult && (
-                      <div className="mt-3 pt-3 border-t border-current/20 space-y-2 text-xs opacity-90">
-                        <div className="flex items-center gap-2">
-                          <CheckCircle2 className="h-4 w-4" />
-                          <span>Status: {message.executionResult.success ? '✓ Sucesso' : '✗ Erro'}</span>
+                return (
+                  <div
+                    key={message.id}
+                    className={`flex gap-3 ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                  >
+                    <Card
+                      className={`max-w-[70%] p-4 cursor-pointer transition-colors ${
+                        message.role === 'user'
+                          ? 'bg-primary text-primary-foreground'
+                          : selectedMessage?.id === message.id
+                          ? 'bg-muted border-primary'
+                          : 'bg-muted hover:bg-muted/80'
+                      }`}
+                      onClick={() => message.role === 'assistant' && setSelectedMessage(message)}
+                    >
+                      {message.role === 'assistant' ? (
+                        <div className="text-sm">
+                          <MarkdownRenderer content={displayContent} className="text-sm" />
+                          {isStreaming && (
+                            <span className="inline-block w-[2px] h-[1em] bg-current animate-pulse ml-0.5 align-middle">
+                              ▋
+                            </span>
+                          )}
                         </div>
-                        <div>
-                          <span className="font-semibold">Tokens:</span> {message.executionResult.total_tokens}
-                        </div>
-                        <div>
-                          <span className="font-semibold">Custo:</span> R$ {message.executionResult.total_cost.toFixed(2)}
-                        </div>
-                        <div>
-                          <span className="font-semibold">Tempo:</span> {message.executionResult.duration_ms}ms
-                        </div>
-                        
-                        {/* 🧠 RAG Info */}
-                        {message.ragDocuments && message.ragDocuments.length > 0 && (
-                          <div className="flex items-center gap-2 mt-2">
-                            <BookOpen className="h-3 w-3" />
-                            <span className="font-semibold">
-                              Contexto: {message.ragDocuments.length} docs
+                      ) : (
+                        <p className="text-sm">{message.content}</p>
+                      )}
+
+                      {message.executionResult && (
+                        <div className="mt-3 pt-3 border-t border-current/20 space-y-2 text-xs opacity-90">
+                          <div className="flex items-center gap-2">
+                            <CheckCircle2 className="h-4 w-4" />
+                            <span>
+                              Status: {message.executionResult.success ? '✓ Sucesso' : '✗ Erro'}
                             </span>
                           </div>
-                        )}
-
-                        {message.executionResult.logs && message.executionResult.logs.length > 0 && (
-                          <div className="mt-2">
-                            <p className="font-semibold mb-1">Skills:</p>
-                            <div className="space-y-1">
-                              {message.executionResult.logs.map((skill, idx) => (
-                                <div key={idx} className="flex items-center gap-2">
-                                  <span>{skill.status === 'success' ? '✓' : '✗'} {skill.skill_id}</span>
-                                </div>
-                              ))}
-                            </div>
+                          <div>
+                            <span className="font-semibold">Tokens:</span>{' '}
+                            {message.executionResult.total_tokens}
                           </div>
-                        )}
-                      </div>
-                    )}
-                  </Card>
-                </div>
-              ))
+                          <div>
+                            <span className="font-semibold">Custo:</span> R${' '}
+                            {message.executionResult.total_cost.toFixed(2)}
+                          </div>
+                          <div>
+                            <span className="font-semibold">Tempo:</span>{' '}
+                            {message.executionResult.duration_ms}ms
+                          </div>
+
+                          {message.ragDocuments && message.ragDocuments.length > 0 && (
+                            <div className="flex items-center gap-2 mt-2">
+                              <BookOpen className="h-3 w-3" />
+                              <span className="font-semibold">
+                                Contexto: {message.ragDocuments.length} docs
+                              </span>
+                            </div>
+                          )}
+
+                          {message.executionResult.logs &&
+                            message.executionResult.logs.length > 0 && (
+                              <div className="mt-2">
+                                <p className="font-semibold mb-1">Skills:</p>
+                                <div className="space-y-1">
+                                  {message.executionResult.logs.map((skill, idx) => (
+                                    <div key={idx} className="flex items-center gap-2">
+                                      <span>
+                                        {skill.status === 'success' ? '✓' : '✗'} {skill.skill_id}
+                                      </span>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+                        </div>
+                      )}
+                    </Card>
+                  </div>
+                );
+              })
             )}
 
-            {isExecuting && (
+            {/* Step-progress timeline (replaces plain spinner) */}
+            {isExecuting && execSteps.length > 0 && (
               <div className="flex gap-3 justify-start">
-                <Card className="bg-muted p-4 space-y-2">
-                  <div className="flex items-center gap-2">
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    <span className="text-sm">Executando skills...</span>
-                  </div>
+                <Card className="bg-muted p-4 space-y-3">
+                  {execSteps.map((step, idx) => (
+                    <div key={idx} className="flex items-center gap-3 text-sm">
+                      <StepIcon status={step.status} />
+                      <span
+                        className={
+                          step.status === 'waiting'
+                            ? 'text-muted-foreground'
+                            : step.status === 'running'
+                            ? 'text-foreground'
+                            : 'text-muted-foreground line-through'
+                        }
+                      >
+                        {step.label}
+                      </span>
+                    </div>
+                  ))}
                   {isRagLoading && (
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground pt-1 border-t border-current/10">
                       <BrainCircuit className="h-3 w-3" />
                       <span>Recuperando contexto Alexandria...</span>
                     </div>
@@ -273,12 +478,28 @@ export const AgentChatLayout: React.FC = () => {
             )}
           </div>
 
-          {/* Input */}
+          {/* Input area */}
           <div className="border-t bg-card p-4 space-y-2">
             {error && isReady && (
               <div className="flex items-center gap-2 p-3 bg-destructive/10 border border-destructive/20 rounded-md text-sm text-destructive">
                 <AlertCircle className="h-4 w-4 flex-shrink-0" />
                 <span>{error.message}</span>
+              </div>
+            )}
+
+            {/* Prompt Chips — only visible in empty state */}
+            {messages.length === 0 && (
+              <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
+                {chips.map((chip) => (
+                  <button
+                    key={chip}
+                    type="button"
+                    onClick={() => setInputValue(chip)}
+                    className="px-3 py-1.5 text-xs bg-zinc-800 border border-zinc-700 rounded-full text-zinc-300 hover:bg-zinc-700 hover:border-zinc-600 transition-colors whitespace-nowrap cursor-pointer"
+                  >
+                    {chip}
+                  </button>
+                ))}
               </div>
             )}
 
@@ -314,36 +535,36 @@ export const AgentChatLayout: React.FC = () => {
                     Pronto
                   </span>
                 )}
-                
-                {/* 🧠 RAG Status */}
+
                 <Badge variant="outline" className="gap-1 text-xs">
                   <BrainCircuit className="h-3 w-3" />
                   Alexandria RAG
                 </Badge>
               </div>
-              
+
               {agentConfig?.skills && agentConfig.skills.length > 0 && (
                 <div>
-                  {agentConfig.skills.length} skill{agentConfig.skills.length !== 1 ? 's' : ''}
+                  {agentConfig.skills.length} skill
+                  {agentConfig.skills.length !== 1 ? 's' : ''}
                 </div>
               )}
             </div>
           </div>
         </div>
 
-        {/* 🧠 Alexandria RAG Panel */}
+        {/* Alexandria RAG Panel */}
         {showRagPanel && (
           <div className="w-80 border-l bg-muted/50 flex flex-col">
             <div className="border-b p-4">
               <div className="flex items-center gap-2">
                 <BookOpen className="h-5 w-5 text-primary" />
-                <h3 className="font-semibold">Alexandria 📚</h3>
+                <h3 className="font-semibold">Alexandria</h3>
               </div>
               <p className="text-xs text-muted-foreground mt-1">
                 Contexto recuperado para esta execução
               </p>
             </div>
-            
+
             <ScrollArea className="flex-1 p-4">
               {selectedMessage?.ragContext ? (
                 <div className="space-y-4">
@@ -356,7 +577,7 @@ export const AgentChatLayout: React.FC = () => {
                       {selectedMessage.ragContext}
                     </div>
                   </div>
-                  
+
                   {selectedMessage.ragDocuments && (
                     <div>
                       <h4 className="text-sm font-medium mb-2">Documentos Usados</h4>
@@ -367,9 +588,7 @@ export const AgentChatLayout: React.FC = () => {
                               <Badge variant="secondary" className="text-[10px]">
                                 {doc.document.type}
                               </Badge>
-                              <span className="font-medium truncate">
-                                {doc.document.title}
-                              </span>
+                              <span className="font-medium truncate">{doc.document.title}</span>
                             </div>
                             <div className="text-muted-foreground">
                               Relevância: {(doc.similarity * 100).toFixed(0)}%

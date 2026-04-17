@@ -10,7 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
-import { searchGiles, listDomains, GilesChunk } from '@/services/giles';
+import { searchHermione, listDomains, HermioneChunk } from '@/services/hermione';
 
 const DOMAIN_ICONS: Record<string, React.ReactNode> = {
   'Infraestrutura': <Server className="w-4 h-4" />,
@@ -33,10 +33,10 @@ const DOMAIN_COLORS: Record<string, string> = {
 export default function WikiAlexandria() {
   const pageTransition = usePageTransition();
   const [searchQuery, setSearchQuery] = useState('');
-  const [results, setResults] = useState<GilesChunk[]>([]);
+  const [results, setResults] = useState<HermioneChunk[]>([]);
   const [domains, setDomains] = useState<string[]>([]);
   const [selectedDomain, setSelectedDomain] = useState<string | null>(null);
-  const [selectedChunk, setSelectedChunk] = useState<GilesChunk | null>(null);
+  const [selectedChunk, setSelectedChunk] = useState<HermioneChunk | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   // Carregar domínios ao montar
@@ -53,7 +53,7 @@ export default function WikiAlexandria() {
     if (!searchQuery.trim()) return;
     
     setIsLoading(true);
-    const searchResults = await searchGiles(searchQuery, {
+    const searchResults = await searchHermione(searchQuery, {
       dominio: selectedDomain || undefined,
       limit: 20
     });
@@ -65,7 +65,7 @@ export default function WikiAlexandria() {
     setSelectedDomain(domain === selectedDomain ? null : domain);
     if (searchQuery) {
       setIsLoading(true);
-      const searchResults = await searchGiles(searchQuery, {
+      const searchResults = await searchHermione(searchQuery, {
         dominio: domain === selectedDomain ? undefined : domain,
         limit: 20
       });

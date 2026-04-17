@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "sonner";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
@@ -17,6 +17,16 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [errors, setErrors] = useState<ValidationErrors>({});
+  const [rememberMe, setRememberMe] = useState(false);
+
+  // Pre-fill email if previously remembered
+  useEffect(() => {
+    const saved = localStorage.getItem("totum_remember_email");
+    if (saved) {
+      setEmail(saved);
+      setRememberMe(true);
+    }
+  }, []);
 
   const handleGoogleSignIn = async () => {
     setGoogleLoading(true);
@@ -47,6 +57,12 @@ export default function Login() {
     setLoading(true);
     try {
       await signIn(email, password);
+      // Persist or clear remembered email
+      if (rememberMe) {
+        localStorage.setItem("totum_remember_email", email);
+      } else {
+        localStorage.removeItem("totum_remember_email");
+      }
       toast.success("Bem-vindo à Totum!");
       navigate("/hub");
     } catch (err: any) {
@@ -196,7 +212,27 @@ export default function Login() {
               )}
             </div>
             
-            <div className="flex justify-end">
+            {/* Remember me + forgot password */}
+            <div className="flex items-center justify-between">
+              <label className="flex items-center gap-2 cursor-pointer select-none group">
+                <div
+                  onClick={() => setRememberMe(!rememberMe)}
+                  className={`w-4 h-4 border flex items-center justify-center transition-colors shrink-0 ${
+                    rememberMe
+                      ? "bg-[#ef233c] border-[#ef233c]"
+                      : "border-zinc-700 bg-transparent group-hover:border-zinc-500"
+                  }`}
+                >
+                  {rememberMe && (
+                    <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+                      <path d="M1 4L3.5 6.5L9 1" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  )}
+                </div>
+                <span className="text-xs text-zinc-500 group-hover:text-zinc-400 transition-colors">
+                  Lembrar de mim
+                </span>
+              </label>
               <Link to="/forgot-password" className="text-xs text-[#ef233c] hover:underline">
                 Esqueci minha senha
               </Link>

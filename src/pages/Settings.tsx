@@ -1,5 +1,6 @@
 import { useState } from "react";
 import AppLayout from "@/components/layout/AppLayout";
+import { usePageTransition } from "@/hooks/usePageTransition";
 import { PageBreadcrumb } from "@/components/navigation/PageBreadcrumb";
 import {
   Settings as SettingsIcon,
@@ -38,14 +39,15 @@ const tabs: Tab[] = [
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState("profile");
+  const pageTransition = usePageTransition();
 
   const ActiveComponent = tabs.find((t) => t.id === activeTab)?.component || ProfileTab;
 
   return (
     <AppLayout>
       <PageBreadcrumb />
-      
-      <div className="p-6">
+
+      <motion.div {...pageTransition} className="p-6">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
           <motion.div
@@ -114,7 +116,7 @@ export default function SettingsPage() {
             </motion.div>
           </div>
         </div>
-      </div>
+      </motion.div>
     </AppLayout>
   );
 }

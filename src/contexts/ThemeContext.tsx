@@ -17,8 +17,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     // Force dark mode
     root.classList.remove("light");
     root.classList.add("dark");
-    // Set background to black
-    document.body.style.backgroundColor = "#000000";
+    // Set background to Anthracite Grey
+    document.body.style.backgroundColor = "#293133";
     localStorage.setItem("totum-theme", "dark");
   }, []);
 

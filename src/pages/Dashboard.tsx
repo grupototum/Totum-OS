@@ -13,6 +13,7 @@ import {
   MexSync,
   AgentCards,
   DashboardProvider,
+  SystemHealthScore,
 } from "@/components/dashboard/DashboardWidgets";
 import { useDashboardData } from "@/hooks/useDashboardData";
 
@@ -32,6 +33,7 @@ export default function Dashboard() {
 
   return (
     <AppLayout>
+      <div className="bg-dashboard-gradient noise-texture min-h-screen">
       <DashboardProvider value={dashboardData}>
         <motion.main {...pageTransition} className="p-6 max-w-7xl mx-auto" aria-label="Dashboard content">
           {/* Header */}
@@ -56,6 +58,11 @@ export default function Dashboard() {
           </motion.div>
 
           <section className="mb-6"><OverviewCards /></section>
+
+          {/* System Health Score — destaque acima dos detalhes */}
+          <section className="mb-6">
+            <SystemHealthScore />
+          </section>
 
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-6">
             <div className="lg:col-span-3 space-y-6">
@@ -95,6 +102,7 @@ export default function Dashboard() {
           </motion.footer>
         </motion.main>
       </DashboardProvider>
+      </div>
     </AppLayout>
   );
 }

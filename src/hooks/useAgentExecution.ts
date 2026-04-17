@@ -1,5 +1,5 @@
 // src/hooks/useAgentExecution.ts
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { ExecutionResult, AgentConfig } from '@/types/agents';
 import { getAgentConfig } from '@/services/skillsService';
@@ -27,6 +27,17 @@ interface UseAgentExecutionState {
 
 export const useAgentExecution = (options: UseAgentExecutionOptions) => {
   const { agentId, onSuccess, onError, enableRAG = true, ragType } = options;
+
+  // ── Stable refs for callbacks — breaks the infinite render loop caused by
+  //    inline arrow functions being recreated every render and sitting in
+  //    useCallback dependency arrays.
+  const onSuccessRef = useRef(onSuccess);
+  const onErrorRef   = useRef(onError);
+  useEffect(() => {
+    onSuccessRef.current = onSuccess;
+    onErrorRef.current   = onError;
+  });
+
   const [state, setState] = useState<UseAgentExecutionState>({
     isLoading: true,
     isExecuting: false,
@@ -36,9 +47,9 @@ export const useAgentExecution = (options: UseAgentExecutionOptions) => {
     executionStatus: 'pending',
   });
 
-  const { 
-    context: ragContext, 
-    documents: ragDocuments, 
+  const {
+    context: ragContext,
+    documents: ragDocuments,
     isLoading: isRagLoading,
     retrieveContext,
     retrieveAndSave
@@ -46,13 +57,14 @@ export const useAgentExecution = (options: UseAgentExecutionOptions) => {
 
   const executionIdRef = useRef<string>(`exec_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
 
+  // ── Only depends on agentId — callbacks are accessed via stable refs ────────
   const loadAgentConfig = useCallback(async () => {
     try {
       setState(prev => ({ ...prev, isLoading: true }));
       const config = await getAgentConfig(agentId);
-      
+
       if (!config) {
-        throw new Error(`Agente ${agentId} não encontrado`);
+        throw new Error(`Agente "${agentId}" não encontrado`);
       }
 
       setState(prev => ({
@@ -64,16 +76,16 @@ export const useAgentExecution = (options: UseAgentExecutionOptions) => {
     } catch (err) {
       const error = err instanceof Error ? err : new Error('Erro desconhecido');
       setState(prev => ({ ...prev, isLoading: false, error }));
-      onError?.(error);
+      onErrorRef.current?.(error);
     }
-  }, [agentId, onError]);
+  }, [agentId]); // ← onError removed from deps; accessed via ref
 
   const execute = useCallback(
     async (userInput: string, context?: Record<string, any>) => {
       if (!state.agentConfig) {
         const error = new Error('Agente não carregado');
         setState(prev => ({ ...prev, error }));
-        onError?.(error);
+        onErrorRef.current?.(error);
         return null;
       }
 
@@ -90,7 +102,7 @@ export const useAgentExecution = (options: UseAgentExecutionOptions) => {
 
         let retrievedContext = '';
         let contextDocuments: string[] = [];
-        
+
         if (enableRAG) {
           console.log('🔍 Alexandria RAG: Buscando contexto...');
           const ragResult = await retrieveAndSave(userInput, agentId, executionId, {
@@ -99,7 +111,7 @@ export const useAgentExecution = (options: UseAgentExecutionOptions) => {
             threshold: 0.5,
             maxContextTokens: 2000
           });
-          
+
           if (ragResult) {
             retrievedContext = ragResult.context;
             contextDocuments = ragResult.documents;
@@ -125,7 +137,6 @@ export const useAgentExecution = (options: UseAgentExecutionOptions) => {
 
         // Log execution to logs_execucao_agente table
         try {
-          const { data: userData } = await supabase.auth.getUser();
           await supabase
             .from('logs_execucao_agente')
             .insert([{
@@ -149,7 +160,7 @@ export const useAgentExecution = (options: UseAgentExecutionOptions) => {
           error: null,
         }));
 
-        onSuccess?.(result);
+        onSuccessRef.current?.(result);
         return result;
       } catch (err) {
         const error = err instanceof Error ? err : new Error('Erro na execução');
@@ -159,11 +170,12 @@ export const useAgentExecution = (options: UseAgentExecutionOptions) => {
           executionStatus: 'error',
           error,
         }));
-        onError?.(error);
+        onErrorRef.current?.(error);
         return null;
       }
     },
-    [agentId, state.agentConfig, enableRAG, ragType, retrieveAndSave, onSuccess, onError]
+    // onSuccess/onError removed — accessed via stable refs
+    [agentId, state.agentConfig, enableRAG, ragType, retrieveAndSave]
   );
 
   return {

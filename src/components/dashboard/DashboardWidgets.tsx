@@ -325,7 +325,7 @@ export function AgentCards() {
     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
       {agents.map((agent, i) => (
         <motion.div key={agent.id} {...anim(10 + i)}>
-          <Card className="bg-card/50 backdrop-blur-sm border-border/40 hover:border-primary/30 transition-all hover:shadow-lg hover:shadow-primary/5 group">
+          <Card className="border-gradient backdrop-blur-sm hover:shadow-lg hover:shadow-primary/5 transition-shadow group">
             <CardContent className="p-5 text-center">
               <span className="text-3xl block mb-2">{agent.emoji}</span>
               <h4 className="font-sans font-bold text-foreground text-sm">{agent.name}</h4>
@@ -346,5 +346,124 @@ export function AgentCards() {
         </motion.div>
       ))}
     </div>
+  );
+}
+
+/* ─── System Health Score ─── */
+export function SystemHealthScore() {
+  const { vps, agents, apps, github, loading } = useData();
+  if (loading) return <CardSkeleton />;
+
+  // Compute weighted score
+  const vpsScore   = vps.length > 0 ? (vps.filter(v => v.status === "online").length / vps.length) * 100 : 0;
+  const agentScore = agents.length > 0 ? (agents.filter(a => a.status === "online").length / agents.length) * 100 : 0;
+  const appScore   = apps.length > 0 ? (apps.filter(a => a.status === "online").length / apps.length) * 100 : 0;
+  const githubScore = github?.status === "connected" || github?.status === "synced" ? 100 : 0;
+
+  const score = Math.round(
+    vpsScore   * 0.30 +
+    agentScore * 0.40 +
+    appScore   * 0.20 +
+    githubScore * 0.10
+  );
+
+  // SVG arc gauge (half circle)
+  const r = 52;
+  const cx = 70;
+  const cy = 70;
+  const circumference = Math.PI * r; // half circle
+  const offset = circumference - (score / 100) * circumference;
+
+  const scoreColor =
+    score >= 80 ? "#10b981" : // emerald
+    score >= 50 ? "#f59e0b" : // amber
+    "#ef4444";                 // red
+
+  const scoreLabel =
+    score >= 80 ? "Saudável" :
+    score >= 50 ? "Atenção" :
+    "Crítico";
+
+  const breakdown = [
+    { label: "VPS",     value: Math.round(vpsScore),    weight: "30%" },
+    { label: "Agentes", value: Math.round(agentScore),  weight: "40%" },
+    { label: "Apps",    value: Math.round(appScore),    weight: "20%" },
+    { label: "GitHub",  value: Math.round(githubScore), weight: "10%" },
+  ];
+
+  return (
+    <motion.div {...anim(11)}>
+      <Card cornerAccents className="border-gradient backdrop-blur-sm">
+        <CardContent className="p-5">
+          <h3 className="font-sans font-bold text-sm text-foreground mb-4 flex items-center gap-2">
+            <Activity className="w-4 h-4 text-primary" />
+            System Health Score
+          </h3>
+
+          {/* Arc gauge */}
+          <div className="flex items-center gap-6">
+            <div className="relative shrink-0">
+              <svg width="140" height="80" viewBox="0 0 140 80">
+                {/* Track */}
+                <path
+                  d={`M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${cx + r} ${cy}`}
+                  fill="none"
+                  stroke="hsl(var(--secondary))"
+                  strokeWidth="10"
+                  strokeLinecap="round"
+                />
+                {/* Fill */}
+                <motion.path
+                  d={`M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${cx + r} ${cy}`}
+                  fill="none"
+                  stroke={scoreColor}
+                  strokeWidth="10"
+                  strokeLinecap="round"
+                  strokeDasharray={circumference}
+                  initial={{ strokeDashoffset: circumference }}
+                  animate={{ strokeDashoffset: offset }}
+                  transition={{ duration: 1.2, ease: "easeOut" }}
+                  style={{ filter: `drop-shadow(0 0 6px ${scoreColor}60)` }}
+                />
+              </svg>
+              {/* Score in center */}
+              <div className="absolute inset-0 flex flex-col items-center justify-end pb-1">
+                <motion.span
+                  className="text-2xl font-bold font-mono leading-none"
+                  style={{ color: scoreColor }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.6 }}
+                >
+                  {score}
+                </motion.span>
+                <span className="text-[9px] uppercase tracking-widest text-muted-foreground">{scoreLabel}</span>
+              </div>
+            </div>
+
+            {/* Breakdown */}
+            <div className="flex-1 space-y-2">
+              {breakdown.map((b) => (
+                <div key={b.label} className="space-y-0.5">
+                  <div className="flex justify-between text-[10px]">
+                    <span className="text-muted-foreground">{b.label} <span className="opacity-40">({b.weight})</span></span>
+                    <span className="font-mono text-foreground">{b.value}%</span>
+                  </div>
+                  <div className="h-1 rounded-full bg-secondary/60 overflow-hidden">
+                    <motion.div
+                      className="h-full rounded-full"
+                      style={{ backgroundColor: b.value >= 80 ? "#10b981" : b.value >= 50 ? "#f59e0b" : "#ef4444" }}
+                      initial={{ width: 0 }}
+                      animate={{ width: `${b.value}%` }}
+                      transition={{ duration: 0.8, delay: 0.3 }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </motion.div>
   );
 }

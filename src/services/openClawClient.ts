@@ -148,6 +148,7 @@ export async function executeAgent(
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${OPENCLAW_CONFIG.AUTH_TOKEN}`,
         'X-Agent-ID': payload.agent,
         'X-Timestamp': new Date().toISOString(),
       },
@@ -214,7 +215,10 @@ export async function checkOpenClawHealth(): Promise<{ healthy: boolean; message
   try {
     const response = await fetch(`${OPENCLAW_CONFIG.VPS_URL}/health`, {
       method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${OPENCLAW_CONFIG.AUTH_TOKEN}`,
+      },
     });
     
     if (response.ok) {

@@ -5,21 +5,24 @@
 
 export const OPENCLAW_CONFIG = {
   // URL base do VPS OpenClaw
+  // Produção: túnel Cloudflare configurado em VITE_OPENCLAW_URL
+  // VPS: 43.98.170.199:18789 (requer Cloudflare Tunnel para acesso externo)
   VPS_URL: import.meta.env.VITE_OPENCLAW_URL || 'http://localhost:3000',
-  
+
+  // Auth token do gateway OpenClaw
+  AUTH_TOKEN: import.meta.env.VITE_OPENCLAW_TOKEN || 'a363a1abd70457da6b5e3abcf59517e5eabbd86ebce066fb',
+
   // Endpoints
   WEBHOOK_PATH: '/webhook/agents/execute',
   HEALTH_PATH: '/health',
-  
+
   // Timeouts e retry
   TIMEOUT: 60000, // 60 segundos
   RETRY_ATTEMPTS: 3,
   RETRY_DELAY_MS: 1000,
-  
-  // Modo mock para desenvolvimento
-  // Quando true, simula respostas sem chamar VPS real
-  // Defaults to false - set VITE_OPENCLAW_MOCK=true to enable mock mode
-  MOCK_MODE: import.meta.env.VITE_OPENCLAW_MOCK === 'true',
+
+  // Mock mode: true quando URL não está configurada (sem VPS acessível)
+  MOCK_MODE: import.meta.env.VITE_OPENCLAW_MOCK === 'true' || !import.meta.env.VITE_OPENCLAW_URL,
   
   // Logging
   ENABLE_LOGS: true,

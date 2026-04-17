@@ -1,0 +1,41 @@
+{
+  "name": "Totum Apps",
+  "short_name": "Totum",
+  "description": "Plataforma de infraestrutura de crescimento com agentes de IA",
+  "start_url": "/hub",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#ef233c",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/favicon.ico",
+      "sizes": "192x192",
+      "type": "image/x-icon",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Hub de Agentes",
+      "url": "/hub",
+      "description": "Ver todos os agentes"
+    },
+    {
+      "name": "Hermione",
+      "url": "/hermione",
+      "description": "Chat com a base de conhecimento"
+    },
+    {
+      "name": "Tarefas",
+      "url": "/tasks",
+      "description": "Quadro de tarefas"
+    }
+  ],
+  "categories": ["productivity", "business"]
+}

@@ -21,43 +21,56 @@ export default function AgentDetail() {
   useEffect(() => {
     let isMounted = true;
 
+    function mapRow(row: any): Agent {
+      return {
+        id: row.id,
+        name: row.name,
+        role: row.role,
+        status: (row.status as Agent['status']) || 'offline',
+        tasks: row.tasks || 0,
+        type: inferType(row.category),
+        category: row.category || 'geral',
+        emoji: row.emoji || '🤖',
+        created_at: row.created_at || new Date().toISOString(),
+        tasks_completed: row.tasks || 0,
+        success_rate: row.success_rate || 0,
+        daily_tasks: row.daily_tasks || 0,
+        slug: row.slug,
+        credits_used: 0,
+        parent_id: undefined,
+        hierarchy_level: 0,
+        is_orchestrator: false,
+      };
+    }
+
     async function loadAgent() {
+      if (!agentId) return;
       try {
         setLoading(true);
-        
-        // Load all agents for hierarchy
-        const { data: allAgentsData, error: agentsError } = await supabase
-          .from('agents')
-          .select('*');
 
-        if (agentsError) throw agentsError;
-
-        const typedAgents: Agent[] = (allAgentsData || []).map(agent => ({
-          id: agent.id,
-          name: agent.name,
-          role: agent.role,
-          status: (agent.status as Agent['status']) || 'offline',
-          tasks: agent.tasks || 0,
-          type: inferType(agent.category),
-          category: agent.category || 'geral',
-          emoji: agent.emoji || '🤖',
-          created_at: agent.created_at || new Date().toISOString(),
-          tasks_completed: agent.tasks || 0,
-          success_rate: agent.success_rate || 0,
-          daily_tasks: agent.daily_tasks || 0,
-          credits_used: 0,
-          parent_id: undefined,
-          hierarchy_level: 0,
-          is_orchestrator: false,
-        }));
+        // Parallel: fetch this agent by id (or slug) + all agents for hierarchy
+        const [singleRes, allRes] = await Promise.all([
+          supabase
+            .from('agents')
+            .select('*')
+            .or(`id.eq.${agentId},slug.eq.${agentId}`)
+            .maybeSingle(),
+          supabase
+            .from('agents')
+            .select('id,name,role,status,category,emoji,tasks,daily_tasks,success_rate,created_at,slug,agent_group'),
+        ]);
 
         if (!isMounted) return;
+
+        const typedAgents: Agent[] = (allRes.data || []).map(mapRow);
         setAgents(typedAgents);
 
-        // Find current agent
-        const currentAgent = typedAgents.find(a => a.id === agentId);
-        if (currentAgent) {
-          setAgent(currentAgent);
+        if (singleRes.data) {
+          setAgent(mapRow(singleRes.data));
+        } else {
+          // fallback: find in full list (handles UUID vs slug mismatch)
+          const found = typedAgents.find(a => a.id === agentId || a.slug === agentId);
+          if (found) setAgent(found);
         }
       } catch (error) {
         console.error('Erro ao carregar agente:', error);

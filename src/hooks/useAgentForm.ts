@@ -2,32 +2,10 @@ import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { AgentAdapter } from '@/lib/agents/adapter';
+// Types are canonical in agents-elizaos.ts — no duplicate definitions here
+import type { AgentFormData, ChannelConfig } from '@/types/agents-elizaos';
 
-export interface ChannelConfig {
-  type: 'telegram' | 'discord' | 'twitter' | 'whatsapp' | 'email';
-  enabled: boolean;
-  config: {
-    token?: string;
-    [key: string]: any;
-  };
-}
-
-export interface AgentFormData {
-  id?: string;
-  name: string;
-  bio: string;
-  emoji: string;
-  lore: string;
-  adjectives: string[];
-  system_prompt: string;
-  tier: 1 | 2 | 3;
-  temperature: number;
-  max_tokens: number;
-  channels: ChannelConfig[];
-  knowledge_sources: string[];
-  rag_mode: 'static' | 'dynamic';
-  plugins: string[];
-}
+export type { AgentFormData, ChannelConfig };
 
 const defaultFormData: AgentFormData = {
   name: '',

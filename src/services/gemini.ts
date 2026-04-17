@@ -160,8 +160,8 @@ export async function chatWithGemini(
   }
 }
 
-// Função simplificada para o GILES responder
-export async function askGeminiAsGiles(
+// Função simplificada para a Hermione responder
+export async function askGeminiAsHermione(
   question: string,
   contextChunks: { content: string; dominio: string; categoria: string }[],
   conversationHistory: { role: 'user' | 'model'; text: string }[] = []

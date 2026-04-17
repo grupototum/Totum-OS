@@ -39,10 +39,24 @@ export default defineConfig(({ mode }) => ({
             if (id.includes('node_modules/@supabase')) {
               return 'vendor-supabase';
             }
+            // Charts — recharts + d3 deps (100KB+ gzip)
+            if (
+              id.includes('node_modules/recharts') ||
+              id.includes('node_modules/d3-') ||
+              id.includes('node_modules/victory-') ||
+              id.includes('node_modules/d3/') ||
+              id.includes('node_modules/internmap') ||
+              id.includes('node_modules/robust-predicates')
+            ) {
+              return 'vendor-charts';
+            }
+            // Icons — lucide-react (tree-shaken but still chunked separately)
+            if (id.includes('node_modules/lucide-react')) {
+              return 'vendor-icons';
+            }
+            // UI primitives — Radix + styling utils
             if (
               id.includes('node_modules/@radix-ui') ||
-              id.includes('node_modules/recharts') ||
-              id.includes('node_modules/lucide-react') ||
               id.includes('node_modules/class-variance-authority') ||
               id.includes('node_modules/clsx') ||
               id.includes('node_modules/tailwind-merge')

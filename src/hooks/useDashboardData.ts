@@ -1,6 +1,8 @@
 import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
+import type { Agent } from '@/types/agent';
+export type { Agent } from '@/types/agent';
 
 export interface VpsServer {
   id: string;
@@ -21,14 +23,7 @@ export interface DashboardApp {
   sort_order: number | null;
 }
 
-export interface Agent {
-  id: string;
-  name: string;
-  role: string;
-  status: string;
-  tasks: number;
-  emoji: string | null;
-}
+// Agent is imported from @/types/agent above — no local duplicate needed
 
 export interface DashboardCost {
   id: string;

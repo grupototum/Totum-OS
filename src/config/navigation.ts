@@ -118,10 +118,10 @@ const knowledgePillar: NavigationPillarConfig = {
       pillar: 'knowledge',
     },
     {
-      id: 'giles-chat',
+      id: 'hermione-chat',
       label: 'Hermione',
       icon: 'MessageSquare',
-      path: '/giles',
+      path: '/hermione',
       pillar: 'knowledge',
     },
     {

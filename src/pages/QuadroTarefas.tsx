@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { usePageTransition } from '@/hooks/usePageTransition';
 import AppLayout from '@/components/layout/AppLayout';
 import { KanbanColumn } from '@/components/kanban';
 import { TaskModal } from '@/components/tasks';
@@ -15,6 +16,7 @@ type ViewType = 'kanban' | 'lista';
 
 export default function QuadroTarefas() {
   const { user } = useAuth();
+  const pageTransition = usePageTransition();
   const {
     tarefas,
     projetos,
@@ -143,7 +145,7 @@ export default function QuadroTarefas() {
 
   return (
     <AppLayout>
-      <div className="h-full flex flex-col bg-[#EAEAE5]">
+      <motion.div {...pageTransition} className="h-full flex flex-col bg-[#EAEAE5]">
         {/* Header */}
         <div className="border-b border-stone-300 bg-white/50">
           <div className="max-w-[1400px] mx-auto px-6 py-4">
@@ -331,7 +333,7 @@ export default function QuadroTarefas() {
           currentUser={user?.email || 'Usuário'}
           mode={modalMode}
         />
-      </div>
+      </motion.div>
     </AppLayout>
   );
 }
