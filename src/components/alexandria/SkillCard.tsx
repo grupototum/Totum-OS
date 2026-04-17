@@ -31,8 +31,8 @@ export default function SkillCard({ skill, onClick }: SkillCardProps) {
         <Badge
           className={
             skill.status === 'active'
-              ? 'text-xs bg-green-100 text-green-700 border-0'
-              : 'text-xs bg-yellow-100 text-yellow-700 border-0'
+              ? 'text-xs bg-green-500/15 text-green-400 border-0'
+              : 'text-xs bg-yellow-500/15 text-yellow-400 border-0'
           }
         >
           {skill.status === 'active' ? 'Ativa' : skill.status === 'beta' ? 'Beta' : 'Inativa'}

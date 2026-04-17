@@ -44,7 +44,7 @@ export default function DatabaseStatus() {
       <div className="space-y-2">
         <div className="flex justify-between text-sm">
           <span className="text-muted-foreground">Status</span>
-          <Badge className={`text-xs border-0 ${stats.status === 'online' ? 'bg-green-100 text-green-700' : stats.status === 'offline' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700'}`}>
+          <Badge className={`text-xs border-0 ${stats.status === 'online' ? 'bg-green-500/15 text-green-400' : stats.status === 'offline' ? 'bg-red-500/15 text-red-400' : 'bg-yellow-500/15 text-yellow-400'}`}>
             {stats.status === 'checking' ? 'verificando...' : stats.status}
           </Badge>
         </div>

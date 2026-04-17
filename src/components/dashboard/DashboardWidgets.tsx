@@ -32,9 +32,11 @@ function useData() {
 
 /* ─── Helpers ─── */
 const statusColor = (s: string) =>
-  s === "online" || s === "connected" ? "bg-emerald-500" :
-  s === "standby" || s === "syncing" ? "bg-amber-400" :
-  "bg-red-500";
+  s === "online" || s === "connected"
+    ? "bg-emerald-500 shadow-[0_0_6px_rgba(52,211,153,0.6)]"
+    : s === "standby" || s === "syncing"
+    ? "bg-amber-400 shadow-[0_0_6px_rgba(251,191,36,0.5)]"
+    : "bg-red-500 shadow-[0_0_6px_rgba(239,68,68,0.5)]";
 
 const statusLabel = (s: string) =>
   s === "online" ? "Online" :

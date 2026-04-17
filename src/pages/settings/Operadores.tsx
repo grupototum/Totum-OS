@@ -16,12 +16,12 @@ const roleLabels: Record<OperadorRole, string> = {
   admin: 'Admin', gestor: 'Gestor', analista: 'Analista', operador: 'Operador', viewer: 'Viewer',
 };
 const roleColors: Record<OperadorRole, string> = {
-  admin: 'bg-red-100 text-red-700', gestor: 'bg-purple-100 text-purple-700',
-  analista: 'bg-blue-100 text-blue-700', operador: 'bg-green-100 text-green-700',
-  viewer: 'bg-gray-100 text-gray-600',
+  admin: 'bg-red-500/15 text-red-400', gestor: 'bg-purple-100 text-purple-700',
+  analista: 'bg-blue-500/15 text-blue-400', operador: 'bg-green-500/15 text-green-400',
+  viewer: 'bg-zinc-800 text-zinc-400',
 };
 const statusColors: Record<OperadorStatus, string> = {
-  ativo: 'bg-green-100 text-green-700', inativo: 'bg-gray-100 text-gray-600', suspenso: 'bg-red-100 text-red-700',
+  ativo: 'bg-green-500/15 text-green-400', inativo: 'bg-zinc-800 text-zinc-400', suspenso: 'bg-red-500/15 text-red-400',
 };
 
 const PERMISSAO_LABELS: Record<keyof Operador['permissoes'], string> = {
@@ -110,7 +110,7 @@ export default function Operadores() {
           <Input placeholder="Buscar operadores..." value={search} onChange={e => setSearch(e.target.value)} className="pl-9" />
         </div>
         <Badge variant="outline" className="px-3">{operadores.length} total</Badge>
-        <Badge className="bg-green-100 text-green-700 border-0 px-3">{operadores.filter(o => o.status === 'ativo').length} ativos</Badge>
+        <Badge className="bg-green-500/15 text-green-400 border-0 px-3">{operadores.filter(o => o.status === 'ativo').length} ativos</Badge>
       </div>
 
       <Card className="overflow-hidden">

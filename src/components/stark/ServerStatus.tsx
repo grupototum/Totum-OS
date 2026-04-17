@@ -45,7 +45,7 @@ export default function ServerStatus() {
     s === 'online' ? 'bg-green-500' : s === 'offline' ? 'bg-red-500' : 'bg-yellow-500';
 
   const statusBadge = (s: ServiceStatus['status']) =>
-    s === 'online' ? 'bg-green-100 text-green-700' : s === 'offline' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700';
+    s === 'online' ? 'bg-green-500/15 text-green-400' : s === 'offline' ? 'bg-red-500/15 text-red-400' : 'bg-yellow-500/15 text-yellow-400';
 
   return (
     <Card className="p-5">

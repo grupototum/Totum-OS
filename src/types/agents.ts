@@ -28,17 +28,20 @@ export interface Skill {
   name: string;
   emoji: string;
   description: string;
-  version: string;
-  category: 'content' | 'research' | 'image' | 'validation' | 'automation' | 'analytics';
-  inputs: Record<string, SkillInput>;
-  outputs: Record<string, SkillOutput>;
-  model_preference: 'claude' | 'groq' | 'gemini' | 'kimi';
-  cost_per_call: number;
-  success_rate: number;
-  prompt_template: string;
-  dependencies: string[];
-  status: 'active' | 'inactive' | 'deprecated';
-  estimated_duration_ms: number;
+  version?: string;
+  category: string;
+  inputs?: Record<string, SkillInput>;
+  outputs?: Record<string, SkillOutput>;
+  model_preference?: string;
+  cost_per_call?: number;
+  success_rate?: number;
+  prompt_template?: string;
+  dependencies?: string[];
+  status: 'active' | 'inactive' | 'deprecated' | 'beta';
+  estimated_duration_ms?: number;
+  // DB fields (Alexandria)
+  created_at?: string;
+  updated_at?: string;
 }
 
 // Re-export unified agent config type from agents-elizaos

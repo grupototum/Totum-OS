@@ -258,6 +258,7 @@ export default function AppSidebar() {
         )}
         <button
           onClick={toggleCollapsed}
+          aria-label={collapsed ? "Expandir menu" : "Recolher menu"}
           className="p-1.5 rounded-lg hover:bg-sidebar-accent transition-colors text-sidebar-foreground/50 hover:text-sidebar-foreground"
         >
           {collapsed ? <Menu className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
@@ -286,7 +287,7 @@ export default function AppSidebar() {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto py-3 px-3 space-y-5">
+      <nav aria-label="Navegação principal" className="flex-1 overflow-y-auto py-3 px-3 space-y-5">
 
         {/* ── 1. CORE ── */}
         <div>

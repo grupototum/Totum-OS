@@ -30,9 +30,9 @@ const freqLabel: Record<Frequency, string> = {
   daily: 'Diário', weekly: 'Semanal', monthly: 'Mensal',
 };
 const freqColor: Record<Frequency, string> = {
-  daily: 'bg-blue-100 text-blue-700',
+  daily: 'bg-blue-500/15 text-blue-400',
   weekly: 'bg-purple-100 text-purple-700',
-  monthly: 'bg-amber-100 text-amber-700',
+  monthly: 'bg-amber-500/15 text-amber-400',
 };
 
 const calcNextRun = (freq: Frequency): string => {
@@ -149,8 +149,8 @@ export default function TaskRecurrence() {
                     <Badge className={`border-0 text-xs ${freqColor[task.frequency]}`}>
                       <RefreshCw className="h-3 w-3 mr-1" />{freqLabel[task.frequency]}
                     </Badge>
-                    {task.telegramEnabled && <Badge className="bg-blue-100 text-blue-700 border-0 text-xs"><Bell className="h-3 w-3 mr-1" />Telegram</Badge>}
-                    {!task.active && <Badge className="bg-gray-100 text-gray-500 border-0 text-xs">Pausada</Badge>}
+                    {task.telegramEnabled && <Badge className="bg-blue-500/15 text-blue-400 border-0 text-xs"><Bell className="h-3 w-3 mr-1" />Telegram</Badge>}
+                    {!task.active && <Badge className="bg-zinc-800 text-zinc-400 border-0 text-xs">Pausada</Badge>}
                   </div>
                   {task.description && <p className="text-sm text-muted-foreground mb-2">{task.description}</p>}
                   <div className="flex gap-4 text-xs text-muted-foreground">

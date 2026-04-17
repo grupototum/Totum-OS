@@ -9,10 +9,10 @@ interface ContextHubProps {
 }
 
 const statusColors = {
-  online: { bg: 'bg-green-100', text: 'text-green-700', label: 'Online' },
-  offline: { bg: 'bg-red-100', text: 'text-red-700', label: 'Offline' },
-  testing: { bg: 'bg-yellow-100', text: 'text-yellow-700', label: 'Testing' },
-  idle: { bg: 'bg-blue-100', text: 'text-blue-700', label: 'Idle' },
+  online: { bg: 'bg-green-500/15', text: 'text-green-400', label: 'Online' },
+  offline: { bg: 'bg-red-500/15', text: 'text-red-400', label: 'Offline' },
+  testing: { bg: 'bg-yellow-500/15', text: 'text-yellow-400', label: 'Testing' },
+  idle: { bg: 'bg-blue-500/15', text: 'text-blue-400', label: 'Idle' },
 };
 
 type StatusType = keyof typeof statusColors;

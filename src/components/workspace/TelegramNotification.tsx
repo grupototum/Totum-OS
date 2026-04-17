@@ -29,10 +29,10 @@ export default function TelegramNotification({
 
   if (!isConfigured) {
     return (
-      <Card className="p-4 border-dashed border-yellow-300 bg-yellow-50">
-        <div className="flex items-center gap-2 text-yellow-700">
+      <Card className="p-4 border-dashed border-yellow-300 bg-amber-500/10">
+        <div className="flex items-center gap-2 text-yellow-400">
           <BellOff className="h-4 w-4" />
-          <p className="text-sm">Telegram não configurado. Adicione <code className="bg-yellow-100 px-1 rounded">VITE_TELEGRAM_BOT_TOKEN</code> no .env</p>
+          <p className="text-sm">Telegram não configurado. Adicione <code className="bg-amber-500/15 px-1 rounded">VITE_TELEGRAM_BOT_TOKEN</code> no .env</p>
         </div>
       </Card>
     );
@@ -43,7 +43,7 @@ export default function TelegramNotification({
       <div className="flex items-center gap-2">
         <Bell className="h-4 w-4 text-primary" />
         <h4 className="text-sm font-semibold">Notificação Telegram</h4>
-        <Badge className="bg-green-100 text-green-700 border-0 text-xs">Ativo</Badge>
+        <Badge className="bg-green-500/15 text-green-400 border-0 text-xs">Ativo</Badge>
       </div>
 
       <div className="space-y-2">

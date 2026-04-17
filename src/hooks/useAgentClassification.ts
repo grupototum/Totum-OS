@@ -56,9 +56,9 @@ export function classifyAgent(agentName: string): AgentClassification {
       type: 'conversational',
       label: 'Conversacional',
       description: 'Interage diretamente com usuários através de chat',
-      color: 'text-emerald-600',
-      bgColor: 'bg-emerald-50',
-      borderColor: 'border-emerald-200',
+      color: 'text-emerald-400',
+      bgColor: 'bg-emerald-500/15',
+      borderColor: 'border-emerald-700',
       icon: 'solar:chat-round-dots-linear',
     };
   }
@@ -67,9 +67,9 @@ export function classifyAgent(agentName: string): AgentClassification {
     type: 'processing',
     label: 'Processamento',
     description: 'Executa tarefas automatizadas em background',
-    color: 'text-amber-600',
-    bgColor: 'bg-amber-50',
-    borderColor: 'border-amber-200',
+    color: 'text-amber-400',
+    bgColor: 'bg-amber-500/10',
+    borderColor: 'border-amber-700',
     icon: 'solar:cpu-bolt-linear',
   };
 }
@@ -117,13 +117,13 @@ export function getAgentTypeBadge(agentType: AgentType) {
   if (agentType === 'conversational') {
     return {
       label: 'Conversacional',
-      className: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+      className: 'bg-emerald-500/15 text-emerald-400 border-emerald-700',
       icon: 'solar:chat-round-dots-linear',
     };
   }
   return {
     label: 'Processamento',
-    className: 'bg-amber-50 text-amber-700 border-amber-200',
+    className: 'bg-amber-500/10 text-amber-400 border-amber-700',
     icon: 'solar:cpu-bolt-linear',
   };
 }

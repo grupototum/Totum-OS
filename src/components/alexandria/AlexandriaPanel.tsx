@@ -58,10 +58,10 @@ const documentTypeLabels = {
 
 const documentTypeColors = {
   design_system: 'bg-purple-100 text-purple-800',
-  pops: 'bg-blue-100 text-blue-800',
+  pops: 'bg-blue-500/15 text-blue-400',
   slas: 'bg-orange-100 text-orange-800',
-  client_info: 'bg-green-100 text-green-800',
-  execution_history: 'bg-gray-100 text-gray-800'
+  client_info: 'bg-green-500/15 text-green-400',
+  execution_history: 'bg-zinc-800 text-zinc-400'
 };
 
 export function AlexandriaPanel() {

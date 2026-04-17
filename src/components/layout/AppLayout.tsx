@@ -69,7 +69,7 @@ function AppLayoutInner({ children }: AppLayoutProps) {
       <OnboardingModal open={showOnboarding} onClose={closeOnboarding} />
 
       {/* Main content — margin responds to sidebar collapsed state */}
-      <main className={mainClass}>
+      <main id="main-content" aria-label="Conteúdo principal" className={mainClass}>
         {children}
       </main>
     </div>

@@ -298,7 +298,7 @@ export default function Hub() {
                             ) : isChat ? (
                               <span className="shrink-0 w-1.5 h-1.5 rounded-full bg-zinc-600" />
                             ) : (
-                              <span className="shrink-0 w-1.5 h-1.5 rounded-full bg-amber-400/60" title="Sistema" />
+                              <span className="shrink-0 w-1.5 h-1.5 rounded-full bg-amber-400/70 shadow-[0_0_4px_rgba(251,191,36,0.4)]" title="Sistema" />
                             )}
                           </div>
                           <p className="text-xs text-zinc-300 leading-relaxed line-clamp-2">{agent.role}</p>

@@ -37,8 +37,8 @@ export default function GoogleDriveEmbed() {
     <div className="p-6 space-y-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="p-2 rounded-lg bg-blue-50">
-            <FolderOpen className="h-6 w-6 text-blue-600" />
+          <div className="p-2 rounded-lg bg-blue-500/10">
+            <FolderOpen className="h-6 w-6 text-blue-400" />
           </div>
           <div>
             <h1 className="text-2xl font-bold">Google Drive</h1>
@@ -46,7 +46,7 @@ export default function GoogleDriveEmbed() {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <Badge className={isConnected ? 'bg-green-100 text-green-700 border-0' : 'bg-gray-100 text-gray-600 border-0'}>
+          <Badge className={isConnected ? 'bg-green-500/15 text-green-400 border-0' : 'bg-zinc-800 text-zinc-400 border-0'}>
             {isConnected ? '🟢 Conectado' : '⚪ Desconectado'}
           </Badge>
           <Button variant="outline" size="sm" onClick={() => setIsLoading(l => !l)}>
@@ -62,8 +62,8 @@ export default function GoogleDriveEmbed() {
 
       {!isConnected ? (
         <Card className="p-8 text-center space-y-4">
-          <div className="w-16 h-16 mx-auto bg-blue-50 rounded-full flex items-center justify-center">
-            <FolderOpen className="h-8 w-8 text-blue-500" />
+          <div className="w-16 h-16 mx-auto bg-blue-500/10 rounded-full flex items-center justify-center">
+            <FolderOpen className="h-8 w-8 text-blue-400" />
           </div>
           <div>
             <h3 className="font-semibold text-lg">Conectar Google Drive</h3>
@@ -74,7 +74,7 @@ export default function GoogleDriveEmbed() {
           {!GOOGLE_OAUTH_CLIENT_ID && (
             <div className="flex items-center gap-2 justify-center text-yellow-600 text-sm">
               <AlertCircle className="h-4 w-4" />
-              <span>Configure <code className="bg-yellow-50 px-1 rounded">VITE_GOOGLE_CLIENT_ID</code> no .env</span>
+              <span>Configure <code className="bg-amber-500/10 px-1 rounded">VITE_GOOGLE_CLIENT_ID</code> no .env</span>
             </div>
           )}
           <Button onClick={() => setIsConnected(true)} className="mx-auto">

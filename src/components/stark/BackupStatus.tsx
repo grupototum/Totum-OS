@@ -26,10 +26,10 @@ const statusIcon = (status: BackupJob['status']) => {
 };
 
 const statusBadge: Record<BackupJob['status'], string> = {
-  success: 'bg-green-100 text-green-700',
-  warning: 'bg-yellow-100 text-yellow-700',
-  failed: 'bg-red-100 text-red-700',
-  pending: 'bg-gray-100 text-gray-600',
+  success: 'bg-green-500/15 text-green-400',
+  warning: 'bg-yellow-500/15 text-yellow-400',
+  failed: 'bg-red-500/15 text-red-400',
+  pending: 'bg-zinc-800 text-zinc-400',
 };
 
 export default function BackupStatus() {

@@ -47,23 +47,8 @@ export interface RagQueryOptions {
 // SKILLS
 // ============================================================
 
-export interface Skill {
-  id: string;
-  name: string;
-  emoji: string;
-  description: string;
-  category: string;
-  inputs?: Record<string, any>;
-  outputs?: Record<string, any>;
-  model_preference?: string;
-  cost_per_call?: number;
-  success_rate?: number;
-  prompt_template?: string;
-  status: 'active' | 'inactive' | 'beta';
-  version?: string;
-  created_at?: string;
-  updated_at?: string;
-}
+// Canonical Skill type lives in agents.ts — re-exported here for backward compatibility
+export type { Skill } from './agents';
 
 // ============================================================
 // AGENTS (Alexandria view — tabela agents_config)
