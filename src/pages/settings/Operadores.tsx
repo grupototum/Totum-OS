@@ -169,33 +169,33 @@ export default function Operadores() {
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label className="text-xs">Nome *</Label>
-                <Input value={form.nome} onChange={e => setForm(f => ({ ...f, nome: e.target.value }))} className="mt-1" />
+                <Label htmlFor="op-nome" className="text-xs">Nome *</Label>
+                <Input id="op-nome" value={form.nome} onChange={e => setForm(f => ({ ...f, nome: e.target.value }))} className="mt-1" />
               </div>
               <div>
-                <Label className="text-xs">Email *</Label>
-                <Input value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} className="mt-1" />
+                <Label htmlFor="op-email" className="text-xs">Email *</Label>
+                <Input id="op-email" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} className="mt-1" />
               </div>
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label className="text-xs">Role</Label>
+                <Label htmlFor="op-role" className="text-xs">Role</Label>
                 <Select value={form.role} onValueChange={v => handleRoleChange(v as OperadorRole)}>
-                  <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
+                  <SelectTrigger id="op-role" className="mt-1"><SelectValue /></SelectTrigger>
                   <SelectContent>{Object.entries(roleLabels).map(([k, v]) => <SelectItem key={k} value={k}>{v}</SelectItem>)}</SelectContent>
                 </Select>
               </div>
               <div>
-                <Label className="text-xs">Status</Label>
+                <Label htmlFor="op-status" className="text-xs">Status</Label>
                 <Select value={form.status} onValueChange={v => setForm(f => ({ ...f, status: v as OperadorStatus }))}>
-                  <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
+                  <SelectTrigger id="op-status" className="mt-1"><SelectValue /></SelectTrigger>
                   <SelectContent>{['ativo','inativo','suspenso'].map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
                 </Select>
               </div>
             </div>
             <div>
-              <Label className="text-xs">Telegram Chat ID (opcional)</Label>
-              <Input value={form.telegram_chat_id} onChange={e => setForm(f => ({ ...f, telegram_chat_id: e.target.value }))} placeholder="ex: 123456789" className="mt-1" />
+              <Label htmlFor="op-telegram" className="text-xs">Telegram Chat ID (opcional)</Label>
+              <Input id="op-telegram" value={form.telegram_chat_id} onChange={e => setForm(f => ({ ...f, telegram_chat_id: e.target.value }))} placeholder="ex: 123456789" className="mt-1" />
             </div>
             <div>
               <Label className="text-xs mb-2 block">Permissões</Label>

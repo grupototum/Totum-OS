@@ -48,8 +48,9 @@ export default function TelegramNotification({
 
       <div className="space-y-2">
         <div>
-          <Label className="text-xs text-muted-foreground">Chat ID do operador</Label>
+          <Label htmlFor="tg-chat-id" className="text-xs text-muted-foreground">Chat ID do operador</Label>
           <Input
+            id="tg-chat-id"
             value={chatId}
             onChange={e => setChatId(e.target.value)}
             placeholder="ex: 123456789"
@@ -57,8 +58,9 @@ export default function TelegramNotification({
           />
         </div>
         <div>
-          <Label className="text-xs text-muted-foreground">Mensagem</Label>
+          <Label htmlFor="tg-mensagem" className="text-xs text-muted-foreground">Mensagem</Label>
           <Input
+            id="tg-mensagem"
             value={mensagem}
             onChange={e => setMensagem(e.target.value)}
             placeholder="Detalhes da notificação..."

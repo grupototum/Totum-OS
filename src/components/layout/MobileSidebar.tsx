@@ -1,4 +1,5 @@
-import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { Menu } from "lucide-react";
 import AppSidebarContent from "./AppSidebarContent";
 
@@ -11,6 +12,10 @@ export default function MobileSidebar({ open, onOpenChange }: MobileSidebarProps
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="left" className="p-0 w-[280px] bg-sidebar border-sidebar-border">
+        {/* SheetTitle required by Radix for aria-labelledby — visually hidden */}
+        <VisuallyHidden>
+          <SheetTitle>Menu de Navegação</SheetTitle>
+        </VisuallyHidden>
         <AppSidebarContent onNavigate={() => onOpenChange(false)} />
       </SheetContent>
     </Sheet>

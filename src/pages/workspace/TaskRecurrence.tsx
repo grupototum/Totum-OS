@@ -90,38 +90,38 @@ export default function TaskRecurrence() {
           <h3 className="font-semibold mb-4 flex items-center gap-2"><Plus className="h-4 w-4" />Nova Tarefa Recorrente</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="md:col-span-2">
-              <Label className="text-xs">Título *</Label>
-              <Input value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} placeholder="Nome da tarefa" className="mt-1" />
+              <Label htmlFor="rec-title" className="text-xs">Título *</Label>
+              <Input id="rec-title" value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} placeholder="Nome da tarefa" className="mt-1" />
             </div>
             <div className="md:col-span-2">
-              <Label className="text-xs">Descrição</Label>
-              <Textarea value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} rows={2} className="mt-1 resize-none" />
+              <Label htmlFor="rec-desc" className="text-xs">Descrição</Label>
+              <Textarea id="rec-desc" value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} rows={2} className="mt-1 resize-none" />
             </div>
             <div>
-              <Label className="text-xs">Frequência</Label>
+              <Label htmlFor="rec-freq" className="text-xs">Frequência</Label>
               <Select value={form.frequency} onValueChange={v => setForm(f => ({ ...f, frequency: v as Frequency }))}>
-                <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
+                <SelectTrigger id="rec-freq" className="mt-1"><SelectValue /></SelectTrigger>
                 <SelectContent>
                   {Object.entries(freqLabel).map(([k, v]) => <SelectItem key={k} value={k}>{v}</SelectItem>)}
                 </SelectContent>
               </Select>
             </div>
             <div>
-              <Label className="text-xs">Responsável (humano/robô)</Label>
-              <Input value={form.responsavel} onChange={e => setForm(f => ({ ...f, responsavel: e.target.value }))} placeholder="ex: Israel / WANDA" className="mt-1" />
+              <Label htmlFor="rec-resp" className="text-xs">Responsável (humano/robô)</Label>
+              <Input id="rec-resp" value={form.responsavel} onChange={e => setForm(f => ({ ...f, responsavel: e.target.value }))} placeholder="ex: Israel / WANDA" className="mt-1" />
             </div>
             <div>
-              <Label className="text-xs">Co-responsável</Label>
-              <Input value={form.coResponsavel} onChange={e => setForm(f => ({ ...f, coResponsavel: e.target.value }))} placeholder="opcional" className="mt-1" />
+              <Label htmlFor="rec-coresp" className="text-xs">Co-responsável</Label>
+              <Input id="rec-coresp" value={form.coResponsavel} onChange={e => setForm(f => ({ ...f, coResponsavel: e.target.value }))} placeholder="opcional" className="mt-1" />
             </div>
             <div className="flex items-center gap-3 pt-5">
-              <Switch checked={form.telegramEnabled} onCheckedChange={v => setForm(f => ({ ...f, telegramEnabled: v }))} />
-              <Label className="text-sm flex items-center gap-1"><Bell className="h-3.5 w-3.5" />Notificar via Telegram</Label>
+              <Switch id="rec-telegram-switch" checked={form.telegramEnabled} onCheckedChange={v => setForm(f => ({ ...f, telegramEnabled: v }))} />
+              <Label htmlFor="rec-telegram-switch" className="text-sm flex items-center gap-1 cursor-pointer"><Bell className="h-3.5 w-3.5" />Notificar via Telegram</Label>
             </div>
             {form.telegramEnabled && (
               <div>
-                <Label className="text-xs">Chat ID Telegram</Label>
-                <Input value={form.telegramChatId} onChange={e => setForm(f => ({ ...f, telegramChatId: e.target.value }))} placeholder="123456789" className="mt-1" />
+                <Label htmlFor="rec-telegram-id" className="text-xs">Chat ID Telegram</Label>
+                <Input id="rec-telegram-id" value={form.telegramChatId} onChange={e => setForm(f => ({ ...f, telegramChatId: e.target.value }))} placeholder="123456789" className="mt-1" />
               </div>
             )}
           </div>
