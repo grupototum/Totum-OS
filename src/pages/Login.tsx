@@ -81,6 +81,14 @@ export default function Login() {
       toast.success("Bem-vindo à Totum!");
       navigate("/hub");
     } catch (err: any) {
+      // Pending/rejected approval → redirect to the proper page instead of generic toast
+      if (err.approvalStatus === 'pending' || err.approvalStatus === 'rejected') {
+        navigate('/pending-approval', {
+          replace: true,
+          state: { status: err.approvalStatus, email: err.userEmail || email },
+        });
+        return;
+      }
       toast.error(err.message || "Credenciais inválidas.");
     } finally {
       setLoading(false);

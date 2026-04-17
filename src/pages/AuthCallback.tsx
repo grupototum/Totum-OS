@@ -23,6 +23,14 @@ export default function AuthCallback() {
 
     const run = async () => {
       try {
+        // Check for OAuth error params first (e.g., provider not configured, user cancelled)
+        const urlParams = new URLSearchParams(window.location.search);
+        const oauthError = urlParams.get('error');
+        const oauthErrorDesc = urlParams.get('error_description');
+        if (oauthError) {
+          throw new Error(oauthErrorDesc || oauthError);
+        }
+
         // Supabase SDK auto-processes the URL hash/code on initialisation.
         // Wait for a session to appear (up to ~3 s).
         let session = (await supabase.auth.getSession()).data.session;
@@ -85,7 +93,14 @@ export default function AuthCallback() {
         navigate('/hub', { replace: true });
       } catch (err: any) {
         console.error('[AuthCallback]', err);
-        setErrorMsg(err.message || 'Erro ao processar login com Google.');
+        // Translate common Supabase/OAuth error messages
+        let msg = err.message || 'Erro ao processar login com Google.';
+        if (msg.includes('provider is not enabled') || msg.includes('Unsupported provider')) {
+          msg = 'Login com Google ainda não está ativado. Entre em contato com o administrador.';
+        } else if (msg.includes('access_denied') || msg.includes('access denied')) {
+          msg = 'Acesso negado. Tente novamente ou use email e senha.';
+        }
+        setErrorMsg(msg);
         setTimeout(() => navigate('/login', { replace: true }), 3000);
       }
     };

@@ -97,7 +97,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (error) throw error;
 
     // Approval gate
-    if (data.user) await guardApproval(data.user.id);
+    if (data.user) await guardApproval(data.user.id, email);
   };
 
   // ── signUp ──────────────────────────────────────────────────────────────────
@@ -156,21 +156,27 @@ export function useAuth() {
 }
 
 // ─── Internal guard (throws on pending/rejected) ──────────────────────────────
-async function guardApproval(userId: string): Promise<void> {
+async function guardApproval(userId: string, email?: string): Promise<void> {
   const status = await fetchApprovalStatus(userId);
 
   if (status === "pending") {
     await supabase.auth.signOut();
-    throw new Error(
+    const err = new Error(
       "Seu cadastro ainda está aguardando aprovação do administrador. Você será notificado quando o acesso for liberado."
     );
+    (err as any).approvalStatus = "pending";
+    if (email) (err as any).userEmail = email;
+    throw err;
   }
 
   if (status === "rejected") {
     await supabase.auth.signOut();
-    throw new Error(
+    const err = new Error(
       "Seu cadastro foi rejeitado. Entre em contato com o administrador para mais informações."
     );
+    (err as any).approvalStatus = "rejected";
+    if (email) (err as any).userEmail = email;
+    throw err;
   }
   // null (no record) = legacy user, approved
 }
