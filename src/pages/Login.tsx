@@ -19,14 +19,24 @@ export default function Login() {
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [rememberMe, setRememberMe] = useState(false);
 
-  // Pre-fill email if previously remembered
   useEffect(() => {
-    const saved = localStorage.getItem("totum_remember_email");
-    if (saved) {
-      setEmail(saved);
+    // Se "lembrar de mim" estava ativo e a sessão ainda é válida → entra direto
+    const wasRemembered = localStorage.getItem("totum_remember_me") === "true";
+    if (wasRemembered) {
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        if (session) {
+          navigate("/hub", { replace: true });
+        }
+      });
+    }
+
+    // Pré-preenche o e-mail salvo
+    const savedEmail = localStorage.getItem("totum_remember_email");
+    if (savedEmail) {
+      setEmail(savedEmail);
       setRememberMe(true);
     }
-  }, []);
+  }, [navigate]);
 
   const handleGoogleSignIn = async () => {
     setGoogleLoading(true);
@@ -61,11 +71,12 @@ export default function Login() {
     setLoading(true);
     try {
       await signIn(email, password);
-      // Persist or clear remembered email
       if (rememberMe) {
         localStorage.setItem("totum_remember_email", email);
+        localStorage.setItem("totum_remember_me", "true");
       } else {
         localStorage.removeItem("totum_remember_email");
+        localStorage.removeItem("totum_remember_me");
       }
       toast.success("Bem-vindo à Totum!");
       navigate("/hub");

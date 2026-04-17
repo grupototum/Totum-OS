@@ -65,7 +65,10 @@ export default function AuthCallback() {
 
           await notifyNewUserPending(user.email || '', name, provider);
           await supabase.auth.signOut();
-          navigate('/pending-approval', { replace: true });
+          navigate('/pending-approval', {
+            replace: true,
+            state: { status: 'pending', email: user.email },
+          });
           return;
         }
 
@@ -73,7 +76,7 @@ export default function AuthCallback() {
           await supabase.auth.signOut();
           navigate('/pending-approval', {
             replace: true,
-            state: { status: record.status },
+            state: { status: record.status, email: user.email },
           });
           return;
         }
