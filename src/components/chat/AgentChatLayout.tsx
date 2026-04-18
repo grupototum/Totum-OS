@@ -18,9 +18,15 @@ import {
   ChevronLeft,
   BrainCircuit,
   Circle,
+  Smile,
 } from 'lucide-react';
 import AppLayout from '@/components/layout/AppLayout';
 import { MarkdownRenderer } from '@/components/ui/MarkdownRenderer';
+import {
+  EmojiPicker,
+  EmojiPickerSearch,
+  EmojiPickerContent,
+} from "@/components/ui/emoji-picker";
 
 // ─── Prompt Chips ────────────────────────────────────────────────────────────
 
@@ -66,6 +72,7 @@ export const AgentChatLayout: React.FC = () => {
   const [inputValue, setInputValue] = useState('');
   const [isSending, setIsSending] = useState(false);
   const [showRagPanel, setShowRagPanel] = useState(false);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
 
   // Step-progress timeline
@@ -495,7 +502,7 @@ export const AgentChatLayout: React.FC = () => {
                     key={chip}
                     type="button"
                     onClick={() => setInputValue(chip)}
-                    className="px-3 py-1.5 text-xs bg-zinc-800 border border-zinc-700 rounded-full text-zinc-300 hover:bg-zinc-700 hover:border-zinc-600 transition-colors whitespace-nowrap cursor-pointer"
+                    className="px-3 py-1.5 text-xs bg-secondary border border-border rounded-full text-secondary-foreground hover:bg-accent hover:text-accent-foreground transition-colors whitespace-nowrap cursor-pointer"
                   >
                     {chip}
                   </button>
@@ -503,15 +510,39 @@ export const AgentChatLayout: React.FC = () => {
               </div>
             )}
 
-            <div className="flex gap-2">
-              <Input
-                placeholder="Digite sua mensagem..."
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                onKeyDown={handleKeyDown}
-                disabled={!isReady || isSending || isExecuting}
-                className="flex-1"
-              />
+            <div className="flex gap-2 items-end">
+              <div className="relative flex-1">
+                <Input
+                  placeholder="Digite sua mensagem..."
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  disabled={!isReady || isSending || isExecuting}
+                  className="pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowEmojiPicker((v) => !v)}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors p-1"
+                  aria-label="Emoji picker"
+                >
+                  <Smile className="h-4 w-4" />
+                </button>
+                {showEmojiPicker && (
+                  <div className="absolute bottom-full right-0 mb-2 z-50">
+                    <EmojiPicker
+                      className="h-[326px] rounded-lg border shadow-md bg-popover"
+                      onEmojiSelect={({ emoji }) => {
+                        setInputValue((prev) => prev + emoji);
+                        setShowEmojiPicker(false);
+                      }}
+                    >
+                      <EmojiPickerSearch />
+                      <EmojiPickerContent />
+                    </EmojiPicker>
+                  </div>
+                )}
+              </div>
               <Button
                 onClick={handleSendMessage}
                 disabled={!isReady || isSending || isExecuting || !inputValue.trim()}

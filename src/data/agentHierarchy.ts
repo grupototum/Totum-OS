@@ -4,7 +4,7 @@ import {
   Share2, UserCheck, Bot, Megaphone, BookOpen, HardDrive, MessageSquare,
   Download, RefreshCw, Speaker, Lightbulb, TrendingDown, Scale,
   PenTool, Image, Video, Hash, Layout, Layers, Target, Users2,
-  Notebook, FolderOpen, Globe, Database, Headset,
+  Notebook, FolderOpen, Globe, Database, Headset, ArrowRightLeft,
 } from "lucide-react";
 
 export interface SubAgent {
@@ -101,6 +101,12 @@ export const centralResources: Resource[] = [
   { id: "website-downloader", name: "Website Downloader", description: "Download de sites para análise.", icon: Download },
   { id: "backup-sync", name: "Backup Sync", description: "Sincronização e backup automático.", icon: Database },
   { id: "integracao-alexa", name: "Integração Alexa", description: "Comandos de voz via Alexa.", icon: Headset },
+  {
+    id: "migracao-claude-codex",
+    name: "Migração Claude Code → Codex",
+    description: "Anthropic encerrou compartilhamento de token do Claude Code com apps de terceiros (Open Cloud / Hermes) em 04/04 12h. Use Codex como LLM dos agentes Open Cloud e mantenha Claude Code pago para operacional (relatórios, otimização de campanhas, subcampanhas).",
+    icon: ArrowRightLeft,
+  },
 ];
 
 export interface TipCategory {

@@ -30,7 +30,7 @@ const DocsPage          = lazy(() => import("./pages/docs"));
 const ClientsCenter     = lazy(() => import("./pages/ClientsCenter"));
 const EditClient        = lazy(() => import("./pages/EditClient"));
 const AlexandriaPage    = lazy(() => import("./pages/alexandria"));
-const Hub               = lazy(() => import("./pages/Hub"));
+
 const QuadroTarefas     = lazy(() => import("./pages/QuadroTarefas"));
 const ContentPipeline   = lazy(() => import("./pages/ContentPipeline"));
 const OfficeView        = lazy(() => import("./pages/OfficeView"));
@@ -119,7 +119,7 @@ const AppWithRouter = () => {
           <Route path="/agent/ads-extractor" element={<Navigate to="/agents/ads-extractor/chat" replace />} />
 
           {/* Páginas principais */}
-          <Route path="/hub" element={<Page><Hub /></Page>} />
+          <Route path="/hub" element={<Navigate to="/agents" replace />} />
           <Route path="/dashboard" element={<Page><Dashboard /></Page>} />
           <Route path="/docs" element={<Page><DocsPage /></Page>} />
           <Route path="/content" element={<Page><ContentPipeline /></Page>} />

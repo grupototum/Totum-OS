@@ -4,6 +4,18 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>Totum Apps</title>
+    <script>
+      (function() {
+        try {
+          const stored = localStorage.getItem('totum-theme');
+          const mode = stored === 'dark' || stored === 'light' ? stored : 'system';
+          const resolved = mode === 'system'
+            ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+            : mode;
+          document.documentElement.classList.add(resolved);
+        } catch (e) {}
+      })();
+    </script>
     <meta name="description" content="Plataforma de infraestrutura de crescimento — agentes de IA, Alexandria e ferramentas integradas.">
     <meta name="author" content="Grupo Totum" />
 
