@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Agent } from '@/types/alexandria';
+import { Agent, normalizeSkillIds } from '@/types/alexandria';
 import { Zap, Users } from 'lucide-react';
 
 interface ContextHubProps {
@@ -21,7 +21,7 @@ const statusColors: Record<string, { bg: string; text: string; label: string }> 
 
 export default function ContextHub({ agents = [] }: ContextHubProps) {
   const onlineCount = agents.filter((a) => a.status === 'online' || a.status === 'active').length;
-  const totalSkills = agents.reduce((sum, a) => sum + (a.skills?.length || 0), 0);
+  const totalSkills = agents.reduce((sum, a) => sum + (normalizeSkillIds(a.skills).length), 0);
 
   return (
     <div className="space-y-6">
@@ -101,23 +101,28 @@ export default function ContextHub({ agents = [] }: ContextHubProps) {
                 </div>
 
                 {/* Skills */}
-                <div>
-                  <p className="text-xs text-muted-foreground mb-2">
-                    Skills ({agent.skills?.length || 0})
-                  </p>
-                  <div className="flex flex-wrap gap-1">
-                    {agent.skills?.slice(0, 3).map((skillId) => (
-                      <Badge key={skillId} variant="outline" className="text-xs">
-                        {skillId}
-                      </Badge>
-                    ))}
-                    {(agent.skills?.length || 0) > 3 && (
-                      <Badge variant="outline" className="text-xs">
-                        +{(agent.skills?.length || 0) - 3}
-                      </Badge>
-                    )}
-                  </div>
-                </div>
+                {(() => {
+                  const skillIds = normalizeSkillIds(agent.skills);
+                  return (
+                    <div>
+                      <p className="text-xs text-muted-foreground mb-2">
+                        Skills ({skillIds.length})
+                      </p>
+                      <div className="flex flex-wrap gap-1">
+                        {skillIds.slice(0, 3).map((id) => (
+                          <Badge key={id} variant="outline" className="text-xs">
+                            {id}
+                          </Badge>
+                        ))}
+                        {skillIds.length > 3 && (
+                          <Badge variant="outline" className="text-xs">
+                            +{skillIds.length - 3}
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })()}
               </Card>
             );
           })}
