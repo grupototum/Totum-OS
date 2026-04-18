@@ -74,7 +74,9 @@ export const navigationSections: NavSection[] = [
   {
     id: "agentes",
     label: "Agentes",
-    items: [],
+    items: [
+      { label: "Escritório", icon: Building2, path: "/office" },
+    ],
     expandable: {
       label: "Agentes",
       path: "/agents",
@@ -120,7 +122,6 @@ export const navigationSections: NavSection[] = [
       { label: "Tarefas", icon: KanbanSquare, path: "/tasks" },
       { label: "Pipeline Conteúdo", icon: GitBranch, path: "/content" },
       { label: "Plano de Ação", icon: CheckSquare, path: "/action-plan" },
-      { label: "Escritório", icon: Building2, path: "/office" },
       { label: "Central de Clientes", icon: Contact, path: "/clients" },
       { label: "Novo Cliente", icon: UserPlus, path: "/new-client" },
     ],
