@@ -179,7 +179,7 @@ export function useDashboardData(): DashboardData {
 
   const refetchGithub = useCallback(async () => {
     const data = await withRetry(async () => {
-      const { data, error } = await supabase.from("github_config").select("*").limit(1).single();
+      const { data, error } = await supabase.from("github_config").select("*").limit(1).maybeSingle();
       if (error) throw error;
       return data;
     });

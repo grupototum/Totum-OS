@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Icon } from '@iconify/react';
 import type { Agent } from '@/hooks/useAgents';
@@ -166,6 +166,8 @@ export function AgentGraph({ agents, onAgentClick, selectedAgentId }: AgentGraph
   const vbW = bbox.w + PAD * 2;
   const vbH = bbox.h + PAD * 2;
 
+  const canvasRef = useRef<HTMLDivElement>(null);
+
   const handleMouseDown = (e: React.MouseEvent) => {
     setDrag({ x: e.clientX - pan.x, y: e.clientY - pan.y });
   };
@@ -174,12 +176,20 @@ export function AgentGraph({ agents, onAgentClick, selectedAgentId }: AgentGraph
     setPan({ x: e.clientX - drag.x, y: e.clientY - drag.y });
   };
   const handleMouseUp = () => setDrag(null);
-  const handleWheel = (e: React.WheelEvent) => {
-    e.preventDefault();
-    setZoom(z => Math.max(0.3, Math.min(3, z * (e.deltaY > 0 ? 0.9 : 1.1))));
-  };
 
   const reset = useCallback(() => { setZoom(1); setPan({ x: 0, y: 0 }); }, []);
+
+  // Attach wheel listener imperatively so we can use {passive: false} and call preventDefault()
+  useEffect(() => {
+    const el = canvasRef.current;
+    if (!el) return;
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      setZoom(z => Math.max(0.3, Math.min(3, z * (e.deltaY > 0 ? 0.9 : 1.1))));
+    };
+    el.addEventListener('wheel', onWheel, { passive: false });
+    return () => el.removeEventListener('wheel', onWheel);
+  }, []);
 
   // Edges: collect all parent→child pairs
   const edges = useMemo(() => {
@@ -219,12 +229,12 @@ export function AgentGraph({ agents, onAgentClick, selectedAgentId }: AgentGraph
 
       {/* Canvas */}
       <div
+        ref={canvasRef}
         className="w-full h-full cursor-grab active:cursor-grabbing select-none"
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
-        onWheel={handleWheel}
       >
         <svg
           width="100%"
