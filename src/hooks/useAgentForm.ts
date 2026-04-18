@@ -127,6 +127,33 @@ export const useAgentForm = (initialData?: Partial<AgentFormData>) => {
         agentId = data.id;
       }
 
+      // ── Sync agents table (dashboard / hub / estrutura do time) ──
+      if (agentId) {
+        const { data: existing } = await supabase
+          .from('agents')
+          .select('id')
+          .eq('id', agentId)
+          .maybeSingle();
+
+        const agentSyncPayload = {
+          id: agentId,
+          name: formData.name,
+          role: formData.bio.substring(0, 100),
+          status: 'offline',
+          emoji: formData.emoji,
+          category: `tier-${formData.tier}`,
+          tasks: 0,
+          daily_tasks: null,
+          success_rate: null,
+        };
+
+        if (existing) {
+          await supabase.from('agents').update(agentSyncPayload).eq('id', agentId);
+        } else {
+          await supabase.from('agents').insert(agentSyncPayload);
+        }
+      }
+
       // Save channels
       if (agentId) {
         const { error: deleteError } = await supabase

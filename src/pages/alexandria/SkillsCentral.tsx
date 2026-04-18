@@ -61,24 +61,24 @@ const categoriaLabels: Record<string, string> = {
 };
 
 const categoriaColors: Record<string, string> = {
-  automacao: 'bg-blue-100 text-blue-700 border-blue-200',
-  automation: 'bg-blue-100 text-blue-700 border-blue-200',
-  analise: 'bg-purple-100 text-purple-700 border-purple-200',
-  analytics: 'bg-purple-100 text-purple-700 border-purple-200',
-  criacao: 'bg-orange-100 text-orange-700 border-orange-200',
-  content: 'bg-orange-100 text-orange-700 border-orange-200',
-  integracao: 'bg-green-100 text-green-700 border-green-200',
-  validacao: 'bg-red-100 text-red-700 border-red-200',
-  validation: 'bg-red-100 text-red-700 border-red-200',
-  image: 'bg-pink-100 text-pink-700 border-pink-200',
-  research: 'bg-teal-100 text-teal-700 border-teal-200'
+  automacao: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
+  automation: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
+  analise: 'bg-purple-500/10 text-purple-400 border-purple-500/20',
+  analytics: 'bg-purple-500/10 text-purple-400 border-purple-500/20',
+  criacao: 'bg-orange-500/10 text-orange-400 border-orange-500/20',
+  content: 'bg-orange-500/10 text-orange-400 border-orange-500/20',
+  integracao: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
+  validacao: 'bg-red-500/10 text-red-400 border-red-500/20',
+  validation: 'bg-red-500/10 text-red-400 border-red-500/20',
+  image: 'bg-pink-500/10 text-pink-400 border-pink-500/20',
+  research: 'bg-teal-500/10 text-teal-400 border-teal-500/20'
 };
 
 const modelColors: Record<string, string> = {
-  claude: 'bg-violet-100 text-violet-700 border-violet-200',
-  groq: 'bg-cyan-100 text-cyan-700 border-cyan-200',
-  gemini: 'bg-indigo-100 text-indigo-700 border-indigo-200',
-  kimi: 'bg-amber-100 text-amber-700 border-amber-200'
+  claude: 'bg-violet-500/10 text-violet-400 border-violet-500/20',
+  groq: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20',
+  gemini: 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20',
+  kimi: 'bg-amber-500/10 text-amber-400 border-amber-500/20'
 };
 
 export default function SkillsCentral() {

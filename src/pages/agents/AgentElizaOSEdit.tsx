@@ -121,17 +121,39 @@ export default function AgentElizaOSEdit() {
     toast.success('Character.json exportado!');
   };
 
-  const handlePreviewSend = () => {
+  const handlePreviewSend = async () => {
     if (!previewInput.trim()) return;
     setPreviewMessages(prev => [...prev, { role: 'user', content: previewInput }]);
     setPreviewInput('');
     
-    setTimeout(() => {
+    if (!hasAIConfig()) {
+      setTimeout(() => {
+        setPreviewMessages(prev => [...prev, { 
+          role: 'agent', 
+          content: `Configure uma API key (Kimi, Groq ou OpenAI) para ver respostas reais no preview.` 
+        }]);
+      }, 500);
+      return;
+    }
+
+    try {
+      const response = await sendMessageToAI([
+        { role: 'system', content: formData.system_prompt || 'Você é um assistente útil.' },
+        { role: 'user', content: previewInput },
+      ]);
+
       setPreviewMessages(prev => [...prev, { 
         role: 'agent', 
-        content: `Resposta simulada do agente ${formData.name || 'AI'}...` 
+        content: response.error 
+          ? `Erro: ${response.error}` 
+          : response.content || 'Sem resposta.'
       }]);
-    }, 1000);
+    } catch (err: any) {
+      setPreviewMessages(prev => [...prev, { 
+        role: 'agent', 
+        content: `Erro ao chamar IA: ${err.message}` 
+      }]);
+    }
   };
 
   const toggleBot = async () => {

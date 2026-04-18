@@ -145,32 +145,32 @@ export default function QuadroTarefas() {
 
   return (
     <AppLayout>
-      <motion.div {...pageTransition} className="h-full flex flex-col bg-[#EAEAE5]">
+      <motion.div {...pageTransition} className="h-full flex flex-col ">
         {/* Header */}
-        <div className="border-b border-stone-300 bg-white/50">
+        <div className="border-b border-zinc-800 bg-zinc-900/50">
           <div className="max-w-[1400px] mx-auto px-6 py-4">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-2xl font-semibold text-stone-900 tracking-tight">Quadro de Tarefas</h1>
-                <p className="text-xs text-stone-500 mt-0.5">Organize projetos e acompanhe o progresso</p>
+                <h1 className="text-2xl font-semibold text-white tracking-tight">Quadro de Tarefas</h1>
+                <p className="text-xs text-zinc-400 mt-0.5">Organize projetos e acompanhe o progresso</p>
               </div>
               <div className="flex items-center gap-3">
                 <div className="hidden md:flex items-center gap-4 mr-4">
                   <div className="text-center">
-                    <div className="text-xl font-semibold text-stone-900">{stats.total}</div>
-                    <div className="text-[10px] text-stone-500 uppercase tracking-wider">Total</div>
+                    <div className="text-xl font-semibold text-white">{stats.total}</div>
+                    <div className="text-[10px] text-zinc-400 uppercase tracking-wider">Total</div>
                   </div>
                   <div className="w-px h-8 bg-stone-300" />
                   <div className="text-center">
                     <div className="text-xl font-semibold text-emerald-600">{stats.concluidas}</div>
-                    <div className="text-[10px] text-stone-500 uppercase tracking-wider">Feitas</div>
+                    <div className="text-[10px] text-zinc-400 uppercase tracking-wider">Feitas</div>
                   </div>
                   <div className="w-px h-8 bg-stone-300" />
                   <div className="flex items-center gap-2">
                     <div className="relative w-12 h-12">
                       <svg viewBox="0 0 36 36" className="w-full h-full -rotate-90">
-                        <circle cx="18" cy="18" r="15.5" fill="none" stroke="#E7E5E4" strokeWidth="3" />
-                        <circle cx="18" cy="18" r="15.5" fill="none" stroke="#1C1917" strokeWidth="3"
+                        <circle cx="18" cy="18" r="15.5" fill="none" stroke="#27272a" strokeWidth="3" />
+                        <circle cx="18" cy="18" r="15.5" fill="none" stroke="#ef233c" strokeWidth="3"
                           strokeDasharray={`${stats.progresso} ${100 - stats.progresso}`}
                           strokeLinecap="round" className="transition-all duration-700" />
                       </svg>
@@ -188,27 +188,27 @@ export default function QuadroTarefas() {
         </div>
 
         {/* Toolbar */}
-        <div className="border-b border-stone-300 bg-white/30">
+        <div className="border-b border-zinc-800 bg-zinc-900/30">
           <div className="max-w-[1400px] mx-auto px-6 py-3">
             <div className="flex items-center gap-4 flex-wrap">
               <div className="relative flex-1 min-w-[200px] max-w-sm">
-                <Icon icon="solar:magnifer-linear" className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
-                <Input value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Buscar tarefas..." className="pl-10 bg-white border-stone-300" />
+                <Icon icon="solar:magnifer-linear" className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+                <Input value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Buscar tarefas..." className="pl-10 bg-white border-zinc-800" />
               </div>
-              <div className="flex items-center bg-stone-100 rounded-lg p-1">
-                <button onClick={() => setViewType('kanban')} className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-all ${viewType === 'kanban' ? 'bg-white shadow-sm text-stone-900' : 'text-stone-500 hover:text-stone-700'}`}>
+              <div className="flex items-center bg-zinc-900/50 rounded-lg p-1">
+                <button onClick={() => setViewType('kanban')} className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-all ${viewType === 'kanban' ? 'bg-white shadow-sm text-white' : 'text-zinc-400 hover:text-zinc-300'}`}>
                   <Icon icon="solar:kanban-linear" className="w-4 h-4" /> Kanban
                 </button>
-                <button onClick={() => setViewType('lista')} className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-all ${viewType === 'lista' ? 'bg-white shadow-sm text-stone-900' : 'text-stone-500 hover:text-stone-700'}`}>
+                <button onClick={() => setViewType('lista')} className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-all ${viewType === 'lista' ? 'bg-white shadow-sm text-white' : 'text-zinc-400 hover:text-zinc-300'}`}>
                   <Icon icon="solar:list-linear" className="w-4 h-4" /> Lista
                 </button>
               </div>
-              <button onClick={() => setShowFilters(!showFilters)} className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all ${showFilters || temFiltrosAtivos ? 'bg-stone-900 text-white' : 'bg-stone-100 text-stone-600 hover:bg-stone-200'}`}>
+              <button onClick={() => setShowFilters(!showFilters)} className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all ${showFilters || temFiltrosAtivos ? 'bg-stone-900 text-white' : 'bg-zinc-900/50 text-zinc-400 hover:bg-zinc-800'}`}>
                 <Icon icon="solar:filter-linear" className="w-4 h-4" /> Filtros
                 {temFiltrosAtivos && <span className="ml-1 w-2 h-2 rounded-full bg-emerald-400" />}
               </button>
               {temFiltrosAtivos && (
-                <button onClick={limparFiltros} className="text-xs text-stone-500 hover:text-stone-700 underline">Limpar filtros</button>
+                <button onClick={limparFiltros} className="text-xs text-zinc-400 hover:text-zinc-300 underline">Limpar filtros</button>
               )}
             </div>
 
@@ -218,16 +218,16 @@ export default function QuadroTarefas() {
                   <div className="pt-4 flex items-center gap-4 flex-wrap">
                     {viewType === 'lista' && (
                       <div className="space-y-1">
-                        <label className="text-xs text-stone-500">Status</label>
-                        <select value={filtroStatus} onChange={(e) => setFiltroStatus(e.target.value as StatusTarefa | 'todos')} className="h-9 px-3 rounded-md border border-stone-300 bg-white text-sm">
+                        <label className="text-xs text-zinc-400">Status</label>
+                        <select value={filtroStatus} onChange={(e) => setFiltroStatus(e.target.value as StatusTarefa | 'todos')} className="h-9 px-3 rounded-md border border-zinc-800 bg-white text-sm">
                           <option value="todos">Todos</option>
                           {COLUNAS_KANBAN.map(c => <option key={c.id} value={c.id}>{c.titulo}</option>)}
                         </select>
                       </div>
                     )}
                     <div className="space-y-1">
-                      <label className="text-xs text-stone-500">Prioridade</label>
-                      <select value={filtroPrioridade} onChange={(e) => setFiltroPrioridade(e.target.value)} className="h-9 px-3 rounded-md border border-stone-300 bg-white text-sm">
+                      <label className="text-xs text-zinc-400">Prioridade</label>
+                      <select value={filtroPrioridade} onChange={(e) => setFiltroPrioridade(e.target.value)} className="h-9 px-3 rounded-md border border-zinc-800 bg-white text-sm">
                         <option value="todas">Todas</option>
                         {PRIORIDADES.map(p => <option key={p.id} value={p.id}>{p.label}</option>)}
                       </select>
@@ -262,30 +262,30 @@ export default function QuadroTarefas() {
           ) : (
             <div className="h-full overflow-auto p-6">
               <div className="max-w-[1400px] mx-auto">
-                <div className="bg-white rounded-lg border border-stone-300 overflow-hidden">
+                <div className="bg-white rounded-lg border border-zinc-800 overflow-hidden">
                   <table className="w-full">
-                    <thead className="bg-stone-50 border-b border-stone-300">
+                    <thead className="bg-zinc-900 border-b border-zinc-800">
                       <tr>
-                        <th className="text-left py-3 px-4 text-xs font-semibold text-stone-500 uppercase">Tarefa</th>
-                        <th className="text-left py-3 px-4 text-xs font-semibold text-stone-500 uppercase">Status</th>
-                        <th className="text-left py-3 px-4 text-xs font-semibold text-stone-500 uppercase">Prioridade</th>
-                        <th className="text-left py-3 px-4 text-xs font-semibold text-stone-500 uppercase">Data Limite</th>
+                        <th className="text-left py-3 px-4 text-xs font-semibold text-zinc-400 uppercase">Tarefa</th>
+                        <th className="text-left py-3 px-4 text-xs font-semibold text-zinc-400 uppercase">Status</th>
+                        <th className="text-left py-3 px-4 text-xs font-semibold text-zinc-400 uppercase">Prioridade</th>
+                        <th className="text-left py-3 px-4 text-xs font-semibold text-zinc-400 uppercase">Data Limite</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-stone-200">
                       {tarefasFiltradas.length === 0 ? (
                         <tr>
-                          <td colSpan={4} className="py-12 text-center text-stone-400">
+                          <td colSpan={4} className="py-12 text-center text-zinc-500">
                             <Icon icon="solar:inbox-linear" className="w-12 h-12 mx-auto mb-3 opacity-30" />
                             <p>Nenhuma tarefa encontrada</p>
                           </td>
                         </tr>
                       ) : (
                         tarefasFiltradas.map((tarefa) => (
-                          <tr key={tarefa.id} onClick={() => handleCardClick(tarefa)} className="hover:bg-stone-50 cursor-pointer transition-colors">
+                          <tr key={tarefa.id} onClick={() => handleCardClick(tarefa)} className="hover:bg-zinc-900 cursor-pointer transition-colors">
                             <td className="py-3 px-4">
-                              <div className="font-medium text-stone-900">{tarefa.titulo}</div>
-                              {tarefa.descricao && <div className="text-sm text-stone-500 line-clamp-1">{tarefa.descricao}</div>}
+                              <div className="font-medium text-white">{tarefa.titulo}</div>
+                              {tarefa.descricao && <div className="text-sm text-zinc-400 line-clamp-1">{tarefa.descricao}</div>}
                             </td>
                             <td className="py-3 px-4">
                               <Badge style={{
@@ -300,7 +300,7 @@ export default function QuadroTarefas() {
                                 {PRIORIDADES.find(p => p.id === tarefa.prioridade)?.label}
                               </Badge>
                             </td>
-                            <td className="py-3 px-4 text-sm text-stone-500">
+                            <td className="py-3 px-4 text-sm text-zinc-400">
                               {(tarefa.data_limite || tarefa.deadline) 
                                 ? new Date(tarefa.data_limite || tarefa.deadline!).toLocaleDateString('pt-BR')
                                 : '—'}

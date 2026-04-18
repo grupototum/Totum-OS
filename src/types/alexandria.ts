@@ -54,6 +54,8 @@ export type { Skill } from './agents';
 // AGENTS (Alexandria view — tabela agents_config)
 // ============================================================
 
+import type { AgentConfigStatus } from './status';
+
 export interface Agent {
   agent_id: string;
   name: string;
@@ -63,7 +65,7 @@ export interface Agent {
   system_prompt: string;
   skills: string[];
   metadata?: Record<string, any>;
-  status: 'active' | 'inactive' | 'testing';
+  status: AgentConfigStatus;
   created_at?: string;
   updated_at?: string;
 }

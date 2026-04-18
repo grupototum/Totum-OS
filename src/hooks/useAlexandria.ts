@@ -30,7 +30,6 @@ export const useAlexandria = () => {
       const { data: agentsData } = await (supabase as any)
         .from('agents_config')
         .select('*')
-        .eq('status', 'active')
         .order('name');
 
       const stats = {

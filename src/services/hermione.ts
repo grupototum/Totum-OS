@@ -331,19 +331,8 @@ export async function logQuery(
   }
 }
 
-// Função para o chat com Hermione - resposta simulada (até ter IA)
-export async function askHermione(
-  question: string,
-  context: HermioneChunk[]
-): Promise<string> {
-  // Aqui futuramente integraríamos com uma IA
-  // Por enquanto, retorna uma resposta baseada nos contextos encontrados
-  
-  if (context.length === 0) {
-    return "Não encontrei informações sobre isso na Alexandria. Pode reformular ou adicionar esse conhecimento?";
-  }
-
-  const sources = context.map(c => `- ${c.content.substring(0, 100)}...`).join('\n');
-  
-  return `Com base no que encontrei na Alexandria:\n\n${sources}\n\n[Esta é uma resposta simulada - integração com IA em desenvolvimento]`;
-}
+/**
+ * Chat com Hermione — delega para Gemini via askGeminiAsHermione.
+ * Mantida para compatibilidade; em novos códigos, importe direto de @/services/gemini.
+ */
+export { askGeminiAsHermione as askHermione } from '@/services/gemini';

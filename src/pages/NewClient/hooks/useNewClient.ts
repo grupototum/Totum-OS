@@ -84,7 +84,14 @@ export function useNewClient() {
   const { user } = useAuth();
 
   const submit = async (): Promise<boolean> => {
-    if (!user) return false;
+    if (!user) {
+      toast({
+        title: "❌ Não autenticado",
+        description: "Você precisa estar logado para criar um cliente.",
+        variant: "destructive",
+      });
+      return false;
+    }
 
     const sanitizedWebsite = form.website ? sanitizeURL(form.website) : null;
 

@@ -42,10 +42,10 @@ export default function EstruturaTime() {
                     <Icon icon="solar:diagram-up-linear" className="w-5 h-5 text-white" />
                   </div>
                   <div>
-                    <h1 className="text-3xl font-medium text-stone-900 tracking-tighter">
+                    <h1 className="text-3xl font-medium text-white tracking-tighter">
                       Estrutura do Time
                     </h1>
-                    <p className="text-xs uppercase tracking-widest text-stone-500">
+                    <p className="text-xs uppercase tracking-widest text-zinc-400">
                       Hierarquia · {agents.length} agentes
                     </p>
                   </div>
@@ -86,8 +86,8 @@ export default function EstruturaTime() {
                   <Icon icon="solar:crown-linear" className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-stone-900">Orquestrador</p>
-                  <p className="text-xs text-stone-500">TOT · Nível 0</p>
+                  <p className="text-sm font-medium text-white">Orquestrador</p>
+                  <p className="text-xs text-zinc-400">TOT · Nível 0</p>
                 </div>
               </div>
 
@@ -96,8 +96,8 @@ export default function EstruturaTime() {
                   <Icon icon="solar:users-group-two-rounded-linear" className="w-6 h-6 text-stone-700" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-stone-900">Modos de Operação</p>
-                  <p className="text-xs text-stone-500">Pablo, Data, Hug · Nível 1</p>
+                  <p className="text-sm font-medium text-white">Modos de Operação</p>
+                  <p className="text-xs text-zinc-400">Pablo, Data, Hug · Nível 1</p>
                 </div>
               </div>
 
@@ -106,8 +106,8 @@ export default function EstruturaTime() {
                   <Icon icon="solar:stars-linear" className="w-6 h-6 text-stone-700" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-stone-900">Agentes Especializados</p>
-                  <p className="text-xs text-stone-500">KVirtuoso, Radar, Ghost... · Nível 2+</p>
+                  <p className="text-sm font-medium text-white">Agentes Especializados</p>
+                  <p className="text-xs text-zinc-400">KVirtuoso, Radar, Ghost... · Nível 2+</p>
                 </div>
               </div>
             </div>
@@ -135,12 +135,12 @@ export default function EstruturaTime() {
                       <div className="w-8 h-8 rounded-full bg-stone-200 flex items-center justify-center text-sm font-medium text-stone-700">
                         {level}
                       </div>
-                      <h3 className="text-sm font-medium text-stone-900 uppercase tracking-wider">
+                      <h3 className="text-sm font-medium text-white uppercase tracking-wider">
                         {level === 0 ? 'Orquestrador' : 
                          level === 1 ? 'Modos de Operação' : 
                          `Nível ${level}`}
                       </h3>
-                      <div className="flex-1 h-px bg-stone-300" />
+                      <div className="flex-1 h-px bg-zinc-800" />
                       <Badge variant="outline" className="text-[10px]">
                         {agentsByLevel[level].length} agente{agentsByLevel[level].length > 1 ? 's' : ''}
                       </Badge>
@@ -184,17 +184,17 @@ export default function EstruturaTime() {
 
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-2">
-                                <p className="font-medium text-stone-900 truncate">{agent.name}</p>
+                                <p className="font-medium text-white truncate">{agent.name}</p>
                                 {agent.is_orchestrator && (
                                   <Badge className="bg-stone-900 text-white text-[9px]">
                                     Orquestrador
                                   </Badge>
                                 )}
                               </div>
-                              <p className="text-xs text-stone-500 truncate">{agent.role}</p>
+                              <p className="text-xs text-zinc-400 truncate">{agent.role}</p>
                             </div>
 
-                            <div className="hidden sm:flex items-center gap-4 text-xs text-stone-500">
+                            <div className="hidden sm:flex items-center gap-4 text-xs text-zinc-400">
                               <span className="flex items-center gap-1">
                                 <Icon icon="solar:check-circle-linear" className="w-4 h-4" />
                                 {agent.success_rate || 0}%

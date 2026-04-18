@@ -32,10 +32,10 @@ import {
 import { supabase } from '@/integrations/supabase/client';
 
 const statusColors: Record<string, string> = {
-  draft: 'bg-slate-100 text-slate-700',
-  review: 'bg-yellow-100 text-yellow-700',
-  approved: 'bg-green-100 text-green-700',
-  deprecated: 'bg-red-100 text-red-700'
+  draft: 'bg-zinc-800 text-zinc-300',
+  review: 'bg-yellow-500/10 text-yellow-400',
+  approved: 'bg-emerald-500/10 text-emerald-400',
+  deprecated: 'bg-red-500/10 text-red-400'
 };
 
 const statusLabels: Record<string, string> = {
@@ -314,11 +314,11 @@ export default function PopsPortal() {
                 {filteredPops.map((pop) => (
                   <div key={pop.id}>
                     <div
-                      className="flex items-center justify-between p-4 border rounded-lg hover:bg-slate-50 transition-colors cursor-pointer"
+                      className="flex items-center justify-between p-4 border rounded-lg hover:bg-zinc-900/50 transition-colors cursor-pointer"
                       onClick={() => setExpandedId(expandedId === pop.id ? null : pop.id)}
                     >
                       <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <div className="w-10 h-10 bg-blue-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
                           <FileText className="text-blue-600" size={20} />
                         </div>
                         <div>
@@ -327,7 +327,7 @@ export default function PopsPortal() {
                         </div>
                       </div>
                       <div className="flex items-center gap-4">
-                        <Badge className={statusColors[pop.status] || 'bg-slate-100'}>
+                        <Badge className={statusColors[pop.status] || 'bg-zinc-800'}>
                           {statusLabels[pop.status] || pop.status}
                         </Badge>
                         {expandedId === pop.id ? (
@@ -394,7 +394,7 @@ export default function PopsPortal() {
             </CardContent>
           </Card>
 
-          <Card className="bg-green-50 border-green-200">
+          <Card className="bg-emerald-500/5 border-emerald-500/20">
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
                 <CheckCircle className="text-green-600" size={24} />

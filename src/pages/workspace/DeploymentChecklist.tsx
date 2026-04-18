@@ -38,9 +38,9 @@ const categoryLabel: Record<CheckItem['category'], string> = {
 };
 
 const categoryColor: Record<CheckItem['category'], string> = {
-  pre: 'bg-blue-100 text-blue-700',
-  deploy: 'bg-amber-100 text-amber-700',
-  post: 'bg-green-100 text-green-700',
+  pre: 'bg-blue-500/10 text-blue-400',
+  deploy: 'bg-amber-500/10 text-amber-400',
+  post: 'bg-emerald-500/10 text-emerald-400',
 };
 
 export default function DeploymentChecklist() {
@@ -74,7 +74,7 @@ export default function DeploymentChecklist() {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <Badge className={allDone ? 'bg-green-100 text-green-700 border-0' : 'bg-muted text-muted-foreground border-0'}>
+          <Badge className={allDone ? 'bg-emerald-500/10 text-emerald-400 border-0' : 'bg-muted text-muted-foreground border-0'}>
             {progress}% concluído
           </Badge>
           <Button variant="outline" size="sm" onClick={reset}>

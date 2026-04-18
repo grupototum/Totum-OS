@@ -13,25 +13,25 @@ export default function Dashboard({ data }: DashboardProps) {
       label: '📚 Documentos',
       value: data.stats.totalDocuments,
       icon: BookOpen,
-      color: 'bg-blue-100 text-blue-700',
+      color: 'bg-blue-500/10 text-blue-400',
     },
     {
       label: '⚙️ Skills Ativas',
       value: data.stats.totalSkills,
       icon: Zap,
-      color: 'bg-amber-100 text-amber-700',
+      color: 'bg-amber-500/10 text-amber-400',
     },
     {
       label: '🤖 Agentes',
       value: data.stats.totalAgents,
       icon: Users,
-      color: 'bg-green-100 text-green-700',
+      color: 'bg-emerald-500/10 text-emerald-400',
     },
     {
       label: '📈 Taxa de Uso',
       value: '92%',
       icon: TrendingUp,
-      color: 'bg-purple-100 text-purple-700',
+      color: 'bg-purple-500/10 text-purple-400',
     },
   ];
 
@@ -118,21 +118,21 @@ export default function Dashboard({ data }: DashboardProps) {
         <div className="space-y-3 text-sm">
           <div className="flex justify-between items-center">
             <span className="text-muted-foreground">Documentos Indexados</span>
-            <span className="font-semibold text-green-600">✅ OK</span>
+            <span className="font-semibold text-emerald-400">✅ OK</span>
           </div>
           <div className="flex justify-between items-center">
             <span className="text-muted-foreground">Skills Operacionais</span>
-            <span className="font-semibold text-green-600">✅ OK</span>
+            <span className="font-semibold text-emerald-400">✅ OK</span>
           </div>
           <div className="flex justify-between items-center">
             <span className="text-muted-foreground">Agentes Online</span>
-            <span className="font-semibold text-green-600">
+            <span className="font-semibold text-emerald-400">
               ✅ {data.stats.activeAgents}/{data.stats.totalAgents}
             </span>
           </div>
           <div className="flex justify-between items-center">
             <span className="text-muted-foreground">Última Sincronização</span>
-            <span className="font-semibold text-green-600">✅ Agora</span>
+            <span className="font-semibold text-emerald-400">✅ Agora</span>
           </div>
         </div>
       </Card>

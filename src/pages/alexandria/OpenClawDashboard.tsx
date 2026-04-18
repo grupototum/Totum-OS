@@ -49,13 +49,14 @@ const SKILL_DEFINITIONS = [
   { name: 'healthcheck', version: '2.0.1' },
 ];
 
-const MOCK_LOGS = [
-  { time: '10:42:15', level: 'info', message: 'Gateway iniciado com sucesso' },
-  { time: '10:42:18', level: 'info', message: 'Conectado ao Supabase' },
-  { time: '10:45:32', level: 'warn', message: 'Rate limit approaching for Gemini API' },
-  { time: '10:52:01', level: 'info', message: 'Ingestão completa: POP-001' },
-  { time: '11:15:45', level: 'error', message: 'Falha na conexão com wecom-mcp' },
-];
+interface LogEntry {
+  time: string;
+  level: 'info' | 'warn' | 'error';
+  message: string;
+}
+
+// Logs são preenchidos dinamicamente quando o gateway está online.
+// Em modo mock/disconnected, o painel mostra empty state informativo.
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -190,16 +191,16 @@ export default function OpenClawDashboard() {
 
   const gatewayOnline = !isMockMode && vps.online;
   const gatewayCls = gatewayOnline
-    ? { card: 'bg-green-50 border-green-200', icon: 'bg-green-100', ico: 'text-green-600', label: 'text-green-600', value: 'text-green-900' }
-    : { card: 'bg-slate-50 border-slate-200', icon: 'bg-slate-100', ico: 'text-slate-400', label: 'text-slate-500', value: 'text-slate-600' };
+    ? { card: 'bg-emerald-500/5 border-emerald-500/20', icon: 'bg-emerald-500/10', ico: 'text-emerald-400', label: 'text-emerald-400', value: 'text-emerald-300' }
+    : { card: 'bg-zinc-900/50 border-zinc-800', icon: 'bg-zinc-800', ico: 'text-zinc-500', label: 'text-zinc-400', value: 'text-zinc-300' };
 
   const cpuCls = gatewayOnline
-    ? { card: 'bg-purple-50 border-purple-200', icon: 'bg-purple-100', ico: 'text-purple-600', label: 'text-purple-600', value: 'text-purple-900' }
-    : { card: 'bg-slate-50 border-slate-200', icon: 'bg-slate-100', ico: 'text-slate-400', label: 'text-slate-500', value: 'text-slate-600' };
+    ? { card: 'bg-purple-500/5 border-purple-500/20', icon: 'bg-purple-500/10', ico: 'text-purple-400', label: 'text-purple-400', value: 'text-purple-300' }
+    : { card: 'bg-zinc-900/50 border-zinc-800', icon: 'bg-zinc-800', ico: 'text-zinc-500', label: 'text-zinc-400', value: 'text-zinc-300' };
 
   const memCls = gatewayOnline
-    ? { card: 'bg-orange-50 border-orange-200', icon: 'bg-orange-100', ico: 'text-orange-600', label: 'text-orange-600', value: 'text-orange-900' }
-    : { card: 'bg-slate-50 border-slate-200', icon: 'bg-slate-100', ico: 'text-slate-400', label: 'text-slate-500', value: 'text-slate-600' };
+    ? { card: 'bg-orange-500/5 border-orange-500/20', icon: 'bg-orange-500/10', ico: 'text-orange-400', label: 'text-orange-400', value: 'text-orange-300' }
+    : { card: 'bg-zinc-900/50 border-zinc-800', icon: 'bg-zinc-800', ico: 'text-zinc-500', label: 'text-zinc-400', value: 'text-zinc-300' };
 
   // ── Render ───────────────────────────────────────────────────────────────────
 
@@ -210,10 +211,10 @@ export default function OpenClawDashboard() {
 
         {/* Mock-mode banner */}
         {isMockMode && (
-          <div className="flex items-center gap-3 p-4 rounded-lg bg-amber-50 border border-amber-200 text-amber-800">
+          <div className="flex items-center gap-3 p-4 rounded-lg bg-amber-500/5 border border-amber-500/20 text-amber-400">
             <AlertCircle size={18} className="shrink-0" />
             <span className="text-sm font-medium">
-              Configure <code className="bg-amber-100 px-1 rounded">VITE_OPENCLAW_URL</code> para conectar ao gateway real
+              Configure <code className="bg-amber-500/10 px-1 rounded">VITE_OPENCLAW_URL</code> para conectar ao gateway real
             </span>
           </div>
         )}
@@ -260,7 +261,7 @@ export default function OpenClawDashboard() {
           <Card className="bg-blue-50 border-blue-200">
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                <div className="w-12 h-12 bg-blue-500/10 rounded-full flex items-center justify-center">
                   <Activity className="text-blue-600" size={24} />
                 </div>
                 <div>
@@ -326,7 +327,7 @@ export default function OpenClawDashboard() {
                 {skills.map((skill) => (
                   <div
                     key={skill.name}
-                    className="flex items-center justify-between p-3 border rounded-lg hover:bg-slate-50"
+                    className="flex items-center justify-between p-3 border rounded-lg hover:bg-zinc-900/50"
                   >
                     <div className="flex items-center gap-3">
                       {skill.status === 'active' ? (
@@ -343,10 +344,10 @@ export default function OpenClawDashboard() {
                       <Badge
                         className={
                           skill.status === 'active'
-                            ? 'bg-green-100 text-green-700'
+                            ? 'bg-emerald-500/10 text-emerald-400'
                             : skill.status === 'inactive'
-                            ? 'bg-slate-100 text-slate-700'
-                            : 'bg-yellow-100 text-yellow-700'
+                            ? 'bg-zinc-800 text-zinc-300'
+                            : 'bg-yellow-500/10 text-yellow-400'
                         }
                       >
                         {skill.status === 'unknown' ? 'desconhecido' : skill.status}
@@ -368,31 +369,18 @@ export default function OpenClawDashboard() {
               <Button variant="ghost" size="sm">Ver todos</Button>
             </CardHeader>
             <CardContent>
-              {/* Offline banner */}
-              {!gatewayOnline && !vps.loading && (
-                <div className="flex items-center gap-2 p-2 mb-3 rounded bg-slate-100 text-slate-600 text-xs font-medium">
-                  <AlertCircle size={14} className="shrink-0" />
-                  VPS offline — mostrando logs simulados
-                </div>
-              )}
               <div className="space-y-2 font-mono text-sm">
-                {MOCK_LOGS.map((log, index) => (
-                  <div key={index} className="flex gap-3 p-2 rounded hover:bg-slate-50">
-                    <span className="text-slate-400">{log.time}</span>
-                    <Badge
-                      className={
-                        log.level === 'error'
-                          ? 'bg-red-100 text-red-700'
-                          : log.level === 'warn'
-                          ? 'bg-yellow-100 text-yellow-700'
-                          : 'bg-blue-100 text-blue-700'
-                      }
-                    >
-                      {log.level}
-                    </Badge>
-                    <span className="text-slate-700">{log.message}</span>
+                {gatewayOnline ? (
+                  <div className="flex items-center gap-2 p-4 rounded bg-zinc-900/50 text-zinc-400 text-sm">
+                    <AlertCircle size={16} className="shrink-0" />
+                    <span>Logs em tempo real serão exibidos aqui quando o streaming estiver ativo.</span>
                   </div>
-                ))}
+                ) : (
+                  <div className="flex items-center gap-2 p-4 rounded bg-slate-50 text-slate-500 text-sm">
+                    <AlertCircle size={16} className="shrink-0" />
+                    <span>Gateway offline — conecte o VPS para visualizar logs em tempo real.</span>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
@@ -410,7 +398,7 @@ export default function OpenClawDashboard() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {/* Supabase — always green */}
               <div className="flex items-center gap-3 p-4 border rounded-lg">
-                <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                <div className="w-10 h-10 bg-emerald-500/10 rounded-lg flex items-center justify-center">
                   <CheckCircle className="text-green-600" size={20} />
                 </div>
                 <div>
@@ -421,7 +409,7 @@ export default function OpenClawDashboard() {
 
               {/* Gemini — based on env var */}
               <div className="flex items-center gap-3 p-4 border rounded-lg">
-                <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${hasGeminiKey ? 'bg-green-100' : 'bg-yellow-100'}`}>
+                <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${hasGeminiKey ? 'bg-green-100' : 'bg-yellow-500/10'}`}>
                   {hasGeminiKey ? (
                     <CheckCircle className="text-green-600" size={20} />
                   ) : (
@@ -438,7 +426,7 @@ export default function OpenClawDashboard() {
 
               {/* OpenClaw Gateway — real status */}
               <div className="flex items-center gap-3 p-4 border rounded-lg">
-                <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${gatewayOnline ? 'bg-green-100' : 'bg-slate-100'}`}>
+                <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${gatewayOnline ? 'bg-green-100' : 'bg-zinc-800'}`}>
                   {gatewayOnline ? (
                     <Shield className="text-green-600" size={20} />
                   ) : (

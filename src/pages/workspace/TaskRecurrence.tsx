@@ -34,7 +34,7 @@ const freqLabel: Record<Frequency, string> = {
 };
 const freqColor: Record<Frequency, string> = {
   daily:   'bg-blue-500/15 text-blue-400',
-  weekly:  'bg-purple-100 text-purple-700',
+  weekly:  'bg-purple-500/10 text-purple-400',
   monthly: 'bg-amber-500/15 text-amber-400',
 };
 

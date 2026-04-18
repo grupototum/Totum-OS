@@ -66,7 +66,7 @@ export default function CraudioCodete() {
           <div className="flex items-center gap-2">
             <Terminal className="h-5 w-5 text-primary" />
             <h1 className="font-bold text-lg">Cráudio Codete</h1>
-            <Badge className={`border-0 text-xs ${isOnline ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+            <Badge className={`border-0 text-xs ${isOnline ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'}`}>
               {isCheckingHealth ? 'Verificando...' : isOnline ? '● Ollama Online' : '● Ollama Offline'}
             </Badge>
           </div>

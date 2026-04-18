@@ -25,6 +25,8 @@ import {
   Library,
   Lightbulb,
   Cpu,
+  BookMarked,
+  Terminal,
   Search,
   UserCog,
   Network,
@@ -76,6 +78,12 @@ const workspaceItems = [
 const clientsItems = [
   { label: "Central de Clientes", icon: Contact,  path: "/clients" },
   { label: "Novo Cliente",        icon: UserPlus, path: "/new-client" },
+];
+
+const toolsItems = [
+  { label: "Documentação",   icon: BookMarked, path: "/docs" },
+  { label: "Cráudio Codete", icon: Cpu,        path: "/craudio-codete" },
+  { label: "Claude Code",    icon: Terminal,   path: "/claude-code" },
 ];
 
 const configItems = [
@@ -377,7 +385,15 @@ export default function AppSidebar() {
           </ul>
         </div>
 
-        {/* ── 6. CONFIGURAÇÕES ── */}
+        {/* ── 6. FERRAMENTAS ── */}
+        <div>
+          <SectionLabel title="Ferramentas" />
+          <ul className="space-y-0.5">
+            {toolsItems.map((item) => <NavItem key={item.path} item={item} />)}
+          </ul>
+        </div>
+
+        {/* ── 7. CONFIGURAÇÕES ── */}
         <div>
           <SectionLabel title="Config" />
           <ul className="space-y-0.5">

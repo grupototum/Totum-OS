@@ -3,11 +3,14 @@
  * Used by useAgents, useDashboardData, AgentDetail, AgentsDashboard.
  * Do NOT redefine Agent locally in hooks or pages.
  */
+import type { AgentRuntimeStatus } from './status';
+export type { AgentRuntimeStatus };
+
 export interface Agent {
   id: string;
   name: string;
   role: string;
-  status: 'online' | 'offline' | 'idle' | 'maintenance';
+  status: AgentRuntimeStatus;
   emoji: string;
   category: string | null;
   tasks: number;

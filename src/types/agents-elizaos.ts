@@ -46,6 +46,8 @@ export interface MessageExample {
 // TOTUM AGENT CONFIG (Supabase)
 // ============================================
 
+import type { AgentRuntimeStatus } from './status';
+
 export interface TotumAgentConfig {
   id: string;
   agent_id: string;
@@ -67,7 +69,7 @@ export interface TotumAgentConfig {
   rag_mode?: 'static' | 'dynamic';
   plugins?: string[];
   is_active: boolean;
-  status: 'online' | 'offline' | 'error' | 'maintenance';
+  status: AgentRuntimeStatus;
   exported_character?: ElizaCharacter;
   metadata?: {
     tier?: number;
@@ -105,7 +107,7 @@ export interface AgentCard {
   id: string;
   name: string;
   emoji: string;
-  status: 'online' | 'offline' | 'error';
+  status: AgentRuntimeStatus;
   tier: 1 | 2 | 3;
   channels: Array<{ type: string; enabled: boolean }>;
   messages_today?: number;

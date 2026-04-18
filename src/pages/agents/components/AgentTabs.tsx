@@ -6,21 +6,13 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Icon } from '@iconify/react';
+import { TrendingUp } from 'lucide-react';
 import type { Agent } from '@/hooks/useAgents';
 import { classifyAgent } from '@/hooks/useAgentClassification';
 import { AgentChat } from '@/components/agents/AgentChat';
 import { N8NWorkflow } from './N8NWorkflow';
 import { useNavigate } from 'react-router-dom';
 import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  BarChart,
-  Bar,
   PieChart,
   Pie,
   Cell,
@@ -36,22 +28,13 @@ interface AgentTabsProps {
 
 const COLORS = ['#1C1917', '#78716C', '#D6D3D1', '#A8A29E'];
 
-// Generate mock chart data
-const generateChartData = () => {
-  const days = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
-  return days.map(day => ({
-    day,
-    tarefas: Math.floor(Math.random() * 50) + 20,
-    creditos: Math.floor(Math.random() * 100) + 50,
-    sucesso: Math.floor(Math.random() * 20) + 80,
-  }));
-};
+
 
 export function AgentTabs({ agent, agents, parentAgent, childAgents }: AgentTabsProps) {
   const [activeTab, setActiveTab] = useState('overview');
   const navigate = useNavigate();
   const classification = classifyAgent(agent.name);
-  const chartData = generateChartData();
+
 
   const statusColors = {
     online: 'bg-emerald-500',
@@ -152,29 +135,12 @@ export function AgentTabs({ agent, agents, parentAgent, childAgents }: AgentTabs
                   <CardTitle className="text-sm font-medium">Atividade dos Últimos 7 Dias</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="h-64">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={chartData}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#D6D3D1" />
-                        <XAxis dataKey="day" stroke="#78716C" fontSize={12} />
-                        <YAxis stroke="#78716C" fontSize={12} />
-                        <Tooltip 
-                          contentStyle={{ 
-                            backgroundColor: '#1C1917', 
-                            border: 'none', 
-                            borderRadius: '8px',
-                            color: 'white'
-                          }} 
-                        />
-                        <Line 
-                          type="monotone" 
-                          dataKey="tarefas" 
-                          stroke="#1C1917" 
-                          strokeWidth={2}
-                          dot={{ fill: '#1C1917', r: 4 }}
-                        />
-                      </LineChart>
-                    </ResponsiveContainer>
+                  <div className="h-64 flex items-center justify-center">
+                    <div className="text-center text-stone-500">
+                      <TrendingUp className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                      <p className="text-sm">Dados de atividade serão exibidos aqui</p>
+                      <p className="text-xs mt-1">Quando o tracking estiver ativo</p>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -314,23 +280,12 @@ export function AgentTabs({ agent, agents, parentAgent, childAgents }: AgentTabs
                 <CardTitle className="text-sm font-medium">Histórico de Uso (7 dias)</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="h-64">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={chartData}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#D6D3D1" />
-                      <XAxis dataKey="day" stroke="#78716C" fontSize={12} />
-                      <YAxis stroke="#78716C" fontSize={12} />
-                      <Tooltip 
-                        contentStyle={{ 
-                          backgroundColor: '#1C1917', 
-                          border: 'none', 
-                          borderRadius: '8px',
-                          color: 'white'
-                        }} 
-                      />
-                      <Bar dataKey="creditos" fill="#1C1917" radius={[4, 4, 0, 0]} />
-                    </BarChart>
-                  </ResponsiveContainer>
+                <div className="h-64 flex items-center justify-center">
+                  <div className="text-center text-stone-500">
+                    <TrendingUp className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                    <p className="text-sm">Histórico de uso será exibido aqui</p>
+                    <p className="text-xs mt-1">Quando os dados de créditos estiverem disponíveis</p>
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -442,39 +397,12 @@ export function AgentTabs({ agent, agents, parentAgent, childAgents }: AgentTabs
                 <CardTitle className="text-sm font-medium">Desempenho Semanal</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="h-72">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={chartData}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#D6D3D1" />
-                      <XAxis dataKey="day" stroke="#78716C" fontSize={12} />
-                      <YAxis stroke="#78716C" fontSize={12} />
-                      <Tooltip 
-                        contentStyle={{ 
-                          backgroundColor: '#1C1917', 
-                          border: 'none', 
-                          borderRadius: '8px',
-                          color: 'white'
-                        }} 
-                      />
-                      <Line 
-                        type="monotone" 
-                        dataKey="sucesso" 
-                        name="Taxa de Sucesso (%)"
-                        stroke="#1C1917" 
-                        strokeWidth={2}
-                        dot={{ fill: '#1C1917', r: 4 }}
-                      />
-                      <Line 
-                        type="monotone" 
-                        dataKey="tarefas" 
-                        name="Tarefas"
-                        stroke="#78716C" 
-                        strokeWidth={2}
-                        dot={{ fill: '#78716C', r: 4 }}
-                      />
-                      <Legend />
-                    </LineChart>
-                  </ResponsiveContainer>
+                <div className="h-72 flex items-center justify-center">
+                  <div className="text-center text-stone-500">
+                    <TrendingUp className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                    <p className="text-sm">Dados de desempenho serão exibidos aqui</p>
+                    <p className="text-xs mt-1">Quando o histórico semanal estiver disponível</p>
+                  </div>
                 </div>
               </CardContent>
             </Card>

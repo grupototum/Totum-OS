@@ -1,4 +1,5 @@
 import { toast } from 'sonner';
+import { sendMessageToAI, hasAIConfig } from '@/services/aiService';
 
 export interface TelegramBotConfig {
   token: string;
@@ -145,19 +146,34 @@ export class TelegramBot {
   }
 
   private async generateResponse(userMessage: string, userName: string): Promise<string> {
-    // Em produção, isso chamaria a API do Claude/Groq/Ollama
-    // Por enquanto, resposta simulada baseada no system prompt
-    
+    // Tentar chamar API de IA real (Kimi/Groq/OpenAI)
+    if (hasAIConfig()) {
+      try {
+        const response = await sendMessageToAI([
+          { role: 'system', content: this.systemPrompt },
+          { role: 'user', content: `${userName}: ${userMessage}` },
+        ]);
+
+        if (response.error) {
+          console.warn('[TelegramBot] IA error:', response.error);
+          // Fallback para resposta simulada
+        } else if (response.content) {
+          return response.content;
+        }
+      } catch (err) {
+        console.warn('[TelegramBot] Falha ao chamar IA, usando fallback:', err);
+      }
+    }
+
+    // Fallback: resposta simulada quando não há IA configurada ou deu erro
     const responses = [
       `Entendi, ${userName}. Estou processando sua solicitação sobre "${userMessage}"...`,
       `Interessante! Com base no meu conhecimento, posso ajudar com isso.`,
       `${userName}, vou analisar "${userMessage}" e te retorno em breve.`,
       `Claro! Como ${this.agentName}, posso ajudar com essa demanda.`,
     ];
-    
-    // Simular delay de processamento
+
     await new Promise(resolve => setTimeout(resolve, 1000));
-    
     return responses[Math.floor(Math.random() * responses.length)];
   }
 

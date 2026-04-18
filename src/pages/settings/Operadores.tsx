@@ -16,7 +16,7 @@ const roleLabels: Record<OperadorRole, string> = {
   admin: 'Admin', gestor: 'Gestor', analista: 'Analista', operador: 'Operador', viewer: 'Viewer',
 };
 const roleColors: Record<OperadorRole, string> = {
-  admin: 'bg-red-500/15 text-red-400', gestor: 'bg-purple-100 text-purple-700',
+  admin: 'bg-red-500/15 text-red-400', gestor: 'bg-purple-500/10 text-purple-400',
   analista: 'bg-blue-500/15 text-blue-400', operador: 'bg-green-500/15 text-green-400',
   viewer: 'bg-zinc-800 text-zinc-400',
 };

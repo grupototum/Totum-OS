@@ -23,6 +23,8 @@ export interface SkillOutput {
   description?: string;
 }
 
+import type { SkillStatus, ExecutionStatus } from './status';
+
 export interface Skill {
   id: string;
   name: string;
@@ -37,7 +39,7 @@ export interface Skill {
   success_rate?: number;
   prompt_template?: string;
   dependencies?: string[];
-  status: 'active' | 'inactive' | 'deprecated' | 'beta';
+  status: SkillStatus;
   estimated_duration_ms?: number;
   // DB fields (Alexandria)
   created_at?: string;
@@ -55,7 +57,7 @@ export type { AgentSkillConfig };
 export interface SkillExecution {
   skill_id: string;
   name: string;
-  status: 'pending' | 'running' | 'success' | 'error';
+  status: ExecutionStatus;
   duration_ms: number;
   tokens_used?: number;
   cost?: number;
@@ -122,7 +124,7 @@ export interface UpdateAgentConfigRequest {
   name?: string;
   model_override?: string;
   system_prompt?: string;
-  status?: 'active' | 'inactive';
+  status?: Extract<SkillStatus, 'active' | 'inactive'>;
 }
 
 // ============================================
@@ -144,7 +146,7 @@ export interface AgentStateUpdate {
 
 export interface SkillFilter {
   category?: string;
-  status?: 'active' | 'inactive' | 'deprecated';
+  status?: SkillStatus;
   model?: string;
   search?: string;
 }

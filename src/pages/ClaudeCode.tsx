@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useState, useRef, useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
+import { sendMessageToAI, hasAIConfig } from "@/services/aiService";
 
 interface Message {
   id: string;
@@ -81,50 +82,41 @@ export default function ClaudeCode() {
     ]);
 
     try {
-      // API call disabled to avoid Mixed Content (HTTPS page calling HTTP API)
-      // const response = await fetch("http://187.127.4.140:8002/api/claude/ask", {...});
-      
-      // Always use mock response for now
-      const response = null;
-
-      if (response?.ok) {
-        const data = await response.json();
+      if (!hasAIConfig()) {
         setMessages((prev) =>
           prev
             .filter((m) => m.id !== loadingId)
             .concat({
               id: Date.now().toString(),
               role: "assistant",
-              content: data.response,
+              content: "Configure uma API key (Kimi, Groq ou OpenAI) nas variáveis de ambiente para usar o Claude Code com IA real.",
               timestamp: new Date(),
             })
         );
-      } else {
-        // Mock response for demo
-        await new Promise((resolve) => setTimeout(resolve, 1500));
-        
-        const mockResponses: Record<string, string> = {
-          "oi": "Olá! Como posso ajudar você hoje? Posso ajudar com código, arquitetura, debugging e muito mais.",
-          "ola": "Olá! Como posso ajudar você hoje?",
-          "help": "Comandos disponíveis:\n- 'git status': Ver status do repositório\n- 'deploy': Fazer deploy da aplicação\n- 'test': Rodar testes\n- Ou apenas descreva o que quer construir!",
-          "status": "✓ Todos os serviços estão online:\n- Upixel CRM: Running (port 4173)\n- Totum System: Running (port 4174)\n- Apps Totum: Running (port 4175)\n- Stark API: Running (port 3000)\n- Totum Backend: Running (port 5000)",
-        };
-
-        const lowerInput = input.toLowerCase();
-        const responseText = mockResponses[lowerInput] || 
-          `Entendi! Você disse: "${input}"\n\nEstou processando sua solicitação. Em breve estarei totalmente integrado ao Stark API para executar comandos reais no servidor.`;
-
-        setMessages((prev) =>
-          prev
-            .filter((m) => m.id !== loadingId)
-            .concat({
-              id: Date.now().toString(),
-              role: "assistant",
-              content: responseText,
-              timestamp: new Date(),
-            })
-        );
+        return;
       }
+
+      const aiMessages = messages
+        .filter((m) => m.role !== "system")
+        .map((m) => ({ role: m.role as "user" | "assistant", content: m.content }))
+        .concat({ role: "user" as const, content: input });
+
+      const response = await sendMessageToAI(aiMessages);
+
+      if (response.error) {
+        throw new Error(response.error);
+      }
+
+      setMessages((prev) =>
+        prev
+          .filter((m) => m.id !== loadingId)
+          .concat({
+            id: Date.now().toString(),
+            role: "assistant",
+            content: response.content || "Sem resposta da IA.",
+            timestamp: new Date(),
+          })
+      );
     } catch (error) {
       toast({
         title: "Erro",

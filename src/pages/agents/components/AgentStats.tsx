@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Icon } from '@iconify/react';
+import { TrendingUp } from 'lucide-react';
 import type { Agent } from '@/hooks/useAgents';
 import {
   BarChart,
@@ -16,8 +17,6 @@ import {
   Pie,
   Cell,
   Legend,
-  LineChart,
-  Line,
 } from 'recharts';
 
 interface AgentStatsProps {
@@ -26,16 +25,7 @@ interface AgentStatsProps {
 
 const COLORS = ['#1C1917', '#78716C', '#D6D3D1', '#A8A29E', '#57534E'];
 
-// Generate mock historical data
-const generateTrendData = () => {
-  const days = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
-  return days.map(day => ({
-    day,
-    tarefas: Math.floor(Math.random() * 50) + 20,
-    agentes: Math.floor(Math.random() * 5) + 3,
-    sucesso: Math.floor(Math.random() * 15) + 80,
-  }));
-};
+
 
 export function AgentStats({ agents }: AgentStatsProps) {
   // Calculate metrics
@@ -77,8 +67,6 @@ export function AgentStats({ agents }: AgentStatsProps) {
   const mostActive = [...agents]
     .sort((a, b) => (b.daily_tasks || 0) - (a.daily_tasks || 0))
     .slice(0, 5);
-
-  const trendData = generateTrendData();
 
   const stats = [
     { 
@@ -161,39 +149,12 @@ export function AgentStats({ agents }: AgentStatsProps) {
             <CardTitle className="text-sm font-medium text-stone-900">Tendência Semanal</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={trendData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#D6D3D1" />
-                  <XAxis dataKey="day" stroke="#78716C" fontSize={12} />
-                  <YAxis stroke="#78716C" fontSize={12} />
-                  <Tooltip 
-                    contentStyle={{ 
-                      backgroundColor: '#1C1917', 
-                      border: 'none', 
-                      borderRadius: '8px',
-                      color: 'white'
-                    }} 
-                  />
-                  <Line 
-                    type="monotone" 
-                    dataKey="tarefas" 
-                    name="Tarefas"
-                    stroke="#1C1917" 
-                    strokeWidth={2}
-                    dot={{ fill: '#1C1917', r: 4 }}
-                  />
-                  <Line 
-                    type="monotone" 
-                    dataKey="agentes" 
-                    name="Agentes Ativos"
-                    stroke="#78716C" 
-                    strokeWidth={2}
-                    dot={{ fill: '#78716C', r: 4 }}
-                  />
-                  <Legend />
-                </LineChart>
-              </ResponsiveContainer>
+            <div className="h-64 flex items-center justify-center">
+              <div className="text-center text-stone-500">
+                <TrendingUp className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                <p className="text-sm">Dados históricos serão exibidos aqui</p>
+                <p className="text-xs mt-1">Quando o tracking de execuções estiver ativo</p>
+              </div>
             </div>
           </CardContent>
         </Card>

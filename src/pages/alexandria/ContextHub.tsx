@@ -8,24 +8,20 @@ interface ContextHubProps {
   agents?: Agent[];
 }
 
-const statusColors = {
-  online: { bg: 'bg-green-500/15', text: 'text-green-400', label: 'Online' },
+const statusColors: Record<string, { bg: string; text: string; label: string }> = {
+  online: { bg: 'bg-emerald-500/15', text: 'text-emerald-400', label: 'Online' },
   offline: { bg: 'bg-red-500/15', text: 'text-red-400', label: 'Offline' },
-  testing: { bg: 'bg-yellow-500/15', text: 'text-yellow-400', label: 'Testing' },
   idle: { bg: 'bg-blue-500/15', text: 'text-blue-400', label: 'Idle' },
+  error: { bg: 'bg-red-500/15', text: 'text-red-400', label: 'Erro' },
+  maintenance: { bg: 'bg-amber-500/15', text: 'text-amber-400', label: 'Manutenção' },
+  active: { bg: 'bg-emerald-500/15', text: 'text-emerald-400', label: 'Ativo' },
+  inactive: { bg: 'bg-zinc-500/15', text: 'text-zinc-400', label: 'Inativo' },
+  testing: { bg: 'bg-yellow-500/15', text: 'text-yellow-400', label: 'Testing' },
 };
 
-type StatusType = keyof typeof statusColors;
-
 export default function ContextHub({ agents = [] }: ContextHubProps) {
-  // Simular status por posição (em produção viria do banco em tempo real)
-  const agentsWithStatus = agents.map((agent, idx) => ({
-    ...agent,
-    statusType: (['online', 'offline', 'idle'] as StatusType[])[idx % 3],
-  }));
-
-  const onlineCount = agentsWithStatus.filter((a) => a.statusType === 'online').length;
-  const totalSkills = agentsWithStatus.reduce((sum, a) => sum + (a.skills?.length || 0), 0);
+  const onlineCount = agents.filter((a) => a.status === 'online' || a.status === 'active').length;
+  const totalSkills = agents.reduce((sum, a) => sum + (a.skills?.length || 0), 0);
 
   return (
     <div className="space-y-6">
@@ -63,15 +59,15 @@ export default function ContextHub({ agents = [] }: ContextHubProps) {
       </div>
 
       {/* Grid de Agentes */}
-      {agentsWithStatus.length === 0 ? (
+      {agents.length === 0 ? (
         <Card className="p-8 text-center">
           <p className="text-muted-foreground">Nenhum agente encontrado</p>
         </Card>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {agentsWithStatus.map((agent) => {
+          {agents.map((agent) => {
             const statusColor =
-              statusColors[agent.statusType as StatusType] || statusColors.offline;
+              statusColors[agent.status] || statusColors.offline;
 
             return (
               <Card

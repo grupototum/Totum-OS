@@ -183,8 +183,8 @@ export default function StarkIndustries() {
               lastSyncSuccess === null
                 ? 'bg-muted text-muted-foreground'
                 : lastSyncSuccess
-                ? 'bg-green-100 text-green-700'
-                : 'bg-red-100 text-red-700'
+                ? 'bg-emerald-500/10 text-emerald-400'
+                : 'bg-red-500/10 text-red-400'
             }`}
           >
             {lastSyncSuccess === null
