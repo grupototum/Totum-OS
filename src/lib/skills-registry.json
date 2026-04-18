@@ -7,15 +7,41 @@
     "version": "1.0.0",
     "category": "content",
     "inputs": {
-      "topic": { "type": "string", "required": true, "description": "Tema principal do conteúdo" },
-      "platforms": { "type": "array", "items": "string", "required": true, "description": "Plataformas alvo (TikTok, Instagram, etc)" },
-      "tone": { "type": "string", "default": "professional", "description": "Tom de voz (professional, casual, funny)" },
-      "count": { "type": "number", "default": 5, "description": "Quantidade de posts a gerar" }
+      "topic": {
+        "type": "string",
+        "required": true,
+        "description": "Tema principal do conteúdo"
+      },
+      "platforms": {
+        "type": "array",
+        "items": "string",
+        "required": true,
+        "description": "Plataformas alvo (TikTok, Instagram, etc)"
+      },
+      "tone": {
+        "type": "string",
+        "default": "professional",
+        "description": "Tom de voz (professional, casual, funny)"
+      },
+      "count": {
+        "type": "number",
+        "default": 5,
+        "description": "Quantidade de posts a gerar"
+      }
     },
     "outputs": {
-      "calendar": { "type": "object", "description": "Calendário de publicação" },
-      "posts_outline": { "type": "array", "description": "Array com outline dos posts" },
-      "hashtags": { "type": "array", "description": "Hashtags sugeridas" }
+      "calendar": {
+        "type": "object",
+        "description": "Calendário de publicação"
+      },
+      "posts_outline": {
+        "type": "array",
+        "description": "Array com outline dos posts"
+      },
+      "hashtags": {
+        "type": "array",
+        "description": "Hashtags sugeridas"
+      }
     },
     "model_preference": "claude",
     "cost_per_call": 0.15,
@@ -25,7 +51,6 @@
     "status": "active",
     "estimated_duration_ms": 3000
   },
-
   "trend_analysis": {
     "id": "trend_analysis",
     "name": "Trend Analysis",
@@ -34,14 +59,34 @@
     "version": "1.0.0",
     "category": "research",
     "inputs": {
-      "platform": { "type": "string", "required": true, "description": "Plataforma para analisar (TikTok, Instagram, YouTube)" },
-      "timeframe": { "type": "string", "default": "7d", "description": "Período de análise (1d, 7d, 30d)" },
-      "niche": { "type": "string", "description": "Nicho específico para focar" }
+      "platform": {
+        "type": "string",
+        "required": true,
+        "description": "Plataforma para analisar (TikTok, Instagram, YouTube)"
+      },
+      "timeframe": {
+        "type": "string",
+        "default": "7d",
+        "description": "Período de análise (1d, 7d, 30d)"
+      },
+      "niche": {
+        "type": "string",
+        "description": "Nicho específico para focar"
+      }
     },
     "outputs": {
-      "trends": { "type": "array", "description": "Lista de trends identificadas" },
-      "score": { "type": "number", "description": "Score de relevância 0-100" },
-      "recommendations": { "type": "array", "description": "Recomendações de ação" }
+      "trends": {
+        "type": "array",
+        "description": "Lista de trends identificadas"
+      },
+      "score": {
+        "type": "number",
+        "description": "Score de relevância 0-100"
+      },
+      "recommendations": {
+        "type": "array",
+        "description": "Recomendações de ação"
+      }
     },
     "model_preference": "groq",
     "cost_per_call": 0.02,
@@ -51,7 +96,6 @@
     "status": "active",
     "estimated_duration_ms": 1500
   },
-
   "stable_diffusion_prompt": {
     "id": "stable_diffusion_prompt",
     "name": "Stable Diffusion Prompt",
@@ -60,15 +104,39 @@
     "version": "1.0.0",
     "category": "image",
     "inputs": {
-      "theme": { "type": "string", "required": true, "description": "Tema/conceito da imagem" },
-      "style": { "type": "string", "required": true, "description": "Estilo visual (photorealistic, anime, oil painting)" },
-      "aspect_ratio": { "type": "string", "default": "1:1", "description": "Proporção (1:1, 16:9, 9:16)" },
-      "negative": { "type": "string", "description": "Elementos a evitar" }
+      "theme": {
+        "type": "string",
+        "required": true,
+        "description": "Tema/conceito da imagem"
+      },
+      "style": {
+        "type": "string",
+        "required": true,
+        "description": "Estilo visual (photorealistic, anime, oil painting)"
+      },
+      "aspect_ratio": {
+        "type": "string",
+        "default": "1:1",
+        "description": "Proporção (1:1, 16:9, 9:16)"
+      },
+      "negative": {
+        "type": "string",
+        "description": "Elementos a evitar"
+      }
     },
     "outputs": {
-      "prompt": { "type": "string", "description": "Prompt otimizado positivo" },
-      "negative_prompt": { "type": "string", "description": "Prompt negativo" },
-      "parameters": { "type": "object", "description": "Parâmetros sugeridos (steps, cfg, etc)" }
+      "prompt": {
+        "type": "string",
+        "description": "Prompt otimizado positivo"
+      },
+      "negative_prompt": {
+        "type": "string",
+        "description": "Prompt negativo"
+      },
+      "parameters": {
+        "type": "object",
+        "description": "Parâmetros sugeridos (steps, cfg, etc)"
+      }
     },
     "model_preference": "gemini",
     "cost_per_call": 0.05,
@@ -78,7 +146,6 @@
     "status": "active",
     "estimated_duration_ms": 2000
   },
-
   "content_validation": {
     "id": "content_validation",
     "name": "Content Validation",
@@ -87,25 +154,51 @@
     "version": "1.0.0",
     "category": "validation",
     "inputs": {
-      "content": { "type": "string", "required": true, "description": "Conteúdo a validar" },
-      "criteria": { "type": "array", "default": ["engagement", "clarity", "tone"], "description": "Critérios de validação" },
-      "platform": { "type": "string", "description": "Plataforma alvo para contexto" }
+      "content": {
+        "type": "string",
+        "required": true,
+        "description": "Conteúdo a validar"
+      },
+      "criteria": {
+        "type": "array",
+        "default": [
+          "engagement",
+          "clarity",
+          "tone"
+        ],
+        "description": "Critérios de validação"
+      },
+      "platform": {
+        "type": "string",
+        "description": "Plataforma alvo para contexto"
+      }
     },
     "outputs": {
-      "score": { "type": "number", "description": "Score geral 0-100" },
-      "feedback": { "type": "array", "description": "Lista de feedbacks específicos" },
-      "suggestions": { "type": "array", "description": "Sugestões de melhoria" },
-      "approved": { "type": "boolean", "description": "Se passou no threshold" }
+      "score": {
+        "type": "number",
+        "description": "Score geral 0-100"
+      },
+      "feedback": {
+        "type": "array",
+        "description": "Lista de feedbacks específicos"
+      },
+      "suggestions": {
+        "type": "array",
+        "description": "Sugestões de melhoria"
+      },
+      "approved": {
+        "type": "boolean",
+        "description": "Se passou no threshold"
+      }
     },
     "model_preference": "claude",
-    "cost_per_call": 0.10,
+    "cost_per_call": 0.1,
     "success_rate": 0.96,
     "prompt_template": "prompts/content_validation.md",
     "dependencies": [],
     "status": "active",
     "estimated_duration_ms": 2000
   },
-
   "hashtag_generator": {
     "id": "hashtag_generator",
     "name": "Hashtag Generator",
@@ -114,14 +207,35 @@
     "version": "1.0.0",
     "category": "content",
     "inputs": {
-      "content": { "type": "string", "required": true, "description": "Conteúdo/tema para hashtags" },
-      "platform": { "type": "string", "required": true, "description": "Plataforma (Instagram, TikTok, LinkedIn)" },
-      "count": { "type": "number", "default": 10, "description": "Quantidade de hashtags" }
+      "content": {
+        "type": "string",
+        "required": true,
+        "description": "Conteúdo/tema para hashtags"
+      },
+      "platform": {
+        "type": "string",
+        "required": true,
+        "description": "Plataforma (Instagram, TikTok, LinkedIn)"
+      },
+      "count": {
+        "type": "number",
+        "default": 10,
+        "description": "Quantidade de hashtags"
+      }
     },
     "outputs": {
-      "hashtags": { "type": "array", "description": "Array de hashtags" },
-      "categories": { "type": "object", "description": "Hashtags categorizadas por tamanho" },
-      "reach_estimate": { "type": "number", "description": "Estimativa de alcance" }
+      "hashtags": {
+        "type": "array",
+        "description": "Array de hashtags"
+      },
+      "categories": {
+        "type": "object",
+        "description": "Hashtags categorizadas por tamanho"
+      },
+      "reach_estimate": {
+        "type": "number",
+        "description": "Estimativa de alcance"
+      }
     },
     "model_preference": "groq",
     "cost_per_call": 0.01,
@@ -131,7 +245,6 @@
     "status": "active",
     "estimated_duration_ms": 800
   },
-
   "copywriting": {
     "id": "copywriting",
     "name": "Copywriting",
@@ -140,16 +253,44 @@
     "version": "1.0.0",
     "category": "content",
     "inputs": {
-      "product": { "type": "string", "required": true, "description": "Produto/serviço" },
-      "audience": { "type": "string", "required": true, "description": "Público-alvo" },
-      "goal": { "type": "string", "required": true, "description": "Objetivo (vendas, leads, awareness)" },
-      "format": { "type": "string", "default": "social_ad", "description": "Formato do copy" }
+      "product": {
+        "type": "string",
+        "required": true,
+        "description": "Produto/serviço"
+      },
+      "audience": {
+        "type": "string",
+        "required": true,
+        "description": "Público-alvo"
+      },
+      "goal": {
+        "type": "string",
+        "required": true,
+        "description": "Objetivo (vendas, leads, awareness)"
+      },
+      "format": {
+        "type": "string",
+        "default": "social_ad",
+        "description": "Formato do copy"
+      }
     },
     "outputs": {
-      "headlines": { "type": "array", "description": "Opções de headline" },
-      "body": { "type": "string", "description": "Corpo do copy" },
-      "cta": { "type": "string", "description": "Call-to-action" },
-      "variations": { "type": "array", "description": "Variações para teste A/B" }
+      "headlines": {
+        "type": "array",
+        "description": "Opções de headline"
+      },
+      "body": {
+        "type": "string",
+        "description": "Corpo do copy"
+      },
+      "cta": {
+        "type": "string",
+        "description": "Call-to-action"
+      },
+      "variations": {
+        "type": "array",
+        "description": "Variações para teste A/B"
+      }
     },
     "model_preference": "claude",
     "cost_per_call": 0.12,
@@ -158,5 +299,2558 @@
     "dependencies": [],
     "status": "active",
     "estimated_duration_ms": 2500
+  },
+  "feishu_bitable": {
+    "id": "feishu_bitable",
+    "name": "Feishu Bitable",
+    "emoji": "🔌",
+    "description": "Gestão de dados em tabelas",
+    "version": "1.0.0",
+    "category": "integration",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "claude",
+    "cost_per_call": 0.05,
+    "success_rate": 0.93,
+    "prompt_template": "prompts/feishu_bitable.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "feishu_calendar": {
+    "id": "feishu_calendar",
+    "name": "Feishu Calendar",
+    "emoji": "🔌",
+    "description": "Calendário e agendamento",
+    "version": "1.0.0",
+    "category": "integration",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "claude",
+    "cost_per_call": 0.05,
+    "success_rate": 0.94,
+    "prompt_template": "prompts/feishu_calendar.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "feishu_task": {
+    "id": "feishu_task",
+    "name": "Feishu Task",
+    "emoji": "🔌",
+    "description": "Tarefas e to-dos",
+    "version": "1.0.0",
+    "category": "integration",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "claude",
+    "cost_per_call": 0.05,
+    "success_rate": 0.95,
+    "prompt_template": "prompts/feishu_task.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "feishu_fetch_doc": {
+    "id": "feishu_fetch_doc",
+    "name": "Feishu Fetch Doc",
+    "emoji": "🔌",
+    "description": "Leitura de documentos",
+    "version": "1.0.0",
+    "category": "integration",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "claude",
+    "cost_per_call": 0.05,
+    "success_rate": 0.96,
+    "prompt_template": "prompts/feishu_fetch_doc.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "feishu_create_doc": {
+    "id": "feishu_create_doc",
+    "name": "Feishu Create Doc",
+    "emoji": "🔌",
+    "description": "Criação de documentos",
+    "version": "1.0.0",
+    "category": "integration",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "claude",
+    "cost_per_call": 0.05,
+    "success_rate": 0.97,
+    "prompt_template": "prompts/feishu_create_doc.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "feishu_im_read": {
+    "id": "feishu_im_read",
+    "name": "Feishu IM Read",
+    "emoji": "🔌",
+    "description": "Leitura de mensagens",
+    "version": "1.0.0",
+    "category": "integration",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "claude",
+    "cost_per_call": 0.05,
+    "success_rate": 0.98,
+    "prompt_template": "prompts/feishu_im_read.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "wecom_doc_manager": {
+    "id": "wecom_doc_manager",
+    "name": "WeCom Doc Manager",
+    "emoji": "🔌",
+    "description": "Docs e smart sheets",
+    "version": "1.0.0",
+    "category": "integration",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "claude",
+    "cost_per_call": 0.05,
+    "success_rate": 0.99,
+    "prompt_template": "prompts/wecom_doc_manager.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "wecom_schedule": {
+    "id": "wecom_schedule",
+    "name": "WeCom Schedule",
+    "emoji": "🔌",
+    "description": "Agendas WeCom",
+    "version": "1.0.0",
+    "category": "integration",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "claude",
+    "cost_per_call": 0.05,
+    "success_rate": 0.93,
+    "prompt_template": "prompts/wecom_schedule.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "wecom_edit_todo": {
+    "id": "wecom_edit_todo",
+    "name": "WeCom Edit Todo",
+    "emoji": "🔌",
+    "description": "Tarefas WeCom",
+    "version": "1.0.0",
+    "category": "integration",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "claude",
+    "cost_per_call": 0.05,
+    "success_rate": 0.94,
+    "prompt_template": "prompts/wecom_edit_todo.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "wecom_meeting_create": {
+    "id": "wecom_meeting_create",
+    "name": "WeCom Meeting Create",
+    "emoji": "🔌",
+    "description": "Criar reuniões",
+    "version": "1.0.0",
+    "category": "integration",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "claude",
+    "cost_per_call": 0.05,
+    "success_rate": 0.95,
+    "prompt_template": "prompts/wecom_meeting_create.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "wecom_meeting_query": {
+    "id": "wecom_meeting_query",
+    "name": "WeCom Meeting Query",
+    "emoji": "🔌",
+    "description": "Consultar reuniões",
+    "version": "1.0.0",
+    "category": "integration",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "claude",
+    "cost_per_call": 0.05,
+    "success_rate": 0.96,
+    "prompt_template": "prompts/wecom_meeting_query.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "wecom_meeting_manage": {
+    "id": "wecom_meeting_manage",
+    "name": "WeCom Meeting Manage",
+    "emoji": "🔌",
+    "description": "Gerenciar reuniões",
+    "version": "1.0.0",
+    "category": "integration",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "claude",
+    "cost_per_call": 0.05,
+    "success_rate": 0.97,
+    "prompt_template": "prompts/wecom_meeting_manage.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "wecom_smartsheet_data": {
+    "id": "wecom_smartsheet_data",
+    "name": "WeCom Smartsheet Data",
+    "emoji": "🔌",
+    "description": "Dados smart tables",
+    "version": "1.0.0",
+    "category": "integration",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "claude",
+    "cost_per_call": 0.05,
+    "success_rate": 0.98,
+    "prompt_template": "prompts/wecom_smartsheet_data.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "wecom_smartsheet_schema": {
+    "id": "wecom_smartsheet_schema",
+    "name": "WeCom Smartsheet Schema",
+    "emoji": "🔌",
+    "description": "Estrutura tabelas",
+    "version": "1.0.0",
+    "category": "integration",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "claude",
+    "cost_per_call": 0.05,
+    "success_rate": 0.99,
+    "prompt_template": "prompts/wecom_smartsheet_schema.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "wecom_contact_lookup": {
+    "id": "wecom_contact_lookup",
+    "name": "WeCom Contact Lookup",
+    "emoji": "🔌",
+    "description": "Busca de contatos",
+    "version": "1.0.0",
+    "category": "integration",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "claude",
+    "cost_per_call": 0.05,
+    "success_rate": 0.93,
+    "prompt_template": "prompts/wecom_contact_lookup.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "wecom_msg": {
+    "id": "wecom_msg",
+    "name": "WeCom Message",
+    "emoji": "🔌",
+    "description": "Mensagens WeCom",
+    "version": "1.0.0",
+    "category": "integration",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "claude",
+    "cost_per_call": 0.05,
+    "success_rate": 0.94,
+    "prompt_template": "prompts/wecom_msg.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "channels_setup": {
+    "id": "channels_setup",
+    "name": "Channels Setup",
+    "emoji": "🔌",
+    "description": "Configuração canais",
+    "version": "1.0.0",
+    "category": "integration",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "claude",
+    "cost_per_call": 0.05,
+    "success_rate": 0.95,
+    "prompt_template": "prompts/channels_setup.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "n8n_workflow_automation": {
+    "id": "n8n_workflow_automation",
+    "name": "n8n Workflow Automation",
+    "emoji": "⚙️",
+    "description": "Design workflows n8n",
+    "version": "1.0.0",
+    "category": "automation",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "claude",
+    "cost_per_call": 0.08,
+    "success_rate": 0.96,
+    "prompt_template": "prompts/n8n_workflow_automation.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "automation_workflows": {
+    "id": "automation_workflows",
+    "name": "Automation Workflows",
+    "emoji": "⚙️",
+    "description": "Design de automações",
+    "version": "1.0.0",
+    "category": "automation",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "claude",
+    "cost_per_call": 0.08,
+    "success_rate": 0.97,
+    "prompt_template": "prompts/automation_workflows.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "api_gateway": {
+    "id": "api_gateway",
+    "name": "API Gateway",
+    "emoji": "⚙️",
+    "description": "Gateway APIs gerenciado",
+    "version": "1.0.0",
+    "category": "automation",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "claude",
+    "cost_per_call": 0.08,
+    "success_rate": 0.98,
+    "prompt_template": "prompts/api_gateway.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "agent_browser": {
+    "id": "agent_browser",
+    "name": "Agent Browser",
+    "emoji": "⚙️",
+    "description": "Browser headless",
+    "version": "1.0.0",
+    "category": "automation",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "claude",
+    "cost_per_call": 0.08,
+    "success_rate": 0.99,
+    "prompt_template": "prompts/agent_browser.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "playwright_mcp": {
+    "id": "playwright_mcp",
+    "name": "Playwright MCP",
+    "emoji": "⚙️",
+    "description": "Browser Playwright",
+    "version": "1.0.0",
+    "category": "automation",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "claude",
+    "cost_per_call": 0.08,
+    "success_rate": 0.93,
+    "prompt_template": "prompts/playwright_mcp.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "playwright_scraper_skill": {
+    "id": "playwright_scraper_skill",
+    "name": "Playwright Scraper",
+    "emoji": "⚙️",
+    "description": "Web scraping",
+    "version": "1.0.0",
+    "category": "automation",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "claude",
+    "cost_per_call": 0.08,
+    "success_rate": 0.94,
+    "prompt_template": "prompts/playwright_scraper_skill.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "data_analyst": {
+    "id": "data_analyst",
+    "name": "Data Analyst",
+    "emoji": "📊",
+    "description": "Visualização, SQL, reports",
+    "version": "1.0.0",
+    "category": "analytics",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "groq",
+    "cost_per_call": 0.04,
+    "success_rate": 0.95,
+    "prompt_template": "prompts/data_analyst.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "markdown_converter": {
+    "id": "markdown_converter",
+    "name": "Markdown Converter",
+    "emoji": "📊",
+    "description": "Converter para Markdown",
+    "version": "1.0.0",
+    "category": "analytics",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "groq",
+    "cost_per_call": 0.04,
+    "success_rate": 0.96,
+    "prompt_template": "prompts/markdown_converter.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "notion": {
+    "id": "notion",
+    "name": "Notion",
+    "emoji": "🔌",
+    "description": "Integração Notion",
+    "version": "1.0.0",
+    "category": "integration",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "claude",
+    "cost_per_call": 0.05,
+    "success_rate": 0.97,
+    "prompt_template": "prompts/notion.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "google_analytics": {
+    "id": "google_analytics",
+    "name": "Google Analytics",
+    "emoji": "📊",
+    "description": "Métricas GA4",
+    "version": "1.0.0",
+    "category": "analytics",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "groq",
+    "cost_per_call": 0.04,
+    "success_rate": 0.98,
+    "prompt_template": "prompts/google_analytics.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "ahrefs": {
+    "id": "ahrefs",
+    "name": "Ahrefs",
+    "emoji": "📊",
+    "description": "SEO e backlinks",
+    "version": "1.0.0",
+    "category": "analytics",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "groq",
+    "cost_per_call": 0.04,
+    "success_rate": 0.99,
+    "prompt_template": "prompts/ahrefs.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "google_sheets": {
+    "id": "google_sheets",
+    "name": "Google Sheets",
+    "emoji": "📊",
+    "description": "Planilhas Google",
+    "version": "1.0.0",
+    "category": "analytics",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "groq",
+    "cost_per_call": 0.04,
+    "success_rate": 0.93,
+    "prompt_template": "prompts/google_sheets.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "airtable": {
+    "id": "airtable",
+    "name": "Airtable",
+    "emoji": "📊",
+    "description": "Bases Airtable",
+    "version": "1.0.0",
+    "category": "analytics",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "groq",
+    "cost_per_call": 0.04,
+    "success_rate": 0.94,
+    "prompt_template": "prompts/airtable.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "shopify": {
+    "id": "shopify",
+    "name": "Shopify",
+    "emoji": "📊",
+    "description": "E-commerce Shopify",
+    "version": "1.0.0",
+    "category": "analytics",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "groq",
+    "cost_per_call": 0.04,
+    "success_rate": 0.95,
+    "prompt_template": "prompts/shopify.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "hubspot": {
+    "id": "hubspot",
+    "name": "HubSpot",
+    "emoji": "📊",
+    "description": "CRM HubSpot",
+    "version": "1.0.0",
+    "category": "analytics",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "groq",
+    "cost_per_call": 0.04,
+    "success_rate": 0.96,
+    "prompt_template": "prompts/hubspot.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "salesforce": {
+    "id": "salesforce",
+    "name": "Salesforce",
+    "emoji": "📊",
+    "description": "CRM Salesforce",
+    "version": "1.0.0",
+    "category": "analytics",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "groq",
+    "cost_per_call": 0.04,
+    "success_rate": 0.97,
+    "prompt_template": "prompts/salesforce.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "mailchimp": {
+    "id": "mailchimp",
+    "name": "Mailchimp",
+    "emoji": "📊",
+    "description": "Email marketing",
+    "version": "1.0.0",
+    "category": "analytics",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "groq",
+    "cost_per_call": 0.04,
+    "success_rate": 0.98,
+    "prompt_template": "prompts/mailchimp.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "sendgrid": {
+    "id": "sendgrid",
+    "name": "SendGrid",
+    "emoji": "📊",
+    "description": "Email transacional",
+    "version": "1.0.0",
+    "category": "analytics",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "groq",
+    "cost_per_call": 0.04,
+    "success_rate": 0.99,
+    "prompt_template": "prompts/sendgrid.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "twilio": {
+    "id": "twilio",
+    "name": "Twilio",
+    "emoji": "📊",
+    "description": "SMS/WhatsApp API",
+    "version": "1.0.0",
+    "category": "analytics",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "groq",
+    "cost_per_call": 0.04,
+    "success_rate": 0.93,
+    "prompt_template": "prompts/twilio.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "meta_ads": {
+    "id": "meta_ads",
+    "name": "Meta Ads",
+    "emoji": "📊",
+    "description": "Facebook/Instagram Ads",
+    "version": "1.0.0",
+    "category": "analytics",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "groq",
+    "cost_per_call": 0.04,
+    "success_rate": 0.94,
+    "prompt_template": "prompts/meta_ads.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "google_ads": {
+    "id": "google_ads",
+    "name": "Google Ads",
+    "emoji": "📊",
+    "description": "Google Ads",
+    "version": "1.0.0",
+    "category": "analytics",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "groq",
+    "cost_per_call": 0.04,
+    "success_rate": 0.95,
+    "prompt_template": "prompts/google_ads.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "tiktok_ads": {
+    "id": "tiktok_ads",
+    "name": "TikTok Ads",
+    "emoji": "📊",
+    "description": "TikTok Ads",
+    "version": "1.0.0",
+    "category": "analytics",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "groq",
+    "cost_per_call": 0.04,
+    "success_rate": 0.96,
+    "prompt_template": "prompts/tiktok_ads.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "linkedin_ads": {
+    "id": "linkedin_ads",
+    "name": "LinkedIn Ads",
+    "emoji": "📊",
+    "description": "LinkedIn Ads",
+    "version": "1.0.0",
+    "category": "analytics",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "groq",
+    "cost_per_call": 0.04,
+    "success_rate": 0.97,
+    "prompt_template": "prompts/linkedin_ads.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "slack": {
+    "id": "slack",
+    "name": "Slack",
+    "emoji": "🔌",
+    "description": "Integração Slack",
+    "version": "1.0.0",
+    "category": "integration",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "claude",
+    "cost_per_call": 0.05,
+    "success_rate": 0.98,
+    "prompt_template": "prompts/slack.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "discord": {
+    "id": "discord",
+    "name": "Discord",
+    "emoji": "🔌",
+    "description": "Gestão Discord",
+    "version": "1.0.0",
+    "category": "integration",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "claude",
+    "cost_per_call": 0.05,
+    "success_rate": 0.99,
+    "prompt_template": "prompts/discord.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "telegram": {
+    "id": "telegram",
+    "name": "Telegram",
+    "emoji": "🔌",
+    "description": "Bot Telegram",
+    "version": "1.0.0",
+    "category": "integration",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "claude",
+    "cost_per_call": 0.05,
+    "success_rate": 0.93,
+    "prompt_template": "prompts/telegram.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "whatsapp": {
+    "id": "whatsapp",
+    "name": "WhatsApp",
+    "emoji": "🔌",
+    "description": "WhatsApp Business",
+    "version": "1.0.0",
+    "category": "integration",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "claude",
+    "cost_per_call": 0.05,
+    "success_rate": 0.94,
+    "prompt_template": "prompts/whatsapp.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "gmail": {
+    "id": "gmail",
+    "name": "Gmail",
+    "emoji": "🔌",
+    "description": "Gmail integrado",
+    "version": "1.0.0",
+    "category": "integration",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "claude",
+    "cost_per_call": 0.05,
+    "success_rate": 0.95,
+    "prompt_template": "prompts/gmail.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "google_calendar": {
+    "id": "google_calendar",
+    "name": "Google Calendar",
+    "emoji": "🔌",
+    "description": "Calendário Google",
+    "version": "1.0.0",
+    "category": "integration",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "claude",
+    "cost_per_call": 0.05,
+    "success_rate": 0.96,
+    "prompt_template": "prompts/google_calendar.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "google_drive": {
+    "id": "google_drive",
+    "name": "Google Drive",
+    "emoji": "🔌",
+    "description": "Drive Google",
+    "version": "1.0.0",
+    "category": "integration",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "claude",
+    "cost_per_call": 0.05,
+    "success_rate": 0.97,
+    "prompt_template": "prompts/google_drive.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "dropbox": {
+    "id": "dropbox",
+    "name": "Dropbox",
+    "emoji": "🔌",
+    "description": "Storage",
+    "version": "1.0.0",
+    "category": "integration",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "claude",
+    "cost_per_call": 0.05,
+    "success_rate": 0.98,
+    "prompt_template": "prompts/dropbox.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "zoom": {
+    "id": "zoom",
+    "name": "Zoom",
+    "emoji": "🔌",
+    "description": "Zoom meetings",
+    "version": "1.0.0",
+    "category": "integration",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "claude",
+    "cost_per_call": 0.05,
+    "success_rate": 0.99,
+    "prompt_template": "prompts/zoom.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "calendly": {
+    "id": "calendly",
+    "name": "Calendly",
+    "emoji": "🔌",
+    "description": "Agendamento Calendly",
+    "version": "1.0.0",
+    "category": "integration",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "claude",
+    "cost_per_call": 0.05,
+    "success_rate": 0.93,
+    "prompt_template": "prompts/calendly.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "trello": {
+    "id": "trello",
+    "name": "Trello",
+    "emoji": "🔌",
+    "description": "Gestão Trello",
+    "version": "1.0.0",
+    "category": "integration",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "claude",
+    "cost_per_call": 0.05,
+    "success_rate": 0.94,
+    "prompt_template": "prompts/trello.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "asana": {
+    "id": "asana",
+    "name": "Asana",
+    "emoji": "🔌",
+    "description": "Gestão Asana",
+    "version": "1.0.0",
+    "category": "integration",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "claude",
+    "cost_per_call": 0.05,
+    "success_rate": 0.95,
+    "prompt_template": "prompts/asana.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "monday": {
+    "id": "monday",
+    "name": "Monday",
+    "emoji": "🔌",
+    "description": "Monday.com",
+    "version": "1.0.0",
+    "category": "integration",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "claude",
+    "cost_per_call": 0.05,
+    "success_rate": 0.96,
+    "prompt_template": "prompts/monday.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "clickup": {
+    "id": "clickup",
+    "name": "ClickUp",
+    "emoji": "🔌",
+    "description": "All-in-one workspace",
+    "version": "1.0.0",
+    "category": "integration",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "claude",
+    "cost_per_call": 0.05,
+    "success_rate": 0.97,
+    "prompt_template": "prompts/clickup.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "jira": {
+    "id": "jira",
+    "name": "Jira",
+    "emoji": "🔌",
+    "description": "Gestão Jira",
+    "version": "1.0.0",
+    "category": "integration",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "claude",
+    "cost_per_call": 0.05,
+    "success_rate": 0.98,
+    "prompt_template": "prompts/jira.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "confluence": {
+    "id": "confluence",
+    "name": "Confluence",
+    "emoji": "🔌",
+    "description": "Wiki Confluence",
+    "version": "1.0.0",
+    "category": "integration",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "claude",
+    "cost_per_call": 0.05,
+    "success_rate": 0.99,
+    "prompt_template": "prompts/confluence.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "md_to_pdf": {
+    "id": "md_to_pdf",
+    "name": "MD to PDF",
+    "emoji": "📝",
+    "description": "Markdown → PDF",
+    "version": "1.0.0",
+    "category": "content",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "claude",
+    "cost_per_call": 0.06,
+    "success_rate": 0.93,
+    "prompt_template": "prompts/md_to_pdf.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "daily_report": {
+    "id": "daily_report",
+    "name": "Daily Report",
+    "emoji": "📝",
+    "description": "Relatórios diários",
+    "version": "1.0.0",
+    "category": "content",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "claude",
+    "cost_per_call": 0.06,
+    "success_rate": 0.94,
+    "prompt_template": "prompts/daily_report.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "summarize": {
+    "id": "summarize",
+    "name": "Summarize",
+    "emoji": "📝",
+    "description": "Resumir conteúdo",
+    "version": "1.0.0",
+    "category": "content",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "claude",
+    "cost_per_call": 0.06,
+    "success_rate": 0.95,
+    "prompt_template": "prompts/summarize.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "pdf_generator": {
+    "id": "pdf_generator",
+    "name": "PDF Generator",
+    "emoji": "📝",
+    "description": "Gerar PDFs",
+    "version": "1.0.0",
+    "category": "content",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "claude",
+    "cost_per_call": 0.06,
+    "success_rate": 0.96,
+    "prompt_template": "prompts/pdf_generator.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "docx_generator": {
+    "id": "docx_generator",
+    "name": "DOCX Generator",
+    "emoji": "📝",
+    "description": "Gerar Word",
+    "version": "1.0.0",
+    "category": "content",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "claude",
+    "cost_per_call": 0.06,
+    "success_rate": 0.97,
+    "prompt_template": "prompts/docx_generator.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "pptx_generator": {
+    "id": "pptx_generator",
+    "name": "PPTX Generator",
+    "emoji": "📝",
+    "description": "Gerar PowerPoint",
+    "version": "1.0.0",
+    "category": "content",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "claude",
+    "cost_per_call": 0.06,
+    "success_rate": 0.98,
+    "prompt_template": "prompts/pptx_generator.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "stripe": {
+    "id": "stripe",
+    "name": "Stripe",
+    "emoji": "📊",
+    "description": "Pagamentos Stripe",
+    "version": "1.0.0",
+    "category": "analytics",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "groq",
+    "cost_per_call": 0.04,
+    "success_rate": 0.99,
+    "prompt_template": "prompts/stripe.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "paypal": {
+    "id": "paypal",
+    "name": "PayPal",
+    "emoji": "📊",
+    "description": "Pagamentos PayPal",
+    "version": "1.0.0",
+    "category": "analytics",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "groq",
+    "cost_per_call": 0.04,
+    "success_rate": 0.93,
+    "prompt_template": "prompts/paypal.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "mercado_pago": {
+    "id": "mercado_pago",
+    "name": "Mercado Pago",
+    "emoji": "📊",
+    "description": "Mercado Pago",
+    "version": "1.0.0",
+    "category": "analytics",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "groq",
+    "cost_per_call": 0.04,
+    "success_rate": 0.94,
+    "prompt_template": "prompts/mercado_pago.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "pix": {
+    "id": "pix",
+    "name": "PIX",
+    "emoji": "📊",
+    "description": "PIX Brazil",
+    "version": "1.0.0",
+    "category": "analytics",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "groq",
+    "cost_per_call": 0.04,
+    "success_rate": 0.95,
+    "prompt_template": "prompts/pix.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "openclaw_usage_tracker": {
+    "id": "openclaw_usage_tracker",
+    "name": "OpenClaw Usage Tracker",
+    "emoji": "📊",
+    "description": "Tracking custos",
+    "version": "1.0.0",
+    "category": "analytics",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "groq",
+    "cost_per_call": 0.04,
+    "success_rate": 0.96,
+    "prompt_template": "prompts/openclaw_usage_tracker.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "stock_analysis": {
+    "id": "stock_analysis",
+    "name": "Stock Analysis",
+    "emoji": "📊",
+    "description": "Análise ações",
+    "version": "1.0.0",
+    "category": "analytics",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "groq",
+    "cost_per_call": 0.04,
+    "success_rate": 0.97,
+    "prompt_template": "prompts/stock_analysis.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
+  },
+  "stock_watcher": {
+    "id": "stock_watcher",
+    "name": "Stock Watcher",
+    "emoji": "📊",
+    "description": "Monitor ações",
+    "version": "1.0.0",
+    "category": "analytics",
+    "inputs": {
+      "input": {
+        "type": "string",
+        "required": true,
+        "description": "Entrada principal da skill"
+      },
+      "context": {
+        "type": "object",
+        "required": false,
+        "description": "Contexto adicional de execução"
+      }
+    },
+    "outputs": {
+      "result": {
+        "type": "object",
+        "description": "Resultado da execução"
+      },
+      "logs": {
+        "type": "array",
+        "description": "Logs de execução"
+      }
+    },
+    "model_preference": "groq",
+    "cost_per_call": 0.04,
+    "success_rate": 0.98,
+    "prompt_template": "prompts/stock_watcher.md",
+    "dependencies": [],
+    "status": "active",
+    "estimated_duration_ms": 2000
   }
 }
