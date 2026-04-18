@@ -3,8 +3,9 @@
  * Main page for documentation browsing and AI chat assistance
  */
 
-import { lazy, Suspense, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import AppLayout from '@/components/layout/AppLayout';
 import { PageSkeleton } from '@/components/loading/PageSkeleton';
 import { useDocumentation } from './hooks/useDocumentation';
 import { DocumentationLayout } from './components/DocumentationLayout';
@@ -46,30 +47,34 @@ export default function DocsPage() {
   }, []);
 
   if (!isReady && loading) {
-    return <PageSkeleton />;
+    return (
+      <AppLayout>
+        <PageSkeleton />
+      </AppLayout>
+    );
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.15 }}
-      className="h-screen bg-zinc-950 overflow-hidden"
-    >
-      <DocumentationLayout
-        // Documentation props
-        docs={docs}
-        selectedDoc={selectedDoc}
-        docsLoading={loading}
-        onSelectDoc={selectDoc}
-        // Chat props
-        messages={chatMessages}
-        chatLoading={chatLoading}
-        onSendMessage={sendMessage}
-        onClearChat={clearChat}
-        ollamaAvailable={ollamaAvailable}
-      />
-    </motion.div>
+    <AppLayout>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.15 }}
+        className="h-[calc(100vh-4rem)] overflow-hidden"
+      >
+        <DocumentationLayout
+          docs={docs}
+          selectedDoc={selectedDoc}
+          docsLoading={loading}
+          onSelectDoc={selectDoc}
+          messages={chatMessages}
+          chatLoading={chatLoading}
+          onSendMessage={sendMessage}
+          onClearChat={clearChat}
+          ollamaAvailable={ollamaAvailable}
+        />
+      </motion.div>
+    </AppLayout>
   );
 }

@@ -11,6 +11,93 @@ import { DocumentationChat } from './DocumentationChat';
 import type { DocPage } from '../lib/documentation';
 import type { ChatMessage } from '../hooks/useDocumentation';
 
+/* Simple markdown → JSX renderer (no extra deps) */
+function MarkdownContent({ content }: { content: string }) {
+  const lines = content.split('\n');
+  const elements: React.ReactNode[] = [];
+  let i = 0;
+
+  const inlineFormat = (text: string): React.ReactNode => {
+    const parts: React.ReactNode[] = [];
+    const regex = /(\*\*(.+?)\*\*|`(.+?)`)/g;
+    let last = 0, m: RegExpExecArray | null;
+    let key = 0;
+    while ((m = regex.exec(text)) !== null) {
+      if (m.index > last) parts.push(text.slice(last, m.index));
+      if (m[2]) parts.push(<strong key={key++} className="font-semibold text-foreground">{m[2]}</strong>);
+      else if (m[3]) parts.push(<code key={key++} className="px-1.5 py-0.5 rounded bg-muted font-mono text-xs text-foreground">{m[3]}</code>);
+      last = m.index + m[0].length;
+    }
+    if (last < text.length) parts.push(text.slice(last));
+    return parts.length === 1 ? parts[0] : <>{parts}</>;
+  };
+
+  while (i < lines.length) {
+    const line = lines[i];
+
+    if (line.startsWith('### ')) {
+      elements.push(<h3 key={i} className="text-base font-semibold text-foreground mt-6 mb-2">{line.slice(4)}</h3>);
+    } else if (line.startsWith('## ')) {
+      elements.push(<h2 key={i} className="text-lg font-bold text-foreground mt-8 mb-3 pb-2 border-b border-border">{line.slice(3)}</h2>);
+    } else if (line.startsWith('# ')) {
+      elements.push(<h1 key={i} className="text-2xl font-bold text-foreground mt-6 mb-4">{line.slice(2)}</h1>);
+    } else if (line.startsWith('- ') || line.startsWith('* ')) {
+      const items: string[] = [];
+      while (i < lines.length && (lines[i].startsWith('- ') || lines[i].startsWith('* '))) {
+        items.push(lines[i].slice(2));
+        i++;
+      }
+      elements.push(
+        <ul key={`ul-${i}`} className="list-disc list-inside space-y-1 my-3 ml-2">
+          {items.map((item, j) => <li key={j} className="text-sm text-muted-foreground">{inlineFormat(item)}</li>)}
+        </ul>
+      );
+      continue;
+    } else if (/^\d+\. /.test(line)) {
+      const items: string[] = [];
+      while (i < lines.length && /^\d+\. /.test(lines[i])) {
+        items.push(lines[i].replace(/^\d+\. /, ''));
+        i++;
+      }
+      elements.push(
+        <ol key={`ol-${i}`} className="list-decimal list-inside space-y-1 my-3 ml-2">
+          {items.map((item, j) => <li key={j} className="text-sm text-muted-foreground">{inlineFormat(item)}</li>)}
+        </ol>
+      );
+      continue;
+    } else if (line.startsWith('```')) {
+      const lang = line.slice(3).trim();
+      const codeLines: string[] = [];
+      i++;
+      while (i < lines.length && !lines[i].startsWith('```')) {
+        codeLines.push(lines[i]);
+        i++;
+      }
+      elements.push(
+        <pre key={`code-${i}`} className="my-4 p-4 rounded-lg bg-muted overflow-x-auto text-xs font-mono text-foreground border border-border">
+          <code>{codeLines.join('\n')}</code>
+        </pre>
+      );
+    } else if (line.startsWith('> ')) {
+      elements.push(
+        <blockquote key={i} className="my-3 pl-4 border-l-2 border-primary/40 text-sm text-muted-foreground italic">
+          {inlineFormat(line.slice(2))}
+        </blockquote>
+      );
+    } else if (line.trim() === '' || line.trim() === '---') {
+      if (line.trim() === '---') elements.push(<hr key={i} className="my-6 border-border" />);
+    } else {
+      elements.push(
+        <p key={i} className="text-sm text-muted-foreground leading-relaxed my-2">
+          {inlineFormat(line)}
+        </p>
+      );
+    }
+    i++;
+  }
+  return <>{elements}</>;
+}
+
 interface DocumentationLayoutProps {
   docs: DocPage[];
   selectedDoc: DocPage | null;
@@ -68,8 +155,8 @@ export function DocumentationLayout({
               <h1 className="text-3xl font-bold text-foreground mb-4">
                 {selectedDoc.title}
               </h1>
-              <div className="text-muted-foreground leading-relaxed whitespace-pre-wrap break-words">
-                {selectedDoc.content}
+              <div className="prose-sm">
+                <MarkdownContent content={selectedDoc.content} />
               </div>
             </article>
           ) : (
