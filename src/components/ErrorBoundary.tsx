@@ -35,15 +35,18 @@ export class ErrorBoundary extends Component<Props, State> {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen flex items-center justify-center bg-background">
-          <div className="max-w-md w-full mx-auto text-center p-6 bg-zinc-900 rounded-lg border border-zinc-800">
-            <h1 className="text-2xl font-bold text-white mb-4">⚠️ Algo deu errado</h1>
-            <p className="text-zinc-400 mb-6 text-sm">
+        <div className="min-h-screen flex items-center justify-center bg-surface-container-high px-4">
+          <div className="max-w-md w-full mx-auto text-center p-8 bg-card rounded-3xl border border-border shadow-editorial">
+            <div className="w-14 h-14 rounded-full bg-destructive/10 flex items-center justify-center mx-auto mb-4">
+              <AlertTriangle className="w-7 h-7 text-destructive" />
+            </div>
+            <h1 className="font-display text-2xl font-semibold text-foreground mb-3">Algo deu errado</h1>
+            <p className="text-muted-foreground mb-6 text-sm">
               {this.state.error?.message || 'Um erro inesperado ocorreu'}
             </p>
             {import.meta.env.DEV && this.state.errorInfo && (
-              <details className="mb-6 text-left bg-zinc-800 p-3 rounded text-xs text-zinc-300 overflow-auto max-h-32">
-                <summary className="cursor-pointer font-mono mb-2">Stack trace</summary>
+              <details className="mb-6 text-left bg-muted p-3 rounded-2xl text-xs text-foreground overflow-auto max-h-32 border border-border">
+                <summary className="cursor-pointer font-medium mb-2">Stack trace</summary>
                 <pre className="whitespace-pre-wrap break-words">
                   {this.state.errorInfo.componentStack}
                 </pre>
@@ -52,13 +55,13 @@ export class ErrorBoundary extends Component<Props, State> {
             <div className="flex gap-3">
               <button
                 onClick={this.handleReset}
-                className="flex-1 px-4 py-2 bg-[#ef233c] text-white rounded hover:bg-[#d91e2f] transition font-medium"
+                className="flex-1 h-11 px-4 bg-primary text-primary-foreground rounded-full hover:bg-primary/90 transition font-medium text-sm"
               >
                 Tentar novamente
               </button>
               <button
                 onClick={() => (window.location.href = '/')}
-                className="flex-1 px-4 py-2 bg-zinc-800 text-white rounded hover:bg-zinc-700 transition font-medium"
+                className="flex-1 h-11 px-4 border border-border text-foreground rounded-full hover:bg-muted transition font-medium text-sm"
               >
                 Voltar ao início
               </button>

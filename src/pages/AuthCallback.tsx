@@ -110,18 +110,20 @@ export default function AuthCallback() {
 
   if (errorMsg) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-black text-white gap-4">
-        <AlertCircle className="h-8 w-8 text-red-500" />
-        <p className="text-sm text-zinc-400 max-w-xs text-center">{errorMsg}</p>
-        <p className="text-xs text-zinc-600">Redirecionando para o login...</p>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-surface-container-high text-foreground gap-4 px-6">
+        <div className="w-14 h-14 rounded-full bg-destructive/10 flex items-center justify-center">
+          <AlertCircle className="h-7 w-7 text-destructive" />
+        </div>
+        <p className="text-sm text-muted-foreground max-w-xs text-center">{errorMsg}</p>
+        <p className="label-mono">Redirecionando para o login...</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-black text-white gap-4">
-      <Loader2 className="h-8 w-8 animate-spin text-[#ef233c]" />
-      <p className="text-sm text-zinc-400">Verificando acesso...</p>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-surface-container-high text-foreground gap-4">
+      <Loader2 className="h-8 w-8 animate-spin text-accent" />
+      <p className="text-sm text-muted-foreground">Verificando acesso...</p>
     </div>
   );
 }

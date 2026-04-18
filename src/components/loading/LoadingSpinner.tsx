@@ -13,10 +13,10 @@ export function LoadingSpinner({ size = 'md', message }: LoadingSpinnerProps) {
   return (
     <div className="flex flex-col items-center justify-center gap-4" role="status" aria-live="polite">
       <div
-        className={`${sizeClasses[size]} border-4 border-zinc-700 border-t-[#ef233c] rounded-full animate-spin`}
+        className={`${sizeClasses[size]} border-4 border-border border-t-accent rounded-full animate-spin`}
         aria-hidden="true"
       />
-      {message && <p className="text-zinc-400 text-sm">{message}</p>}
+      {message && <p className="text-muted-foreground text-sm">{message}</p>}
     </div>
   );
 }

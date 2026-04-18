@@ -1,6 +1,7 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import AppSidebar from "./AppSidebar";
+import { ThemeProvider } from "@/contexts/ThemeContext";
 
 // Mock AuthContext
 import { vi } from "vitest";
@@ -27,9 +28,11 @@ vi.mock("@/integrations/supabase/client", () => ({
 describe("AppSidebar", () => {
   it("renders 5 pillar labels", () => {
     render(
-      <MemoryRouter>
-        <AppSidebar />
-      </MemoryRouter>
+      <ThemeProvider>
+        <MemoryRouter>
+          <AppSidebar />
+        </MemoryRouter>
+      </ThemeProvider>
     );
 
     expect(screen.getByText("Visão")).toBeInTheDocument();
@@ -41,9 +44,11 @@ describe("AppSidebar", () => {
 
   it("renders key navigation items", () => {
     render(
-      <MemoryRouter>
-        <AppSidebar />
-      </MemoryRouter>
+      <ThemeProvider>
+        <MemoryRouter>
+          <AppSidebar />
+        </MemoryRouter>
+      </ThemeProvider>
     );
 
     expect(screen.getByText("Hub de Agentes")).toBeInTheDocument();
@@ -55,9 +60,11 @@ describe("AppSidebar", () => {
 
   it("renders expandable Agentes section with sub-items", () => {
     render(
-      <MemoryRouter>
-        <AppSidebar />
-      </MemoryRouter>
+      <ThemeProvider>
+        <MemoryRouter>
+          <AppSidebar />
+        </MemoryRouter>
+      </ThemeProvider>
     );
 
     // Agentes section should be expanded by default
@@ -68,9 +75,11 @@ describe("AppSidebar", () => {
 
   it("renders user email initial in footer", () => {
     render(
-      <MemoryRouter>
-        <AppSidebar />
-      </MemoryRouter>
+      <ThemeProvider>
+        <MemoryRouter>
+          <AppSidebar />
+        </MemoryRouter>
+      </ThemeProvider>
     );
 
     expect(screen.getByText("test")).toBeInTheDocument();

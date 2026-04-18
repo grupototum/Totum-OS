@@ -1,8 +1,14 @@
 /**
- * TOTUM BUTTON COMPONENT v5 - EXACT DS IMPLEMENTATION
- * Design System Digital Architect - Dark Only
- * 
- * All buttons use exact classes from design-system.html
+ * TOTUM BUTTON — Editorial DS v6
+ *
+ * Editorial pill-first button set. Primary is an inverted-ink pill,
+ * outline is a bordered pill, secondary/ghost/link pick up softer
+ * neutral treatments. All variants respect the current theme through
+ * `--primary`, `--foreground`, `--border`, etc.
+ *
+ * `GlowButton`, `BeamButton`, `OutlineButton` are preserved as
+ * re-exports so legacy call sites keep working — they now render the
+ * same editorial pill instead of the previous red rotating-border.
  */
 
 import * as React from "react";
@@ -11,36 +17,43 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  // Base styles - focus on accessibility
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ef233c]/50 disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium transition-all duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
-        // Primary: brand red, sharp corners
-        primary: 
-          "bg-[#ef233c] text-white rounded-none border-none hover:bg-[#dc2626] active:scale-[0.98]",
-        
-        // Secondary: zinc background
-        secondary: 
-          "bg-zinc-800 text-white rounded-none border-none hover:bg-zinc-700 active:scale-[0.98]",
-        
-        // Outline: brand red border
-        outline: 
-          "bg-transparent border border-[#ef233c] text-[#ef233c] rounded-none uppercase tracking-widest text-[11px] font-bold hover:bg-[#ef233c] hover:text-white active:scale-[0.98]",
-        
-        // Ghost: transparent
-        ghost: 
-          "bg-transparent text-zinc-400 rounded-none border-none hover:text-white hover:bg-zinc-900 active:scale-[0.98]",
-        
-        // Link: text with underline
-        link: 
-          "bg-transparent text-zinc-400 underline-offset-4 hover:text-white hover:underline rounded-none border-none",
+        // Primary: inverted-ink pill, soft shadow, micro lift on hover
+        primary:
+          "rounded-full bg-primary text-primary-foreground shadow-editorial hover:-translate-y-px hover:bg-primary/90 active:translate-y-0",
+
+        // Accent: blue accent pill (editorial highlight)
+        accent:
+          "rounded-full bg-accent text-accent-foreground shadow-editorial hover:-translate-y-px hover:bg-accent/90 active:translate-y-0",
+
+        // Secondary: neutral pill (surface container)
+        secondary:
+          "rounded-full bg-secondary text-secondary-foreground hover:bg-secondary/70",
+
+        // Outline: bordered pill
+        outline:
+          "rounded-full bg-transparent border border-border text-foreground hover:bg-foreground hover:text-background hover:border-foreground",
+
+        // Ghost: text-only, pill on hover
+        ghost:
+          "rounded-full bg-transparent text-foreground hover:bg-muted",
+
+        // Link: underline on hover, no pill
+        link: "bg-transparent text-foreground underline-offset-4 hover:underline",
+
+        // Destructive: red pill (kept for destructive CTAs)
+        destructive:
+          "rounded-full bg-destructive text-destructive-foreground hover:bg-destructive/90",
       },
       size: {
-        default: "h-10 px-6 py-2 text-sm",
-        sm: "h-9 px-4 py-2 text-xs",
-        lg: "h-12 px-8 py-3 text-base",
-        icon: "h-10 w-10",
+        default: "h-11 px-6 text-sm",
+        sm: "h-9 px-4 text-xs",
+        lg: "h-12 px-8 text-sm tracking-wide",
+        xl: "h-14 px-10 text-base",
+        icon: "h-11 w-11 rounded-full",
       },
     },
     defaultVariants: {
@@ -70,82 +83,58 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 );
 Button.displayName = "Button";
 
-/**
- * GLOW BUTTON - Primary CTA with rotating border
- * Exact implementation from design-system.html
- */
-interface GlowButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+/* ------------------------------------------------------------------
+   Legacy aliases — kept so existing call sites compile unchanged.
+   Previously these rendered elaborate rotating-border / red-beam
+   markup; in the editorial DS they collapse to clean pill buttons.
+   ------------------------------------------------------------------ */
+
+interface CompatButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
 }
 
-const GlowButton = React.forwardRef<HTMLButtonElement, GlowButtonProps>(
-  ({ className, children, ...props }, ref) => {
-    return (
-      <button
-        ref={ref}
-        className={cn("btn-glow", className)}
-        {...props}
-      >
-        <div className="glow-layer-1" />
-        <div className="glow-layer-2" />
-        <div className="glow-stroke-1" />
-        <div className="glow-stroke-2" />
-        <div className="spin-border" />
-        <div className="btn-bg" />
-        <span className="btn-text">{children}</span>
-      </button>
-    );
-  }
+const GlowButton = React.forwardRef<HTMLButtonElement, CompatButtonProps>(
+  ({ className, children, ...props }, ref) => (
+    <Button
+      ref={ref}
+      variant="primary"
+      size="lg"
+      className={cn("uppercase tracking-[0.18em] text-xs", className)}
+      {...props}
+    >
+      {children}
+    </Button>
+  )
 );
 GlowButton.displayName = "GlowButton";
 
-/**
- * BEAM BUTTON - Secondary CTA with red beam on hover
- * Exact implementation from design-system.html
- */
-interface BeamButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  children: React.ReactNode;
-}
-
-const BeamButton = React.forwardRef<HTMLButtonElement, BeamButtonProps>(
-  ({ className, children, ...props }, ref) => {
-    return (
-      <button
-        ref={ref}
-        className={cn("btn-beam", className)}
-        {...props}
-      >
-        <div className="beam-layer" />
-        <div className="beam-bg" />
-        <div className="beam-fill" />
-        <div className="beam-glow" />
-        <span className="btn-text">{children}</span>
-      </button>
-    );
-  }
+const BeamButton = React.forwardRef<HTMLButtonElement, CompatButtonProps>(
+  ({ className, children, ...props }, ref) => (
+    <Button
+      ref={ref}
+      variant="outline"
+      size="lg"
+      className={cn("uppercase tracking-[0.18em] text-xs", className)}
+      {...props}
+    >
+      {children}
+    </Button>
+  )
 );
 BeamButton.displayName = "BeamButton";
 
-/**
- * OUTLINE RED BUTTON - Simple outline with red
- * Exact implementation from design-system.html
- */
-interface OutlineButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  children: React.ReactNode;
-}
-
-const OutlineButton = React.forwardRef<HTMLButtonElement, OutlineButtonProps>(
-  ({ className, children, ...props }, ref) => {
-    return (
-      <button
-        ref={ref}
-        className={cn("btn-outline-red", className)}
-        {...props}
-      >
-        {children}
-      </button>
-    );
-  }
+const OutlineButton = React.forwardRef<HTMLButtonElement, CompatButtonProps>(
+  ({ className, children, ...props }, ref) => (
+    <Button
+      ref={ref}
+      variant="outline"
+      size="default"
+      className={cn("uppercase tracking-[0.22em] text-[11px] font-semibold", className)}
+      {...props}
+    >
+      {children}
+    </Button>
+  )
 );
 OutlineButton.displayName = "OutlineButton";
 

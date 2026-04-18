@@ -6,6 +6,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
 import { validateSignUpForm, type ValidationErrors } from "@/lib/validation";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -29,7 +31,6 @@ export default function SignUp() {
         },
       });
       if (error) throw error;
-      // Redirect handled by Supabase — no need to setGoogleLoading(false)
     } catch (err: any) {
       toast.error(err.message || "Erro ao cadastrar com Google.");
       setGoogleLoading(false);
@@ -38,17 +39,15 @@ export default function SignUp() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Validação client-side
+
     const validationErrors = validateSignUpForm(email, password, confirmPassword, name);
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
-      // Mostra o primeiro erro
       const firstError = Object.values(validationErrors)[0];
       toast.error(firstError);
       return;
     }
-    
+
     setErrors({});
     setLoading(true);
     try {
@@ -69,95 +68,54 @@ export default function SignUp() {
     }
   };
 
-  const inputClass = (hasError?: boolean) =>
-    `w-full px-3.5 py-2.5 text-sm rounded-none bg-zinc-900 border text-white placeholder:text-zinc-600 outline-none transition-all duration-200 focus:border-[#ef233c]/50 focus:ring-2 focus:ring-[#ef233c]/10 ${
-      hasError ? "border-[#ef233c] focus:border-[#ef233c] focus:ring-[#ef233c]/10" : "border-zinc-800"
-    }`;
-
   return (
-    <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-black">
-      {/* Grid lines background */}
-      <div className="absolute inset-0 pointer-events-none">
-        {[1, 2, 3, 4, 5].map((i) => (
-          <div
-            key={i}
-            className="absolute top-0 bottom-0 w-px"
-            style={{
-              left: `${i * 20}%`,
-              background: "linear-gradient(to bottom, transparent, rgba(39, 39, 42, 0.15), transparent)",
-              animation: `grid-line-pulse ${3 + i * 0.5}s ease-in-out infinite`,
-            }}
-          />
-        ))}
-        {[1, 2, 3].map((i) => (
-          <div
-            key={`h-${i}`}
-            className="absolute left-0 right-0 h-px"
-            style={{
-              top: `${i * 25}%`,
-              background: "linear-gradient(to right, transparent, rgba(39, 39, 42, 0.1), transparent)",
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Radial glow */}
+    <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-surface-container-high px-4 py-12">
       <div
-        className="absolute pointer-events-none"
+        aria-hidden
+        className="pointer-events-none absolute inset-0"
         style={{
-          width: 600,
-          height: 600,
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          background: "radial-gradient(circle, rgba(239,35,60,0.08) 0%, transparent 70%)",
+          background:
+            "radial-gradient(60% 50% at 50% 0%, hsl(var(--accent) / 0.08) 0%, transparent 70%)",
         }}
       />
 
-      {/* Main content */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="relative z-10 w-full max-w-sm mx-auto px-6"
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        className="relative z-10 w-full max-w-md"
       >
-        {/* Logo */}
-        <div className="flex flex-col items-center mb-8">
-          <div className="flex items-center gap-3 mb-3">
-            <img
-              src="https://d2xsxph8kpxj0f.cloudfront.net/310419663032548632/bvUyrRtbH5C9bH6F2BSBEC/totum-icon_c601ad50.png"
-              alt="Totum"
-              className="w-10 h-10 rounded-lg"
-            />
-            <span className="font-manrope text-xl font-bold tracking-tight text-white">
-              Apps Totum
-            </span>
+        <div className="ds-panel p-8 sm:p-10 bg-surface-container">
+          {/* Logo */}
+          <div className="flex flex-col items-center mb-8">
+            <div className="flex items-center gap-3 mb-3">
+              <img
+                src="https://d2xsxph8kpxj0f.cloudfront.net/310419663032548632/bvUyrRtbH5C9bH6F2BSBEC/totum-icon_c601ad50.png"
+                alt="Totum"
+                className="w-10 h-10 rounded-lg"
+              />
+              <span className="font-display text-xl font-semibold tracking-tight text-foreground">
+                Apps Totum
+              </span>
+            </div>
+            <span className="label-mono">Central de Agentes IA</span>
           </div>
-          <span className="text-xs font-medium tracking-widest uppercase text-zinc-500">
-            Central de Agentes IA
-          </span>
-        </div>
 
-        {/* Heading */}
-        <div className="text-center mb-8">
-          <h1 className="font-manrope text-3xl font-bold text-white mb-2">
-            Criar conta
-          </h1>
-          <p className="text-sm text-zinc-400">
-            Cadastre-se para acessar os agentes de IA da Totum
-          </p>
-        </div>
+          {/* Heading */}
+          <div className="text-center mb-8">
+            <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight text-foreground mb-2">
+              Criar conta
+            </h1>
+            <p className="paragraph text-muted-foreground">
+              Cadastre-se para acessar os agentes de IA da Totum
+            </p>
+          </div>
 
-        {/* Form card */}
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div className="rounded-none border border-zinc-800 p-6 space-y-4 bg-zinc-950/60 backdrop-blur-sm"
-          >
+          <form onSubmit={handleSubmit} className="space-y-5">
             {/* Name */}
             <div className="space-y-1.5">
-              <label className="text-xs font-medium text-zinc-500 uppercase tracking-wider">
-                Nome completo
-              </label>
-              <input
+              <label className="label-mono block">Nome completo</label>
+              <Input
                 type="text"
                 value={name}
                 onChange={(e) => {
@@ -167,19 +125,15 @@ export default function SignUp() {
                 placeholder="Seu nome"
                 disabled={loading}
                 autoComplete="name"
-                className={inputClass(!!errors.name)}
+                className={errors.name ? "border-destructive focus-visible:ring-destructive" : ""}
               />
-              {errors.name && (
-                <p className="text-xs text-[#ef233c] mt-1">{errors.name}</p>
-              )}
+              {errors.name && <p className="text-xs text-destructive mt-1">{errors.name}</p>}
             </div>
 
             {/* Email */}
             <div className="space-y-1.5">
-              <label className="text-xs font-medium text-zinc-500 uppercase tracking-wider">
-                E-mail
-              </label>
-              <input
+              <label className="label-mono block">E-mail</label>
+              <Input
                 type="email"
                 value={email}
                 onChange={(e) => {
@@ -189,20 +143,16 @@ export default function SignUp() {
                 placeholder="seu@email.com"
                 disabled={loading}
                 autoComplete="email"
-                className={inputClass(!!errors.email)}
+                className={errors.email ? "border-destructive focus-visible:ring-destructive" : ""}
               />
-              {errors.email && (
-                <p className="text-xs text-[#ef233c] mt-1">{errors.email}</p>
-              )}
+              {errors.email && <p className="text-xs text-destructive mt-1">{errors.email}</p>}
             </div>
 
             {/* Password */}
             <div className="space-y-1.5">
-              <label className="text-xs font-medium text-zinc-500 uppercase tracking-wider">
-                Senha
-              </label>
+              <label className="label-mono block">Senha</label>
               <div className="relative">
-                <input
+                <Input
                   type={showPass ? "text" : "password"}
                   value={password}
                   onChange={(e) => {
@@ -212,93 +162,85 @@ export default function SignUp() {
                   placeholder="Mínimo 6 caracteres"
                   disabled={loading}
                   autoComplete="new-password"
-                  className={`${inputClass(!!errors.password)} pr-11`}
+                  className={`pr-11 ${errors.password ? "border-destructive focus-visible:ring-destructive" : ""}`}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPass(!showPass)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                 >
                   {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
-              {errors.password && (
-                <p className="text-xs text-[#ef233c] mt-1">{errors.password}</p>
-              )}
+              {errors.password && <p className="text-xs text-destructive mt-1">{errors.password}</p>}
             </div>
 
             {/* Confirm Password */}
             <div className="space-y-1.5">
-              <label className="text-xs font-medium text-zinc-500 uppercase tracking-wider">
-                Confirmar senha
-              </label>
-              <div className="relative">
-                <input
-                  type={showPass ? "text" : "password"}
-                  value={confirmPassword}
-                  onChange={(e) => {
-                    setConfirmPassword(e.target.value);
-                    if (errors.confirmPassword) setErrors((prev) => ({ ...prev, confirmPassword: "" }));
-                  }}
-                  placeholder="Repita a senha"
-                  disabled={loading}
-                  autoComplete="new-password"
-                  className={`${inputClass(!!errors.confirmPassword)} pr-11`}
-                />
-              </div>
+              <label className="label-mono block">Confirmar senha</label>
+              <Input
+                type={showPass ? "text" : "password"}
+                value={confirmPassword}
+                onChange={(e) => {
+                  setConfirmPassword(e.target.value);
+                  if (errors.confirmPassword) setErrors((prev) => ({ ...prev, confirmPassword: "" }));
+                }}
+                placeholder="Repita a senha"
+                disabled={loading}
+                autoComplete="new-password"
+                className={errors.confirmPassword ? "border-destructive focus-visible:ring-destructive" : ""}
+              />
               {errors.confirmPassword && (
-                <p className="text-xs text-[#ef233c] mt-1">{errors.confirmPassword}</p>
+                <p className="text-xs text-destructive mt-1">{errors.confirmPassword}</p>
               )}
             </div>
 
             {/* Divider */}
             <div className="flex items-center gap-3">
-              <div className="flex-1 h-px bg-zinc-800" />
-              <span className="text-xs text-zinc-600 uppercase tracking-wider">ou</span>
-              <div className="flex-1 h-px bg-zinc-800" />
+              <div className="flex-1 h-px bg-border" />
+              <span className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">ou</span>
+              <div className="flex-1 h-px bg-border" />
             </div>
 
             {/* Google Sign In */}
-            <button
+            <Button
               type="button"
+              variant="outline"
+              size="lg"
               onClick={handleGoogleSignIn}
               disabled={googleLoading || loading}
-              className="w-full py-3 rounded-none font-manrope font-semibold text-sm border border-zinc-800 text-white bg-zinc-900/60 backdrop-blur-sm overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:border-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2.5"
+              className="w-full"
             >
               {googleLoading ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
               ) : (
                 <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615Z" fill="#4285F4"/>
-                  <path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18Z" fill="#34A853"/>
-                  <path d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.997 8.997 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332Z" fill="#FBBC05"/>
-                  <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 6.29C4.672 4.163 6.656 3.58 9 3.58Z" fill="#EA4335"/>
+                  <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615Z" fill="#4285F4" />
+                  <path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18Z" fill="#34A853" />
+                  <path d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.997 8.997 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332Z" fill="#FBBC05" />
+                  <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 6.29C4.672 4.163 6.656 3.58 9 3.58Z" fill="#EA4335" />
                 </svg>
               )}
-              {googleLoading ? "Entrando..." : "Cadastrar com Google"}
-            </button>
-          </div>
+              <span>{googleLoading ? "Entrando..." : "Cadastrar com Google"}</span>
+            </Button>
 
-          {/* Submit */}
-          <button
-            type="submit"
-            disabled={loading}
-            className="relative w-full py-3 rounded-none font-manrope font-semibold text-sm text-white bg-[#ef233c] overflow-hidden transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {loading && <Loader2 className="inline-block w-4 h-4 mr-2 animate-spin" />}
-            {loading ? "Criando conta..." : "Criar conta"}
-          </button>
-        </form>
+            {/* Submit */}
+            <Button type="submit" variant="primary" size="lg" disabled={loading} className="w-full">
+              {loading && <Loader2 className="w-4 h-4 animate-spin" />}
+              {loading ? "Criando conta..." : "Criar conta"}
+            </Button>
+          </form>
+        </div>
 
         {/* Footer */}
-        <div className="mt-6 space-y-3 text-center">
-          <p className="text-sm text-zinc-400">
+        <div className="mt-6 space-y-2 text-center">
+          <p className="text-sm text-muted-foreground">
             Já tem conta?{" "}
-            <Link to="/login" className="text-[#ef233c] hover:underline font-medium">
+            <Link to="/login" className="text-foreground hover:underline font-medium">
               Entrar
             </Link>
           </p>
-          <p className="text-xs text-zinc-600">
+          <p className="label-mono">
             © {new Date().getFullYear()} Grupo Totum · Sistema de Agentes IA
           </p>
         </div>

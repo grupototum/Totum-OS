@@ -13,6 +13,7 @@ import { useState, useEffect } from "react";
 import { useSidebarStore } from "@/stores/sidebarStore";
 import { supabase } from "@/integrations/supabase/client";
 import { navigationSections, type NavItem, type NavSubItem } from "@/config/navigation";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
 export default function AppSidebar() {
   const { user, signOut } = useAuth();
@@ -281,40 +282,45 @@ export default function AppSidebar() {
       </nav>
 
       {/* Footer / User */}
-      <div className="border-t border-sidebar-border p-3 shrink-0">
+      <div className="border-t border-sidebar-border p-3 shrink-0 space-y-3">
         {collapsed ? (
           <div className="flex flex-col items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary text-xs font-semibold uppercase">
+            <div className="w-9 h-9 rounded-full bg-foreground text-background flex items-center justify-center text-xs font-semibold uppercase">
               {user?.email?.[0] || "U"}
             </div>
+            <ThemeToggle compact />
             <button
               onClick={handleLogout}
-              className="p-1.5 rounded-lg hover:bg-sidebar-accent text-sidebar-foreground/40 hover:text-sidebar-foreground transition-colors"
-            >
-              <LogOut className="w-4 h-4" />
-            </button>
-          </div>
-        ) : (
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-primary/20 flex items-center justify-center text-primary text-sm font-semibold uppercase shrink-0">
-              {user?.email?.[0] || "U"}
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-[12px] font-medium text-sidebar-foreground truncate">
-                {user?.email?.split("@")[0] || "User"}
-              </p>
-              <p className="text-[10px] text-sidebar-foreground/35 truncate">
-                {user?.email || ""}
-              </p>
-            </div>
-            <button
-              onClick={handleLogout}
-              className="p-1.5 rounded-lg hover:bg-sidebar-accent text-sidebar-foreground/40 hover:text-sidebar-foreground transition-colors"
+              className="p-1.5 rounded-full hover:bg-sidebar-accent text-sidebar-foreground/50 hover:text-sidebar-foreground transition-colors"
               title="Sair"
             >
               <LogOut className="w-4 h-4" />
             </button>
           </div>
+        ) : (
+          <>
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-full bg-foreground text-background flex items-center justify-center text-sm font-semibold uppercase shrink-0">
+                {user?.email?.[0] || "U"}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-[13px] font-medium text-sidebar-foreground truncate">
+                  {user?.email?.split("@")[0] || "User"}
+                </p>
+                <p className="text-[11px] text-sidebar-foreground/50 truncate">
+                  {user?.email || ""}
+                </p>
+              </div>
+              <button
+                onClick={handleLogout}
+                className="p-1.5 rounded-full hover:bg-sidebar-accent text-sidebar-foreground/50 hover:text-sidebar-foreground transition-colors"
+                title="Sair"
+              >
+                <LogOut className="w-4 h-4" />
+              </button>
+            </div>
+            <ThemeToggle className="w-full justify-center" />
+          </>
         )}
       </div>
     </aside>
