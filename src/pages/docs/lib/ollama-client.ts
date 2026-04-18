@@ -4,8 +4,19 @@
  * Falls back to Groq API if Ollama is unavailable
  */
 
-// Use VITE_OLLAMA_URL env var; fall back to localhost only for local dev
-const OLLAMA_BASE_URL = (import.meta.env.VITE_OLLAMA_URL || 'http://localhost:11434') + '/api';
+function getOllamaBaseUrl(): string {
+  try {
+    const stored = localStorage.getItem('totum-api-keys');
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      if (parsed.ollamaHost) return parsed.ollamaHost + '/api';
+    }
+  } catch {
+    // ignore parse errors
+  }
+  return (import.meta.env.VITE_OLLAMA_URL || 'http://localhost:11434') + '/api';
+}
+
 // Must use import.meta.env in Vite (process.env.REACT_APP_* is CRA syntax — doesn't work here)
 const GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY || '';
 const GROQ_BASE_URL = 'https://api.groq.com/openai/v1/chat/completions';
@@ -38,7 +49,7 @@ class OllamaClient {
 
   private async checkOllamaHealth(): Promise<void> {
     try {
-      const response = await fetch(`${OLLAMA_BASE_URL}/tags`);
+      const response = await fetch(`${getOllamaBaseUrl()}/tags`);
       this.ollamaAvailable = response.ok;
     } catch (error) {
       this.ollamaAvailable = false;
@@ -73,7 +84,7 @@ class OllamaClient {
     let fullResponse = '';
 
     try {
-      const response = await fetch(`${OLLAMA_BASE_URL}/chat`, {
+      const response = await fetch(`${getOllamaBaseUrl()}/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

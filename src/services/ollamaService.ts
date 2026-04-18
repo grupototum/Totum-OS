@@ -1,6 +1,18 @@
 // Serviço de integração com Ollama (IA local na VPS)
+// A URL pode vir de: localStorage (Settings) > env var > fallback localhost
 
-const OLLAMA_BASE_URL = import.meta.env.VITE_OLLAMA_URL || 'http://localhost:11434';
+function getOllamaBaseUrl(): string {
+  try {
+    const stored = localStorage.getItem('totum-api-keys');
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      if (parsed.ollamaHost) return parsed.ollamaHost;
+    }
+  } catch {
+    // ignore parse errors
+  }
+  return import.meta.env.VITE_OLLAMA_URL || 'http://localhost:11434';
+}
 
 export interface OllamaModel {
   name: string;
@@ -47,8 +59,8 @@ export interface OllamaResponse {
 // Verifica se o Ollama está online
 export const checkOllamaHealth = async (): Promise<boolean> => {
   try {
-    const res = await fetch(`${OLLAMA_BASE_URL}/api/tags`, {
-      signal: AbortSignal.timeout(3000),
+    const res = await fetch(`${getOllamaBaseUrl()}/api/tags`, {
+      signal: AbortSignal.timeout(8000),
     });
     return res.ok;
   } catch {
@@ -58,7 +70,7 @@ export const checkOllamaHealth = async (): Promise<boolean> => {
 
 // Lista modelos disponíveis
 export const listOllamaModels = async (): Promise<OllamaModel[]> => {
-  const res = await fetch(`${OLLAMA_BASE_URL}/api/tags`);
+  const res = await fetch(`${getOllamaBaseUrl()}/api/tags`);
   if (!res.ok) throw new Error('Ollama indisponível');
   const data = await res.json();
   return data.models || [];
@@ -66,7 +78,7 @@ export const listOllamaModels = async (): Promise<OllamaModel[]> => {
 
 // Geração simples (não-stream)
 export const ollamaGenerate = async (req: OllamaGenerateRequest): Promise<string> => {
-  const res = await fetch(`${OLLAMA_BASE_URL}/api/generate`, {
+  const res = await fetch(`${getOllamaBaseUrl()}/api/generate`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ ...req, stream: false }),
@@ -82,7 +94,7 @@ export const ollamaChatStream = async (
   onChunk: (chunk: string) => void,
   onDone: () => void
 ): Promise<void> => {
-  const res = await fetch(`${OLLAMA_BASE_URL}/api/chat`, {
+  const res = await fetch(`${getOllamaBaseUrl()}/api/chat`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ ...req, stream: true }),
