@@ -125,7 +125,8 @@ export function useDashboardData(): DashboardData {
 
   const refetchVps = useCallback(async () => {
     const data = await withRetry(async () => {
-      const { data } = await supabase.from("vps_servers").select("*");
+      const { data, error } = await supabase.from("vps_servers").select("*");
+      if (error) throw error;
       return data;
     });
     if (data) setVps(data as VpsServer[]);
@@ -133,7 +134,8 @@ export function useDashboardData(): DashboardData {
 
   const refetchApps = useCallback(async () => {
     const data = await withRetry(async () => {
-      const { data } = await supabase.from("dashboard_apps").select("*").order("sort_order");
+      const { data, error } = await supabase.from("dashboard_apps").select("*").order("sort_order");
+      if (error) throw error;
       return data;
     });
     if (data) setApps(data as DashboardApp[]);
@@ -141,7 +143,8 @@ export function useDashboardData(): DashboardData {
 
   const refetchAgents = useCallback(async () => {
     const data = await withRetry(async () => {
-      const { data } = await supabase.from("agents").select("*");
+      const { data, error } = await supabase.from("agents").select("*");
+      if (error) throw error;
       return data;
     });
     if (data) setAgents(data as Agent[]);
@@ -149,7 +152,8 @@ export function useDashboardData(): DashboardData {
 
   const refetchCosts = useCallback(async () => {
     const data = await withRetry(async () => {
-      const { data } = await supabase.from("dashboard_costs").select("*");
+      const { data, error } = await supabase.from("dashboard_costs").select("*");
+      if (error) throw error;
       return data;
     });
     if (data) setCosts(data as DashboardCost[]);
@@ -157,7 +161,8 @@ export function useDashboardData(): DashboardData {
 
   const refetchActivities = useCallback(async () => {
     const data = await withRetry(async () => {
-      const { data } = await supabase.from("dashboard_activities").select("*").order("created_at", { ascending: false }).limit(20);
+      const { data, error } = await supabase.from("dashboard_activities").select("*").order("created_at", { ascending: false }).limit(20);
+      if (error) throw error;
       return data;
     });
     if (data) setActivities(data as DashboardActivity[]);
@@ -165,7 +170,8 @@ export function useDashboardData(): DashboardData {
 
   const refetchMex = useCallback(async () => {
     const data = await withRetry(async () => {
-      const { data } = await supabase.from("mex_sync").select("*");
+      const { data, error } = await supabase.from("mex_sync").select("*");
+      if (error) throw error;
       return data;
     });
     if (data) setMex(data as MexSyncEntry[]);
@@ -173,7 +179,8 @@ export function useDashboardData(): DashboardData {
 
   const refetchGithub = useCallback(async () => {
     const data = await withRetry(async () => {
-      const { data } = await supabase.from("github_config").select("*").limit(1).single();
+      const { data, error } = await supabase.from("github_config").select("*").limit(1).maybeSingle();
+      if (error) throw error;
       return data;
     });
     if (data) setGitHub(data as GitHubConfig);

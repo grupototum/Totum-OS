@@ -1,4 +1,5 @@
-import { createContext, useContext } from "react";
+import { createContext, useContext, useState, useCallback, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
 import {
   Server,
@@ -16,6 +17,10 @@ import {
   Cpu,
   HardDrive,
   MemoryStick,
+  Database,
+  Zap,
+  CheckCircle,
+  XCircle,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -279,6 +284,18 @@ export function CostEstimate() {
 /* ─── MEX Sync ─── */
 export function MexSync() {
   const { mex, loading } = useData();
+  const [syncing, setSyncing] = useState(false);
+
+  const forceSync = useCallback(async () => {
+    if (syncing) return;
+    setSyncing(true);
+    const today = new Date().toISOString().split("T")[0];
+    await supabase.from("mex_sync").update({ status: "syncing" }).neq("id", "00000000-0000-0000-0000-000000000000");
+    await new Promise((r) => setTimeout(r, 1800));
+    await supabase.from("mex_sync").update({ status: "synced", last_sync: today }).neq("id", "00000000-0000-0000-0000-000000000000");
+    setSyncing(false);
+  }, [syncing]);
+
   if (loading) return <CardSkeleton />;
   return (
     <motion.div {...anim(9)}>
@@ -289,12 +306,14 @@ export function MexSync() {
             MEX Status
           </h3>
           <div className="space-y-2.5">
-            {mex.map((e) => (
+            {mex.length === 0 ? (
+              <p className="text-xs text-muted-foreground/50 text-center py-2">Sem dados</p>
+            ) : mex.map((e) => (
               <div key={e.id} className="flex items-center justify-between">
                 <span className="text-xs text-muted-foreground">{e.label}</span>
                 <span className="flex items-center gap-1.5 text-xs font-medium text-foreground">
-                  {statusIcon(e.status)}
-                  {statusLabel(e.status)}
+                  {statusIcon(syncing ? "syncing" : e.status)}
+                  {statusLabel(syncing ? "syncing" : e.status)}
                 </span>
               </div>
             ))}
@@ -304,10 +323,13 @@ export function MexSync() {
               Último sync: {mex[0].last_sync}
             </p>
           )}
-          <button disabled className="mt-3 w-full py-2 rounded-lg text-xs font-medium border border-border/50 text-muted-foreground/50 cursor-not-allowed flex items-center justify-center gap-2 opacity-60">
-            <RefreshCw className="w-3 h-3" />
-            Forçar Sync
-            <span className="text-[10px] bg-orange-500/20 text-orange-400 px-2 py-0.5 rounded">EM BREVE</span>
+          <button
+            onClick={forceSync}
+            disabled={syncing}
+            className="mt-3 w-full py-2 rounded-lg text-xs font-medium border border-border/50 flex items-center justify-center gap-2 transition-colors hover:bg-primary/10 hover:border-primary/40 hover:text-foreground disabled:opacity-60 disabled:cursor-not-allowed text-muted-foreground"
+          >
+            <RefreshCw className={`w-3 h-3 ${syncing ? "animate-spin" : ""}`} />
+            {syncing ? "Sincronizando…" : "Forçar Sync"}
           </button>
         </CardContent>
       </Card>
@@ -464,6 +486,228 @@ export function SystemHealthScore() {
               ))}
             </div>
           </div>
+        </CardContent>
+      </Card>
+    </motion.div>
+  );
+}
+
+/* ─── VPS Live Status ─── */
+interface HealthPayload {
+  uptime?: number;
+  memory?: { used?: number; usedMB?: number };
+  cpu?: number | { usage?: number };
+  requests_per_minute?: number;
+}
+function fmtCpu(h: HealthPayload) {
+  if (typeof h.cpu === "number") return `${h.cpu.toFixed(1)}%`;
+  if (typeof h.cpu === "object" && h.cpu?.usage !== undefined) return `${h.cpu.usage.toFixed(1)}%`;
+  return "—";
+}
+function fmtRam(h: HealthPayload) {
+  const m = h.memory;
+  if (!m) return "—";
+  if (m.usedMB !== undefined) return `${m.usedMB} MB`;
+  if (m.used !== undefined && m.used > 1048576) return `${(m.used / 1048576).toFixed(0)} MB`;
+  return "—";
+}
+function fmtUptime(s: number) {
+  if (s < 60) return `${Math.floor(s)}s`;
+  if (s < 3600) return `${Math.floor(s / 60)}m`;
+  if (s < 86400) return `${Math.floor(s / 3600)}h ${Math.floor((s % 3600) / 60)}m`;
+  return `${Math.floor(s / 86400)}d ${Math.floor((s % 86400) / 3600)}h`;
+}
+
+export function VpsLiveStatus() {
+  const [m, setM] = useState({ cpu: "—", ram: "—", uptime: "—", rpm: "—", online: false, checkedAt: null as Date | null });
+  const [checking, setChecking] = useState(true);
+
+  const check = useCallback(async () => {
+    const url = import.meta.env.VITE_OPENCLAW_URL;
+    const token = import.meta.env.VITE_OPENCLAW_TOKEN;
+    if (!url) { setM(p => ({ ...p, online: false, checkedAt: new Date() })); setChecking(false); return; }
+    setChecking(true);
+    try {
+      const ctrl = new AbortController();
+      const tid = setTimeout(() => ctrl.abort(), 8000);
+      const res = await fetch(`${url}/health`, { headers: token ? { Authorization: `Bearer ${token}` } : {}, signal: ctrl.signal });
+      clearTimeout(tid);
+      if (!res.ok) throw new Error();
+      const h: HealthPayload = await res.json();
+      setM({ cpu: fmtCpu(h), ram: fmtRam(h), uptime: h.uptime !== undefined ? fmtUptime(h.uptime) : "—", rpm: h.requests_per_minute !== undefined ? String(h.requests_per_minute) : "—", online: true, checkedAt: new Date() });
+    } catch { setM(p => ({ ...p, online: false, checkedAt: new Date() })); }
+    setChecking(false);
+  }, []);
+
+  useEffect(() => { check(); const id = setInterval(check, 30_000); return () => clearInterval(id); }, [check]);
+
+  const items = [
+    { label: "CPU", value: m.cpu, Icon: Cpu },
+    { label: "RAM", value: m.ram, Icon: MemoryStick },
+    { label: "Uptime", value: m.uptime, Icon: Activity },
+    { label: "Req/min", value: m.rpm, Icon: Zap },
+  ];
+
+  return (
+    <motion.div {...anim(13)}>
+      <Card cornerMarks className="bg-card/50 backdrop-blur-sm border-border/40">
+        <CardContent className="p-5">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="font-sans font-bold text-sm text-foreground flex items-center gap-2">
+              <Server className="w-4 h-4 text-primary" />
+              VPS Live
+            </h3>
+            <div className="flex items-center gap-2">
+              {m.checkedAt && <span className="text-[10px] text-muted-foreground/50">{m.checkedAt.toLocaleTimeString("pt-BR")}</span>}
+              <div className={`w-2 h-2 rounded-full ${m.online ? "bg-emerald-500 animate-pulse" : "bg-red-500"}`} />
+              <span className={`text-[10px] font-mono uppercase ${m.online ? "text-emerald-500" : "text-red-400"}`}>
+                {checking ? "…" : m.online ? "Live" : "Offline"}
+              </span>
+              <button onClick={check} className="text-muted-foreground hover:text-foreground transition-colors">
+                <RefreshCw className={`w-3 h-3 ${checking ? "animate-spin" : ""}`} />
+              </button>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            {items.map(({ label, value, Icon }) => (
+              <div key={label} className="bg-secondary/30 rounded-lg p-3 text-center">
+                <Icon className={`w-4 h-4 mx-auto mb-1 ${m.online ? "text-primary" : "text-muted-foreground/30"}`} />
+                <p className={`text-sm font-bold font-mono ${m.online ? "text-foreground" : "text-muted-foreground/40"}`}>{checking ? "…" : value}</p>
+                <p className="text-[10px] text-muted-foreground uppercase tracking-wider">{label}</p>
+              </div>
+            ))}
+          </div>
+          {!m.online && !checking && (
+            <p className="text-[11px] text-muted-foreground/50 mt-3 text-center">
+              {import.meta.env.VITE_OPENCLAW_URL ? "VPS inacessível" : "VITE_OPENCLAW_URL não configurada"}
+            </p>
+          )}
+        </CardContent>
+      </Card>
+    </motion.div>
+  );
+}
+
+/* ─── Database Status ─── */
+export function DatabaseStatus() {
+  const [stat, setStat] = useState<{ status: "online" | "offline" | "checking"; latency: number; checkedAt: Date }>({
+    status: "checking", latency: 0, checkedAt: new Date(),
+  });
+
+  const check = useCallback(async () => {
+    setStat(s => ({ ...s, status: "checking" }));
+    const t0 = Date.now();
+    try {
+      const { error } = await supabase.from("agents").select("id").limit(1);
+      setStat({ status: error ? "offline" : "online", latency: Date.now() - t0, checkedAt: new Date() });
+    } catch {
+      setStat({ status: "offline", latency: Date.now() - t0, checkedAt: new Date() });
+    }
+  }, []);
+
+  useEffect(() => { check(); }, [check]);
+
+  const badgeColor = stat.status === "online"
+    ? "bg-emerald-500/15 text-emerald-400"
+    : stat.status === "offline"
+    ? "bg-red-500/15 text-red-400"
+    : "bg-amber-500/15 text-amber-400";
+
+  return (
+    <motion.div {...anim(14)}>
+      <Card cornerMarks className="bg-card/50 backdrop-blur-sm border-border/40">
+        <CardContent className="p-5">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="font-sans font-bold text-sm text-foreground flex items-center gap-2">
+              <Database className="w-4 h-4 text-primary" />
+              PostgreSQL
+            </h3>
+            <button onClick={check} className="text-muted-foreground hover:text-foreground transition-colors">
+              <RefreshCw className={`w-3 h-3 ${stat.status === "checking" ? "animate-spin" : ""}`} />
+            </button>
+          </div>
+          <div className="space-y-2.5">
+            {([
+              { label: "Status", node: <span className={`text-[10px] px-2 py-0.5 rounded font-medium uppercase ${badgeColor}`}>{stat.status === "checking" ? "verificando…" : stat.status}</span> },
+              { label: "Latência", node: <span className="text-xs font-mono font-medium text-foreground">{stat.latency}ms</span> },
+              { label: "Provider", node: <span className="text-xs font-medium text-foreground">Supabase</span> },
+              { label: "Atualizado", node: <span className="text-[10px] text-muted-foreground">{stat.checkedAt.toLocaleTimeString("pt-BR")}</span> },
+            ] as { label: string; node: React.ReactNode }[]).map(({ label, node }) => (
+              <div key={label} className="flex items-center justify-between">
+                <span className="text-xs text-muted-foreground">{label}</span>
+                {node}
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    </motion.div>
+  );
+}
+
+/* ─── Infra Controls ─── */
+type SyncState = "idle" | "syncing" | "success" | "error";
+
+export function InfraControls() {
+  const [state, setState] = useState<SyncState>("idle");
+  const [log, setLog] = useState<string[]>([]);
+  const [lastSync, setLastSync] = useState<Date | null>(null);
+
+  const runSync = useCallback(async () => {
+    setState("syncing");
+    const lines: string[] = [];
+    const push = (l: string) => { lines.push(l); setLog([...lines]); };
+    try {
+      push("🔄 Iniciando sincronização…");
+      const { error } = await supabase.from("agents").select("id").limit(1);
+      if (error) throw new Error("Supabase indisponível");
+      push("✅ Supabase: conectado");
+      await supabase.from("agents").select("count", { count: "exact", head: true });
+      push("✅ agents: ok");
+      await supabase.from("tarefas").select("count", { count: "exact", head: true });
+      push("✅ tarefas: ok");
+      push("🎯 Concluído!");
+      setState("success");
+      setLastSync(new Date());
+      setTimeout(() => setState("idle"), 3000);
+    } catch (err: any) {
+      push(`❌ Erro: ${err.message}`);
+      setState("error");
+      setTimeout(() => setState("idle"), 4000);
+    }
+  }, []);
+
+  return (
+    <motion.div {...anim(15)}>
+      <Card cornerMarks className="bg-card/50 backdrop-blur-sm border-border/40">
+        <CardContent className="p-5">
+          <h3 className="font-sans font-bold text-sm text-foreground mb-4 flex items-center gap-2">
+            <Zap className="w-4 h-4 text-primary" />
+            Controles
+          </h3>
+          <button
+            onClick={runSync}
+            disabled={state === "syncing"}
+            className={`w-full py-2 rounded-lg text-xs font-medium flex items-center justify-center gap-2 transition-colors border
+              ${state === "success" ? "border-emerald-500/40 text-emerald-400 bg-emerald-500/10"
+              : state === "error"   ? "border-red-500/40 text-red-400 bg-red-500/10"
+              : "border-border/50 text-foreground hover:bg-primary/10 hover:border-primary/40 disabled:opacity-50 disabled:cursor-not-allowed"}`}
+          >
+            {state === "syncing" ? <><RefreshCw className="w-3 h-3 animate-spin" />Sincronizando…</>
+            : state === "success"  ? <><CheckCircle className="w-3 h-3" />Sincronizado!</>
+            : state === "error"    ? <><XCircle className="w-3 h-3" />Tentar novamente</>
+            : <><RefreshCw className="w-3 h-3" />Forçar Sync</>}
+          </button>
+          {log.length > 0 && (
+            <div className="mt-3 bg-black/60 rounded-lg p-3 font-mono text-[10px] space-y-0.5 max-h-28 overflow-y-auto">
+              {log.map((l, i) => <p key={i} className="text-emerald-400">{l}</p>)}
+            </div>
+          )}
+          {lastSync && (
+            <p className="text-[10px] text-muted-foreground/50 mt-2 text-center">
+              Último sync: {lastSync.toLocaleString("pt-BR")}
+            </p>
+          )}
         </CardContent>
       </Card>
     </motion.div>

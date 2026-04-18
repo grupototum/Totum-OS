@@ -56,6 +56,13 @@ export type { Skill } from './agents';
 
 import type { AgentConfigStatus } from './status';
 
+export interface AgentSkillRef {
+  skill_id: string;
+  skill_name?: string;
+  position?: number;
+  enabled?: boolean;
+}
+
 export interface Agent {
   agent_id: string;
   name: string;
@@ -63,11 +70,18 @@ export interface Agent {
   tier: number;
   model_override?: string;
   system_prompt: string;
-  skills: string[];
+  skills: string[] | AgentSkillRef[];
   metadata?: Record<string, any>;
   status: AgentConfigStatus;
   created_at?: string;
   updated_at?: string;
+}
+
+/** Normaliza skills independente de virem como string[] ou AgentSkillRef[] */
+export function normalizeSkillIds(skills: Agent['skills']): string[] {
+  if (!skills || skills.length === 0) return [];
+  if (typeof skills[0] === 'string') return skills as string[];
+  return (skills as AgentSkillRef[]).map(s => s.skill_id);
 }
 
 // ============================================================

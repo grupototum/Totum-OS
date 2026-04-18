@@ -22,7 +22,6 @@ import {
   UserCog,
   Network,
   ShieldCheck,
-  Shield,
   Brain,
   FileText,
   BookOpen,
@@ -68,7 +67,6 @@ export const navigationSections: NavSection[] = [
     label: "Visão",
     items: [
       { label: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },
-      { label: "Stark Industries", icon: Shield, path: "/stark" },
     ],
   },
 

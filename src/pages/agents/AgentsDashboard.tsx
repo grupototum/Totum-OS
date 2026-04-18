@@ -289,6 +289,8 @@ export default function AgentsDashboard() {
               <div className="relative flex-1 lg:w-56">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
+                  id="agent-search"
+                  name="agent-search"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Buscar agente..."
