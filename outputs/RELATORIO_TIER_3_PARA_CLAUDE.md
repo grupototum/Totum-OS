@@ -294,10 +294,47 @@ docs/DESIGN_SYSTEM.md                         # Reescrito dark-only
 package.json                                  # +zustand, +vite-plugin-pwa
 ```
 
-### Arquivos removidos (1)
+### Arquivos removidos (2)
 ```
-src/contexts/SidebarContext.tsx
+src/contexts/SidebarContext.tsx           # Migração Zustand completa
+src/pages/WikiAlexandria.tsx              # Dead code (Tier 1)
 ```
+
+---
+
+## 🔧 Hotfixes Pós-Tier 3 (2026-04-17)
+
+### 1. Página /docs fora do Design System
+**Problema:** Cores light-mode hardcoded, border-radius arredondado, textos em inglês.
+**Fix:**
+- `rounded-*` → `rounded-none` em todos os componentes de docs
+- `#ef233c` hardcoded → `bg-primary` / `text-primary` tokens
+- `bg-green-500` → `bg-emerald-500`
+- Cores amarelas de warning → `primary/10` + `primary/20`
+- `prose prose-invert` removido
+- Textos traduzidos para PT-BR
+
+**Arquivos:** `DocumentationLayout.tsx`, `DocumentationBrowser.tsx`, `DocumentationChat.tsx`
+
+### 2. Ollama Offline em CraudioCodete
+**Problema:** Env var `OLLAMA_URL` (sem prefixo `VITE_`) invisível para o frontend. Settings salva em localStorage mas serviço nunca lia de lá. Timeout de 3s curto para VPS remoto.
+
+**Fix:**
+- `.env.example`: `OLLAMA_URL` → `VITE_OLLAMA_URL`
+- `ollamaService.ts`: agora lê `ollamaHost` do `localStorage` (key `totum-api-keys`) primeiro, depois env var, depois localhost
+- `docs/lib/ollama-client.ts`: mesma lógica de localStorage
+- Timeout aumentado: 3s → 8s
+
+### 3. Codeflow Offline (ADA / Análise de funções)
+**Problema:** `.env.example` não documentava `CODEFLOW_URL`. IP hardcoded `187.127.4.140:8002` pode estar desatualizado.
+
+**Fix:**
+- `.env.example`: adicionada seção `CODEFLOW_URL`
+- Também adicionadas: `VITE_N8N_URL`, `VITE_N8N_API_KEY`
+
+### 4. SidebarContext.tsx Órfão
+**Problema:** Arquivo remanescente do Context após migração para Zustand.
+**Fix:** Arquivo removido. Verificado que nenhum consumidor restante o referenciava.
 
 ---
 
