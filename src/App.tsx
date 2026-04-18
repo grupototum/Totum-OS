@@ -96,6 +96,8 @@ const AppWithRouter = () => {
 
           {/* Agentes */}
           <Route path="/agents" element={<Page><AgentsDashboard /></Page>} />
+          {/* Criação de agente — redirect de atalho para o editor elizaOS em modo "new" */}
+          <Route path="/agents/new" element={<Navigate to="/agents/elizaos/new/edit" replace />} />
           <Route path="/agents/:agentId" element={<Page><AgentDetail /></Page>} />
           <Route path="/agents/:agentId/chat" element={<Page><AgentChatLayout /></Page>} />
           <Route path="/agents/elizaos/:agentId/edit" element={<Page><AgentElizaOSEdit /></Page>} />
