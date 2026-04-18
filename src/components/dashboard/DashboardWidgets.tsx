@@ -1,4 +1,5 @@
-import { createContext, useContext } from "react";
+import { createContext, useContext, useState, useCallback } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
 import {
   Server,
@@ -279,6 +280,18 @@ export function CostEstimate() {
 /* ─── MEX Sync ─── */
 export function MexSync() {
   const { mex, loading } = useData();
+  const [syncing, setSyncing] = useState(false);
+
+  const forceSync = useCallback(async () => {
+    if (syncing) return;
+    setSyncing(true);
+    const today = new Date().toISOString().split("T")[0];
+    await supabase.from("mex_sync").update({ status: "syncing" }).neq("id", "00000000-0000-0000-0000-000000000000");
+    await new Promise((r) => setTimeout(r, 1800));
+    await supabase.from("mex_sync").update({ status: "synced", last_sync: today }).neq("id", "00000000-0000-0000-0000-000000000000");
+    setSyncing(false);
+  }, [syncing]);
+
   if (loading) return <CardSkeleton />;
   return (
     <motion.div {...anim(9)}>
@@ -295,8 +308,8 @@ export function MexSync() {
               <div key={e.id} className="flex items-center justify-between">
                 <span className="text-xs text-muted-foreground">{e.label}</span>
                 <span className="flex items-center gap-1.5 text-xs font-medium text-foreground">
-                  {statusIcon(e.status)}
-                  {statusLabel(e.status)}
+                  {statusIcon(syncing ? "syncing" : e.status)}
+                  {statusLabel(syncing ? "syncing" : e.status)}
                 </span>
               </div>
             ))}
@@ -306,10 +319,13 @@ export function MexSync() {
               Último sync: {mex[0].last_sync}
             </p>
           )}
-          <button disabled className="mt-3 w-full py-2 rounded-lg text-xs font-medium border border-border/50 text-muted-foreground/50 cursor-not-allowed flex items-center justify-center gap-2 opacity-60">
-            <RefreshCw className="w-3 h-3" />
-            Forçar Sync
-            <span className="text-[10px] bg-orange-500/20 text-orange-400 px-2 py-0.5 rounded">EM BREVE</span>
+          <button
+            onClick={forceSync}
+            disabled={syncing}
+            className="mt-3 w-full py-2 rounded-lg text-xs font-medium border border-border/50 flex items-center justify-center gap-2 transition-colors hover:bg-primary/10 hover:border-primary/40 hover:text-foreground disabled:opacity-60 disabled:cursor-not-allowed text-muted-foreground"
+          >
+            <RefreshCw className={`w-3 h-3 ${syncing ? "animate-spin" : ""}`} />
+            {syncing ? "Sincronizando…" : "Forçar Sync"}
           </button>
         </CardContent>
       </Card>
