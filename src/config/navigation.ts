@@ -8,7 +8,6 @@ import {
   type LucideIcon,
   LayoutDashboard,
   Bot,
-  Sparkles,
   KanbanSquare,
   GitBranch,
   CheckSquare,
@@ -68,7 +67,6 @@ export const navigationSections: NavSection[] = [
     id: "visao",
     label: "Visão",
     items: [
-      { label: "Hub de Agentes", icon: Sparkles, path: "/hub" },
       { label: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },
       { label: "Stark Industries", icon: Shield, path: "/stark" },
     ],
