@@ -1,6 +1,6 @@
 /**
  * DocumentationChat Component
- * Displays chat interface with Ollama AI assistance
+ * Displays chat interface with AI assistance
  */
 
 import React, { useEffect, useRef, useState } from 'react';
@@ -9,7 +9,6 @@ import { Send, Trash2, AlertCircle, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { LoadingSpinner } from '@/components/loading';
-import { Card } from '@/components/ui/card';
 import type { ChatMessage } from '../hooks/useDocumentation';
 
 interface DocumentationChatProps {
@@ -44,22 +43,22 @@ export function DocumentationChat({
   };
 
   return (
-    <div className="h-full flex flex-col bg-zinc-950 border-l border-zinc-800">
+    <div className="h-full flex flex-col bg-background border-l border-border">
       {/* Header */}
-      <div className="p-4 border-b border-zinc-800 bg-black/50 sticky top-0 z-10">
+      <div className="p-4 border-b border-border bg-background/50 sticky top-0 z-10">
         <div className="flex items-center justify-between mb-3">
-          <h2 className="font-semibold text-white flex items-center gap-2">
-            <Zap className="w-4 h-4 text-[#ef233c]" />
-            Documentation AI
+          <h2 className="font-semibold text-foreground flex items-center gap-2">
+            <Zap className="w-4 h-4 text-primary" />
+            Documentação AI
           </h2>
           {messages.length > 0 && (
             <button
               onClick={onClearChat}
-              className="p-2 min-h-[44px] min-w-[44px] hover:bg-zinc-800 rounded transition-colors active:scale-95 flex items-center justify-center"
-              title="Clear chat history"
-              aria-label="Clear chat history"
+              className="p-2 min-h-[44px] min-w-[44px] hover:bg-muted rounded-none transition-colors active:scale-95 flex items-center justify-center"
+              title="Limpar histórico"
+              aria-label="Limpar histórico"
             >
-              <Trash2 className="w-4 h-4 text-zinc-500 hover:text-zinc-300" />
+              <Trash2 className="w-4 h-4 text-muted-foreground hover:text-foreground" />
             </button>
           )}
         </div>
@@ -69,12 +68,12 @@ export function DocumentationChat({
           <div
             className={`w-2 h-2 rounded-full ${
               ollamaAvailable
-                ? 'bg-green-500'
-                : 'bg-yellow-500'
+                ? 'bg-emerald-500'
+                : 'bg-primary'
             }`}
           />
-          <span className="text-zinc-400">
-            {ollamaAvailable ? 'Ollama Active' : 'Using Fallback'}
+          <span className="text-muted-foreground">
+            {ollamaAvailable ? 'Ollama Ativo' : 'Usando Fallback'}
           </span>
         </div>
       </div>
@@ -88,19 +87,19 @@ export function DocumentationChat({
               animate={{ opacity: 1, y: 0 }}
               className="h-full flex flex-col items-center justify-center text-center"
             >
-              <div className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center mb-3">
-                <Zap className="w-6 h-6 text-[#ef233c]" />
+              <div className="w-12 h-12 rounded-none bg-muted flex items-center justify-center mb-3">
+                <Zap className="w-6 h-6 text-primary" />
               </div>
-              <p className="text-sm text-zinc-400 mb-2">
-                Ask me anything about elizaOS
+              <p className="text-sm text-muted-foreground mb-2">
+                Pergunte-me qualquer coisa sobre a Totum
               </p>
-              <p className="text-xs text-zinc-500 max-w-xs">
-                I can help with agents, workflows, Alexandria, troubleshooting,
-                and API reference.
+              <p className="text-xs text-muted-foreground/70 max-w-xs">
+                Posso ajudar com agentes, workflows, Alexandria, troubleshooting
+                e referência de API.
               </p>
             </motion.div>
           ) : (
-            messages.map((message, index) => (
+            messages.map((message) => (
               <motion.div
                 key={message.id}
                 initial={{ opacity: 0, y: 10 }}
@@ -111,23 +110,23 @@ export function DocumentationChat({
                 }`}
               >
                 <div
-                  className={`max-w-xs px-4 py-2.5 rounded-lg ${
+                  className={`max-w-xs px-4 py-2.5 rounded-none ${
                     message.role === 'user'
-                      ? 'bg-[#ef233c] text-white rounded-br-none'
-                      : 'bg-zinc-800 text-zinc-100 rounded-bl-none'
+                      ? 'bg-primary text-primary-foreground'
+                      : 'bg-muted text-foreground'
                   }`}
                 >
                   <p className="text-sm leading-relaxed whitespace-pre-wrap break-words">
                     {message.content}
                   </p>
                   {message.sources && message.sources.length > 0 && (
-                    <div className="mt-2 pt-2 border-t border-zinc-700">
-                      <p className="text-xs text-zinc-400 mb-1">Sources:</p>
+                    <div className="mt-2 pt-2 border-t border-border">
+                      <p className="text-xs text-muted-foreground mb-1">Fontes:</p>
                       <div className="flex flex-wrap gap-1">
                         {message.sources.map(source => (
                           <span
                             key={source}
-                            className="text-xs bg-zinc-700 px-2 py-0.5 rounded"
+                            className="text-xs bg-background px-2 py-0.5 rounded-none border border-border"
                           >
                             {source}
                           </span>
@@ -146,7 +145,7 @@ export function DocumentationChat({
               animate={{ opacity: 1, y: 0 }}
               className="flex justify-start"
             >
-              <div className="bg-zinc-800 text-zinc-100 px-4 py-2.5 rounded-lg rounded-bl-none">
+              <div className="bg-muted text-foreground px-4 py-2.5 rounded-none">
                 <LoadingSpinner size="sm" />
               </div>
             </motion.div>
@@ -157,11 +156,11 @@ export function DocumentationChat({
       </div>
 
       {/* Input */}
-      <div className="p-4 border-t border-zinc-800 bg-black/50 sticky bottom-0">
+      <div className="p-4 border-t border-border bg-background/50 sticky bottom-0">
         {!ollamaAvailable && (
-          <div className="flex items-center gap-2 text-xs text-yellow-600 bg-yellow-500/10 px-3 py-2 rounded mb-3 border border-yellow-500/20">
+          <div className="flex items-center gap-2 text-xs text-primary bg-primary/10 px-3 py-2 rounded-none mb-3 border border-primary/20">
             <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />
-            <span>Ollama unavailable, using cloud fallback</span>
+            <span>Ollama indisponível, usando fallback em nuvem</span>
           </div>
         )}
 
@@ -169,22 +168,22 @@ export function DocumentationChat({
           <Input
             value={input}
             onChange={e => setInput(e.target.value)}
-            placeholder="Ask about documentation..."
+            placeholder="Pergunte sobre a documentação..."
             disabled={loading}
-            className="flex-1 bg-zinc-900 border-zinc-700 text-white placeholder-zinc-500 focus:border-[#ef233c] min-h-[48px] py-3"
+            className="flex-1 bg-card border-border text-foreground placeholder:text-muted-foreground focus-visible:ring-primary min-h-[48px] py-3 rounded-none"
           />
           <Button
             type="submit"
             disabled={loading || !input.trim()}
-            className="bg-[#ef233c] hover:bg-[#d91e2f] text-white disabled:opacity-50 min-h-[48px] min-w-[48px] px-3 py-3 active:scale-95 transition-transform"
-            aria-label="Send message"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground disabled:opacity-50 min-h-[48px] min-w-[48px] px-3 py-3 active:scale-95 transition-transform rounded-none"
+            aria-label="Enviar mensagem"
           >
             <Send className="w-4 h-4" />
           </Button>
         </form>
 
-        <p className="text-xs text-zinc-500 mt-2 text-center">
-          Powered by Ollama · Local AI · No tracking
+        <p className="text-xs text-muted-foreground mt-2 text-center">
+          Powered by Ollama · IA Local · Sem tracking
         </p>
       </div>
     </div>
