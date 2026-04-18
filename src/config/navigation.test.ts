@@ -1,4 +1,10 @@
-import { navigationSections, getAllNavPaths, getSectionForPath, isPathInSection } from "./navigation";
+import {
+  navigationSections,
+  getAllNavPaths,
+  getSectionForPath,
+  isPathInSection,
+  getCommandPaletteEntries,
+} from "./navigation";
 
 describe("navigation config", () => {
   it("has exactly 5 pillars", () => {
@@ -67,5 +73,44 @@ describe("navigation config", () => {
     expect(isPathInSection("/hub", "visao")).toBe(true);
     expect(isPathInSection("/hub", "agentes")).toBe(false);
     expect(isPathInSection("/hermione", "conhecimento")).toBe(true);
+  });
+
+  // ── CommandPalette integration ───────────────────────────────────────────
+  describe("getCommandPaletteEntries", () => {
+    it("returns entries for all top-level items", () => {
+      const entries = getCommandPaletteEntries();
+      expect(entries.find((e) => e.path === "/hub")).toBeDefined();
+      expect(entries.find((e) => e.path === "/tasks")).toBeDefined();
+      expect(entries.find((e) => e.path === "/docs")).toBeDefined();
+    });
+
+    it("includes expandable parents and subitems", () => {
+      const entries = getCommandPaletteEntries();
+      expect(entries.find((e) => e.path === "/agents")).toBeDefined();
+      expect(entries.find((e) => e.path === "/agents/radar/chat")).toBeDefined();
+      expect(entries.find((e) => e.path === "/hermione")).toBeDefined();
+      expect(entries.find((e) => e.path === "/alexandria/pops")).toBeDefined();
+    });
+
+    it("groups entries by pillar label", () => {
+      const entries = getCommandPaletteEntries();
+      const hub = entries.find((e) => e.path === "/hub");
+      const radar = entries.find((e) => e.path === "/agents/radar/chat");
+      const hermione = entries.find((e) => e.path === "/hermione");
+      expect(hub?.group).toBe("Visão");
+      expect(radar?.group).toBe("Agentes");
+      expect(hermione?.group).toBe("Conhecimento");
+    });
+
+    it("has unique ids", () => {
+      const entries = getCommandPaletteEntries();
+      const ids = entries.map((e) => e.id);
+      expect(new Set(ids).size).toBe(ids.length);
+    });
+
+    it("provides an icon for every entry", () => {
+      const entries = getCommandPaletteEntries();
+      entries.forEach((e) => expect(e.icon).toBeDefined());
+    });
   });
 });

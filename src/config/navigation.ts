@@ -193,3 +193,58 @@ export function getSectionForPath(path: string): string | null {
   }
   return null;
 }
+
+// ─── Command Palette integration ─────────────────────────────────────────────
+
+export interface CommandPaletteEntry {
+  id: string;
+  label: string;
+  group: string;
+  path: string;
+  icon: LucideIcon;
+}
+
+/**
+ * Build CommandPalette entries directly from navigationSections so the palette
+ * always stays in sync with the sidebar. Sub-items without a `icon` prop fall
+ * back to the parent section's icon.
+ */
+export function getCommandPaletteEntries(): CommandPaletteEntry[] {
+  const entries: CommandPaletteEntry[] = [];
+
+  for (const section of navigationSections) {
+    for (const item of section.items) {
+      entries.push({
+        id: `nav-${item.path}`,
+        label: item.label,
+        group: section.label,
+        path: item.path,
+        icon: item.icon,
+      });
+    }
+
+    if (section.expandable) {
+      // Parent entry
+      entries.push({
+        id: `nav-${section.expandable.path}`,
+        label: section.expandable.label,
+        group: section.label,
+        path: section.expandable.path,
+        icon: section.expandable.icon,
+      });
+      // Sub-items
+      for (const sub of section.expandable.subItems) {
+        if (sub.path === section.expandable.path) continue; // skip duplicate parent
+        entries.push({
+          id: `nav-${sub.path}`,
+          label: sub.label,
+          group: section.label,
+          path: sub.path,
+          icon: sub.icon || section.expandable.icon,
+        });
+      }
+    }
+  }
+
+  return entries;
+}

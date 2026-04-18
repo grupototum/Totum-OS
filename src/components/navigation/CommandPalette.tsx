@@ -1,6 +1,10 @@
 /**
  * CommandPalette — Global search & navigation palette
  * Triggered by Cmd+K (Mac) / Ctrl+K (Windows/Linux)
+ *
+ * Primary entries are derived from `src/config/navigation.ts` (single source of
+ * truth shared with the sidebar). "Extras" below cover routes that aren't in
+ * the sidebar but are still reachable.
  */
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
@@ -15,68 +19,49 @@ import {
   CommandShortcut,
 } from "@/components/ui/command";
 import {
-  LayoutDashboard, Bot, BookOpen, KanbanSquare, GitBranch,
-  Building2, Terminal, Users, Settings, FileText, Brain,
-  Sparkles, Cloud, Library, Server, UserPlus, Contact,
-  Shield, Home, Cpu, UserCog, CalendarClock, FolderOpen,
-  CheckSquare, BookMarked, Lightbulb, ClipboardList,
+  Terminal, FileText, Brain, Server, CalendarClock, FolderOpen,
+  CheckSquare, Lightbulb, Cpu,
+  type LucideIcon,
 } from "lucide-react";
+import { getCommandPaletteEntries, type CommandPaletteEntry } from "@/config/navigation";
 
 interface CommandEntry {
   id: string;
   label: string;
   group: string;
   path: string;
-  icon: React.ElementType;
+  icon: LucideIcon;
   keywords?: string;
 }
 
-const COMMANDS: CommandEntry[] = [
-  // Principal
-  { id: "dashboard", label: "Dashboard", group: "Principal", path: "/dashboard", icon: LayoutDashboard, keywords: "home inicio" },
-  { id: "hub", label: "Hub de Agentes", group: "Principal", path: "/hub", icon: Home },
-  { id: "office", label: "Visão do Escritório", group: "Principal", path: "/office", icon: Building2 },
-  { id: "stark", label: "Stark Industries", group: "Principal", path: "/stark", icon: Shield, keywords: "vps infra server" },
-
-  // Agentes
-  { id: "agents", label: "Painel de Agentes", group: "Agentes", path: "/agents", icon: Bot, keywords: "agents dashboard" },
-  { id: "estrutura-time", label: "Estrutura do Time", group: "Agentes", path: "/estrutura-time", icon: Users, keywords: "team time" },
-
-  // Alexandria
-  { id: "alexandria", label: "Alexandria", group: "Alexandria", path: "/alexandria", icon: BookOpen, keywords: "base conhecimento knowledge" },
-  { id: "hermione", label: "Hermione", group: "Alexandria", path: "/hermione", icon: Sparkles, keywords: "chat ia giles knowledge base" },
-  { id: "alexandria-pops", label: "Portal POPs", group: "Alexandria", path: "/alexandria/pops", icon: FileText, keywords: "procedimentos operacionais" },
-  { id: "alexandria-context", label: "Context HUB", group: "Alexandria", path: "/alexandria/context", icon: Brain, keywords: "contexto rag embeddings" },
-  { id: "alexandria-skills", label: "Skills Central", group: "Alexandria", path: "/alexandria/skills", icon: Lightbulb, keywords: "habilidades skills" },
-  { id: "alexandria-openclaw", label: "OpenClaw Dashboard", group: "Alexandria", path: "/alexandria/openclaw", icon: Cloud, keywords: "gateway openclaw" },
-  { id: "docs", label: "Documentação", group: "Alexandria", path: "/docs", icon: BookMarked, keywords: "docs documentation guias" },
-
-  // Trabalho
-  { id: "tasks", label: "Quadro de Tarefas", group: "Trabalho", path: "/tasks", icon: KanbanSquare, keywords: "kanban tarefas tasks board" },
-  { id: "content", label: "Pipeline de Conteúdo", group: "Trabalho", path: "/content", icon: GitBranch, keywords: "conteudo pipeline" },
-  { id: "action-plan", label: "Plano de Ação", group: "Trabalho", path: "/action-plan", icon: ClipboardList, keywords: "plano acao goals" },
-  { id: "deployment", label: "Checklist Deploy", group: "Trabalho", path: "/deployment", icon: CheckSquare, keywords: "deploy checklist release" },
-  { id: "task-recurrence", label: "Recorrência de Tarefas", group: "Trabalho", path: "/task-recurrence", icon: CalendarClock, keywords: "recorrencia tarefas agendamento" },
-
-  // Clientes
-  { id: "clients", label: "Central de Clientes", group: "Clientes", path: "/clients", icon: Contact, keywords: "clientes crm" },
-  { id: "new-client", label: "Novo Cliente", group: "Clientes", path: "/new-client", icon: UserPlus, keywords: "novo cliente add" },
-
-  // IA Tools
-  { id: "claude-code", label: "Claude Code", group: "IA Tools", path: "/claude-code", icon: Terminal, keywords: "ai code claudecode" },
-  { id: "craudio-codete", label: "Cráudio Codete", icon: Cpu, group: "IA Tools", path: "/craudio-codete", keywords: "audio codete ia" },
-  { id: "ada", label: "ADA", group: "IA Tools", path: "/ada", icon: Brain, keywords: "ada assistente" },
-
-  // Infraestrutura
-  { id: "hosting", label: "Painel de Hosting", group: "Infra", path: "/hosting", icon: Server, keywords: "hosting vps server cloud" },
-  { id: "google-drive", label: "Google Drive", group: "Infra", path: "/google-drive", icon: FolderOpen, keywords: "drive arquivos files" },
-
-  // Configurações
-  { id: "settings", label: "Configurações", group: "Config", path: "/settings", icon: Settings, keywords: "settings configuracoes" },
-  { id: "operadores", label: "Operadores", group: "Config", path: "/operadores", icon: UserCog, keywords: "operadores usuarios" },
-  { id: "pop-sla", label: "POP e SLA", group: "Config", path: "/pop-sla", icon: FileText, keywords: "pop sla procedimentos" },
-  { id: "dicas", label: "Dicas & Recursos", group: "Config", path: "/dicas", icon: Lightbulb, keywords: "dicas recursos tips" },
+// Routes not present in the sidebar but still navigable
+const EXTRA_COMMANDS: CommandEntry[] = [
+  { id: "extra-deployment", label: "Checklist Deploy", group: "Operações", path: "/deployment", icon: CheckSquare, keywords: "deploy checklist release" },
+  { id: "extra-task-recurrence", label: "Recorrência de Tarefas", group: "Operações", path: "/task-recurrence", icon: CalendarClock, keywords: "recorrencia tarefas agendamento" },
+  { id: "extra-claude-code", label: "Claude Code", group: "Sistema", path: "/claude-code", icon: Terminal, keywords: "ai code claudecode" },
+  { id: "extra-craudio", label: "Cráudio Codete", group: "Sistema", path: "/craudio-codete", icon: Cpu, keywords: "audio codete ia" },
+  { id: "extra-ada", label: "ADA", group: "Sistema", path: "/ada", icon: Brain, keywords: "ada assistente" },
+  { id: "extra-hosting", label: "Painel de Hosting", group: "Sistema", path: "/hosting", icon: Server, keywords: "hosting vps server cloud" },
+  { id: "extra-google-drive", label: "Google Drive", group: "Operações", path: "/google-drive", icon: FolderOpen, keywords: "drive arquivos files" },
+  { id: "extra-pop-sla", label: "POP e SLA", group: "Sistema", path: "/pop-sla", icon: FileText, keywords: "pop sla procedimentos" },
+  { id: "extra-dicas", label: "Dicas & Recursos", group: "Sistema", path: "/dicas", icon: Lightbulb, keywords: "dicas recursos tips" },
 ];
+
+function buildAllCommands(): CommandEntry[] {
+  const navEntries: CommandEntry[] = getCommandPaletteEntries().map((e: CommandPaletteEntry) => ({
+    id: e.id,
+    label: e.label,
+    group: e.group,
+    path: e.path,
+    icon: e.icon,
+  }));
+
+  // Dedupe by path — nav is authoritative
+  const seen = new Set(navEntries.map((e) => e.path));
+  const extras = EXTRA_COMMANDS.filter((e) => !seen.has(e.path));
+
+  return [...navEntries, ...extras];
+}
 
 // Agrupa mantendo a ordem de aparição
 function groupCommands(commands: CommandEntry[]) {
@@ -104,7 +89,7 @@ export function CommandPalette({ open, onOpenChange }: Props) {
     [navigate, onOpenChange]
   );
 
-  const grouped = groupCommands(COMMANDS);
+  const grouped = groupCommands(buildAllCommands());
 
   return (
     <CommandDialog open={open} onOpenChange={onOpenChange}>
