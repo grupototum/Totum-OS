@@ -25,7 +25,6 @@ const routeMappings: Record<string, BreadcrumbItem[]> = {
   "/new-client": [{ label: "Clientes", path: "/clients" }, { label: "Novo Cliente" }],
   "/hosting": [{ label: "Hosting" }],
   "/claude-code": [{ label: "Claude Code" }],
-  "/stark": [{ label: "Stark Industries" }],
   "/pop-sla": [{ label: "POPs & SLAs" }],
   "/dicas": [{ label: "Dicas & Recursos" }],
   "/recursos": [{ label: "Recursos Centrais" }],

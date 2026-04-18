@@ -43,7 +43,6 @@ const RecursosPage      = lazy(() => import("./pages/RecursosPage"));
 const ActionPlan        = lazy(() => import("./pages/ActionPlan"));
 const NewClient         = lazy(() => import("./pages/NewClient"));
 const AdaPage           = lazy(() => import("./pages/ada"));
-const StarkIndustries   = lazy(() => import("./pages/dashboard/StarkIndustries"));
 const GoogleDriveEmbed  = lazy(() => import("./pages/workspace/GoogleDriveEmbed"));
 const TaskRecurrence    = lazy(() => import("./pages/workspace/TaskRecurrence"));
 const DeploymentChecklist = lazy(() => import("./pages/workspace/DeploymentChecklist"));
@@ -144,8 +143,7 @@ const AppWithRouter = () => {
           <Route path="/edit-client/:clientId" element={<Page><EditClient /></Page>} />
           <Route path="/ada" element={<Page><AdaPage /></Page>} />
 
-          {/* Stark / Workspace / IA Tools */}
-          <Route path="/stark" element={<Page><StarkIndustries /></Page>} />
+          {/* Workspace / IA Tools */}
           <Route path="/google-drive" element={<Page><GoogleDriveEmbed /></Page>} />
           <Route path="/task-recurrence" element={<Page><TaskRecurrence /></Page>} />
           <Route path="/deployment" element={<Page><DeploymentChecklist /></Page>} />

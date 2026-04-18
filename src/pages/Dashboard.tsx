@@ -14,6 +14,9 @@ import {
   AgentCards,
   DashboardProvider,
   SystemHealthScore,
+  VpsLiveStatus,
+  DatabaseStatus,
+  InfraControls,
 } from "@/components/dashboard/DashboardWidgets";
 import { useDashboardData } from "@/hooks/useDashboardData";
 
@@ -75,6 +78,15 @@ export default function Dashboard() {
               <MexSync />
             </div>
           </div>
+
+          <section className="mb-6">
+            <p className="font-mono text-xs uppercase tracking-widest text-[10px] text-muted-foreground mb-4">INFRAESTRUTURA</p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <VpsLiveStatus />
+              <DatabaseStatus />
+              <InfraControls />
+            </div>
+          </section>
 
           <section className="mb-6">
             <p className="font-mono text-xs uppercase tracking-widest text-[10px] text-muted-foreground mb-4">MÉTRICAS AO LONGO DO TEMPO</p>
