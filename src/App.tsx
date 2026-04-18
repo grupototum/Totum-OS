@@ -34,7 +34,7 @@ const AlexandriaPage    = lazy(() => import("./pages/alexandria"));
 const QuadroTarefas     = lazy(() => import("./pages/QuadroTarefas"));
 const ContentPipeline   = lazy(() => import("./pages/ContentPipeline"));
 const OfficeView        = lazy(() => import("./pages/OfficeView"));
-const EstruturaTime     = lazy(() => import("./pages/EstruturaTime"));
+const SystemDiagram     = lazy(() => import("./pages/SystemDiagram"));
 const ClaudeCode        = lazy(() => import("./pages/ClaudeCode"));
 const SettingsPage      = lazy(() => import("./pages/Settings"));
 const PopSlaPage        = lazy(() => import("./pages/PopSla"));
@@ -124,8 +124,9 @@ const AppWithRouter = () => {
           <Route path="/docs" element={<Page><DocsPage /></Page>} />
           <Route path="/content" element={<Page><ContentPipeline /></Page>} />
           <Route path="/office" element={<Page><OfficeView /></Page>} />
-          <Route path="/estrutura-time" element={<Page><EstruturaTime /></Page>} />
-          <Route path="/team" element={<Navigate to="/estrutura-time" replace />} />
+          <Route path="/diagrama-sistemas" element={<Page><SystemDiagram /></Page>} />
+          <Route path="/estrutura-time" element={<Navigate to="/diagrama-sistemas" replace />} />
+          <Route path="/team" element={<Navigate to="/diagrama-sistemas" replace />} />
           <Route path="/claude-code" element={<Page><ClaudeCode /></Page>} />
           <Route path="/settings" element={<Page><SettingsPage /></Page>} />
 
