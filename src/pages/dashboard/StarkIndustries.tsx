@@ -8,7 +8,8 @@ import ServerStatus from '@/components/stark/ServerStatus';
 import BackupStatus from '@/components/stark/BackupStatus';
 import DatabaseStatus from '@/components/stark/DatabaseStatus';
 import SyncButton from '@/components/stark/SyncButton';
-import { Shield, Activity, Cpu, Zap, AlertCircle } from 'lucide-react';
+import { Shield, Activity, Cpu, Zap, AlertCircle, Radio } from 'lucide-react';
+import { useDashboardData } from '@/hooks/useDashboardData';
 import { OPENCLAW_CONFIG } from '@/config/openclaw';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -68,6 +69,7 @@ function parseUptime(seconds: number): string {
 
 export default function StarkIndustries() {
   const pageTransition = usePageTransition();
+  const { realtimeConnected } = useDashboardData();
   const [lastSyncSuccess, setLastSyncSuccess] = useState<boolean | null>(null);
 
   const [metrics, setMetrics] = useState<VpsMetrics>({
@@ -173,7 +175,15 @@ export default function StarkIndustries() {
                 <Shield className="h-6 w-6 text-primary" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold tracking-tight">Stark Industries</h1>
+                <div className="flex items-center gap-2">
+                  <h1 className="text-2xl font-bold tracking-tight">Stark Industries</h1>
+                  <div className="flex items-center gap-1" title={realtimeConnected ? "Conexão em tempo real ativa" : "Conexão em tempo real desconectada"}>
+                    <Radio className={`w-3 h-3 ${realtimeConnected ? "text-emerald-500" : "text-muted-foreground"}`} />
+                    <span className={`text-[9px] font-mono uppercase tracking-wider ${realtimeConnected ? "text-emerald-500" : "text-muted-foreground"}`}>
+                      {realtimeConnected ? "Live" : "Off"}
+                    </span>
+                  </div>
+                </div>
                 <p className="text-sm text-muted-foreground">Centro de controle de infraestrutura Totum</p>
               </div>
             </div>

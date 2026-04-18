@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import type { Agent } from '@/types/agent';
@@ -22,8 +22,6 @@ export interface DashboardApp {
   description: string | null;
   sort_order: number | null;
 }
-
-// Agent is imported from @/types/agent above — no local duplicate needed
 
 export interface DashboardCost {
   id: string;
@@ -61,6 +59,7 @@ export interface DashboardData {
   mex: MexSyncEntry[];
   github: GitHubConfig | null;
   loading: boolean;
+  realtimeConnected: boolean;
 }
 
 const notifyLabels: Record<string, string> = {
@@ -73,6 +72,45 @@ const notifyLabels: Record<string, string> = {
   github_config: "GitHub",
 };
 
+// Debounce helper for toast notifications
+function useDebouncedToast() {
+  const pending = useRef<Map<string, NodeJS.Timeout>>(new Map());
+
+  const show = useCallback((table: string, eventType: string) => {
+    const key = `${table}-${eventType}`;
+    const existing = pending.current.get(key);
+    if (existing) clearTimeout(existing);
+
+    const timeout = setTimeout(() => {
+      const eventLabel = eventType === "INSERT" ? "adicionado" :
+        eventType === "UPDATE" ? "atualizado" : "removido";
+      toast({
+        title: `🔔 ${notifyLabels[table] ?? table}`,
+        description: `Dado ${eventLabel} em tempo real`,
+      });
+      pending.current.delete(key);
+    }, 1500);
+
+    pending.current.set(key, timeout);
+  }, []);
+
+  return show;
+}
+
+// Retry helper for Supabase queries
+async function withRetry<T>(fn: () => Promise<T>, retries = 2, delay = 1000): Promise<T | undefined> {
+  try {
+    return await fn();
+  } catch (err) {
+    if (retries > 0) {
+      await new Promise((r) => setTimeout(r, delay));
+      return withRetry(fn, retries - 1, delay * 2);
+    }
+    console.error("[Dashboard] Query failed after retries:", err);
+    return undefined;
+  }
+}
+
 export function useDashboardData(): DashboardData {
   const [vps, setVps] = useState<VpsServer[]>([]);
   const [apps, setApps] = useState<DashboardApp[]>([]);
@@ -82,39 +120,62 @@ export function useDashboardData(): DashboardData {
   const [mex, setMex] = useState<MexSyncEntry[]>([]);
   const [github, setGitHub] = useState<GitHubConfig | null>(null);
   const [loading, setLoading] = useState(true);
+  const [realtimeConnected, setRealtimeConnected] = useState(false);
+  const showToast = useDebouncedToast();
 
   const refetchVps = useCallback(async () => {
-    const { data } = await supabase.from("vps_servers").select("*");
+    const data = await withRetry(async () => {
+      const { data } = await supabase.from("vps_servers").select("*");
+      return data;
+    });
     if (data) setVps(data as VpsServer[]);
   }, []);
 
   const refetchApps = useCallback(async () => {
-    const { data } = await supabase.from("dashboard_apps").select("*").order("sort_order");
+    const data = await withRetry(async () => {
+      const { data } = await supabase.from("dashboard_apps").select("*").order("sort_order");
+      return data;
+    });
     if (data) setApps(data as DashboardApp[]);
   }, []);
 
   const refetchAgents = useCallback(async () => {
-    const { data } = await supabase.from("agents").select("*");
+    const data = await withRetry(async () => {
+      const { data } = await supabase.from("agents").select("*");
+      return data;
+    });
     if (data) setAgents(data as Agent[]);
   }, []);
 
   const refetchCosts = useCallback(async () => {
-    const { data } = await supabase.from("dashboard_costs").select("*");
+    const data = await withRetry(async () => {
+      const { data } = await supabase.from("dashboard_costs").select("*");
+      return data;
+    });
     if (data) setCosts(data as DashboardCost[]);
   }, []);
 
   const refetchActivities = useCallback(async () => {
-    const { data } = await supabase.from("dashboard_activities").select("*").order("created_at", { ascending: false }).limit(20);
+    const data = await withRetry(async () => {
+      const { data } = await supabase.from("dashboard_activities").select("*").order("created_at", { ascending: false }).limit(20);
+      return data;
+    });
     if (data) setActivities(data as DashboardActivity[]);
   }, []);
 
   const refetchMex = useCallback(async () => {
-    const { data } = await supabase.from("mex_sync").select("*");
+    const data = await withRetry(async () => {
+      const { data } = await supabase.from("mex_sync").select("*");
+      return data;
+    });
     if (data) setMex(data as MexSyncEntry[]);
   }, []);
 
   const refetchGithub = useCallback(async () => {
-    const { data } = await supabase.from("github_config").select("*").limit(1).single();
+    const data = await withRetry(async () => {
+      const { data } = await supabase.from("github_config").select("*").limit(1).single();
+      return data;
+    });
     if (data) setGitHub(data as GitHubConfig);
   }, []);
 
@@ -142,6 +203,9 @@ export function useDashboardData(): DashboardData {
     };
 
     const id = Math.random().toString(36).slice(2);
+    let connectedCount = 0;
+    const totalChannels = Object.keys(refetchMap).length;
+
     const channels = Object.entries(refetchMap).map(([table, refetch]) => {
       const ch = supabase.channel(`dash-${table}-${id}`)
         .on(
@@ -149,22 +213,25 @@ export function useDashboardData(): DashboardData {
           { event: "*", schema: "public", table },
           (payload: any) => {
             refetch();
-            const eventLabel = payload.eventType === "INSERT" ? "adicionado" :
-              payload.eventType === "UPDATE" ? "atualizado" : "removido";
-            toast({
-              title: `🔔 ${notifyLabels[table] ?? table}`,
-              description: `Dado ${eventLabel} em tempo real`,
-            });
+            showToast(table, payload.eventType);
           }
-        );
-      ch.subscribe();
+        )
+        .subscribe((status: string) => {
+          if (status === "SUBSCRIBED") {
+            connectedCount++;
+            if (connectedCount === totalChannels) {
+              setRealtimeConnected(true);
+            }
+          }
+        });
       return ch;
     });
 
     return () => {
       channels.forEach((ch) => supabase.removeChannel(ch));
+      setRealtimeConnected(false);
     };
-  }, [refetchVps, refetchApps, refetchAgents, refetchCosts, refetchActivities, refetchMex, refetchGithub]);
+  }, [refetchVps, refetchApps, refetchAgents, refetchCosts, refetchActivities, refetchMex, refetchGithub, showToast]);
 
-  return { vps, apps, agents, costs, activities, mex, github, loading };
+  return { vps, apps, agents, costs, activities, mex, github, loading, realtimeConnected };
 }

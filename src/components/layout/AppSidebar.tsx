@@ -1,108 +1,27 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
-  LayoutDashboard,
-  Bot,
-  KanbanSquare,
-  GitBranch,
-  Building2,
-  Users,
-  Settings,
   LogOut,
   ChevronLeft,
   ChevronDown,
   ChevronRight,
   Menu,
-  UserPlus,
-  Contact,
-  Shield,
-  Sparkles,
-  BookOpen,
-  CheckSquare,
-  Brain,
-  FileText,
-  Cloud,
-  Library,
-  Lightbulb,
-  Cpu,
-  BookMarked,
-  Terminal,
   Search,
-  UserCog,
-  Network,
-  Zap,
-  ShieldCheck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
-import { useSidebarCollapse } from "@/contexts/SidebarContext";
+import { useSidebarStore } from "@/stores/sidebarStore";
 import { supabase } from "@/integrations/supabase/client";
-
-// ─── Sub-items para seções expansíveis ────────────────────────────────────────
-
-const agentsSubItems = [
-  { label: "Painel de Agentes", icon: Bot,       path: "/agents",               emoji: null },
-  { label: "Radar",             icon: Sparkles,  path: "/agents/radar/chat",    emoji: "🔍" },
-  { label: "Gestor",            icon: Sparkles,  path: "/agents/gestor/chat",   emoji: "📊" },
-  { label: "Social",            icon: Sparkles,  path: "/agents/social/chat",   emoji: "📱" },
-  { label: "Atendente",         icon: Sparkles,  path: "/agents/atendente/chat",emoji: "🎧" },
-  { label: "SDR",               icon: Sparkles,  path: "/agents/sdr/chat",      emoji: "🤝" },
-  { label: "Kimi",              icon: Sparkles,  path: "/agents/kimi/chat",     emoji: "🤖" },
-];
-
-const alexandriaSubItems = [
-  { label: "Hermione",     icon: Brain,          path: "/hermione" },
-  { label: "Portal POPs",  icon: FileText,        path: "/alexandria/pops" },
-  { label: "Context HUB",  icon: BookOpen,        path: "/alexandria/context" },
-  { label: "Skills",       icon: Lightbulb,       path: "/alexandria/skills" },
-  { label: "OpenClaw",     icon: Cloud,           path: "/alexandria/openclaw" },
-  { label: "Biblioteca",   icon: Library,         path: "/alexandria" },
-  { label: "Suna Agent",  icon: Cpu,             path: "/suna" },
-];
-
-// ─── Seções fixas ─────────────────────────────────────────────────────────────
-
-const coreItems = [
-  { label: "Hub de Agentes",   icon: Sparkles,       path: "/hub" },
-  { label: "Dashboard",        icon: LayoutDashboard, path: "/dashboard" },
-  { label: "Stark Industries", icon: Shield,          path: "/stark" },
-];
-
-const workspaceItems = [
-  { label: "Tarefas",           icon: KanbanSquare, path: "/tasks" },
-  { label: "Pipeline Conteúdo", icon: GitBranch,    path: "/content" },
-  { label: "Plano de Ação",     icon: CheckSquare,  path: "/action-plan" },
-  { label: "Escritório",        icon: Building2,    path: "/office" },
-];
-
-const clientsItems = [
-  { label: "Central de Clientes", icon: Contact,  path: "/clients" },
-  { label: "Novo Cliente",        icon: UserPlus, path: "/new-client" },
-];
-
-const toolsItems = [
-  { label: "Documentação",   icon: BookMarked, path: "/docs" },
-  { label: "Cráudio Codete", icon: Cpu,        path: "/craudio-codete" },
-  { label: "Claude Code",    icon: Terminal,   path: "/claude-code" },
-];
-
-const configItems = [
-  { label: "Configurações",   icon: Settings,    path: "/settings" },
-  { label: "Time",            icon: Users,       path: "/estrutura-time" },
-  { label: "Operadores",      icon: UserCog,     path: "/operadores" },
-  { label: "Hosting",         icon: Network,     path: "/hosting" },
-  { label: "Aprovações",      icon: ShieldCheck, path: "/admin/approvals" },
-];
-
-// ─── Component ────────────────────────────────────────────────────────────────
+import { navigationSections, type NavItem, type NavSubItem } from "@/config/navigation";
 
 export default function AppSidebar() {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const { collapsed, toggle: toggleCollapsed } = useSidebarCollapse();
-  const [expandedAgents, setExpandedAgents] = useState(true);
-  const [expandedAlexandria, setExpandedAlexandria] = useState(false);
+  const collapsed = useSidebarStore((s) => s.collapsed);
+  const toggleCollapsed = useSidebarStore((s) => s.toggleCollapsed);
+  const expandedSections = useSidebarStore((s) => s.expandedSections);
+  const toggleSection = useSidebarStore((s) => s.toggleSection);
   const [isNavigating, setIsNavigating] = useState(false);
   const [pendingApprovals, setPendingApprovals] = useState(0);
 
@@ -116,7 +35,7 @@ export default function AppSidebar() {
       setPendingApprovals(count || 0);
     };
     fetchPending();
-    const interval = setInterval(fetchPending, 60000); // atualiza a cada 1 min
+    const interval = setInterval(fetchPending, 60000);
     return () => clearInterval(interval);
   }, []);
 
@@ -124,9 +43,17 @@ export default function AppSidebar() {
     window.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true, bubbles: true }));
 
   const isActive = (path: string) => location.pathname === path;
-  const isAgentsActive  = () => location.pathname.startsWith("/agents") || location.pathname === "/hub";
-  const isAlexandriaActive = () =>
-    location.pathname.startsWith("/alexandria") || location.pathname === "/hermione";
+
+  const isSectionActive = (sectionId: string) => {
+    const section = navigationSections.find((s) => s.id === sectionId);
+    if (!section) return false;
+    if (section.items.some((i) => isActive(i.path))) return true;
+    if (section.expandable) {
+      if (location.pathname.startsWith(section.expandable.path)) return true;
+      if (section.expandable.subItems.some((s) => isActive(s.path))) return true;
+    }
+    return false;
+  };
 
   const handleNav = (path: string) => {
     if (isNavigating) return;
@@ -137,10 +64,20 @@ export default function AppSidebar() {
 
   const handleLogout = () => { signOut(); navigate("/login"); };
 
+
+
   // ── helpers ──────────────────────────────────────────────────────────────────
 
-  const NavItem = ({ item, badge }: { item: { label: string; icon: React.ElementType; path: string }; badge?: number }) => {
+  const SectionLabel = ({ title }: { title: string }) =>
+    !collapsed ? (
+      <p className="font-mono text-[10px] uppercase tracking-widest text-sidebar-foreground/35 mb-2 px-2">
+        {title}
+      </p>
+    ) : null;
+
+  const NavItemButton = ({ item }: { item: NavItem }) => {
     const active = isActive(item.path);
+    const badge = item.badge === "approvals" ? pendingApprovals : undefined;
     return (
       <li>
         <button
@@ -179,101 +116,95 @@ export default function AppSidebar() {
     );
   };
 
-  const SectionLabel = ({ title }: { title: string }) =>
-    !collapsed ? (
-      <p className="font-mono text-[10px] uppercase tracking-widest text-sidebar-foreground/35 mb-2 px-2">
-        {title}
-      </p>
-    ) : null;
-
   const ExpandableSection = ({
+    sectionId,
     label,
     icon: Icon,
-    isActive: sectionActive,
-    expanded,
-    onToggle,
-    onNavigate,
+    path,
     subItems,
   }: {
+    sectionId: string;
     label: string;
     icon: React.ElementType;
-    isActive: boolean;
-    expanded: boolean;
-    onToggle: () => void;
-    onNavigate: () => void;
-    subItems: Array<{ label: string; icon: React.ElementType; path: string; emoji?: string | null }>;
-  }) => (
-    <li>
-      {collapsed ? (
-        <button
-          onClick={onNavigate}
-          className={cn(
-            "w-full flex justify-center items-center px-2 py-2.5 rounded-lg transition-all duration-200",
-            sectionActive
-              ? "bg-sidebar-accent text-primary"
-              : "text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent/50"
-          )}
-        >
-          <Icon className="w-[18px] h-[18px]" />
-        </button>
-      ) : (
-        <>
-          <div className="flex items-center">
-            <button
-              onClick={onToggle}
-              className="p-1 text-sidebar-foreground/35 hover:text-sidebar-foreground shrink-0"
-            >
-              {expanded
-                ? <ChevronDown className="w-3.5 h-3.5" />
-                : <ChevronRight className="w-3.5 h-3.5" />}
-            </button>
-            <button
-              onClick={onNavigate}
-              className={cn(
-                "flex-1 flex items-center gap-2.5 px-2 py-2.5 rounded-lg transition-all duration-200 relative",
-                sectionActive
-                  ? "bg-sidebar-accent text-primary"
-                  : "text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent/50"
-              )}
-            >
-              <Icon className={cn("w-[18px] h-[18px] shrink-0", sectionActive && "text-primary")} />
-              <span className="text-[13px] font-medium tracking-wide truncate">{label}</span>
-            </button>
-          </div>
+    path: string;
+    subItems: NavSubItem[];
+  }) => {
+    const sectionActive = isSectionActive(sectionId);
+    const expanded = !!expandedSections[sectionId];
 
-          {expanded && (
-            <ul className="ml-5 pl-3 border-l border-sidebar-border/40 space-y-0.5 mt-0.5">
-              {subItems.map((sub) => {
-                const subActive = isActive(sub.path);
-                return (
-                  <li key={sub.path}>
-                    <button
-                      onClick={() => handleNav(sub.path)}
-                      className={cn(
-                        "w-full flex items-center gap-2 px-2 py-1.5 rounded-md transition-all duration-200 text-[12px]",
-                        subActive
-                          ? "bg-sidebar-accent text-primary font-medium"
-                          : "text-sidebar-foreground/45 hover:text-sidebar-foreground hover:bg-sidebar-accent/30"
-                      )}
-                    >
-                      {sub.emoji ? (
-                        <span className="text-[13px] shrink-0 leading-none">{sub.emoji}</span>
-                      ) : (
-                        <sub.icon className="w-3.5 h-3.5 shrink-0" />
-                      )}
-                      <span className="truncate">{sub.label}</span>
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
-          )}
-        </>
-      )}
-    </li>
-  );
+    return (
+      <li>
+        {collapsed ? (
+          <button
+            onClick={() => handleNav(path)}
+            className={cn(
+              "w-full flex justify-center items-center px-2 py-2.5 rounded-lg transition-all duration-200",
+              sectionActive
+                ? "bg-sidebar-accent text-primary"
+                : "text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent/50"
+            )}
+          >
+            <Icon className="w-[18px] h-[18px]" />
+          </button>
+        ) : (
+          <>
+            <div className="flex items-center">
+              <button
+                onClick={() => toggleSection(sectionId)}
+                className="p-1 text-sidebar-foreground/35 hover:text-sidebar-foreground shrink-0"
+              >
+                {expanded
+                  ? <ChevronDown className="w-3.5 h-3.5" />
+                  : <ChevronRight className="w-3.5 h-3.5" />}
+              </button>
+              <button
+                onClick={() => handleNav(path)}
+                className={cn(
+                  "flex-1 flex items-center gap-2.5 px-2 py-2.5 rounded-lg transition-all duration-200 relative",
+                  sectionActive
+                    ? "bg-sidebar-accent text-primary"
+                    : "text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent/50"
+                )}
+              >
+                <Icon className={cn("w-[18px] h-[18px] shrink-0", sectionActive && "text-primary")} />
+                <span className="text-[13px] font-medium tracking-wide truncate">{label}</span>
+              </button>
+            </div>
 
-  // ── render ────────────────────────────────────────────────────────────────────
+            {expanded && (
+              <ul className="ml-5 pl-3 border-l border-sidebar-border/40 space-y-0.5 mt-0.5">
+                {subItems.map((sub) => {
+                  const subActive = isActive(sub.path);
+                  return (
+                    <li key={sub.path}>
+                      <button
+                        onClick={() => handleNav(sub.path)}
+                        className={cn(
+                          "w-full flex items-center gap-2 px-2 py-1.5 rounded-md transition-all duration-200 text-[12px]",
+                          subActive
+                            ? "bg-sidebar-accent text-primary font-medium"
+                            : "text-sidebar-foreground/45 hover:text-sidebar-foreground hover:bg-sidebar-accent/30"
+                        )}
+                      >
+                        {sub.emoji ? (
+                          <span className="text-[13px] shrink-0 leading-none">{sub.emoji}</span>
+                        ) : sub.icon ? (
+                          <sub.icon className="w-3.5 h-3.5 shrink-0" />
+                        ) : null}
+                        <span className="truncate">{sub.label}</span>
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </>
+        )}
+      </li>
+    );
+  };
+
+  // ── render ───────────────────────────────────────────────────────────────────
 
   return (
     <aside
@@ -328,85 +259,25 @@ export default function AppSidebar() {
 
       {/* Navigation */}
       <nav aria-label="Navegação principal" className="flex-1 overflow-y-auto py-3 px-3 space-y-5">
-
-        {/* ── 1. CORE ── */}
-        <div>
-          <SectionLabel title="Core" />
-          <ul className="space-y-0.5">
-            {coreItems.map((item) => <NavItem key={item.path} item={item} />)}
-          </ul>
-        </div>
-
-        {/* ── 2. AGENTES (expandable) ── */}
-        <div>
-          <SectionLabel title="Agentes" />
-          <ul className="space-y-0.5">
-            <ExpandableSection
-              label="Agentes"
-              icon={Bot}
-              isActive={isAgentsActive()}
-              expanded={expandedAgents}
-              onToggle={() => setExpandedAgents(!expandedAgents)}
-              onNavigate={() => handleNav("/agents")}
-              subItems={agentsSubItems}
-            />
-          </ul>
-        </div>
-
-        {/* ── 3. ALEXANDRIA (expandable) ── */}
-        <div>
-          <SectionLabel title="Alexandria" />
-          <ul className="space-y-0.5">
-            <ExpandableSection
-              label="Alexandria"
-              icon={BookOpen}
-              isActive={isAlexandriaActive()}
-              expanded={expandedAlexandria}
-              onToggle={() => setExpandedAlexandria(!expandedAlexandria)}
-              onNavigate={() => handleNav("/alexandria")}
-              subItems={alexandriaSubItems}
-            />
-          </ul>
-        </div>
-
-        {/* ── 4. WORKSPACE ── */}
-        <div>
-          <SectionLabel title="Workspace" />
-          <ul className="space-y-0.5">
-            {workspaceItems.map((item) => <NavItem key={item.path} item={item} />)}
-          </ul>
-        </div>
-
-        {/* ── 5. CLIENTES ── */}
-        <div>
-          <SectionLabel title="Clientes" />
-          <ul className="space-y-0.5">
-            {clientsItems.map((item) => <NavItem key={item.path} item={item} />)}
-          </ul>
-        </div>
-
-        {/* ── 6. FERRAMENTAS ── */}
-        <div>
-          <SectionLabel title="Ferramentas" />
-          <ul className="space-y-0.5">
-            {toolsItems.map((item) => <NavItem key={item.path} item={item} />)}
-          </ul>
-        </div>
-
-        {/* ── 7. CONFIGURAÇÕES ── */}
-        <div>
-          <SectionLabel title="Config" />
-          <ul className="space-y-0.5">
-            {configItems.map((item) => (
-              <NavItem
-                key={item.path}
-                item={item}
-                badge={item.path === "/admin/approvals" ? pendingApprovals : undefined}
-              />
-            ))}
-          </ul>
-        </div>
-
+        {navigationSections.map((section) => (
+          <div key={section.id}>
+            <SectionLabel title={section.label} />
+            <ul className="space-y-0.5">
+              {section.items.map((item) => (
+                <NavItemButton key={item.path} item={item} />
+              ))}
+              {section.expandable && (
+                <ExpandableSection
+                  sectionId={section.id}
+                  label={section.expandable.label}
+                  icon={section.expandable.icon}
+                  path={section.expandable.path}
+                  subItems={section.expandable.subItems}
+                />
+              )}
+            </ul>
+          </div>
+        ))}
       </nav>
 
       {/* Footer / User */}

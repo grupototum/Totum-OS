@@ -4,8 +4,9 @@ import { useEffect, useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import AppSidebar from "./AppSidebar";
 import MobileSidebar, { MobileTrigger } from "./MobileSidebar";
-import { OnboardingModal, useOnboarding } from "@/components/onboarding/OnboardingModal";
-import { SidebarProvider, useSidebarCollapse } from "@/contexts/SidebarContext";
+import OnboardingModal from "@/components/onboarding/OnboardingModal";
+import { useOnboarding } from "@/hooks/useOnboarding";
+import { useSidebarStore } from "@/stores/sidebarStore";
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -19,7 +20,7 @@ function AppLayoutInner({ children }: AppLayoutProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isReady, setIsReady] = useState(false);
   const { showOnboarding, closeOnboarding } = useOnboarding();
-  const { collapsed } = useSidebarCollapse();
+  const collapsed = useSidebarStore((s) => s.collapsed);
 
   useEffect(() => {
     if (!loading) {
@@ -77,9 +78,5 @@ function AppLayoutInner({ children }: AppLayoutProps) {
 }
 
 export default function AppLayout({ children }: AppLayoutProps) {
-  return (
-    <SidebarProvider>
-      <AppLayoutInner>{children}</AppLayoutInner>
-    </SidebarProvider>
-  );
+  return <AppLayoutInner>{children}</AppLayoutInner>;
 }

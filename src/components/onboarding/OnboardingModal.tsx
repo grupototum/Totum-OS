@@ -1,16 +1,24 @@
 /**
  * OnboardingModal — First-time user experience
  * Shows once on first login, stored in localStorage.
- * 4 steps: Welcome → Agentes → Alexandria/Hermione → Command+K
+ * 6 steps: Welcome → Agentes → Alexandria → Workspace → Ferramentas → Pronto
  */
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Bot, BookOpen, Search, Sparkles, ChevronRight, X, Command } from "lucide-react";
+import {
+  Bot,
+  BookOpen,
+  Search,
+  Sparkles,
+  ChevronRight,
+  X,
+  Command,
+  KanbanSquare,
+  Cpu,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-
-const STORAGE_KEY = "totum_onboarded_v1";
 
 interface Step {
   id: string;
@@ -53,13 +61,33 @@ const STEPS: Step[] = [
     color: "from-amber-500/20 to-amber-500/5",
   },
   {
+    id: "workspace",
+    emoji: "📋",
+    icon: KanbanSquare,
+    title: "Workspace",
+    description:
+      "Gerencie tarefas no quadro Kanban, acompanhe o pipeline de conteúdo, monte planos de ação e organize o escritório. Tudo em um só lugar.",
+    cta: { label: "Ver Tarefas", path: "/tasks" },
+    color: "from-emerald-500/20 to-emerald-500/5",
+  },
+  {
+    id: "tools",
+    emoji: "🛠️",
+    icon: Cpu,
+    title: "Ferramentas",
+    description:
+      "Documentação, Cráudio Codete e Claude Code estão à sua disposição. E não esqueça: pressione ⌘K para buscar e navegar rapidamente por qualquer área.",
+    cta: { label: "Abrir Documentação", path: "/docs" },
+    color: "from-violet-500/20 to-violet-500/5",
+  },
+  {
     id: "commandk",
-    emoji: "⌡",
+    emoji: "⌘",
     icon: Command,
     title: "Busca Rápida ⌘K",
     description:
       "Pressione Cmd+K (Mac) ou Ctrl+K (Windows) de qualquer página para abrir a paleta de busca global. Navegue para qualquer área do sistema em segundos.",
-    color: "from-violet-500/20 to-violet-500/5",
+    color: "from-rose-500/20 to-rose-500/5",
   },
 ];
 
@@ -68,11 +96,12 @@ interface Props {
   onClose: () => void;
 }
 
-export function OnboardingModal({ open, onClose }: Props) {
+export default function OnboardingModal({ open, onClose }: Props) {
   const [step, setStep] = useState(0);
   const navigate = useNavigate();
   const current = STEPS[step];
   const isLast = step === STEPS.length - 1;
+  const progress = ((step + 1) / STEPS.length) * 100;
 
   const handleNext = () => {
     if (isLast) {
@@ -90,8 +119,11 @@ export function OnboardingModal({ open, onClose }: Props) {
   };
 
   const handleClose = () => {
-    localStorage.setItem(STORAGE_KEY, "true");
     onClose();
+  };
+
+  const handleSkip = () => {
+    handleClose();
   };
 
   if (!open) return null;
@@ -118,8 +150,18 @@ export function OnboardingModal({ open, onClose }: Props) {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -10 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="relative z-10 w-full max-w-md bg-card border border-border rounded-2xl shadow-2xl overflow-hidden"
+            className="relative z-10 w-full max-w-md bg-card border border-border shadow-2xl overflow-hidden"
           >
+            {/* Progress bar */}
+            <div className="absolute top-0 left-0 right-0 h-1 bg-muted">
+              <motion.div
+                className="h-full bg-primary"
+                initial={{ width: 0 }}
+                animate={{ width: `${progress}%` }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+              />
+            </div>
+
             {/* Close button */}
             <button
               onClick={handleClose}
@@ -128,34 +170,70 @@ export function OnboardingModal({ open, onClose }: Props) {
               <X className="w-4 h-4" />
             </button>
 
+            {/* Skip button */}
+            <button
+              onClick={handleSkip}
+              className="absolute top-4 left-4 text-[11px] font-mono uppercase tracking-wider text-muted-foreground/60 hover:text-muted-foreground transition-colors z-10"
+            >
+              Pular tour
+            </button>
+
             {/* Hero gradient area */}
-            <div className={cn("bg-gradient-to-br p-8 pb-6", current.color)}>
-              <div className="text-5xl mb-4">{current.emoji}</div>
-              <h2 className="text-xl font-semibold text-foreground">{current.title}</h2>
+            <div className={cn("bg-gradient-to-br p-8 pb-6 mt-2", current.color)}>
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ delay: 0.1 }}
+                className="text-5xl mb-4"
+              >
+                {current.emoji}
+              </motion.div>
+              <motion.h2
+                initial={{ y: 10, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.15 }}
+                className="text-xl font-semibold text-foreground"
+              >
+                {current.title}
+              </motion.h2>
             </div>
 
             {/* Content */}
             <div className="p-6 pt-4">
-              <p className="text-sm text-muted-foreground leading-relaxed mb-6">
+              <motion.p
+                initial={{ y: 10, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.2 }}
+                className="text-sm text-muted-foreground leading-relaxed mb-6"
+              >
                 {current.description}
-              </p>
+              </motion.p>
 
               {/* CTA secondary button */}
               {current.cta && (
-                <button
+                <motion.button
+                  initial={{ y: 10, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.25 }}
                   onClick={handleCta}
                   className="w-full mb-3 flex items-center justify-between px-4 py-3 rounded-xl border border-border bg-muted/50 hover:bg-muted transition-colors text-sm font-medium text-foreground group"
                 >
                   {current.cta.label}
                   <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:translate-x-0.5 transition-transform" />
-                </button>
+                </motion.button>
               )}
 
               {/* Primary action */}
-              <Button className="w-full" onClick={handleNext}>
-                {isLast ? "Começar agora" : "Próximo"}
-                {!isLast && <ChevronRight className="w-4 h-4 ml-1" />}
-              </Button>
+              <motion.div
+                initial={{ y: 10, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.3 }}
+              >
+                <Button className="w-full" onClick={handleNext}>
+                  {isLast ? "Começar agora" : "Próximo"}
+                  {!isLast && <ChevronRight className="w-4 h-4 ml-1" />}
+                </Button>
+              </motion.div>
             </div>
 
             {/* Step indicators */}
@@ -173,34 +251,16 @@ export function OnboardingModal({ open, onClose }: Props) {
                 />
               ))}
             </div>
+
+            {/* Step counter */}
+            <div className="text-center pb-3">
+              <span className="text-[10px] font-mono text-muted-foreground/40">
+                {step + 1} / {STEPS.length}
+              </span>
+            </div>
           </motion.div>
         </motion.div>
       )}
     </AnimatePresence>
   );
-}
-
-/**
- * Hook — manages open state + localStorage check.
- * Mount in AppLayout (only renders for authenticated users).
- */
-export function useOnboarding() {
-  const [showOnboarding, setShowOnboarding] = useState(false);
-
-  useEffect(() => {
-    const done = localStorage.getItem(STORAGE_KEY);
-    if (!done) {
-      // Small delay to avoid flash on first render
-      const t = setTimeout(() => setShowOnboarding(true), 800);
-      return () => clearTimeout(t);
-    }
-  }, []);
-
-  return {
-    showOnboarding,
-    closeOnboarding: () => {
-      localStorage.setItem(STORAGE_KEY, "true");
-      setShowOnboarding(false);
-    },
-  };
 }
