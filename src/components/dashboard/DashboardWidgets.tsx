@@ -289,7 +289,9 @@ export function MexSync() {
             MEX Status
           </h3>
           <div className="space-y-2.5">
-            {mex.map((e) => (
+            {mex.length === 0 ? (
+              <p className="text-xs text-muted-foreground/50 text-center py-2">Sem dados</p>
+            ) : mex.map((e) => (
               <div key={e.id} className="flex items-center justify-between">
                 <span className="text-xs text-muted-foreground">{e.label}</span>
                 <span className="flex items-center gap-1.5 text-xs font-medium text-foreground">
