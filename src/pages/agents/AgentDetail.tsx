@@ -4,12 +4,26 @@ import { motion } from 'framer-motion';
 import AppLayout from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Icon } from '@iconify/react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { toast } from 'sonner';
 import type { Agent } from '@/hooks/useAgents';
 import { classifyAgent } from '@/hooks/useAgentClassification';
 import { AgentTabs } from './components/AgentTabs';
 import { supabase } from '@/integrations/supabase/client';
+
+const CATEGORIES = ['geral','comercial','criacao','marketing','analytics','social','trafego','tech','suporte'] as const;
+const STATUSES   = ['standby','online','offline','idle','maintenance'] as const;
+
+interface EditForm {
+  name: string; role: string; emoji: string; description: string;
+  category: string; status: string; agent_group: string; slug: string;
+}
 
 export default function AgentDetail() {
   const { agentId } = useParams();
@@ -17,6 +31,9 @@ export default function AgentDetail() {
   const [agent, setAgent] = useState<Agent | null>(null);
   const [agents, setAgents] = useState<Agent[]>([]);
   const [loading, setLoading] = useState(true);
+  const [editOpen, setEditOpen] = useState(false);
+  const [editForm, setEditForm] = useState<EditForm | null>(null);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -100,6 +117,48 @@ export default function AgentDetail() {
     return conversationalCategories.some(c => (category || '').toLowerCase().includes(c))
       ? 'conversational'
       : 'processing';
+  }
+
+  function openEdit() {
+    if (!agent) return;
+    setEditForm({
+      name:        agent.name,
+      role:        agent.role,
+      emoji:       agent.emoji,
+      description: (agent as any).description ?? '',
+      category:    agent.category,
+      status:      agent.status,
+      agent_group: (agent as any).agent_group ?? '',
+      slug:        agent.slug ?? '',
+    });
+    setEditOpen(true);
+  }
+
+  async function saveEdit() {
+    if (!agent || !editForm) return;
+    setSaving(true);
+    try {
+      const { error } = await supabase
+        .from('agents')
+        .update({
+          name:        editForm.name,
+          role:        editForm.role,
+          emoji:       editForm.emoji,
+          description: editForm.description || null,
+          category:    editForm.category,
+          status:      editForm.status,
+          agent_group: editForm.agent_group || null,
+          slug:        editForm.slug || null,
+        })
+        .eq('id', agent.id);
+      if (error) throw error;
+      toast.success('Agente atualizado com sucesso');
+      setEditOpen(false);
+    } catch (err: unknown) {
+      toast.error(`Erro ao salvar: ${err instanceof Error ? err.message : 'Erro desconhecido'}`);
+    } finally {
+      setSaving(false);
+    }
   }
 
   // Find parent and children
@@ -257,19 +316,149 @@ export default function AgentDetail() {
                   <Icon icon="solar:graph-new-linear" className="w-4 h-4 mr-2" />
                   Ver no Dashboard
                 </Button>
+                <Button
+                  variant="outline"
+                  onClick={openEdit}
+                  className="border-stone-300 bg-white"
+                >
+                  <Icon icon="solar:pen-linear" className="w-4 h-4 mr-2" />
+                  Editar
+                </Button>
               </div>
             </div>
           </motion.div>
 
           {/* Tabs Content */}
-          <AgentTabs 
-            agent={agent} 
+          <AgentTabs
+            agent={agent}
             agents={agents}
             parentAgent={parentAgent}
             childAgents={childAgents}
           />
         </div>
       </div>
+
+      {/* Edit Sheet */}
+      <Sheet open={editOpen} onOpenChange={setEditOpen}>
+        <SheetContent className="w-full sm:max-w-md overflow-y-auto bg-[#EAEAE5] border-stone-300">
+          <SheetHeader className="mb-6">
+            <SheetTitle className="text-stone-900">Editar Agente</SheetTitle>
+          </SheetHeader>
+
+          {editForm && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-4 gap-3">
+                <div>
+                  <Label className="text-xs text-stone-500 mb-1 block">Emoji</Label>
+                  <Input
+                    value={editForm.emoji}
+                    onChange={e => setEditForm(f => f ? { ...f, emoji: e.target.value } : f)}
+                    className="text-center text-xl bg-white border-stone-300"
+                  />
+                </div>
+                <div className="col-span-3">
+                  <Label className="text-xs text-stone-500 mb-1 block">Nome</Label>
+                  <Input
+                    value={editForm.name}
+                    onChange={e => setEditForm(f => f ? { ...f, name: e.target.value } : f)}
+                    className="bg-white border-stone-300"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <Label className="text-xs text-stone-500 mb-1 block">Role / Função</Label>
+                <Input
+                  value={editForm.role}
+                  onChange={e => setEditForm(f => f ? { ...f, role: e.target.value } : f)}
+                  className="bg-white border-stone-300"
+                />
+              </div>
+
+              <div>
+                <Label className="text-xs text-stone-500 mb-1 block">Descrição</Label>
+                <Textarea
+                  value={editForm.description}
+                  onChange={e => setEditForm(f => f ? { ...f, description: e.target.value } : f)}
+                  rows={3}
+                  className="bg-white border-stone-300 resize-none"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <Label className="text-xs text-stone-500 mb-1 block">Categoria</Label>
+                  <Select value={editForm.category} onValueChange={v => setEditForm(f => f ? { ...f, category: v } : f)}>
+                    <SelectTrigger className="bg-white border-stone-300">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {CATEGORIES.map(c => (
+                        <SelectItem key={c} value={c}>{c}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label className="text-xs text-stone-500 mb-1 block">Status</Label>
+                  <Select value={editForm.status} onValueChange={v => setEditForm(f => f ? { ...f, status: v } : f)}>
+                    <SelectTrigger className="bg-white border-stone-300">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {STATUSES.map(s => (
+                        <SelectItem key={s} value={s}>{s}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div>
+                <Label className="text-xs text-stone-500 mb-1 block">Grupo</Label>
+                <Input
+                  value={editForm.agent_group}
+                  onChange={e => setEditForm(f => f ? { ...f, agent_group: e.target.value } : f)}
+                  placeholder="tier1, tier2, totum…"
+                  className="bg-white border-stone-300"
+                />
+              </div>
+
+              <div>
+                <Label className="text-xs text-stone-500 mb-1 block">Slug</Label>
+                <Input
+                  value={editForm.slug}
+                  onChange={e => setEditForm(f => f ? { ...f, slug: e.target.value } : f)}
+                  placeholder="meu-agente"
+                  className="bg-white border-stone-300 font-mono text-sm"
+                />
+              </div>
+
+              <div className="flex gap-3 pt-2">
+                <Button
+                  onClick={saveEdit}
+                  disabled={saving}
+                  className="flex-1 bg-stone-900 hover:bg-stone-800 text-white"
+                >
+                  {saving ? (
+                    <Icon icon="solar:refresh-linear" className="w-4 h-4 mr-2 animate-spin" />
+                  ) : (
+                    <Icon icon="solar:check-circle-linear" className="w-4 h-4 mr-2" />
+                  )}
+                  {saving ? 'Salvando…' : 'Salvar'}
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => setEditOpen(false)}
+                  className="border-stone-300 bg-white"
+                >
+                  Cancelar
+                </Button>
+              </div>
+            </div>
+          )}
+        </SheetContent>
+      </Sheet>
     </AppLayout>
   );
 }
