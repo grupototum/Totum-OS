@@ -330,11 +330,15 @@ async function ingestDocument({ path, doc_id, dominio }) {
     const hash = chunkHash(doc_id, chunk.heading, chunk.content);
     const chunk_id = `${doc_id}::${hash.slice(0, 16)}`;
 
-    // Dedup: se já existe, pula
+    // content_hash provavelmente é UNIQUE no schema — calculamos antes
+    // de gastar embedding pra deduplicar por chunk_id E por content_hash.
+    const content_hash = createHash('sha256').update(chunk.content).digest('hex');
+
     const { data: existing } = await supabase
       .from('giles_knowledge')
       .select('id')
-      .eq('chunk_id', chunk_id)
+      .or(`chunk_id.eq.${chunk_id},content_hash.eq.${content_hash}`)
+      .limit(1)
       .maybeSingle();
     if (existing) { skipped++; continue; }
 
@@ -344,21 +348,27 @@ async function ingestDocument({ path, doc_id, dominio }) {
 
     const fullPayload = {
       chunk_id,
-      doc_id,                                  // coluna NOT NULL no schema real
-      hierarchical_path: chunk.hierarchical_path,
+      doc_id,                                          // text NOT NULL
       content: chunk.content,
-      dominio,
-      categoria: 'documentação',
+      content_hash,                                    // text NOT NULL
+      hierarchical_path: chunk.hierarchical_path,
       subcategoria: chunk.heading || null,
-      heading: chunk.heading || null,           // alguns schemas usam 'heading' em vez de 'subcategoria'
-      tags: [dominio, doc_id.split('-')[0].toLowerCase()],
       keywords: [],
-      source_file: path,
-      autor: 'opus-bloco-3',
+      source_type: 'markdown',
       entidades: { doc_id, hierarchical_path: chunk.hierarchical_path },
       relacionamentos: {},
       confianca: 1.0,
       embedding: JSON.stringify(embedding),
+      // Campos que não são colunas top-level vão para metadata JSONB
+      metadata: {
+        dominio,
+        categoria: 'documentação',
+        source_file: path,
+        tags: [dominio, doc_id.split('-')[0].toLowerCase()],
+        autor: 'opus-bloco-3',
+        ingested_at: new Date().toISOString(),
+        embed_model: RESOLVED_EMBED_SPEC ? specLabel(RESOLVED_EMBED_SPEC) : null,
+      },
     };
 
     const columns = await discoverColumns();
@@ -404,11 +414,10 @@ async function ingestDocument({ path, doc_id, dominio }) {
 
   // Avisa quais campos nosso payload teria que vão ser descartados
   const samplePayload = {
-    chunk_id: 'x', doc_id: 'x', hierarchical_path: 'x',
-    content: 'x', dominio: 'x', categoria: 'x',
-    subcategoria: 'x', heading: 'x', tags: [], keywords: [], source_file: 'x',
-    autor: 'x', entidades: {}, relacionamentos: {}, confianca: 1.0,
-    embedding: '[]',
+    chunk_id: 'x', doc_id: 'x', content: 'x', content_hash: 'x',
+    hierarchical_path: 'x', subcategoria: 'x', keywords: [],
+    source_type: 'markdown', entidades: {}, relacionamentos: {},
+    confianca: 1.0, embedding: '[]', metadata: {},
   };
   const { dropped } = filterPayload(samplePayload, columns);
   if (dropped.length) {
