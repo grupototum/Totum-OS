@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useCallback, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
 import {
@@ -121,6 +122,9 @@ export function AppStatusList() {
             Status dos Apps
           </h3>
           <div className="space-y-2">
+            {apps.length === 0 && (
+              <p className="text-xs text-muted-foreground/50 text-center py-4">Nenhum app configurado</p>
+            )}
             {apps.map((app) => (
               <div key={app.id} className="flex items-center justify-between p-3 rounded-xl bg-secondary/30 border border-border/30 hover:border-border/60 transition-colors group">
                 <div className="flex items-center gap-3">
@@ -168,6 +172,9 @@ export function ActivityLog() {
             Log de Atividades
           </h3>
           <div className="space-y-1 max-h-[300px] overflow-y-auto custom-scrollbar">
+            {activities.length === 0 && (
+              <p className="text-xs text-muted-foreground/50 text-center py-4">Nenhuma atividade registrada</p>
+            )}
             {activities.map((a) => (
               <div key={a.id} className="flex items-start gap-3 py-2 border-b border-border/20 last:border-0">
                 <span className="text-[11px] font-mono text-muted-foreground/60 mt-0.5 shrink-0 w-10">{a.time}</span>
@@ -252,6 +259,9 @@ export function CostEstimate() {
             Custos Estimados
           </h3>
           <div className="space-y-3">
+            {costs.length === 0 && (
+              <p className="text-xs text-muted-foreground/50 text-center py-4">Nenhum custo registrado</p>
+            )}
             {costs.map((item) => {
               const pct = total > 0 ? Math.round((Number(item.value) / total) * 100) : 0;
               return (
@@ -340,16 +350,33 @@ export function MexSync() {
 /* ─── Agent Cards (Trindade) ─── */
 export function AgentCards() {
   const { agents, loading } = useData();
+  const navigate = useNavigate();
+
+  const trindade = agents.filter(a =>
+    (a.category || "").toLowerCase() === "trindade" ||
+    ["radar", "gestor", "social"].includes((a.name || "").toLowerCase())
+  ).slice(0, 3);
+
+  const display = trindade.length > 0 ? trindade : agents.slice(0, 3);
+
   if (loading) return (
     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
       {[0,1,2].map(i => <CardSkeleton key={i} />)}
     </div>
   );
+
+  if (display.length === 0) return (
+    <Card className="border-border/40 bg-card/50 p-8 text-center">
+      <p className="text-sm text-muted-foreground">Nenhum agente encontrado</p>
+    </Card>
+  );
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-      {agents.map((agent, i) => (
+      {display.map((agent, i) => (
         <motion.div key={agent.id} {...anim(10 + i)}>
-          <Card className="border-gradient backdrop-blur-sm hover:shadow-lg hover:shadow-primary/5 transition-shadow group">
+          <Card className="border-gradient backdrop-blur-sm hover:shadow-lg hover:shadow-primary/5 transition-shadow group cursor-pointer"
+            onClick={() => navigate(`/agents/${agent.slug || agent.id}/chat`)}>
             <CardContent className="p-5 text-center">
               <span className="text-3xl block mb-2">{agent.emoji}</span>
               <h4 className="font-sans font-bold text-foreground text-sm">{agent.name}</h4>
@@ -358,12 +385,15 @@ export function AgentCards() {
                 <div className={`w-2 h-2 rounded-full ${statusColor(agent.status)} ${agent.status === "online" ? "animate-pulse" : ""}`} />
                 <span className="text-xs font-medium text-foreground">{statusLabel(agent.status)}</span>
               </div>
-              <p className="text-[11px] text-muted-foreground">
+              <p className="text-[11px] text-muted-foreground mb-3">
                 {agent.tasks} tarefa{agent.tasks !== 1 ? "s" : ""} ativa{agent.tasks !== 1 ? "s" : ""}
               </p>
-              <button className="mt-3 text-[11px] text-primary/50 cursor-not-allowed opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1 mx-auto">
-                Ver detalhes →
-                <span className="text-[10px] bg-orange-500/20 text-orange-400 px-2 py-0.5 rounded">EM BREVE</span>
+              <button
+                onClick={(e) => { e.stopPropagation(); navigate(`/agents/${agent.slug || agent.id}/chat`); }}
+                className="mt-1 w-full py-1.5 rounded-lg text-[11px] font-medium border border-primary/30 text-primary bg-primary/5 opacity-0 group-hover:opacity-100 transition-all hover:bg-primary/15 flex items-center justify-center gap-1.5"
+              >
+                <Zap className="w-3 h-3" />
+                Abrir Chat LLM
               </button>
             </CardContent>
           </Card>

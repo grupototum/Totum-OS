@@ -17,6 +17,7 @@ import {
   Pie,
   Cell,
   Legend,
+  ResponsiveContainer,
 } from 'recharts';
 
 interface AgentTabsProps {

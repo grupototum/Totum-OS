@@ -10,6 +10,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import type { Agent } from '@/hooks/useAgents';
 import { sendMessageToAI, streamMessageFromAI, hasAIConfig, getDefaultProvider, type AIProvider } from '@/services/aiService';
+import { loadAgentDna } from '@/services/agentDnaLoader';
 
 interface Message {
   id: string;
@@ -24,20 +25,11 @@ interface AgentChatProps {
   onClose?: () => void;
 }
 
-// Contexto do sistema para cada tipo de agente
-const getAgentSystemPrompt = (agent: Agent): string => {
-  return `Você é ${agent.name}, um agente de IA especializado como ${agent.role}.
-
-CATEGORIA: ${agent.category}
-TIPO: ${agent.type}
-STATUS: ${agent.status}
-
-Você deve responder de forma profissional, objetiva e alinhada com sua função como ${agent.role}.
-Mantenha respostas concisas mas informativas.
-Se não souber algo, seja honesto sobre suas limitações.
-
-Contexto adicional: Você faz parte do ecossistema TOTUM de agentes de IA.`;
-};
+// Fallback system prompt when no DNA file is available
+const getFallbackSystemPrompt = (agent: Agent): string =>
+  `Você é ${agent.name}, um agente de IA especializado como ${agent.role}.
+CATEGORIA: ${agent.category} | ECOSSISTEMA: TOTUM Agentes IA
+Responda de forma profissional e objetiva. Seja honesto sobre limitações.`;
 
 export function AgentChat({ agent, onClose }: AgentChatProps) {
   const [messages, setMessages] = useState<Message[]>([
@@ -52,6 +44,7 @@ export function AgentChat({ agent, onClose }: AgentChatProps) {
   const [isTyping, setIsTyping] = useState(false);
   const [provider, setProvider] = useState<AIProvider>(getDefaultProvider());
   const [hasConfig, setHasConfig] = useState(hasAIConfig());
+  const [dnaPrompt, setDnaPrompt] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const statusColors = {
@@ -73,6 +66,13 @@ export function AgentChat({ agent, onClose }: AgentChatProps) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [messages]);
+
+  // Load DNA for this agent on mount
+  useEffect(() => {
+    loadAgentDna(agent.slug, agent.name).then(dna => {
+      if (dna) setDnaPrompt(dna);
+    });
+  }, [agent.slug, agent.name]);
 
   // Atualiza o estado de configuração quando o componente monta
   useEffect(() => {
@@ -106,8 +106,8 @@ export function AgentChat({ agent, onClose }: AgentChatProps) {
       return;
     }
 
-    // Prepara mensagens para a API
-    const systemPrompt = getAgentSystemPrompt(agent);
+    // Prepara mensagens para a API — DNA tem prioridade sobre fallback
+    const systemPrompt = dnaPrompt ?? getFallbackSystemPrompt(agent);
     const apiMessages = [
       { role: 'system' as const, content: systemPrompt },
       ...messages.filter(m => m.role === 'user' || m.role === 'agent').map(m => ({
