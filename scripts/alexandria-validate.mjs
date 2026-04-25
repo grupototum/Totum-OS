@@ -9,20 +9,76 @@
  *     node scripts/alexandria-validate.mjs
  */
 
+import { readFileSync, existsSync } from 'node:fs';
+import { resolve, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { createClient } from '@supabase/supabase-js';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const REPO_ROOT = resolve(__dirname, '..');
+
+// ─── .env.local loader (sem deps) ─────────────────────────────
+function loadEnvLocal() {
+  const envPath = resolve(REPO_ROOT, '.env.local');
+  if (!existsSync(envPath)) return;
+  const content = readFileSync(envPath, 'utf8');
+  for (const rawLine of content.split('\n')) {
+    const line = rawLine.trim();
+    if (!line || line.startsWith('#')) continue;
+    const m = line.match(/^(?:export\s+)?([A-Z_][A-Z0-9_]*)=(.*)$/i);
+    if (!m) continue;
+    const [, key, rawVal] = m;
+    if (process.env[key]) continue;
+    let val = rawVal.trim();
+    if ((val.startsWith('"') && val.endsWith('"')) ||
+        (val.startsWith("'") && val.endsWith("'"))) val = val.slice(1, -1);
+    process.env[key] = val;
+  }
+}
+loadEnvLocal();
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://cgpkfhrqprqptvehatad.supabase.co';
 const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_KEY;
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY;
 
-if (!SUPABASE_KEY) {
-  console.error('[ERRO] SUPABASE_SERVICE_ROLE_KEY não definida.');
+function isPlaceholder(v) {
+  return !v || v.length < 30 || /COLE[_ ]?A[_ ]?KEY|YOUR[_ ]?KEY|placeholder/i.test(v);
+}
+if (isPlaceholder(SUPABASE_KEY)) {
+  console.error(`[ERRO] SUPABASE_SERVICE_ROLE_KEY ausente/placeholder (length=${SUPABASE_KEY?.length || 0}).`);
+  console.error('       Esperado JWT eyJ... ~218 chars. Pegue em Dashboard → Settings → API → service_role.');
   process.exit(1);
 }
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY, {
   auth: { persistSession: false },
 });
+
+// Auto-discovery do modelo de embedding (mesmo do ingest)
+const EMBED_MODEL_CANDIDATES = [
+  'text-embedding-004',
+  'gemini-embedding-001',
+  'gemini-embedding-exp-03-07',
+  'embedding-001',
+];
+async function resolveEmbedModel() {
+  for (const m of EMBED_MODEL_CANDIDATES) {
+    try {
+      const res = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${m}:embedContent?key=${GEMINI_API_KEY}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ model: `models/${m}`, content: { parts: [{ text: 'ping' }] } }),
+        }
+      );
+      if (!res.ok) continue;
+      const data = await res.json();
+      if (data?.embedding?.values?.length === 768) return m;
+    } catch {}
+  }
+  return null;
+}
 
 function header(t) { console.log(`\n${'─'.repeat(60)}\n${t}\n${'─'.repeat(60)}`); }
 
@@ -78,14 +134,21 @@ async function main() {
   if (!GEMINI_API_KEY) {
     console.log('GEMINI_API_KEY ausente — pulando teste semântico.');
   } else {
+    const embedModel = await resolveEmbedModel();
+    if (!embedModel) {
+      console.log('Nenhum modelo Gemini de embedding 768D disponível — pulando.');
+      console.log('\nValidação completa.');
+      return;
+    }
+    console.log(`(usando modelo Gemini: ${embedModel})`);
     const queryText = 'quem é o Jarvis';
     const embRes = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/text-embedding-004:embedContent?key=${GEMINI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/${embedModel}:embedContent?key=${GEMINI_API_KEY}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: 'models/text-embedding-004',
+          model: `models/${embedModel}`,
           content: { parts: [{ text: queryText }] },
         }),
       }

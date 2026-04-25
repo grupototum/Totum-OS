@@ -34,18 +34,54 @@ import { createClient } from '@supabase/supabase-js';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = resolve(__dirname, '..');
 
+// ─── .env.local loader (sem deps) ─────────────────────────────
+// Carrega ./.env.local relativo ao repo se existir, sem sobrescrever
+// vars já definidas no shell. Suporta `KEY=value`, `export KEY=value`,
+// aspas simples/duplas e comentários `#`.
+
+function loadEnvLocal() {
+  const envPath = resolve(REPO_ROOT, '.env.local');
+  if (!existsSync(envPath)) return;
+  const content = readFileSync(envPath, 'utf8');
+  for (const rawLine of content.split('\n')) {
+    const line = rawLine.trim();
+    if (!line || line.startsWith('#')) continue;
+    const m = line.match(/^(?:export\s+)?([A-Z_][A-Z0-9_]*)=(.*)$/i);
+    if (!m) continue;
+    const [, key, rawVal] = m;
+    if (process.env[key]) continue; // não sobrescreve shell
+    let val = rawVal.trim();
+    if ((val.startsWith('"') && val.endsWith('"')) ||
+        (val.startsWith("'") && val.endsWith("'"))) {
+      val = val.slice(1, -1);
+    }
+    process.env[key] = val;
+  }
+  console.log(`[env] carregado: ${envPath}`);
+}
+loadEnvLocal();
+
 // ─── Config ────────────────────────────────────────────────────
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://cgpkfhrqprqptvehatad.supabase.co';
 const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_KEY;
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY;
 
-if (!SUPABASE_KEY) {
-  console.error('[ERRO] SUPABASE_SERVICE_ROLE_KEY não definida. Abortando.');
+// Validação amigável: distinguir "ausente" de "placeholder colado por engano".
+function isPlaceholder(v) {
+  return !v
+    || v.length < 30
+    || /COLE[_ ]?A[_ ]?KEY|YOUR[_ ]?KEY|placeholder|xxxxx/i.test(v);
+}
+
+if (isPlaceholder(SUPABASE_KEY)) {
+  console.error(`[ERRO] SUPABASE_SERVICE_ROLE_KEY ausente ou é placeholder (length=${SUPABASE_KEY?.length || 0}).`);
+  console.error('       Esperado: JWT iniciando com "eyJ..." (~218 chars).');
+  console.error('       Pegue em: Dashboard → Project Settings → API → service_role → Reveal');
   process.exit(1);
 }
-if (!GEMINI_API_KEY) {
-  console.error('[ERRO] GEMINI_API_KEY não definida. Abortando.');
+if (isPlaceholder(GEMINI_API_KEY)) {
+  console.error(`[ERRO] GEMINI_API_KEY ausente ou é placeholder (length=${GEMINI_API_KEY?.length || 0}).`);
   process.exit(1);
 }
 
@@ -153,25 +189,66 @@ function chunkHash(doc_id, heading, content) {
 }
 
 // ─── Gemini embedding ─────────────────────────────────────────
+// Lista de candidatos em ordem de preferência (768D para casar com
+// o schema vector(768) atual). O primeiro que responder 200 vira
+// o modelo escolhido para toda a sessão.
+
+const EMBED_MODEL_CANDIDATES = [
+  'text-embedding-004',
+  'gemini-embedding-001',
+  'gemini-embedding-exp-03-07',
+  'embedding-001',
+];
+
+let RESOLVED_EMBED_MODEL = null;
+
+async function tryEmbed(model, text) {
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:embedContent?key=${GEMINI_API_KEY}`;
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: `models/${model}`,
+      content: { parts: [{ text: text.slice(0, 8000) }] },
+    }),
+  });
+  if (!res.ok) {
+    const errText = await res.text().catch(() => '');
+    throw new Error(`HTTP ${res.status} ${errText.slice(0, 200)}`);
+  }
+  const data = await res.json();
+  const values = data?.embedding?.values;
+  if (!Array.isArray(values)) throw new Error('resposta sem embedding.values');
+  return values;
+}
+
+async function resolveEmbedModel() {
+  if (RESOLVED_EMBED_MODEL) return RESOLVED_EMBED_MODEL;
+  console.log('\n[embed] resolvendo modelo Gemini disponível...');
+  for (const m of EMBED_MODEL_CANDIDATES) {
+    try {
+      const v = await tryEmbed(m, 'teste de resolução');
+      if (v.length !== 768) {
+        console.log(`  [embed] ${m} responde ${v.length}D — incompatível com vector(768), pulando`);
+        continue;
+      }
+      RESOLVED_EMBED_MODEL = m;
+      console.log(`  [embed] ✓ usando "${m}" (768D)`);
+      return m;
+    } catch (e) {
+      console.log(`  [embed] ✗ ${m}: ${e.message}`);
+    }
+  }
+  throw new Error('Nenhum modelo Gemini de embedding 768D disponível. Verifique a chave em https://aistudio.google.com/apikey');
+}
 
 async function generateEmbedding(text, retries = 3) {
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/text-embedding-004:embedContent?key=${GEMINI_API_KEY}`;
-  const body = JSON.stringify({
-    model: 'models/text-embedding-004',
-    content: { parts: [{ text: text.slice(0, 8000) }] },
-  });
+  const model = await resolveEmbedModel();
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
-      const res = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body,
-      });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = await res.json();
-      const values = data?.embedding?.values;
-      if (Array.isArray(values) && values.length === 768) return values;
-      throw new Error(`Embedding inválido (length=${values?.length})`);
+      const values = await tryEmbed(model, text);
+      if (values.length === 768) return values;
+      throw new Error(`Embedding length=${values.length} (esperado 768)`);
     } catch (err) {
       if (attempt === retries) {
         console.error(`  [embed] falhou após ${retries} tentativas: ${err.message}`);
