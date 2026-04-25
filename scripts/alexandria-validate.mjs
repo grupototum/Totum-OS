@@ -28,11 +28,10 @@ function loadEnvLocal() {
     const m = line.match(/^(?:export\s+)?([A-Z_][A-Z0-9_]*)=(.*)$/i);
     if (!m) continue;
     const [, key, rawVal] = m;
-    if (process.env[key]) continue;
     let val = rawVal.trim();
     if ((val.startsWith('"') && val.endsWith('"')) ||
         (val.startsWith("'") && val.endsWith("'"))) val = val.slice(1, -1);
-    process.env[key] = val;
+    process.env[key] = val; // .env.local vence o shell
   }
 }
 loadEnvLocal();

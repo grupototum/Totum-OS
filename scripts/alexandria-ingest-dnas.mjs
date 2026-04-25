@@ -43,21 +43,26 @@ function loadEnvLocal() {
   const envPath = resolve(REPO_ROOT, '.env.local');
   if (!existsSync(envPath)) return;
   const content = readFileSync(envPath, 'utf8');
+  const overridden = [];
   for (const rawLine of content.split('\n')) {
     const line = rawLine.trim();
     if (!line || line.startsWith('#')) continue;
     const m = line.match(/^(?:export\s+)?([A-Z_][A-Z0-9_]*)=(.*)$/i);
     if (!m) continue;
     const [, key, rawVal] = m;
-    if (process.env[key]) continue; // não sobrescreve shell
     let val = rawVal.trim();
     if ((val.startsWith('"') && val.endsWith('"')) ||
         (val.startsWith("'") && val.endsWith("'"))) {
       val = val.slice(1, -1);
     }
+    // .env.local vence o shell (padrão Next/Vite). Avisa em caso de override.
+    if (process.env[key] && process.env[key] !== val) overridden.push(key);
     process.env[key] = val;
   }
   console.log(`[env] carregado: ${envPath}`);
+  if (overridden.length) {
+    console.log(`[env] sobrescrito do shell: ${overridden.join(', ')}`);
+  }
 }
 loadEnvLocal();
 
