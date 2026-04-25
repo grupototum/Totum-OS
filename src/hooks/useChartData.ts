@@ -28,61 +28,81 @@ export function useChartData(vpsName: string) {
   const [costHistory, setCostHistory] = useState<CostHistoryPoint[]>([]);
   const [activityStats, setActivityStats] = useState<ActivityStatsPoint[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
 
   const fetchVps = useCallback(async () => {
-    const { data } = await supabase
-      .from("vps_usage_history")
-      .select("*")
-      .eq("vps_name", vpsName)
-      .order("recorded_at", { ascending: true });
-    if (data) {
-      setVpsUsage(
-        data.map((r: any) => ({
-          hour: new Date(r.recorded_at).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }),
-          ram: r.ram,
-          cpu: r.cpu,
-          disk: r.disk,
-        }))
-      );
+    try {
+      const { data, error } = await supabase
+        .from("vps_usage_history")
+        .select("*")
+        .eq("vps_name", vpsName)
+        .order("recorded_at", { ascending: true });
+      if (error) throw error;
+      if (data) {
+        setVpsUsage(
+          data.map((r: any) => ({
+            hour: new Date(r.recorded_at).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }),
+            ram: r.ram,
+            cpu: r.cpu,
+            disk: r.disk,
+          }))
+        );
+      }
+    } catch (err) {
+      console.error("useChartData: vps_usage_history:", err);
+      setError(err instanceof Error ? err : new Error("Erro ao buscar dados de VPS"));
     }
   }, [vpsName]);
 
   const fetchCosts = useCallback(async () => {
-    const { data } = await supabase
-      .from("cost_history")
-      .select("*")
-      .order("month", { ascending: true });
-    if (data) {
-      setCostHistory(
-        data.map((r: any) => {
-          const ia = Number(r.ia);
-          const tools = Number(r.tools);
-          const hosting = Number(r.hosting);
-          return { month: r.month.slice(5), ia, tools, hosting, total: ia + tools + hosting };
-        })
-      );
+    try {
+      const { data, error } = await supabase
+        .from("cost_history")
+        .select("*")
+        .order("month", { ascending: true });
+      if (error) throw error;
+      if (data) {
+        setCostHistory(
+          data.map((r: any) => {
+            const ia = Number(r.ia);
+            const tools = Number(r.tools);
+            const hosting = Number(r.hosting);
+            return { month: r.month.slice(5), ia, tools, hosting, total: ia + tools + hosting };
+          })
+        );
+      }
+    } catch (err) {
+      console.error("useChartData: cost_history:", err);
+      setError(err instanceof Error ? err : new Error("Erro ao buscar histórico de custos"));
     }
   }, []);
 
   const fetchActivity = useCallback(async () => {
-    const { data } = await supabase
-      .from("activity_stats")
-      .select("*")
-      .order("date", { ascending: true });
-    if (data) {
-      setActivityStats(
-        data.map((r: any) => ({
-          date: r.date,
-          requests: r.requests,
-          messages: r.messages,
-          deployments: r.deployments,
-        }))
-      );
+    try {
+      const { data, error } = await supabase
+        .from("activity_stats")
+        .select("*")
+        .order("date", { ascending: true });
+      if (error) throw error;
+      if (data) {
+        setActivityStats(
+          data.map((r: any) => ({
+            date: r.date,
+            requests: r.requests,
+            messages: r.messages,
+            deployments: r.deployments,
+          }))
+        );
+      }
+    } catch (err) {
+      console.error("useChartData: activity_stats:", err);
+      setError(err instanceof Error ? err : new Error("Erro ao buscar estatísticas de atividade"));
     }
   }, []);
 
   useEffect(() => {
     async function init() {
+      setError(null);
       await Promise.all([fetchVps(), fetchCosts(), fetchActivity()]);
       setLoading(false);
     }
@@ -110,5 +130,5 @@ export function useChartData(vpsName: string) {
     };
   }, [fetchVps, fetchCosts, fetchActivity]);
 
-  return { vpsUsage, costHistory, activityStats, loading };
+  return { vpsUsage, costHistory, activityStats, loading, error };
 }
