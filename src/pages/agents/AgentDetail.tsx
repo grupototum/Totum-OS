@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { z } from 'zod';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import AppLayout from '@/components/layout/AppLayout';
@@ -19,6 +20,19 @@ import { supabase } from '@/integrations/supabase/client';
 
 const CATEGORIES = ['geral','comercial','criacao','marketing','analytics','social','trafego','tech','suporte'] as const;
 const STATUSES   = ['standby','online','offline','idle','maintenance'] as const;
+
+const agentEditSchema = z.object({
+  name:        z.string().min(2, 'Nome deve ter ao menos 2 caracteres').max(50, 'Nome deve ter no máximo 50 caracteres'),
+  role:        z.string().min(3, 'Role deve ter ao menos 3 caracteres').max(100, 'Role deve ter no máximo 100 caracteres'),
+  description: z.string().max(500, 'Descrição deve ter no máximo 500 caracteres'),
+  emoji:       z.string().max(4, 'Emoji deve ter no máximo 4 caracteres'),
+  slug:        z.string().refine(v => v === '' || /^[a-z0-9-]+$/.test(v), {
+    message: 'Slug deve conter apenas letras minúsculas, números e hífens',
+  }),
+  category:    z.enum(CATEGORIES),
+  status:      z.enum(STATUSES),
+  agent_group: z.string(),
+});
 
 interface EditForm {
   name: string; role: string; emoji: string; description: string;
@@ -136,6 +150,14 @@ export default function AgentDetail() {
 
   async function saveEdit() {
     if (!agent || !editForm) return;
+
+    const validation = agentEditSchema.safeParse(editForm);
+    if (!validation.success) {
+      const firstError = validation.error.errors[0];
+      toast.error(`Dados inválidos: ${firstError.message}`);
+      return;
+    }
+
     setSaving(true);
     try {
       const { error } = await supabase
