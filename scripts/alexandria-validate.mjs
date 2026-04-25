@@ -93,25 +93,31 @@ async function main() {
     .from('giles_knowledge').select('*', { count: 'exact', head: true });
   console.log(`total = ${totalChunks}`);
 
-  // 2. Por domínio
+  // 2. Por domínio (lê metadata.dominio JSONB; fallback p/ coluna top-level)
   header('2. Chunks por domínio');
   const { data: byDomain } = await supabase
-    .from('giles_knowledge').select('dominio');
+    .from('giles_knowledge').select('metadata');
   const counts = {};
-  for (const row of byDomain || []) counts[row.dominio] = (counts[row.dominio] || 0) + 1;
+  for (const row of byDomain || []) {
+    const d = row?.metadata?.dominio || '(sem domínio)';
+    counts[d] = (counts[d] || 0) + 1;
+  }
   Object.entries(counts).sort((a, b) => b[1] - a[1])
     .forEach(([d, c]) => console.log(`  ${d.padEnd(24)} ${c}`));
 
-  // 3. Documentos únicos (via entidades.doc_id)
+  // 3. Documentos únicos (doc_id top-level, fallback entidades.doc_id)
   header('3. Documentos únicos');
   const { data: docRows } = await supabase
-    .from('giles_knowledge').select('entidades');
+    .from('giles_knowledge').select('doc_id, entidades');
   const docs = new Set();
   for (const r of docRows || []) {
-    const id = r?.entidades?.doc_id;
+    const id = r?.doc_id || r?.entidades?.doc_id;
     if (id) docs.add(id);
   }
   console.log(`documentos_unicos = ${docs.size}`);
+  if (docs.size <= 30) {
+    [...docs].sort().forEach(d => console.log(`  - ${d}`));
+  }
 
   // 4. Chunks com embedding
   header('4. Chunks com embedding válido');
@@ -175,18 +181,38 @@ async function main() {
         match_count: 3,
       });
       if (error) {
-        console.log(`rpc match_documents indisponível (${error.message}) — caindo para fallback.`);
+        console.log(`rpc match_documents indisponível (${error.message}) — caindo para fallback ilike.`);
         const { data: fallback } = await supabase
           .from('giles_knowledge')
-          .select('chunk_id,subcategoria,content,source_file')
+          .select('chunk_id,subcategoria,content,doc_id,metadata')
           .ilike('content', '%jarvis%')
           .limit(3);
-        (fallback || []).forEach(m =>
-          console.log(`  ${m.source_file} :: ${m.subcategoria}\n    ${m.content.slice(0, 120)}…`)
-        );
+        if (!fallback || fallback.length === 0) {
+          console.log('  (nenhum chunk com "jarvis" no texto encontrado via ilike)');
+        } else {
+          fallback.forEach(m =>
+            console.log(`  ${m.metadata?.source_file || m.doc_id} :: ${m.subcategoria || ''}\n    ${(m.content || '').slice(0, 140)}…`)
+          );
+        }
+      } else if (!matches || matches.length === 0) {
+        console.log('  rpc match_documents OK mas retornou 0 matches (threshold=0.5).');
+        console.log('  Tentando threshold=0.3...');
+        const { data: lowMatches } = await supabase.rpc('match_documents', {
+          query_embedding: queryEmb,
+          match_threshold: 0.3,
+          match_count: 3,
+        });
+        if (!lowMatches || lowMatches.length === 0) {
+          console.log('  Ainda 0 matches em 0.3. Embeddings antigos (text-embedding-004) e novos');
+          console.log('  (gemini-embedding-001@768) podem viver em espaços vetoriais diferentes.');
+        } else {
+          lowMatches.forEach(m =>
+            console.log(`  ${m.source_file || m.doc_id || ''} :: ${m.subcategoria || ''}\n    similarity=${m.similarity?.toFixed(3)} — ${(m.content || '').slice(0, 140)}…`)
+          );
+        }
       } else {
-        (matches || []).forEach(m =>
-          console.log(`  ${m.source_file || ''} :: ${m.subcategoria || ''}\n    similarity=${m.similarity?.toFixed(3)} — ${(m.content || '').slice(0, 120)}…`)
+        matches.forEach(m =>
+          console.log(`  ${m.source_file || m.doc_id || ''} :: ${m.subcategoria || ''}\n    similarity=${m.similarity?.toFixed(3)} — ${(m.content || '').slice(0, 140)}…`)
         );
       }
     }
