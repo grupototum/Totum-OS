@@ -194,28 +194,37 @@ function chunkHash(doc_id, heading, content) {
 }
 
 // ─── Gemini embedding ─────────────────────────────────────────
-// Lista de candidatos em ordem de preferência (768D para casar com
-// o schema vector(768) atual). O primeiro que responder 200 vira
-// o modelo escolhido para toda a sessão.
+// Lista de candidatos em ordem de preferência. Cada entrada é
+// { model, outputDimensionality? }. O outputDimensionality força
+// o modelo Matryoshka (gemini-embedding-001) a devolver 768D
+// em vez do default 3072D — necessário para casar com o schema
+// vector(768) atual em produção.
 
 const EMBED_MODEL_CANDIDATES = [
-  'text-embedding-004',
-  'gemini-embedding-001',
-  'gemini-embedding-exp-03-07',
-  'embedding-001',
+  { model: 'text-embedding-004' },                              // legado, 768D nativo (pode estar offline)
+  { model: 'gemini-embedding-001', outputDimensionality: 768 }, // Matryoshka, força 768
+  { model: 'embedding-001' },                                   // antigo, 768D nativo
 ];
 
-let RESOLVED_EMBED_MODEL = null;
+let RESOLVED_EMBED_SPEC = null;
 
-async function tryEmbed(model, text) {
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:embedContent?key=${GEMINI_API_KEY}`;
+function specLabel(spec) {
+  return spec.outputDimensionality
+    ? `${spec.model}@${spec.outputDimensionality}D`
+    : spec.model;
+}
+
+async function tryEmbed(spec, text) {
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${spec.model}:embedContent?key=${GEMINI_API_KEY}`;
+  const body = {
+    model: `models/${spec.model}`,
+    content: { parts: [{ text: text.slice(0, 8000) }] },
+  };
+  if (spec.outputDimensionality) body.outputDimensionality = spec.outputDimensionality;
   const res = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      model: `models/${model}`,
-      content: { parts: [{ text: text.slice(0, 8000) }] },
-    }),
+    body: JSON.stringify(body),
   });
   if (!res.ok) {
     const errText = await res.text().catch(() => '');
@@ -228,30 +237,31 @@ async function tryEmbed(model, text) {
 }
 
 async function resolveEmbedModel() {
-  if (RESOLVED_EMBED_MODEL) return RESOLVED_EMBED_MODEL;
+  if (RESOLVED_EMBED_SPEC) return RESOLVED_EMBED_SPEC;
   console.log('\n[embed] resolvendo modelo Gemini disponível...');
-  for (const m of EMBED_MODEL_CANDIDATES) {
+  for (const spec of EMBED_MODEL_CANDIDATES) {
+    const label = specLabel(spec);
     try {
-      const v = await tryEmbed(m, 'teste de resolução');
+      const v = await tryEmbed(spec, 'teste de resolução');
       if (v.length !== 768) {
-        console.log(`  [embed] ${m} responde ${v.length}D — incompatível com vector(768), pulando`);
+        console.log(`  [embed] ${label} responde ${v.length}D — incompatível com vector(768), pulando`);
         continue;
       }
-      RESOLVED_EMBED_MODEL = m;
-      console.log(`  [embed] ✓ usando "${m}" (768D)`);
-      return m;
+      RESOLVED_EMBED_SPEC = spec;
+      console.log(`  [embed] ✓ usando "${label}" (768D)`);
+      return spec;
     } catch (e) {
-      console.log(`  [embed] ✗ ${m}: ${e.message}`);
+      console.log(`  [embed] ✗ ${label}: ${e.message}`);
     }
   }
   throw new Error('Nenhum modelo Gemini de embedding 768D disponível. Verifique a chave em https://aistudio.google.com/apikey');
 }
 
 async function generateEmbedding(text, retries = 3) {
-  const model = await resolveEmbedModel();
+  const spec = await resolveEmbedModel();
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
-      const values = await tryEmbed(model, text);
+      const values = await tryEmbed(spec, text);
       if (values.length === 768) return values;
       throw new Error(`Embedding length=${values.length} (esperado 768)`);
     } catch (err) {

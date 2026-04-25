@@ -53,27 +53,32 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY, {
   auth: { persistSession: false },
 });
 
-// Auto-discovery do modelo de embedding (mesmo do ingest)
+// Auto-discovery do modelo de embedding (mesmo padrão do ingest:
+// gemini-embedding-001 é Matryoshka e exige outputDimensionality:768)
 const EMBED_MODEL_CANDIDATES = [
-  'text-embedding-004',
-  'gemini-embedding-001',
-  'gemini-embedding-exp-03-07',
-  'embedding-001',
+  { model: 'text-embedding-004' },
+  { model: 'gemini-embedding-001', outputDimensionality: 768 },
+  { model: 'embedding-001' },
 ];
 async function resolveEmbedModel() {
-  for (const m of EMBED_MODEL_CANDIDATES) {
+  for (const spec of EMBED_MODEL_CANDIDATES) {
     try {
+      const body = {
+        model: `models/${spec.model}`,
+        content: { parts: [{ text: 'ping' }] },
+      };
+      if (spec.outputDimensionality) body.outputDimensionality = spec.outputDimensionality;
       const res = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${m}:embedContent?key=${GEMINI_API_KEY}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/${spec.model}:embedContent?key=${GEMINI_API_KEY}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ model: `models/${m}`, content: { parts: [{ text: 'ping' }] } }),
+          body: JSON.stringify(body),
         }
       );
       if (!res.ok) continue;
       const data = await res.json();
-      if (data?.embedding?.values?.length === 768) return m;
+      if (data?.embedding?.values?.length === 768) return spec;
     } catch {}
   }
   return null;
@@ -139,17 +144,22 @@ async function main() {
       console.log('\nValidação completa.');
       return;
     }
-    console.log(`(usando modelo Gemini: ${embedModel})`);
+    const label = embedModel.outputDimensionality
+      ? `${embedModel.model}@${embedModel.outputDimensionality}D`
+      : embedModel.model;
+    console.log(`(usando modelo Gemini: ${label})`);
     const queryText = 'quem é o Jarvis';
+    const embBody = {
+      model: `models/${embedModel.model}`,
+      content: { parts: [{ text: queryText }] },
+    };
+    if (embedModel.outputDimensionality) embBody.outputDimensionality = embedModel.outputDimensionality;
     const embRes = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${embedModel}:embedContent?key=${GEMINI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/${embedModel.model}:embedContent?key=${GEMINI_API_KEY}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: `models/${embedModel}`,
-          content: { parts: [{ text: queryText }] },
-        }),
+        body: JSON.stringify(embBody),
       }
     );
     const embData = await embRes.json();
