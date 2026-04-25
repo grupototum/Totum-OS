@@ -36,15 +36,25 @@ export const useAlexandria = () => {
       setIsLoading(true);
       setError(null);
 
-      const [documentsRes, skillsRes, configRes, dashRes] = await Promise.all([
+      const results = await Promise.allSettled([
         (supabase as any).from('rag_documents').select('*').order('created_at', { ascending: false }),
         (supabase as any).from('skills').select('*').eq('status', 'active').order('name'),
         (supabase as any).from('agents_config').select('*').order('name'),
         (supabase as any).from('agents').select('id,name,emoji,role,description,status,category,agent_group,slug,created_at').order('name'),
       ]);
 
-      const configAgents: any[] = configRes.data || [];
-      const dashAgents:   any[] = dashRes.data   || [];
+      if (results[0].status === 'rejected') console.error('useAlexandria: rag_documents:', results[0].reason);
+      if (results[1].status === 'rejected') console.error('useAlexandria: skills:', results[1].reason);
+      if (results[2].status === 'rejected') console.error('useAlexandria: agents_config:', results[2].reason);
+      if (results[3].status === 'rejected') console.error('useAlexandria: agents:', results[3].reason);
+
+      const documentsRes = results[0].status === 'fulfilled' ? results[0].value : null;
+      const skillsRes    = results[1].status === 'fulfilled' ? results[1].value : null;
+      const configRes    = results[2].status === 'fulfilled' ? results[2].value : null;
+      const dashRes      = results[3].status === 'fulfilled' ? results[3].value : null;
+
+      const configAgents: any[] = configRes?.data || [];
+      const dashAgents:   any[] = dashRes?.data   || [];
 
       // Merge: dashboard agents not already in agents_config (matched by id)
       const configIds = new Set(configAgents.map((a: any) => a.id));
