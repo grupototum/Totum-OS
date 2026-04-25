@@ -226,6 +226,13 @@ async function tryEmbed(spec, text) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
   });
+  if (res.status === 429) {
+    const retryAfter = parseInt(res.headers.get('retry-after') || '60', 10);
+    const e = new Error(`HTTP 429 quota exceeded`);
+    e.is429 = true;
+    e.retryAfterMs = Math.max(retryAfter, 30) * 1000;
+    throw e;
+  }
   if (!res.ok) {
     const errText = await res.text().catch(() => '');
     throw new Error(`HTTP ${res.status} ${errText.slice(0, 200)}`);
@@ -257,7 +264,12 @@ async function resolveEmbedModel() {
   throw new Error('Nenhum modelo Gemini de embedding 768D disponível. Verifique a chave em https://aistudio.google.com/apikey');
 }
 
-async function generateEmbedding(text, retries = 3) {
+// Estado global de quota — quando Gemini esgota, sinaliza para o
+// loop principal abortar limpo em vez de bater retries até o fim.
+let QUOTA_EXHAUSTED = false;
+
+async function generateEmbedding(text, retries = 5) {
+  if (QUOTA_EXHAUSTED) return null;
   const spec = await resolveEmbedModel();
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
@@ -267,9 +279,17 @@ async function generateEmbedding(text, retries = 3) {
     } catch (err) {
       if (attempt === retries) {
         console.error(`  [embed] falhou após ${retries} tentativas: ${err.message}`);
+        if (err.is429) QUOTA_EXHAUSTED = true;
         return null;
       }
-      await new Promise(r => setTimeout(r, 500 * attempt));
+      let waitMs;
+      if (err.is429) {
+        waitMs = err.retryAfterMs;
+        console.log(`  [embed] rate limit 429 — aguardando ${(waitMs/1000)|0}s antes de retry ${attempt}/${retries}...`);
+      } else {
+        waitMs = 500 * attempt;
+      }
+      await new Promise(r => setTimeout(r, waitMs));
     }
   }
   return null;
@@ -325,8 +345,14 @@ async function ingestDocument({ path, doc_id, dominio }) {
   console.log(`\n→ ${path} (${doc_id}) — ${chunks.length} chunks`);
 
   let inserted = 0, skipped = 0, failed = 0;
+  let firstInsertError = false;
 
   for (const chunk of chunks) {
+    if (QUOTA_EXHAUSTED) {
+      console.log(`  [quota] gemini quota esgotada — interrompendo aqui (idempotente, retomar depois)`);
+      break;
+    }
+
     const hash = chunkHash(doc_id, chunk.heading, chunk.content);
     const chunk_id = `${doc_id}::${hash.slice(0, 16)}`;
 
@@ -378,9 +404,11 @@ async function ingestDocument({ path, doc_id, dominio }) {
     if (error) {
       console.error(`  [insert] erro: ${error.message}`);
       failed++;
-      // Se o primeiro insert do documento falha, aborta o doc para não
-      // gastar quota Gemini em chunks que vão todos falhar pelo mesmo motivo.
-      if (inserted === 0 && failed === 1) {
+      // Erro de schema/constraint é persistente — aborta este doc
+      // (gastar quota Gemini em mais chunks daria mesmo erro).
+      // 429 do Gemini não chega aqui — vira `failed` em generateEmbedding.
+      if (!firstInsertError) {
+        firstInsertError = true;
         console.error(`  [insert] primeira inserção falhou — abortando este documento.`);
         console.error(`  [insert] payload tentado (sem embedding):`, {
           ...payload,
@@ -441,6 +469,10 @@ async function ingestDocument({ path, doc_id, dominio }) {
     summary.inserted += r.inserted;
     summary.skipped += r.skipped;
     summary.failed += r.failed;
+    if (QUOTA_EXHAUSTED) {
+      console.log('\n[quota] interrompendo batch — Gemini quota esgotada.');
+      break;
+    }
   }
 
   console.log('\n' + '='.repeat(60));
@@ -451,6 +483,12 @@ async function ingestDocument({ path, doc_id, dominio }) {
   console.log(`Chunks inseridos       : ${summary.inserted}`);
   console.log(`Chunks pulados (dedup) : ${summary.skipped}`);
   console.log(`Chunks com falha       : ${summary.failed}`);
+  if (QUOTA_EXHAUSTED) {
+    console.log(`\n⚠ Gemini quota esgotada — batch interrompido.`);
+    console.log(`  Free tier reseta em ~24h. Re-rodar este script depois disso é IDEMPOTENTE`);
+    console.log(`  (vai pular tudo que já foi inserido, processar só o que faltou).`);
+    console.log(`  Para subir o limite: https://aistudio.google.com/apikey -> ativar billing.`);
+  }
 
   // Contagem final
   const { count } = await supabase
