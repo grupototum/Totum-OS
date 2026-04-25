@@ -344,10 +344,13 @@ async function ingestDocument({ path, doc_id, dominio }) {
 
     const fullPayload = {
       chunk_id,
+      doc_id,                                  // coluna NOT NULL no schema real
+      hierarchical_path: chunk.hierarchical_path,
       content: chunk.content,
       dominio,
       categoria: 'documentação',
       subcategoria: chunk.heading || null,
+      heading: chunk.heading || null,           // alguns schemas usam 'heading' em vez de 'subcategoria'
       tags: [dominio, doc_id.split('-')[0].toLowerCase()],
       keywords: [],
       source_file: path,
@@ -365,6 +368,16 @@ async function ingestDocument({ path, doc_id, dominio }) {
     if (error) {
       console.error(`  [insert] erro: ${error.message}`);
       failed++;
+      // Se o primeiro insert do documento falha, aborta o doc para não
+      // gastar quota Gemini em chunks que vão todos falhar pelo mesmo motivo.
+      if (inserted === 0 && failed === 1) {
+        console.error(`  [insert] primeira inserção falhou — abortando este documento.`);
+        console.error(`  [insert] payload tentado (sem embedding):`, {
+          ...payload,
+          embedding: payload.embedding ? `<vector length=${embedding.length}>` : null,
+        });
+        break;
+      }
     } else {
       inserted++;
     }
@@ -391,8 +404,9 @@ async function ingestDocument({ path, doc_id, dominio }) {
 
   // Avisa quais campos nosso payload teria que vão ser descartados
   const samplePayload = {
-    chunk_id: 'x', content: 'x', dominio: 'x', categoria: 'x',
-    subcategoria: 'x', tags: [], keywords: [], source_file: 'x',
+    chunk_id: 'x', doc_id: 'x', hierarchical_path: 'x',
+    content: 'x', dominio: 'x', categoria: 'x',
+    subcategoria: 'x', heading: 'x', tags: [], keywords: [], source_file: 'x',
     autor: 'x', entidades: {}, relacionamentos: {}, confianca: 1.0,
     embedding: '[]',
   };
