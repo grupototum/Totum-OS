@@ -471,7 +471,7 @@ POST /alexandria/search
 }
 ```
 
-### Chat with GILES
+### Chat with HERMIONE
 
 ```
 POST /alexandria/chat
