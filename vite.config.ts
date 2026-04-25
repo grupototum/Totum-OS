@@ -6,6 +6,12 @@ import { VitePWA } from "vite-plugin-pwa";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
+  // Drop console/debugger statements in production builds only
+  ...(mode === 'production' && {
+    esbuild: {
+      drop: ['console', 'debugger'],
+    },
+  }),
   server: {
     host: "::",
     port: 8080,
