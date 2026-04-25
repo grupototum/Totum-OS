@@ -275,6 +275,42 @@ async function generateEmbedding(text, retries = 3) {
   return null;
 }
 
+// ─── Schema discovery ─────────────────────────────────────────
+// Descobre as colunas reais de giles_knowledge fazendo um SELECT *
+// LIMIT 1. Schema definido em código (alexandriaIngestion.ts) pode
+// divergir do schema em produção — sempre confiar no que existe lá.
+
+let KNOWN_COLUMNS = null;
+
+async function discoverColumns() {
+  if (KNOWN_COLUMNS) return KNOWN_COLUMNS;
+  const { data, error } = await supabase
+    .from('giles_knowledge')
+    .select('*')
+    .limit(1);
+  if (error) throw new Error(`schema discovery falhou: ${error.message}`);
+  if (!data || data.length === 0) {
+    // Tabela vazia — tenta com SELECT que força retorno de header.
+    // Como fallback assumimos colunas mínimas universais.
+    console.log('  [schema] tabela vazia, assumindo colunas mínimas');
+    KNOWN_COLUMNS = new Set(['chunk_id', 'content', 'embedding', 'dominio']);
+  } else {
+    KNOWN_COLUMNS = new Set(Object.keys(data[0]));
+  }
+  console.log(`  [schema] colunas reais: ${[...KNOWN_COLUMNS].join(', ')}`);
+  return KNOWN_COLUMNS;
+}
+
+function filterPayload(payload, columns) {
+  const filtered = {};
+  const dropped = [];
+  for (const [k, v] of Object.entries(payload)) {
+    if (columns.has(k)) filtered[k] = v;
+    else dropped.push(k);
+  }
+  return { filtered, dropped };
+}
+
 // ─── Ingestão de um documento ─────────────────────────────────
 
 async function ingestDocument({ path, doc_id, dominio }) {
@@ -306,7 +342,7 @@ async function ingestDocument({ path, doc_id, dominio }) {
     const embedding = await generateEmbedding(textToEmbed);
     if (!embedding) { failed++; continue; }
 
-    const payload = {
+    const fullPayload = {
       chunk_id,
       content: chunk.content,
       dominio,
@@ -321,6 +357,9 @@ async function ingestDocument({ path, doc_id, dominio }) {
       confianca: 1.0,
       embedding: JSON.stringify(embedding),
     };
+
+    const columns = await discoverColumns();
+    const { filtered: payload } = filterPayload(fullPayload, columns);
 
     const { error } = await supabase.from('giles_knowledge').insert(payload);
     if (error) {
@@ -345,6 +384,30 @@ async function ingestDocument({ path, doc_id, dominio }) {
   console.log(`Supabase: ${SUPABASE_URL}`);
   console.log(`Documentos no manifest: ${DOC_MANIFEST.length}`);
   console.log('='.repeat(60));
+
+  // Descobre o schema ANTES de gastar embeddings
+  console.log('\n[setup] descobrindo schema da giles_knowledge...');
+  const columns = await discoverColumns();
+
+  // Avisa quais campos nosso payload teria que vão ser descartados
+  const samplePayload = {
+    chunk_id: 'x', content: 'x', dominio: 'x', categoria: 'x',
+    subcategoria: 'x', tags: [], keywords: [], source_file: 'x',
+    autor: 'x', entidades: {}, relacionamentos: {}, confianca: 1.0,
+    embedding: '[]',
+  };
+  const { dropped } = filterPayload(samplePayload, columns);
+  if (dropped.length) {
+    console.log(`[setup] campos do payload sem coluna correspondente (serão omitidos): ${dropped.join(', ')}`);
+  }
+
+  // Aborta se faltar coluna essencial
+  for (const required of ['chunk_id', 'content', 'embedding']) {
+    if (!columns.has(required)) {
+      console.error(`[FATAL] coluna obrigatória '${required}' não existe em giles_knowledge.`);
+      process.exit(1);
+    }
+  }
 
   const summary = { inserted: 0, skipped: 0, failed: 0, missing: 0, docs: 0 };
 
