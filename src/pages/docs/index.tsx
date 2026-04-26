@@ -61,7 +61,7 @@ export default function DocsPage() {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.15 }}
-        className="h-[calc(100vh-4rem)] overflow-hidden"
+        className="h-[calc(100vh-4rem)] overflow-hidden bg-background"
       >
         <DocumentationLayout
           docs={docs}

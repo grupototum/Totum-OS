@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
 import { Search, LayoutGrid, List, Columns3, Download, Mail } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Toolbar } from "@/components/ui/patterns";
 import {
   Select,
   SelectContent,
@@ -45,8 +45,7 @@ export function ClientFilters({
   return (
     <>
       <motion.div {...anim(1)}>
-        <Card className="border-border/40 bg-card/80">
-          <CardContent className="p-3 flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+        <Toolbar>
             <div className="relative flex-1 w-full">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
@@ -58,7 +57,7 @@ export function ClientFilters({
             </div>
             <div className="flex gap-2 flex-wrap items-center">
               <Select value={statusFilter} onValueChange={onStatusChange}>
-                <SelectTrigger className="bg-secondary border-border/40 h-9 w-32 text-xs">
+                <SelectTrigger className="bg-secondary border-border/40 h-9 w-32 text-xs rounded-none">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -69,7 +68,7 @@ export function ClientFilters({
                 </SelectContent>
               </Select>
               <Select value={industryFilter} onValueChange={onIndustryChange}>
-                <SelectTrigger className="bg-secondary border-border/40 h-9 w-36 text-xs">
+                <SelectTrigger className="bg-secondary border-border/40 h-9 w-36 text-xs rounded-none">
                   <SelectValue placeholder="Ramo" />
                 </SelectTrigger>
                 <SelectContent>
@@ -81,7 +80,7 @@ export function ClientFilters({
                   ))}
                 </SelectContent>
               </Select>
-              <div className="flex border border-border/40 rounded-lg overflow-hidden">
+              <div className="flex border border-border/40 overflow-hidden">
                 {(
                   [
                     ["list", List],
@@ -94,7 +93,7 @@ export function ClientFilters({
                     onClick={() => onViewModeChange(mode)}
                     className={`p-2 transition-colors ${
                       viewMode === mode
-                        ? "bg-primary/20 text-primary"
+                        ? "bg-primary text-primary-foreground"
                         : "text-muted-foreground hover:text-foreground"
                     }`}
                   >
@@ -103,8 +102,7 @@ export function ClientFilters({
                 ))}
               </div>
             </div>
-          </CardContent>
-        </Card>
+        </Toolbar>
       </motion.div>
 
       {/* Batch actions */}

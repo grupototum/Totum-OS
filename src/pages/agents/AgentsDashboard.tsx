@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { EmptyState, MetricCard, PageHeader, Toolbar } from "@/components/ui/patterns";
 import {
   Bot, Zap, Users, TrendingUp, Search, LayoutGrid, List, BarChart3,
   Plus, FileText,
@@ -209,31 +210,24 @@ export default function AgentsDashboard() {
   return (
     <AppLayout>
       <motion.main {...pageTransition} className="min-h-screen bg-background" aria-label="Agents dashboard">
-        <div className="max-w-7xl mx-auto p-6 space-y-8">
+        <div className="max-w-7xl mx-auto p-4 sm:p-6 space-y-6">
 
           {/* ─── Header ─── */}
-          <motion.header {...anim(0)} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div>
-              <h1 className="text-2xl font-semibold text-foreground tracking-tight">
-                TOTUM AGENTS
-              </h1>
-              <p className="text-xs text-muted-foreground uppercase tracking-widest mt-1">
-                Dashboard · Gerenciamento de Agentes IA
-              </p>
-            </div>
-
-            {/* All action buttons aligned in header */}
-            <div className="flex flex-wrap gap-2">
+          <motion.div {...anim(0)}>
+            <PageHeader
+              eyebrow="Rede operacional"
+              title="Totum Agents"
+              description="Gerencie agentes, workflows, performance e conversas de IA em uma central única."
+              icon={Bot}
+              actions={
+                <>
               <Button
-                className="bg-foreground hover:bg-foreground/90 text-background"
                 onClick={() => navigate('/agents/new')}
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Novo Agente
               </Button>
-              <Button
-                className="bg-foreground hover:bg-foreground/90 text-background"
-              >
+              <Button variant="secondary">
                 <Plus className="w-4 h-4 mr-2" />
                 Novo Workflow
               </Button>
@@ -245,38 +239,33 @@ export default function AgentsDashboard() {
                 <FileText className="w-4 h-4 mr-2" />
                 Ver Relatórios
               </Button>
-            </div>
-          </motion.header>
+                </>
+              }
+            />
+          </motion.div>
 
           {/* ─── Stats ─── */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {stats.map((s, i) => (
+            {stats.map((s, i) => {
+              const icons = [Bot, Zap, Users, TrendingUp];
+              return (
               <motion.div key={s.label} {...anim(i + 1)}>
-                <Card className="border-border bg-card hover:shadow-lg hover:scale-[1.02] transition-all duration-300">
-                  <CardContent className="p-5 flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-muted border border-border flex items-center justify-center text-2xl">
-                      {s.emoji}
-                    </div>
-                    <div>
-                      <p className="text-xs text-muted-foreground uppercase tracking-wider">{s.label}</p>
-                      <p className="text-2xl font-semibold text-foreground">{s.value}</p>
-                    </div>
-                  </CardContent>
-                </Card>
+                <MetricCard label={s.label} value={s.value} icon={icons[i]} tone={i === 1 ? "amber" : i === 2 ? "sky" : i === 3 ? "emerald" : "primary"} />
               </motion.div>
-            ))}
+            )})}
           </div>
 
           {/* ─── Filters & View Toggle ─── */}
-          <motion.div {...anim(5)} className="flex flex-col lg:flex-row gap-3 items-start lg:items-center justify-between">
+          <motion.div {...anim(5)}>
+          <Toolbar>
             <div className="flex gap-2 flex-wrap">
               {CATEGORIES.map((cat) => (
                 <button
                   key={cat}
                   onClick={() => setCategory(cat)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all border ${
+                  className={`px-3 py-1.5 text-xs font-medium transition-all border ${
                     category === cat
-                      ? "bg-foreground text-background border-foreground"
+                      ? "bg-primary text-primary-foreground border-primary"
                       : "bg-card text-muted-foreground border-border hover:bg-muted"
                   }`}
                 >
@@ -298,7 +287,7 @@ export default function AgentsDashboard() {
                 />
               </div>
 
-              <div className="flex bg-card rounded-lg border border-border p-1">
+              <div className="flex bg-card border border-border p-1">
                 {([
                   { mode: "list" as ViewMode, icon: List, title: "Vista em Lista" },
                   { mode: "graph" as ViewMode, icon: LayoutGrid, title: "Vista em Grafo" },
@@ -307,9 +296,9 @@ export default function AgentsDashboard() {
                   <button
                     key={mode}
                     onClick={() => setViewMode(mode)}
-                    className={`p-2 rounded-md transition-all ${
+                    className={`p-2 transition-all ${
                       viewMode === mode
-                        ? "bg-foreground text-background"
+                        ? "bg-primary text-primary-foreground"
                         : "text-muted-foreground hover:text-foreground"
                     }`}
                     title={title}
@@ -319,6 +308,7 @@ export default function AgentsDashboard() {
                 ))}
               </div>
             </div>
+          </Toolbar>
           </motion.div>
 
           {/* ─── Usage Chart — full width horizontal ─── */}
@@ -378,11 +368,13 @@ export default function AgentsDashboard() {
           {/* ─── Agent Views — full width ─── */}
           <motion.div {...anim(7)}>
             {filtered.length === 0 ? (
-              <Card className="border-border bg-card p-12 text-center">
-                <Bot className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
-                <p className="text-muted-foreground">Nenhum agente encontrado</p>
-                <p className="text-xs text-muted-foreground/60 mt-1">Tente alterar os filtros ou a busca</p>
-              </Card>
+              <EmptyState
+                icon={Bot}
+                title="Nenhum agente encontrado"
+                description="Ajuste a busca, mude os filtros ou cadastre um novo agente para ativar a rede."
+                actionLabel="Novo Agente"
+                onAction={() => navigate("/agents/new")}
+              />
             ) : viewMode === "list" ? (
               <AgentList
                 agents={filtered}

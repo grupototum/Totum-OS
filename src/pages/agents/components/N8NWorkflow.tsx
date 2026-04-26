@@ -22,9 +22,9 @@ import {
   useN8NWorkflows,
   useN8NExecutions,
   useExecuteWorkflow,
-  useN8NEditorUrl,
   isN8NConfigured,
 } from "@/hooks/useN8N";
+import { getN8NEditorUrl } from "@/services/n8n";
 import type { Agent } from "@/hooks/useAgents";
 import { toast } from "sonner";
 
@@ -67,7 +67,7 @@ export function N8NWorkflow({ agent }: N8NWorkflowProps) {
     toast.success("Webhook URL copiado");
   };
 
-  const editorUrl = useN8NEditorUrl(selectedWorkflow || undefined, agent?.id);
+  const editorUrl = getN8NEditorUrl(selectedWorkflow || undefined, agent?.id);
 
   if (!isN8NConfigured() && !n8nUrl) {
     return (
@@ -205,7 +205,7 @@ export function N8NWorkflow({ agent }: N8NWorkflowProps) {
                         <Play className="w-3.5 h-3.5" />
                       </Button>
                       <a
-                        href={useN8NEditorUrl(wf.id, agent?.id)}
+                        href={getN8NEditorUrl(wf.id, agent?.id)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="h-7 w-7 flex items-center justify-center rounded-md hover:bg-muted transition-colors"

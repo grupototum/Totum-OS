@@ -19,7 +19,7 @@ import {
   Settings,
   Shield
 } from 'lucide-react';
-import { OPENCLAW_CONFIG } from '@/config/openclaw';
+import { OPENCLAW_CONFIG, isOpenClawBrowserReachable } from '@/config/openclaw';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -124,12 +124,12 @@ export default function OpenClawDashboard() {
   // ── Health fetch ────────────────────────────────────────────────────────────
 
   const fetchHealth = useCallback(async () => {
-    if (isMockMode) {
+    if (isMockMode || !isOpenClawBrowserReachable()) {
       setVps({
         online: false,
         loading: false,
         health: null,
-        error: 'Mock mode',
+        error: 'Modo simulado',
         lastChecked: new Date(),
       });
       return;

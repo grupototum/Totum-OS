@@ -59,10 +59,10 @@ export default function AppSidebarContent({ onNavigate }: Props) {
         <button
           onClick={() => handleNav(item.path)}
           className={cn(
-            "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 relative",
+            "w-full flex items-center gap-3 px-3 py-2.5 rounded-none border border-transparent transition-all duration-200 relative",
             active
-              ? "bg-sidebar-accent text-primary"
-              : "text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent/50"
+              ? "border-primary/40 bg-primary/10 text-primary"
+              : "text-sidebar-foreground/60 hover:border-sidebar-border hover:text-sidebar-foreground hover:bg-sidebar-accent/50"
           )}
         >
           {active && (
@@ -103,10 +103,10 @@ export default function AppSidebarContent({ onNavigate }: Props) {
           <button
             onClick={() => handleNav(path)}
             className={cn(
-              "flex-1 flex items-center gap-2.5 px-2 py-2.5 rounded-lg transition-all duration-200",
+              "flex-1 flex items-center gap-2.5 px-2 py-2.5 rounded-none border border-transparent transition-all duration-200",
               sectionActive
-                ? "bg-sidebar-accent text-primary"
-                : "text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent/50"
+                ? "border-primary/40 bg-primary/10 text-primary"
+                : "text-sidebar-foreground/60 hover:border-sidebar-border hover:text-sidebar-foreground hover:bg-sidebar-accent/50"
             )}
           >
             <Icon className={cn("w-[18px] h-[18px] shrink-0", sectionActive && "text-primary")} />
@@ -122,9 +122,9 @@ export default function AppSidebarContent({ onNavigate }: Props) {
                   <button
                     onClick={() => handleNav(sub.path)}
                     className={cn(
-                      "w-full flex items-center gap-2 px-2 py-1.5 rounded-md transition-all duration-200 text-[12px]",
+                      "w-full flex items-center gap-2 px-2 py-1.5 rounded-none transition-all duration-200 text-[12px]",
                       subActive
-                        ? "bg-sidebar-accent text-primary font-medium"
+                        ? "bg-primary/10 text-primary font-medium"
                         : "text-sidebar-foreground/45 hover:text-sidebar-foreground hover:bg-sidebar-accent/30"
                     )}
                   >
@@ -148,10 +148,11 @@ export default function AppSidebarContent({ onNavigate }: Props) {
     <div className="flex flex-col h-full bg-sidebar">
       {/* Logo */}
       <div className="flex items-center gap-2.5 px-5 h-16 border-b border-sidebar-border shrink-0">
-        <div className="flex gap-[3px]">
-          <div className="w-[5px] h-6 bg-primary rounded-full" />
-          <div className="w-[5px] h-4 bg-primary/60 rounded-full" />
-          <div className="w-[5px] h-6 bg-primary rounded-full" />
+        <div className="grid h-7 w-7 grid-cols-2 gap-0.5">
+          <div className="bg-primary" />
+          <div className="bg-zinc-700" />
+          <div className="bg-zinc-800" />
+          <div className="bg-white shadow-[0_0_12px_rgba(255,255,255,0.45)]" />
         </div>
         <span className="font-sans text-lg font-medium text-sidebar-foreground tracking-tight">
           TOTUM
@@ -166,11 +167,11 @@ export default function AppSidebarContent({ onNavigate }: Props) {
               new KeyboardEvent("keydown", { key: "k", metaKey: true, bubbles: true })
             )
           }
-          className="w-full flex items-center gap-2 rounded-lg border border-sidebar-border bg-sidebar-accent/20 px-3 py-2 text-sidebar-foreground/45 hover:text-sidebar-foreground hover:bg-sidebar-accent/50 transition-colors"
+          className="w-full flex items-center gap-2 rounded-none border border-sidebar-border bg-sidebar-accent/20 px-3 py-2 text-sidebar-foreground/45 hover:text-sidebar-foreground hover:bg-sidebar-accent/50 transition-colors"
         >
           <Search className="w-3.5 h-3.5 shrink-0" />
           <span className="text-[12px] flex-1 text-left">Buscar ou navegar...</span>
-          <kbd className="text-[10px] font-mono opacity-40 border border-sidebar-border rounded px-1 py-0.5">⌘K</kbd>
+          <kbd className="text-[10px] font-mono opacity-40 border border-sidebar-border px-1 py-0.5">⌘K</kbd>
         </button>
       </div>
 
@@ -200,7 +201,7 @@ export default function AppSidebarContent({ onNavigate }: Props) {
       {/* Footer */}
       <div className="border-t border-sidebar-border p-4 shrink-0">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-full bg-primary/20 flex items-center justify-center text-primary text-sm font-semibold uppercase shrink-0">
+          <div className="w-9 h-9 bg-primary/15 border border-primary/30 flex items-center justify-center text-primary text-sm font-semibold uppercase shrink-0">
             {user?.email?.[0] || "U"}
           </div>
           <div className="flex-1 min-w-0">
@@ -211,7 +212,7 @@ export default function AppSidebarContent({ onNavigate }: Props) {
           </div>
           <button
             onClick={handleLogout}
-            className="p-1.5 rounded-lg hover:bg-sidebar-accent text-sidebar-foreground/40 hover:text-sidebar-foreground transition-colors"
+            className="p-1.5 hover:bg-sidebar-accent text-sidebar-foreground/40 hover:text-sidebar-foreground transition-colors"
           >
             <LogOut className="w-4 h-4" />
           </button>

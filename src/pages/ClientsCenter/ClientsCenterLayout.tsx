@@ -4,8 +4,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { usePageTransition } from "@/hooks/usePageTransition";
 import { PageSkeleton } from "@/components/loading";
 import { Plus, Building2 } from "lucide-react";
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { EmptyState, PageHeader } from "@/components/ui/patterns";
 import AppLayout from "@/components/layout/AppLayout";
 import {
   ClientFilters,
@@ -72,29 +72,21 @@ export function ClientsCenterLayout() {
 
   return (
     <AppLayout>
-      <motion.main {...pageTransition} className="p-6 max-w-7xl mx-auto space-y-6" aria-label="Clients center">
+      <motion.main {...pageTransition} className="p-4 sm:p-6 max-w-7xl mx-auto space-y-6" aria-label="Clients center">
         {/* Header */}
-        <motion.header
-          {...anim(0)}
-          className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
-        >
-          <div>
-            <h1 className="font-sans text-2xl font-semibold text-foreground tracking-tight">
-              CENTRAL DE CLIENTES
-            </h1>
-            <p className="text-xs text-muted-foreground uppercase tracking-widest mt-1">
-              {clients.length} clientes cadastrados ·{" "}
-              {clients.filter((c) => c.status === "active").length} ativos
-            </p>
-          </div>
-          <Button
-            onClick={() => navigate("/new-client")}
-            className="bg-primary hover:bg-primary/90 text-primary-foreground text-sm"
-            aria-label="Create new client"
-          >
-            <Plus className="w-4 h-4 mr-2" /> Novo Cliente
-          </Button>
-        </motion.header>
+        <motion.div {...anim(0)}>
+          <PageHeader
+            eyebrow="Operações comerciais"
+            title="Central de Clientes"
+            description={`${clients.length} clientes cadastrados · ${clients.filter((c) => c.status === "active").length} ativos`}
+            icon={Building2}
+            actions={
+              <Button onClick={() => navigate("/new-client")} aria-label="Create new client">
+                <Plus className="w-4 h-4 mr-2" /> Novo Cliente
+              </Button>
+            }
+          />
+        </motion.div>
 
         {/* Filters */}
         <ClientFilters
@@ -112,13 +104,13 @@ export function ClientsCenterLayout() {
 
         {/* Empty state */}
         {filtered.length === 0 && (
-          <Card className="border-border/40 bg-card/60 p-12 text-center">
-            <Building2 className="w-16 h-16 mx-auto text-muted-foreground/40 mb-4" />
-            <p className="text-muted-foreground">Nenhum cliente encontrado</p>
-            <p className="text-xs text-muted-foreground/60 mt-1">
-              Altere os filtros ou cadastre um novo cliente
-            </p>
-          </Card>
+          <EmptyState
+            icon={Building2}
+            title="Nenhum cliente encontrado"
+            description="Altere os filtros ou cadastre um novo cliente para preencher a central."
+            actionLabel="Novo Cliente"
+            onAction={() => navigate("/new-client")}
+          />
         )}
 
         {/* Views */}
@@ -156,11 +148,11 @@ export function ClientsCenterLayout() {
         {/* Kanban view placeholder */}
         {viewMode === "kanban" && filtered.length > 0 && (
           <motion.div {...anim(2)}>
-            <Card className="border-border/40 bg-card/80 p-12 text-center">
-              <p className="text-muted-foreground">
-                Visualização Kanban em desenvolvimento
-              </p>
-            </Card>
+            <EmptyState
+              icon={Building2}
+              title="Kanban de clientes preparado"
+              description="Esta visão será conectada às etapas comerciais; por enquanto use lista ou grid para operar os clientes."
+            />
           </motion.div>
         )}
 

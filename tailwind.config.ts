@@ -43,16 +43,16 @@ export default {
          ============================================================ */
       colors: {
         brand: {
-          DEFAULT: "hsl(var(--accent))",
-          red: "hsl(var(--accent))",
-          "red-dark": "hsl(var(--accent))",
-          "red-light": "hsl(var(--accent))",
+          DEFAULT: "hsl(var(--primary))",
+          red: "hsl(var(--primary))",
+          "red-dark": "hsl(var(--primary))",
+          "red-light": "hsl(var(--primary))",
         },
 
         success: "#059669",
         warning: "#d97706",
         error: "#dc2626",
-        "brand-red": "hsl(var(--accent))",
+        "brand-red": "hsl(var(--primary))",
 
         // Neutral scale used across the editorial DS.
         // Aliased to Tailwind's stone/zinc defaults so existing utility
@@ -192,13 +192,13 @@ export default {
          around the reference design's hero panels).
          ============================================================ */
       borderRadius: {
-        sm: "calc(var(--radius) - 4px)",
-        md: "calc(var(--radius) - 2px)",
+        sm: "0",
+        md: "0",
         lg: "var(--radius)",
-        xl: "1rem",
-        "2xl": "1.5rem",
-        "3xl": "2rem",
-        "4xl": "2.5rem",
+        xl: "0",
+        "2xl": "0",
+        "3xl": "0",
+        "4xl": "0",
       },
 
       /* ============================================================

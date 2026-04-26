@@ -3,7 +3,7 @@
  * Cliente HTTP para comunicação com VPS OpenClaw
  */
 
-import { OPENCLAW_CONFIG, getWebhookUrl } from '@/config/openclaw';
+import { OPENCLAW_CONFIG, getWebhookUrl, isOpenClawBrowserReachable } from '@/config/openclaw';
 import type { 
   AgentPayload, 
   ExecutionResult, 
@@ -131,7 +131,7 @@ export async function executeAgent(
   const { retryCount = 0, timeout = OPENCLAW_CONFIG.TIMEOUT } = options;
   
   // Modo Mock: retorna resposta simulada
-  if (OPENCLAW_CONFIG.MOCK_MODE) {
+  if (OPENCLAW_CONFIG.MOCK_MODE || !isOpenClawBrowserReachable()) {
     console.log('[OpenClaw] Mock mode - simulating execution', payload);
     
     await new Promise(resolve => setTimeout(resolve, MOCK_DELAY_MS));
@@ -208,7 +208,7 @@ export async function executeAgent(
  * Verifica saúde do OpenClaw
  */
 export async function checkOpenClawHealth(): Promise<{ healthy: boolean; message: string }> {
-  if (OPENCLAW_CONFIG.MOCK_MODE) {
+  if (OPENCLAW_CONFIG.MOCK_MODE || !isOpenClawBrowserReachable()) {
     return { healthy: true, message: 'Mock mode active' };
   }
   

@@ -20,6 +20,20 @@ function getBaseUrl(): string {
   return N8N_URL.replace(/\/$/, "");
 }
 
+function canFetchFromBrowser(url: string): boolean {
+  if (!url) return false;
+  if (typeof window === "undefined") return true;
+
+  try {
+    const parsed = new URL(url);
+    const isHttpsPage = window.location.protocol === "https:";
+    const isInsecureRemote = parsed.protocol === "http:" && !["localhost", "127.0.0.1", "::1"].includes(parsed.hostname);
+    return !(isHttpsPage && isInsecureRemote);
+  } catch {
+    return false;
+  }
+}
+
 export interface N8NWorkflow {
   id: string;
   name: string;
@@ -48,6 +62,7 @@ export interface N8NWebhook {
 
 export async function checkN8NHealth(): Promise<boolean> {
   if (!N8N_URL) return false;
+  if (!canFetchFromBrowser(getBaseUrl())) return false;
   try {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 3000);
@@ -60,6 +75,7 @@ export async function checkN8NHealth(): Promise<boolean> {
 }
 
 export async function listWorkflows(): Promise<N8NWorkflow[]> {
+  if (!canFetchFromBrowser(getBaseUrl())) return [];
   const res = await fetch(`${getBaseUrl()}/api/v1/workflows`, {
     headers: getHeaders(),
   });
@@ -69,6 +85,7 @@ export async function listWorkflows(): Promise<N8NWorkflow[]> {
 }
 
 export async function getWorkflow(id: string): Promise<N8NWorkflow> {
+  if (!canFetchFromBrowser(getBaseUrl())) throw new Error("N8N indisponível neste ambiente");
   const res = await fetch(`${getBaseUrl()}/api/v1/workflows/${id}`, {
     headers: getHeaders(),
   });
@@ -78,6 +95,7 @@ export async function getWorkflow(id: string): Promise<N8NWorkflow> {
 }
 
 export async function executeWorkflow(id: string, data?: Record<string, unknown>): Promise<{ executionId: string }> {
+  if (!canFetchFromBrowser(getBaseUrl())) throw new Error("N8N indisponível neste ambiente");
   const res = await fetch(`${getBaseUrl()}/api/v1/workflows/${id}/execute`, {
     method: "POST",
     headers: getHeaders(),
@@ -89,6 +107,7 @@ export async function executeWorkflow(id: string, data?: Record<string, unknown>
 }
 
 export async function getExecutions(workflowId?: string, limit = 20): Promise<N8NExecution[]> {
+  if (!canFetchFromBrowser(getBaseUrl())) return [];
   const url = new URL(`${getBaseUrl()}/api/v1/executions`);
   url.searchParams.set("limit", String(limit));
   if (workflowId) url.searchParams.set("workflowId", workflowId);

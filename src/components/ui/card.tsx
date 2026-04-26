@@ -17,19 +17,28 @@ import { cn } from "@/lib/utils";
 interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   /** @deprecated Preserved for call-site compatibility; has no visual effect in the editorial DS. */
   cornerAccents?: boolean;
+  /** @deprecated Legacy alias for cornerAccents from older dashboard cards. */
+  cornerMarks?: boolean;
   hoverGlow?: boolean;
 }
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
-  ({ className, cornerAccents: _cornerAccents = false, hoverGlow = true, children, ...props }, ref) => (
+  ({
+    className,
+    cornerAccents: _cornerAccents = false,
+    cornerMarks: _cornerMarks = false,
+    hoverGlow = true,
+    children,
+    ...props
+  }, ref) => (
     <div
       ref={ref}
       className={cn(
-        "relative bg-card text-card-foreground border border-border rounded-3xl overflow-hidden",
+        "relative bg-card text-card-foreground border border-border/80 rounded-xl overflow-hidden shadow-[0_0_0_1px_rgba(255,255,255,0.02)]",
         hoverGlow && [
-          "transition-all duration-500 ease-out",
-          "hover:-translate-y-0.5",
-          "hover:shadow-editorial",
+          "transition-all duration-300 ease-out",
+          "hover:-translate-y-px",
+          "hover:border-primary/40 hover:shadow-[0_18px_60px_-35px_hsl(var(--primary)/0.55)]",
         ],
         className
       )}
@@ -185,8 +194,8 @@ const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
     <div
       ref={ref}
       className={cn(
-        "p-8 flex flex-col justify-between",
-        "border-b border-border last:border-b-0",
+        "p-6 flex flex-col justify-between",
+        "border-b border-border/70 last:border-b-0",
         "group hover:bg-muted/60 transition-colors duration-200",
         className
       )}

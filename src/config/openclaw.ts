@@ -23,7 +23,10 @@ export const OPENCLAW_CONFIG = {
   RETRY_DELAY_MS: 1000,
 
   // Mock mode: true quando URL não está configurada (sem VPS acessível)
-  MOCK_MODE: import.meta.env.VITE_OPENCLAW_MOCK === 'true' || !import.meta.env.VITE_OPENCLAW_URL,
+  MOCK_MODE:
+    import.meta.env.VITE_OPENCLAW_MOCK === 'true' ||
+    !import.meta.env.VITE_OPENCLAW_URL ||
+    (import.meta.env.PROD && String(import.meta.env.VITE_OPENCLAW_URL).includes('trycloudflare.com')),
   
   // Logging
   ENABLE_LOGS: true,
@@ -72,4 +75,18 @@ export function getWebhookUrl(): string {
 // Helper para obter URL de health check
 export function getHealthUrl(): string {
   return `${OPENCLAW_CONFIG.VPS_URL}${OPENCLAW_CONFIG.HEALTH_PATH}`;
+}
+
+export function isOpenClawBrowserReachable(): boolean {
+  if (OPENCLAW_CONFIG.MOCK_MODE) return false;
+  if (typeof window === 'undefined') return true;
+
+  try {
+    const url = new URL(OPENCLAW_CONFIG.VPS_URL);
+    const isHttpsPage = window.location.protocol === 'https:';
+    const isInsecureRemote = url.protocol === 'http:' && !['localhost', '127.0.0.1', '::1'].includes(url.hostname);
+    return !(isHttpsPage && isInsecureRemote);
+  } catch {
+    return false;
+  }
 }
