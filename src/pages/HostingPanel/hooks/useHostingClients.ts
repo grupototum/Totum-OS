@@ -44,10 +44,18 @@ export function useHostingClients() {
 
   const load = async () => {
     setLoading(true);
-    const { data } = await (supabase as any)
+    const { data, error } = await (supabase as any)
       .from('hosting_clients')
       .select('*')
       .order('company_name');
+
+    if (error) {
+      console.info('Cadastro de hospedagem indisponível nesta base.', error);
+      setClients([]);
+      setLoading(false);
+      return;
+    }
+
     setClients((data || []) as HostingClient[]);
     setLoading(false);
   };
@@ -94,15 +102,23 @@ export function useHostingClients() {
     };
 
     if (editing) {
-      await (supabase as any)
+      const { error } = await (supabase as any)
         .from('hosting_clients')
         .update(payload)
         .eq('id', editing.id);
+      if (error) {
+        toast.error('Base de hospedagem indisponível');
+        return;
+      }
       toast.success('Cliente atualizado');
     } else {
-      await (supabase as any)
+      const { error } = await (supabase as any)
         .from('hosting_clients')
         .insert(payload);
+      if (error) {
+        toast.error('Base de hospedagem indisponível');
+        return;
+      }
       toast.success('Cliente criado');
     }
 
@@ -113,10 +129,14 @@ export function useHostingClients() {
   const remove = async (id: string) => {
     if (!confirm('Remover cliente?')) return;
 
-    await (supabase as any)
+    const { error } = await (supabase as any)
       .from('hosting_clients')
       .delete()
       .eq('id', id);
+    if (error) {
+      toast.error('Base de hospedagem indisponível');
+      return;
+    }
     toast.success('Cliente removido');
     load();
   };

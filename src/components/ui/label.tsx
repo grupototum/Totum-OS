@@ -14,7 +14,7 @@ interface LabelProps extends React.HTMLAttributes<HTMLElement> {
 
 const Label = React.forwardRef<HTMLElement, LabelProps>(
   ({ className, variant = "default", as: Component = "span", htmlFor, ...props }, ref) => {
-    const resolvedComponent = (htmlFor && Component === "span" ? "label" : Component) as React.ElementType;
+    const ResolvedComponent = (htmlFor && Component === "span" ? "label" : Component) as React.ElementType;
 
     const elementProps: React.HTMLAttributes<HTMLElement> & { htmlFor?: string } = {
       ...props,
@@ -32,7 +32,7 @@ const Label = React.forwardRef<HTMLElement, LabelProps>(
       elementProps.htmlFor = htmlFor;
     }
 
-    return <resolvedComponent ref={ref} {...elementProps} />;
+    return <ResolvedComponent ref={ref} {...elementProps} />;
   }
 );
 Label.displayName = "Label";

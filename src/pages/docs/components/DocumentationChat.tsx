@@ -43,22 +43,22 @@ export function DocumentationChat({
   };
 
   return (
-    <div className="h-full flex flex-col bg-background border-l border-border">
+    <div className="flex h-full flex-col border-l border-border bg-card">
       {/* Header */}
-      <div className="p-4 border-b border-border bg-background/50 sticky top-0 z-10">
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="font-semibold text-foreground flex items-center gap-2">
+      <div className="sticky top-0 z-10 border-b border-border bg-card p-4">
+        <div className="mb-3 flex items-center justify-between">
+          <h2 className="flex items-center gap-2 text-sm font-semibold text-foreground">
             <Zap className="w-4 h-4 text-primary" />
-            Documentação AI
+            IA da documentação
           </h2>
           {messages.length > 0 && (
             <button
               onClick={onClearChat}
-              className="p-2 min-h-[44px] min-w-[44px] hover:bg-muted rounded-none transition-colors active:scale-95 flex items-center justify-center"
+              className="flex min-h-[44px] min-w-[44px] items-center justify-center p-2 transition-colors hover:bg-muted active:scale-95"
               title="Limpar histórico"
               aria-label="Limpar histórico"
             >
-              <Trash2 className="w-4 h-4 text-muted-foreground hover:text-foreground" />
+              <Trash2 className="h-4 w-4 text-muted-foreground hover:text-foreground" />
             </button>
           )}
         </div>
@@ -79,15 +79,15 @@ export function DocumentationChat({
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className="flex-1 space-y-4 overflow-y-auto p-4">
         <AnimatePresence initial={false}>
           {messages.length === 0 ? (
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="h-full flex flex-col items-center justify-center text-center"
+              className="flex h-full flex-col items-center justify-center text-center"
             >
-              <div className="w-12 h-12 rounded-none bg-muted flex items-center justify-center mb-3">
+              <div className="mb-3 flex h-12 w-12 items-center justify-center border border-border bg-muted">
                 <Zap className="w-6 h-6 text-primary" />
               </div>
               <p className="text-sm text-muted-foreground mb-2">
@@ -110,23 +110,23 @@ export function DocumentationChat({
                 }`}
               >
                 <div
-                  className={`max-w-xs px-4 py-2.5 rounded-none ${
+                  className={`max-w-xs border px-4 py-2.5 ${
                     message.role === 'user'
-                      ? 'bg-primary text-primary-foreground'
-                      : 'bg-muted text-foreground'
+                      ? 'border-primary/60 bg-primary/15 text-foreground'
+                      : 'border-border bg-muted text-foreground'
                   }`}
                 >
                   <p className="text-sm leading-relaxed whitespace-pre-wrap break-words">
                     {message.content}
                   </p>
                   {message.sources && message.sources.length > 0 && (
-                    <div className="mt-2 pt-2 border-t border-border">
-                      <p className="text-xs text-muted-foreground mb-1">Fontes:</p>
+                    <div className="mt-2 border-t border-border pt-2">
+                      <p className="mb-1 text-xs text-muted-foreground">Fontes:</p>
                       <div className="flex flex-wrap gap-1">
                         {message.sources.map(source => (
                           <span
                             key={source}
-                            className="text-xs bg-background px-2 py-0.5 rounded-none border border-border"
+                            className="border border-border bg-background px-2 py-0.5 text-xs"
                           >
                             {source}
                           </span>
@@ -145,7 +145,7 @@ export function DocumentationChat({
               animate={{ opacity: 1, y: 0 }}
               className="flex justify-start"
             >
-              <div className="bg-muted text-foreground px-4 py-2.5 rounded-none">
+              <div className="bg-muted px-4 py-2.5 text-foreground">
                 <LoadingSpinner size="sm" />
               </div>
             </motion.div>
@@ -156,11 +156,11 @@ export function DocumentationChat({
       </div>
 
       {/* Input */}
-      <div className="p-4 border-t border-border bg-background/50 sticky bottom-0">
+      <div className="sticky bottom-0 border-t border-border bg-card p-4">
         {!ollamaAvailable && (
-          <div className="flex items-center gap-2 text-xs text-primary bg-primary/10 px-3 py-2 rounded-none mb-3 border border-primary/20">
+          <div className="mb-3 flex items-center gap-2 border border-primary/20 bg-primary/10 px-3 py-2 text-xs text-primary">
             <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />
-            <span>Ollama indisponível, usando fallback em nuvem</span>
+            <span>IA local indisponível; respostas seguem em modo seguro.</span>
           </div>
         )}
 
@@ -170,20 +170,20 @@ export function DocumentationChat({
             onChange={e => setInput(e.target.value)}
             placeholder="Pergunte sobre a documentação..."
             disabled={loading}
-            className="flex-1 bg-card border-border text-foreground placeholder:text-muted-foreground focus-visible:ring-primary min-h-[48px] py-3 rounded-none"
+            className="min-h-[48px] flex-1 border-border bg-background py-3 text-foreground placeholder:text-muted-foreground focus-visible:ring-primary"
           />
           <Button
             type="submit"
             disabled={loading || !input.trim()}
-            className="bg-primary hover:bg-primary/90 text-primary-foreground disabled:opacity-50 min-h-[48px] min-w-[48px] px-3 py-3 active:scale-95 transition-transform rounded-none"
+            className="min-h-[48px] min-w-[48px] bg-primary px-3 py-3 text-primary-foreground transition-transform hover:bg-primary/90 active:scale-95 disabled:opacity-50"
             aria-label="Enviar mensagem"
           >
             <Send className="w-4 h-4" />
           </Button>
         </form>
 
-        <p className="text-xs text-muted-foreground mt-2 text-center">
-          Powered by Ollama · IA Local · Sem tracking
+        <p className="mt-2 text-center text-xs text-muted-foreground">
+          IA local quando disponível · sem histórico remoto por padrão
         </p>
       </div>
     </div>

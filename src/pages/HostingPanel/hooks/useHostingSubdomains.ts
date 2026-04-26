@@ -32,14 +32,23 @@ export function useHostingSubdomains() {
 
   const load = async () => {
     setLoading(true);
-    const { data: subdomainsData } = await (supabase as any)
+    const { data: subdomainsData, error: subdomainsError } = await (supabase as any)
       .from('hosting_subdomains')
       .select('*')
       .order('subdomain');
-    const { data: clientsData } = await (supabase as any)
+    const { data: clientsData, error: clientsError } = await (supabase as any)
       .from('hosting_clients')
       .select('id, company_name')
       .eq('status', 'ativo');
+
+    if (subdomainsError || clientsError) {
+      console.info('Subdomínios de hospedagem indisponíveis nesta base.', subdomainsError || clientsError);
+      setSubdomains([]);
+      setClients([]);
+      setLoading(false);
+      return;
+    }
+
     setSubdomains((subdomainsData || []) as HostingSubdomain[]);
     setClients((clientsData || []) as any[]);
     setLoading(false);
@@ -53,13 +62,17 @@ export function useHostingSubdomains() {
     if (!form.client_id || !form.subdomain) return;
 
     const full_url = `${form.subdomain}.${form.base_domain}`;
-    await (supabase as any)
+    const { error } = await (supabase as any)
       .from('hosting_subdomains')
       .insert({
         client_id: form.client_id,
         ...form,
         full_url,
       });
+    if (error) {
+      toast.error('Base de subdomínios indisponível');
+      return;
+    }
     toast.success('Subdomínio criado');
     setForm({ client_id: '', subdomain: '', base_domain: 'grupototum.com' });
     load();
@@ -68,10 +81,14 @@ export function useHostingSubdomains() {
   const remove = async (id: string) => {
     if (!confirm('Remover subdomínio?')) return;
 
-    await (supabase as any)
+    const { error } = await (supabase as any)
       .from('hosting_subdomains')
       .delete()
       .eq('id', id);
+    if (error) {
+      toast.error('Base de subdomínios indisponível');
+      return;
+    }
     toast.success('Subdomínio removido');
     load();
   };

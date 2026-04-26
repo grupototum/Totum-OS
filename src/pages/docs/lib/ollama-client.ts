@@ -17,6 +17,27 @@ function getOllamaBaseUrl(): string {
   return (import.meta.env.VITE_OLLAMA_URL || 'http://localhost:11434') + '/api';
 }
 
+function isHttpsPage(): boolean {
+  return typeof window !== 'undefined' && window.location.protocol === 'https:';
+}
+
+function isLocalHttpUrl(url: string): boolean {
+  try {
+    const parsed = new URL(url);
+    return (
+      parsed.protocol === 'http:' &&
+      ['localhost', '127.0.0.1', '::1'].includes(parsed.hostname)
+    );
+  } catch {
+    return false;
+  }
+}
+
+function canReachOllamaFromBrowser(): boolean {
+  const baseUrl = getOllamaBaseUrl();
+  return !(isHttpsPage() && isLocalHttpUrl(baseUrl));
+}
+
 // Must use import.meta.env in Vite (process.env.REACT_APP_* is CRA syntax — doesn't work here)
 const GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY || '';
 const GROQ_BASE_URL = 'https://api.groq.com/openai/v1/chat/completions';
@@ -42,12 +63,22 @@ class OllamaClient {
   private checkInterval: NodeJS.Timeout | null = null;
 
   constructor() {
+    if (!canReachOllamaFromBrowser()) {
+      this.ollamaAvailable = false;
+      return;
+    }
+
     this.checkOllamaHealth();
     // Check health every 30 seconds
     this.checkInterval = setInterval(() => this.checkOllamaHealth(), 30000);
   }
 
   private async checkOllamaHealth(): Promise<void> {
+    if (!canReachOllamaFromBrowser()) {
+      this.ollamaAvailable = false;
+      return;
+    }
+
     try {
       const response = await fetch(`${getOllamaBaseUrl()}/tags`);
       this.ollamaAvailable = response.ok;
@@ -84,6 +115,10 @@ class OllamaClient {
     let fullResponse = '';
 
     try {
+      if (!canReachOllamaFromBrowser()) {
+        throw new Error('Ollama local indisponível em página HTTPS');
+      }
+
       const response = await fetch(`${getOllamaBaseUrl()}/chat`, {
         method: 'POST',
         headers: {

@@ -34,10 +34,18 @@ export function useHostingContainers() {
 
   const load = async () => {
     setLoading(true);
-    const { data } = await (supabase as any)
+    const { data, error } = await (supabase as any)
       .from('hosting_containers')
       .select('*')
       .order('name');
+
+    if (error) {
+      console.info('Containers de hospedagem indisponíveis nesta base.', error);
+      setContainers([]);
+      setLoading(false);
+      return;
+    }
+
     setContainers((data || []) as HostingContainer[]);
     setLoading(false);
   };
@@ -49,12 +57,16 @@ export function useHostingContainers() {
   const create = async () => {
     if (!form.name) return;
 
-    await (supabase as any)
+    const { error } = await (supabase as any)
       .from('hosting_containers')
       .insert({
         ...form,
         port: form.port ? Number(form.port) : null,
       });
+    if (error) {
+      toast.error('Base de containers indisponível');
+      return;
+    }
     toast.success('Container criado');
     setForm({ name: '', port: '', container_type: 'app', health_check_url: '' });
     setDialogOpen(false);
@@ -62,10 +74,14 @@ export function useHostingContainers() {
   };
 
   const restart = async (c: HostingContainer) => {
-    await (supabase as any)
+    const { error } = await (supabase as any)
       .from('hosting_containers')
       .update({ last_restart: new Date().toISOString() })
       .eq('id', c.id);
+    if (error) {
+      toast.error('Base de containers indisponível');
+      return;
+    }
     toast.success(`${c.name} reiniciado`);
     load();
   };
@@ -73,10 +89,14 @@ export function useHostingContainers() {
   const remove = async (id: string) => {
     if (!confirm('Remover container?')) return;
 
-    await (supabase as any)
+    const { error } = await (supabase as any)
       .from('hosting_containers')
       .delete()
       .eq('id', id);
+    if (error) {
+      toast.error('Base de containers indisponível');
+      return;
+    }
     toast.success('Container removido');
     load();
   };

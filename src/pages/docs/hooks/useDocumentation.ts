@@ -8,6 +8,8 @@ import { getDocumentationManager, DocPage } from '../lib/documentation';
 import { getOllamaClient, OllamaMessage } from '../lib/ollama-client';
 import { supabase } from '@/integrations/supabase/client';
 
+const CHAT_HISTORY_ENABLED = import.meta.env.VITE_DOCS_CHAT_HISTORY === 'true';
+
 export interface ChatMessage {
   id: string;
   role: 'user' | 'assistant';
@@ -66,7 +68,7 @@ export function useDocumentation() {
 
   // Load chat history from Supabase
   const loadChatHistory = useCallback(async () => {
-    if (!userId) return;
+    if (!CHAT_HISTORY_ENABLED || !userId) return;
 
     try {
       const { data, error } = await supabase
@@ -91,14 +93,14 @@ export function useDocumentation() {
         setChatMessages(messages);
       }
     } catch (error) {
-      console.error('Failed to load chat history:', error);
+      console.info('Histórico remoto da documentação indisponível; usando sessão local.', error);
     }
   }, [userId]);
 
   // Save message to Supabase
   const saveMessage = useCallback(
     async (role: 'user' | 'assistant', content: string, sources?: string[]) => {
-      if (!userId) return;
+      if (!CHAT_HISTORY_ENABLED || !userId) return;
 
       try {
         await supabase.from('chat_history').insert({
@@ -109,7 +111,7 @@ export function useDocumentation() {
           sources: sources || [],
         });
       } catch (error) {
-        console.error('Failed to save message:', error);
+        console.info('Não foi possível salvar histórico remoto da documentação.', error);
       }
     },
     [userId]
