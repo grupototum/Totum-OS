@@ -17,6 +17,7 @@ const routeMappings: Record<string, BreadcrumbItem[]> = {
   "/team": [{ label: "Estrutura do Time" }],
   "/settings": [{ label: "Configurações" }],
   "/alexandria": [{ label: "Alexandria" }],
+  "/hermione": [{ label: "Alexandria", path: "/alexandria" }, { label: "Hermione" }],
   "/alexandria/pops": [{ label: "Alexandria", path: "/alexandria" }, { label: "Portal POPs" }],
   "/alexandria/context": [{ label: "Alexandria", path: "/alexandria" }, { label: "Context HUB" }],
   "/alexandria/skills": [{ label: "Alexandria", path: "/alexandria" }, { label: "Skills" }],

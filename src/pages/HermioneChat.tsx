@@ -4,7 +4,7 @@ import { usePageTransition } from '@/hooks/usePageTransition';
 import {
   Send, BookOpen, User, Sparkles, History, X, Loader2, RotateCcw,
   Plus, Zap, Database, Search, Upload, Github, CheckCircle2,
-  AlertCircle, FileText, FolderInput,
+  AlertCircle, FileText, FolderInput, Download, FileJson, Wand2, Library,
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -21,6 +21,18 @@ import {
   type IngestProgress,
   type IngestResult,
 } from '@/services/alexandriaIngestion';
+import {
+  analyzeSourceContent,
+  createArtifactFromSources,
+  createSources,
+  downloadArtifact,
+  logConsultation,
+  searchArtifacts,
+  type HermioneArtifact,
+  type HermioneSource,
+  type HermioneSourceAnalysis,
+  type HermioneSourceInput,
+} from '@/services/hermioneArtifacts';
 
 interface Message {
   id: string;
@@ -179,7 +191,20 @@ export default function HermioneChat() {
   const [isIngesting, setIsIngesting] = useState(false);
   const [ingestProgress, setIngestProgress] = useState<IngestProgress[]>([]);
   const [ingestResult, setIngestResult] = useState<IngestResult | null>(null);
+  const [uploadedSources, setUploadedSources] = useState<HermioneSource[]>([]);
+  const [sourceAnalyses, setSourceAnalyses] = useState<HermioneSourceAnalysis[]>([]);
+  const [generatedArtifact, setGeneratedArtifact] = useState<HermioneArtifact | null>(null);
+  const [recentArtifacts, setRecentArtifacts] = useState<HermioneArtifact[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const refreshArtifacts = useCallback(async () => {
+    const artifacts = await searchArtifacts('', 6);
+    setRecentArtifacts(artifacts);
+  }, []);
+
+  useEffect(() => {
+    refreshArtifacts();
+  }, [refreshArtifacts]);
 
   const handleIngestProgress = useCallback((progress: IngestProgress) => {
     setIngestProgress(prev => {
@@ -199,15 +224,49 @@ export default function HermioneChat() {
     setIsIngesting(true);
     setIngestProgress([]);
     setIngestResult(null);
+    setGeneratedArtifact(null);
+    setSourceAnalyses([]);
 
-    const parsed = await Promise.all(
+    const parsed: HermioneSourceInput[] = await Promise.all(
       files.map(f => f.text().then(content => ({ name: f.name, content })))
     );
 
-    const result = await ingestBatch(parsed, handleIngestProgress);
-    setIngestResult(result);
-    setIsIngesting(false);
-    if (e.target) e.target.value = '';
+    try {
+      const analyses = parsed.map(file => analyzeSourceContent(file.name, file.content));
+      setSourceAnalyses(analyses);
+
+      const savedSources = await createSources(parsed);
+      setUploadedSources(savedSources);
+
+      const artifact = await createArtifactFromSources(parsed, {
+        sourceIds: savedSources.map(source => source.id),
+      });
+      setGeneratedArtifact(artifact);
+
+      const result = await ingestBatch(parsed, handleIngestProgress);
+      setIngestResult(result);
+      await logConsultation({
+        query: `Upload consultivo: ${parsed.map(file => file.name).join(', ')}`,
+        response: artifact.summary,
+        sourceIds: savedSources.map(source => source.id),
+        artifactIds: [artifact.id],
+        metadata: { analyses },
+      });
+      await refreshArtifacts();
+
+      setMessages(prev => prev.concat({
+        id: (Date.now() + 3).toString(),
+        role: 'assistant',
+        content: `Analisei **${parsed.length} documento${parsed.length === 1 ? '' : 's'}**, cataloguei as fontes e gerei o artefato **${artifact.title}**.\n\nTipo sugerido: **${artifact.artifact_type}**\nStatus: **${artifact.status}**\n\nVocê já pode baixar em Markdown/JSON no painel lateral ou pedir para eu transformar em skill, POP, prompt ou pacote de contexto.`,
+        timestamp: new Date(),
+      }));
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Erro ao analisar os documentos';
+      setIngestResult({ succeeded: 0, failed: files.length, totalChunks: 0, documents: [], errors: [msg] });
+    } finally {
+      setIsIngesting(false);
+      if (e.target) e.target.value = '';
+    }
   };
 
   const handleGithubIngest = async () => {
@@ -522,6 +581,48 @@ export default function HermioneChat() {
               </div>
             </div>
 
+            {/* Artifact Library */}
+            <div className="rounded-2xl border border-border bg-card p-4">
+              <div className="mb-3 flex items-center justify-between gap-2">
+                <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                  ARTEFATOS
+                </p>
+                <Library className="h-3.5 w-3.5 text-muted-foreground" />
+              </div>
+              {recentArtifacts.length === 0 ? (
+                <p className="text-xs leading-relaxed text-muted-foreground">
+                  Envie MDs ou textos para a Hermione criar skills, POPs, prompts e documentos baixáveis.
+                </p>
+              ) : (
+                <div className="space-y-2">
+                  {recentArtifacts.map(artifact => (
+                    <div key={artifact.id} className="rounded-lg border border-border bg-secondary/30 p-2">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="min-w-0">
+                          <p className="truncate text-xs font-medium text-foreground">{artifact.title}</p>
+                          <div className="mt-1 flex items-center gap-1">
+                            <Badge variant="outline" className="h-5 px-1.5 text-[9px]">
+                              {artifact.artifact_type}
+                            </Badge>
+                            <Badge variant="secondary" className="h-5 px-1.5 text-[9px]">
+                              v{artifact.version}
+                            </Badge>
+                          </div>
+                        </div>
+                        <button
+                          onClick={() => downloadArtifact(artifact)}
+                          className="shrink-0 text-muted-foreground transition-colors hover:text-foreground"
+                          title="Baixar Markdown"
+                        >
+                          <Download className="h-3.5 w-3.5" />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
             {/* New Chat */}
             <Button variant="outline" className="w-full" onClick={clearChat}>
               <Plus className="w-4 h-4 mr-2" />
@@ -645,6 +746,63 @@ export default function HermioneChat() {
                       {ingestResult.errors.length > 0 && (
                         <p className="text-destructive">{ingestResult.errors[0]}</p>
                       )}
+                    </div>
+                  )}
+
+                  {/* Consultative Analysis */}
+                  {sourceAnalyses.length > 0 && (
+                    <div className="rounded-lg border border-border bg-card/70 p-3 text-xs">
+                      <div className="mb-2 flex items-center gap-2">
+                        <Wand2 className="h-3.5 w-3.5 text-amber-400" />
+                        <p className="font-semibold text-foreground">Análise consultiva</p>
+                      </div>
+                      <div className="space-y-2">
+                        {sourceAnalyses.slice(0, 4).map(analysis => (
+                          <div key={analysis.name} className="rounded-md bg-secondary/40 p-2">
+                            <div className="flex items-center justify-between gap-2">
+                              <span className="truncate font-medium text-foreground">{analysis.name}</span>
+                              <Badge variant="outline" className="h-5 px-1.5 text-[9px]">
+                                {analysis.recommendedOutput}
+                              </Badge>
+                            </div>
+                            <p className="mt-1 line-clamp-2 text-muted-foreground">
+                              {analysis.keyIdeas[0] || analysis.gaps[0] || 'Conteúdo assimilado e pronto para consolidação.'}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Generated artifact */}
+                  {generatedArtifact && (
+                    <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/10 p-3 text-xs">
+                      <div className="mb-2 flex items-center gap-2">
+                        <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />
+                        <p className="font-semibold text-foreground">Artefato criado</p>
+                      </div>
+                      <p className="font-medium text-foreground">{generatedArtifact.title}</p>
+                      <p className="mt-1 text-muted-foreground">{generatedArtifact.summary}</p>
+                      <div className="mt-3 grid grid-cols-2 gap-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="h-8 gap-2 text-xs"
+                          onClick={() => downloadArtifact(generatedArtifact, 'markdown')}
+                        >
+                          <Download className="h-3.5 w-3.5" />
+                          MD
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="h-8 gap-2 text-xs"
+                          onClick={() => downloadArtifact(generatedArtifact, 'json')}
+                        >
+                          <FileJson className="h-3.5 w-3.5" />
+                          JSON
+                        </Button>
+                      </div>
                     </div>
                   )}
                 </motion.div>

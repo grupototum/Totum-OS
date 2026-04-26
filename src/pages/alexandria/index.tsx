@@ -6,7 +6,7 @@ import { useAlexandria } from '@/hooks/useAlexandria';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Loader2, RefreshCw, BookOpen, FileText, Users, Zap, ExternalLink } from 'lucide-react';
+import { Loader2, RefreshCw, BookOpen, FileText, Users, Zap, ExternalLink, Brain, Upload } from 'lucide-react';
 import Dashboard from './Dashboard';
 import ContextHub from './ContextHub';
 
@@ -55,14 +55,40 @@ export default function AlexandriaPage() {
               Alexandria
             </h1>
             <p className="text-muted-foreground mt-1">
-              Central de conhecimento, skills e agentes do ecossistema Totum
+              Central de conhecimento, skills, agentes e artefatos consultivos do ecossistema Totum
             </p>
           </div>
-          <Button onClick={refetch} variant="outline" size="sm">
-            <RefreshCw className="h-4 w-4 mr-2" />
-            Atualizar
-          </Button>
+          <div className="flex flex-wrap items-center gap-2">
+            <Button onClick={() => navigate('/hermione')} className="gap-2">
+              <Brain className="h-4 w-4" />
+              Abrir Hermione
+            </Button>
+            <Button onClick={refetch} variant="outline" size="sm">
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Atualizar
+            </Button>
+          </div>
         </div>
+
+        <Card className="border-primary/20 bg-primary/5">
+          <CardContent className="flex flex-col gap-4 p-5 md:flex-row md:items-center md:justify-between">
+            <div className="flex items-start gap-3">
+              <div className="grid h-10 w-10 shrink-0 place-items-center rounded-lg border border-primary/30 bg-primary/10 text-primary">
+                <Upload className="h-5 w-5" />
+              </div>
+              <div>
+                <p className="font-semibold">Chat consultivo com upload e unificação</p>
+                <p className="mt-1 max-w-3xl text-sm text-muted-foreground">
+                  Envie MDs e textos de várias IAs para a Hermione analisar, assimilar, comparar e gerar skills, POPs, prompts ou documentos com download em Markdown/JSON.
+                </p>
+              </div>
+            </div>
+            <Button variant="outline" onClick={() => navigate('/hermione')} className="shrink-0 gap-2">
+              <ExternalLink className="h-4 w-4" />
+              Criar artefato
+            </Button>
+          </CardContent>
+        </Card>
 
         {/* Tabs principais */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>
