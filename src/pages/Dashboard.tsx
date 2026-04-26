@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Sparkles } from "lucide-react";
 import { usePageTransition } from "@/hooks/usePageTransition";
 import { PageSkeleton } from "@/components/loading";
+import { PageHeader, SectionHeader } from "@/components/ui/patterns";
 import { VpsResourceChart, CostHistoryChart, ActivityVolumeChart } from "@/components/dashboard/DashboardCharts";
 import {
   OverviewCards,
@@ -36,38 +37,24 @@ export default function Dashboard() {
 
   return (
     <AppLayout>
-      <div className="bg-dashboard-gradient noise-texture min-h-screen">
+      <div className="min-h-screen">
       <DashboardProvider value={dashboardData}>
-        <motion.main {...pageTransition} className="p-6 max-w-7xl mx-auto" aria-label="Dashboard content">
-          {/* Header */}
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-8"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center">
-                <Sparkles className="w-5 h-5 text-primary" />
-              </div>
-              <div>
-                <h1 className="font-sans text-2xl font-medium text-foreground tracking-tight">
-                  DASHBOARD
-                </h1>
-                <p className="text-xs text-muted-foreground uppercase tracking-widest">
-                  Mission Control · Visão geral do ecossistema
-                </p>
-              </div>
-            </div>
-          </motion.div>
+        <motion.main {...pageTransition} className="p-4 sm:p-6 max-w-7xl mx-auto space-y-6" aria-label="Dashboard content">
+          <PageHeader
+            eyebrow="Mission Control"
+            title="Dashboard"
+            description="Visão executiva de infraestrutura, agentes, apps, custos e sincronizações críticas."
+            icon={Sparkles}
+          />
 
-          <section className="mb-6"><OverviewCards /></section>
+          <section><OverviewCards /></section>
 
           {/* System Health Score — destaque acima dos detalhes */}
-          <section className="mb-6">
+          <section>
             <SystemHealthScore />
           </section>
 
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-6">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
             <div className="lg:col-span-3 space-y-6">
               <AppStatusList />
               <ActivityLog />
@@ -79,8 +66,8 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <section className="mb-6">
-            <p className="font-mono text-xs uppercase tracking-widest text-[10px] text-muted-foreground mb-4">INFRAESTRUTURA</p>
+          <section>
+            <SectionHeader title="Infraestrutura" />
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <VpsLiveStatus />
               <DatabaseStatus />
@@ -88,8 +75,8 @@ export default function Dashboard() {
             </div>
           </section>
 
-          <section className="mb-6">
-            <p className="font-mono text-xs uppercase tracking-widest text-[10px] text-muted-foreground mb-4">MÉTRICAS AO LONGO DO TEMPO</p>
+          <section>
+            <SectionHeader title="Métricas ao longo do tempo" />
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
               <VpsResourceChart />
               <ActivityVolumeChart />
@@ -97,8 +84,8 @@ export default function Dashboard() {
             <CostHistoryChart />
           </section>
 
-          <section className="mb-8">
-            <p className="font-mono text-xs uppercase tracking-widest text-[10px] text-muted-foreground mb-4">TRINDADE — AGENTES IA</p>
+          <section>
+            <SectionHeader title="Trindade - Agentes IA" />
             <AgentCards />
           </section>
 
@@ -106,7 +93,7 @@ export default function Dashboard() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.9 }}
-            className="text-center py-4 border-t border-border/20"
+            className="text-center py-4 border-t border-border/40"
           >
             <p className="text-[11px] text-muted-foreground/40">
               Apps Totum v2.0.0 · Último deploy: {new Date().toLocaleDateString("pt-BR")}

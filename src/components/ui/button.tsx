@@ -23,37 +23,37 @@ const buttonVariants = cva(
       variant: {
         // Primary: inverted-ink pill, soft shadow, micro lift on hover
         primary:
-          "rounded-full bg-primary text-primary-foreground shadow-editorial hover:-translate-y-px hover:bg-primary/90 active:translate-y-0",
+          "rounded-none bg-primary text-primary-foreground shadow-[0_0_24px_-10px_hsl(var(--primary)/0.8)] hover:-translate-y-px hover:bg-primary/90 active:translate-y-0",
 
         // Accent: blue accent pill (editorial highlight)
         accent:
-          "rounded-full bg-accent text-accent-foreground shadow-editorial hover:-translate-y-px hover:bg-accent/90 active:translate-y-0",
+          "rounded-none bg-accent text-accent-foreground shadow-[0_0_24px_-10px_hsl(var(--accent)/0.8)] hover:-translate-y-px hover:bg-accent/90 active:translate-y-0",
 
         // Secondary: neutral pill (surface container)
         secondary:
-          "rounded-full bg-secondary text-secondary-foreground hover:bg-secondary/70",
+          "rounded-none bg-secondary text-secondary-foreground border border-border/70 hover:bg-secondary/70",
 
         // Outline: bordered pill
         outline:
-          "rounded-full bg-transparent border border-border text-foreground hover:bg-foreground hover:text-background hover:border-foreground",
+          "rounded-none bg-transparent border border-border text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary",
 
         // Ghost: text-only, pill on hover
         ghost:
-          "rounded-full bg-transparent text-foreground hover:bg-muted",
+          "rounded-none bg-transparent text-foreground hover:bg-muted",
 
         // Link: underline on hover, no pill
         link: "bg-transparent text-foreground underline-offset-4 hover:underline",
 
         // Destructive: red pill (kept for destructive CTAs)
         destructive:
-          "rounded-full bg-destructive text-destructive-foreground hover:bg-destructive/90",
+          "rounded-none bg-destructive text-destructive-foreground hover:bg-destructive/90",
       },
       size: {
         default: "h-11 px-6 text-sm",
         sm: "h-9 px-4 text-xs",
         lg: "h-12 px-8 text-sm tracking-wide",
         xl: "h-14 px-10 text-base",
-        icon: "h-11 w-11 rounded-full",
+        icon: "h-11 w-11 rounded-none",
       },
     },
     defaultVariants: {

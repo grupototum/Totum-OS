@@ -45,7 +45,7 @@ export function ContentBoard({
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <div className="flex-1 overflow-x-auto">
-        <div className="flex gap-4 p-4 sm:p-6 h-full min-w-max">
+        <div className="flex gap-4 px-4 pb-4 sm:px-6 sm:pb-6 h-full min-w-max">
           {STAGES.map((stage, index) => (
             <ContentStage
               key={stage.id}

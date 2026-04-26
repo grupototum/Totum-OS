@@ -66,7 +66,9 @@ export const navigationSections: NavSection[] = [
     id: "visao",
     label: "Visão",
     items: [
+      { label: "Hub de Agentes", icon: Bot, path: "/hub" },
       { label: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },
+      { label: "Escritório", icon: Building2, path: "/office" },
     ],
   },
 
@@ -74,9 +76,7 @@ export const navigationSections: NavSection[] = [
   {
     id: "agentes",
     label: "Agentes",
-    items: [
-      { label: "Escritório", icon: Building2, path: "/office" },
-    ],
+    items: [],
     expandable: {
       label: "Agentes",
       path: "/agents",
@@ -124,6 +124,7 @@ export const navigationSections: NavSection[] = [
       { label: "Plano de Ação", icon: CheckSquare, path: "/action-plan" },
       { label: "Central de Clientes", icon: Contact, path: "/clients" },
       { label: "Novo Cliente", icon: UserPlus, path: "/new-client" },
+      { label: "Checklist Deploy", icon: ShieldCheck, path: "/deployment" },
     ],
   },
 

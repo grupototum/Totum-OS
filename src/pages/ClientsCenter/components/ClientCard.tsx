@@ -27,11 +27,11 @@ export function ClientCard({
 }: ClientCardProps) {
   return (
     <motion.div key={client.id} layout {...anim(index + 2)} exit={{ opacity: 0, scale: 0.95 }}>
-      <Card className="border-border/40 bg-card/80 hover:shadow-lg hover:scale-[1.02] transition-all duration-300 cursor-pointer group" onClick={() => onDetail(client)}>
+      <Card className="border-border/80 bg-card cursor-pointer group" onClick={() => onDetail(client)}>
         <CardContent className="p-5">
           <div className="flex items-start justify-between mb-3">
             <div
-              className="w-12 h-12 rounded-xl flex items-center justify-center text-lg font-bold"
+              className="w-12 h-12 border flex items-center justify-center text-lg font-bold"
               style={{
                 backgroundColor: (client.primary_color ?? "#f76926") + "20",
                 color: client.primary_color ?? "#f76926",
@@ -54,7 +54,7 @@ export function ClientCard({
           <div className="space-y-2 mb-4">
             {client.contact_name && (
               <div className="flex items-center gap-2">
-                <div className="w-5 h-5 rounded-md bg-primary/10 flex items-center justify-center">
+                <div className="w-5 h-5 bg-primary/10 border border-primary/20 flex items-center justify-center">
                   <span className="text-[10px] font-bold">
                     {client.contact_name.charAt(0).toUpperCase()}
                   </span>

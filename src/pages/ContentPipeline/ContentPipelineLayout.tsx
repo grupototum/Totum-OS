@@ -10,6 +10,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import AppLayout from "@/components/layout/AppLayout";
+import { PageHeader } from "@/components/ui/patterns";
+import { GitBranch } from "lucide-react";
 import { ContentBoard, STAGES, ContentForm } from "./components";
 import { useContentPipeline, useContentForm } from "./hooks";
 import type { StageId } from "./hooks";
@@ -102,24 +104,23 @@ export function ContentPipelineLayout() {
 
   return (
     <AppLayout>
-      <motion.div {...pageTransition} className="h-[calc(100vh)] flex flex-col overflow-hidden">
+      <motion.div {...pageTransition} className="h-[100vh] flex flex-col overflow-hidden">
         {/* Header */}
         <motion.header
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="shrink-0 border-b border-border px-4 sm:px-6 py-3 flex items-center gap-4"
+          className="shrink-0 p-4 sm:p-6 pb-3"
         >
-          <div className="flex-1">
-            <h1 className="font-sans text-xl font-medium text-foreground tracking-tight">
-              CONTENT PIPELINE
-            </h1>
-            <p className="text-[10px] text-muted-foreground uppercase tracking-widest">
-              Pipeline de produção de conteúdo
-            </p>
-          </div>
+          <PageHeader
+            eyebrow="Produção"
+            title="Content Pipeline"
+            description="Organize ideias, roteiros, criativos, gravações e edição em uma esteira visual."
+            icon={GitBranch}
+            className="py-4"
+          />
 
           {/* Stage legend */}
-          <div className="hidden lg:flex items-center gap-3">
+          <div className="mt-3 hidden lg:flex items-center gap-3">
             {STAGES.map((s) => (
               <div key={s.id} className="flex items-center gap-1.5">
                 <span className={`w-2 h-2 rounded-full ${s.accent}`} />

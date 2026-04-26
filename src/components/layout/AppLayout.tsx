@@ -54,7 +54,7 @@ function AppLayoutInner({ children }: AppLayoutProps) {
     : "ml-[260px] transition-[margin] duration-300 ease-in-out";
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background text-foreground">
       {/* Desktop sidebar */}
       {!isMobile && <AppSidebar />}
 
@@ -70,7 +70,7 @@ function AppLayoutInner({ children }: AppLayoutProps) {
       <OnboardingModal open={showOnboarding} onClose={closeOnboarding} />
 
       {/* Main content — margin responds to sidebar collapsed state */}
-      <main id="main-content" aria-label="Conteúdo principal" className={mainClass}>
+      <main id="main-content" aria-label="Conteúdo principal" className={`${mainClass} min-h-screen`}>
         {children}
       </main>
     </div>

@@ -41,7 +41,7 @@ export function ContentStage({
       {/* Column header */}
       <div className="flex items-center justify-between mb-3 px-1">
         <div className="flex items-center gap-2">
-          <div className={cn("w-7 h-7 rounded-lg flex items-center justify-center", stage.accent + "/20")}>
+          <div className="w-7 h-7 border border-border bg-muted flex items-center justify-center">
             <StageIcon
               className={cn("w-3.5 h-3.5", stage.accent.replace("bg-", "text-"))}
             />
@@ -49,7 +49,7 @@ export function ContentStage({
           <span className="text-sm font-semibold text-foreground">
             {stage.title}
           </span>
-          <span className="text-xs text-muted-foreground bg-secondary px-1.5 py-0.5 rounded-md">
+          <span className="text-xs text-muted-foreground bg-secondary px-1.5 py-0.5 border border-border/60">
             {cards.length}
           </span>
         </div>

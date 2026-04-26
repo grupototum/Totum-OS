@@ -84,11 +84,11 @@ export default function AppSidebar() {
         <button
           onClick={() => handleNav(item.path)}
           className={cn(
-            "w-full flex items-center gap-3 rounded-lg transition-all duration-200 relative",
+            "w-full flex items-center gap-3 rounded-none border border-transparent transition-all duration-200 relative",
             collapsed ? "justify-center px-2 py-2.5" : "px-3 py-2.5",
             active
-              ? "bg-sidebar-accent text-primary"
-              : "text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent/50"
+              ? "border-primary/40 bg-primary/10 text-primary"
+              : "text-sidebar-foreground/60 hover:border-sidebar-border hover:text-sidebar-foreground hover:bg-sidebar-accent/50"
           )}
         >
           {active && !collapsed && (
@@ -139,10 +139,10 @@ export default function AppSidebar() {
           <button
             onClick={() => handleNav(path)}
             className={cn(
-              "w-full flex justify-center items-center px-2 py-2.5 rounded-lg transition-all duration-200",
+              "w-full flex justify-center items-center px-2 py-2.5 rounded-none border border-transparent transition-all duration-200",
               sectionActive
-                ? "bg-sidebar-accent text-primary"
-                : "text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent/50"
+                ? "border-primary/40 bg-primary/10 text-primary"
+                : "text-sidebar-foreground/60 hover:border-sidebar-border hover:text-sidebar-foreground hover:bg-sidebar-accent/50"
             )}
           >
             <Icon className="w-[18px] h-[18px]" />
@@ -161,10 +161,10 @@ export default function AppSidebar() {
               <button
                 onClick={() => handleNav(path)}
                 className={cn(
-                  "flex-1 flex items-center gap-2.5 px-2 py-2.5 rounded-lg transition-all duration-200 relative",
+                  "flex-1 flex items-center gap-2.5 px-2 py-2.5 rounded-none border border-transparent transition-all duration-200 relative",
                   sectionActive
-                    ? "bg-sidebar-accent text-primary"
-                    : "text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent/50"
+                    ? "border-primary/40 bg-primary/10 text-primary"
+                    : "text-sidebar-foreground/60 hover:border-sidebar-border hover:text-sidebar-foreground hover:bg-sidebar-accent/50"
                 )}
               >
                 <Icon className={cn("w-[18px] h-[18px] shrink-0", sectionActive && "text-primary")} />
@@ -181,9 +181,9 @@ export default function AppSidebar() {
                       <button
                         onClick={() => handleNav(sub.path)}
                         className={cn(
-                          "w-full flex items-center gap-2 px-2 py-1.5 rounded-md transition-all duration-200 text-[12px]",
+                          "w-full flex items-center gap-2 px-2 py-1.5 rounded-none transition-all duration-200 text-[12px]",
                           subActive
-                            ? "bg-sidebar-accent text-primary font-medium"
+                            ? "bg-primary/10 text-primary font-medium"
                             : "text-sidebar-foreground/45 hover:text-sidebar-foreground hover:bg-sidebar-accent/30"
                         )}
                       >
@@ -210,7 +210,7 @@ export default function AppSidebar() {
   return (
     <aside
       className={cn(
-        "fixed left-0 top-0 h-full z-40 flex flex-col border-r border-sidebar-border bg-sidebar/90 backdrop-blur-md transition-all duration-300 ease-in-out",
+        "fixed left-0 top-0 h-full z-40 flex flex-col border-r border-sidebar-border bg-sidebar/95 backdrop-blur-md transition-all duration-300 ease-in-out",
         collapsed ? "w-[72px]" : "w-[260px]"
       )}
     >
@@ -218,12 +218,13 @@ export default function AppSidebar() {
       <div className="flex items-center justify-between px-5 h-16 border-b border-sidebar-border shrink-0">
         {!collapsed && (
           <div className="flex items-center gap-2.5">
-            <div className="flex gap-[3px]">
-              <div className="w-[5px] h-6 bg-primary rounded-full" />
-              <div className="w-[5px] h-4 bg-primary/60 rounded-full" />
-              <div className="w-[5px] h-6 bg-primary rounded-full" />
+            <div className="grid h-7 w-7 grid-cols-2 gap-0.5">
+              <div className="bg-primary" />
+              <div className="bg-zinc-700" />
+              <div className="bg-zinc-800" />
+              <div className="bg-white shadow-[0_0_12px_rgba(255,255,255,0.45)]" />
             </div>
-            <span className="font-sans text-lg font-medium text-sidebar-foreground tracking-tight">
+            <span className="font-sans text-lg font-semibold text-sidebar-foreground tracking-tight">
               TOTUM
             </span>
           </div>
@@ -231,7 +232,7 @@ export default function AppSidebar() {
         <button
           onClick={toggleCollapsed}
           aria-label={collapsed ? "Expandir menu" : "Recolher menu"}
-          className="p-1.5 rounded-lg hover:bg-sidebar-accent transition-colors text-sidebar-foreground/50 hover:text-sidebar-foreground"
+          className="p-1.5 hover:bg-sidebar-accent transition-colors text-sidebar-foreground/50 hover:text-sidebar-foreground"
         >
           {collapsed ? <Menu className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
         </button>
@@ -242,7 +243,7 @@ export default function AppSidebar() {
         <button
           onClick={openCommandPalette}
           className={cn(
-            "w-full flex items-center gap-2 rounded-lg border border-sidebar-border bg-sidebar-accent/20 text-sidebar-foreground/45 hover:text-sidebar-foreground hover:bg-sidebar-accent/50 transition-colors",
+            "w-full flex items-center gap-2 rounded-none border border-sidebar-border bg-sidebar-accent/20 text-sidebar-foreground/45 hover:text-sidebar-foreground hover:bg-sidebar-accent/50 transition-colors",
             collapsed ? "justify-center p-2" : "px-3 py-2"
           )}
         >
@@ -250,7 +251,7 @@ export default function AppSidebar() {
           {!collapsed && (
             <>
               <span className="text-[12px] flex-1 text-left">Buscar ou navegar...</span>
-              <kbd className="hidden sm:flex items-center gap-0.5 text-[10px] font-mono opacity-40 border border-sidebar-border rounded px-1 py-0.5">
+              <kbd className="hidden sm:flex items-center gap-0.5 text-[10px] font-mono opacity-40 border border-sidebar-border px-1 py-0.5">
                 ⌘K
               </kbd>
             </>
@@ -285,13 +286,13 @@ export default function AppSidebar() {
       <div className="border-t border-sidebar-border p-3 shrink-0 space-y-3">
         {collapsed ? (
           <div className="flex flex-col items-center gap-2">
-            <div className="w-9 h-9 rounded-full bg-foreground text-background flex items-center justify-center text-xs font-semibold uppercase">
+            <div className="w-9 h-9 bg-primary/15 text-primary border border-primary/30 flex items-center justify-center text-xs font-semibold uppercase">
               {user?.email?.[0] || "U"}
             </div>
             <ThemeToggle compact />
             <button
               onClick={handleLogout}
-              className="p-1.5 rounded-full hover:bg-sidebar-accent text-sidebar-foreground/50 hover:text-sidebar-foreground transition-colors"
+              className="p-1.5 hover:bg-sidebar-accent text-sidebar-foreground/50 hover:text-sidebar-foreground transition-colors"
               title="Sair"
             >
               <LogOut className="w-4 h-4" />
@@ -300,7 +301,7 @@ export default function AppSidebar() {
         ) : (
           <>
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-full bg-foreground text-background flex items-center justify-center text-sm font-semibold uppercase shrink-0">
+              <div className="w-9 h-9 bg-primary/15 text-primary border border-primary/30 flex items-center justify-center text-sm font-semibold uppercase shrink-0">
                 {user?.email?.[0] || "U"}
               </div>
               <div className="flex-1 min-w-0">
@@ -313,7 +314,7 @@ export default function AppSidebar() {
               </div>
               <button
                 onClick={handleLogout}
-                className="p-1.5 rounded-full hover:bg-sidebar-accent text-sidebar-foreground/50 hover:text-sidebar-foreground transition-colors"
+                className="p-1.5 hover:bg-sidebar-accent text-sidebar-foreground/50 hover:text-sidebar-foreground transition-colors"
                 title="Sair"
               >
                 <LogOut className="w-4 h-4" />
