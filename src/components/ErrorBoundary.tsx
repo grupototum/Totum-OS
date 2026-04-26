@@ -124,7 +124,7 @@ export class PageErrorBoundary extends Component<Props, State> {
               Tentar novamente
             </button>
             <button
-              onClick={() => (window.location.href = '/hub')}
+              onClick={() => (window.location.href = '/dashboard')}
               className="flex items-center gap-2 px-4 py-2 border border-border rounded-lg text-sm font-medium hover:bg-muted transition"
             >
               <Home className="w-4 h-4" />

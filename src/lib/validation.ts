@@ -1,4 +1,4 @@
-// Validações de formulários para Apps Totum
+// Validações de formulários para Totum OS
 
 /**
  * Valida formato de email

@@ -41,9 +41,9 @@ export default function Dashboard() {
       <DashboardProvider value={dashboardData}>
         <motion.main {...pageTransition} className="p-4 sm:p-6 max-w-7xl mx-auto space-y-6" aria-label="Dashboard content">
           <PageHeader
-            eyebrow="Mission Control"
-            title="Dashboard"
-            description="Visão executiva de infraestrutura, agentes, apps, custos e sincronizações críticas."
+            eyebrow="Totum OS"
+            title="Visão Geral"
+            description="Painel inicial do sistema operacional da agência: agentes, Alexandria, fluxos, operação e infraestrutura crítica."
             icon={Sparkles}
           />
 
@@ -96,7 +96,7 @@ export default function Dashboard() {
             className="text-center py-4 border-t border-border/40"
           >
             <p className="text-[11px] text-muted-foreground/40">
-              Apps Totum v2.0.0 · Último deploy: {new Date().toLocaleDateString("pt-BR")}
+              Totum OS v2.0.0 · Último deploy: {new Date().toLocaleDateString("pt-BR")}
             </p>
           </motion.footer>
         </motion.main>

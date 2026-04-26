@@ -25,7 +25,7 @@ const Dashboard         = lazy(() => import("./pages/Dashboard"));
 const AgentsDashboard   = lazy(() => import("./pages/agents/AgentsDashboard"));
 const AgentDetail       = lazy(() => import("./pages/agents/AgentDetail"));
 const AgentElizaOSEdit  = lazy(() => import("./pages/agents/AgentElizaOSEdit"));
-const AgentChatLayout   = lazy(() => import("./components/chat/AgentChatLayout"));
+const AICommandCenter   = lazy(() => import("./pages/AICommandCenter"));
 const DocsPage          = lazy(() => import("./pages/docs"));
 const ClientsCenter     = lazy(() => import("./pages/ClientsCenter"));
 const EditClient        = lazy(() => import("./pages/EditClient"));
@@ -70,6 +70,11 @@ const RedirectToAgentDetail = () => {
   return <Navigate to={`/agents/${agentId || agenteId}`} replace />;
 };
 
+const RedirectToAgentCommand = () => {
+  const { agentId } = useParams();
+  return <Navigate to={`/ai-command-center?agent=${agentId || "hermione"}`} replace />;
+};
+
 // Inner wrapper: needs BrowserRouter context for useNavigate inside CommandPalette
 const AppWithRouter = () => {
   const { open, setOpen } = useCommandPalette();
@@ -94,11 +99,14 @@ const AppWithRouter = () => {
         <Route element={<ProtectedRoute />}>
 
           {/* Agentes */}
+          <Route path="/ai-command-center" element={<Page><AICommandCenter /></Page>} />
+          <Route path="/command-center" element={<Navigate to="/ai-command-center" replace />} />
+          <Route path="/totum-chat" element={<Navigate to="/ai-command-center" replace />} />
           <Route path="/agents" element={<Page><AgentsDashboard /></Page>} />
           {/* Criação de agente — redirect de atalho para o editor elizaOS em modo "new" */}
           <Route path="/agents/new" element={<Navigate to="/agents/elizaos/new/edit" replace />} />
           <Route path="/agents/:agentId" element={<Page><AgentDetail /></Page>} />
-          <Route path="/agents/:agentId/chat" element={<Page><AgentChatLayout /></Page>} />
+          <Route path="/agents/:agentId/chat" element={<RedirectToAgentCommand />} />
           <Route path="/agents/elizaos/:agentId/edit" element={<Page><AgentElizaOSEdit /></Page>} />
 
           {/* Redirects de compatibilidade — Agentes */}
@@ -109,16 +117,16 @@ const AppWithRouter = () => {
           <Route path="/agentes/:agentId/:subId" element={<RedirectToAgentDetail />} />
           <Route path="/agente/:agenteId" element={<RedirectToAgentDetail />} />
           <Route path="/agent-profile/:agentId" element={<RedirectToAgentDetail />} />
-          <Route path="/agent/radar" element={<Navigate to="/agents/radar/chat" replace />} />
-          <Route path="/agent/gestor" element={<Navigate to="/agents/gestor/chat" replace />} />
-          <Route path="/agent/social" element={<Navigate to="/agents/social/chat" replace />} />
-          <Route path="/agent/atendente" element={<Navigate to="/agents/atendente/chat" replace />} />
-          <Route path="/agent/sdr" element={<Navigate to="/agents/sdr/chat" replace />} />
-          <Route path="/agent/kimi" element={<Navigate to="/agents/kimi/chat" replace />} />
-          <Route path="/agent/ads-extractor" element={<Navigate to="/agents/ads-extractor/chat" replace />} />
+          <Route path="/agent/radar" element={<Navigate to="/ai-command-center?agent=radar" replace />} />
+          <Route path="/agent/gestor" element={<Navigate to="/ai-command-center?agent=gestor" replace />} />
+          <Route path="/agent/social" element={<Navigate to="/ai-command-center?agent=social" replace />} />
+          <Route path="/agent/atendente" element={<Navigate to="/ai-command-center?agent=atendente" replace />} />
+          <Route path="/agent/sdr" element={<Navigate to="/ai-command-center?agent=sdr" replace />} />
+          <Route path="/agent/kimi" element={<Navigate to="/ai-command-center?agent=kimi" replace />} />
+          <Route path="/agent/ads-extractor" element={<Navigate to="/ai-command-center?agent=ads-extractor" replace />} />
 
           {/* Páginas principais */}
-          <Route path="/hub" element={<Navigate to="/agents" replace />} />
+          <Route path="/hub" element={<Navigate to="/dashboard" replace />} />
           <Route path="/dashboard" element={<Page><Dashboard /></Page>} />
           <Route path="/docs" element={<Page><DocsPage /></Page>} />
           <Route path="/content" element={<Page><ContentPipeline /></Page>} />

@@ -116,7 +116,7 @@ export default function Hub() {
                   </div>
                   <div>
                     <h1 className="font-manrope text-3xl font-medium text-white tracking-tight">
-                      Hub de Agentes
+                      AI Command Center
                     </h1>
                     <p className="font-mono text-[10px] uppercase tracking-widest text-zinc-500 mt-1">
                       Central de Agentes · {totalCount} agentes disponíveis

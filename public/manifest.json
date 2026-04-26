@@ -1,11 +1,11 @@
 {
-  "name": "Totum Apps",
-  "short_name": "Totum",
-  "description": "Plataforma de infraestrutura de crescimento com agentes de IA",
-  "start_url": "/hub",
+  "name": "Totum OS",
+  "short_name": "Totum OS",
+  "description": "Sistema operacional de agência com AI Command Center, Alexandria e agentes de IA",
+  "start_url": "/dashboard",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#000000",
+  "background_color": "#f6f6f3",
   "theme_color": "#ef233c",
   "orientation": "portrait-primary",
   "icons": [
@@ -29,9 +29,9 @@
   ],
   "shortcuts": [
     {
-      "name": "Hub de Agentes",
-      "url": "/hub",
-      "description": "Ver todos os agentes"
+      "name": "AI Command Center",
+      "url": "/ai-command-center",
+      "description": "Conversar com agentes e IAs"
     },
     {
       "name": "Hermione",

@@ -77,7 +77,7 @@ export function ClientsCenterLayout() {
         <motion.div {...anim(0)}>
           <PageHeader
             eyebrow="Operações comerciais"
-            title="Central de Clientes"
+            title="Clientes"
             description={`${clients.length} clientes cadastrados · ${clients.filter((c) => c.status === "active").length} ativos`}
             icon={Building2}
             actions={

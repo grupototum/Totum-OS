@@ -51,7 +51,7 @@ export default function ResetPassword() {
       const { error } = await supabase.auth.updateUser({ password });
       if (error) throw error;
       toast.success("Senha redefinida com sucesso!");
-      navigate("/hub");
+      navigate("/dashboard");
     } catch (err: any) {
       toast.error(err.message || "Erro ao redefinir senha.");
     } finally {
@@ -103,7 +103,7 @@ export default function ResetPassword() {
               className="w-10 h-10 rounded-lg"
             />
             <span className="font-sans text-xl font-bold tracking-tight text-foreground">
-              Apps Totum
+              Totum OS
             </span>
           </div>
         </div>

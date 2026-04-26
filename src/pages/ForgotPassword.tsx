@@ -83,7 +83,7 @@ export default function ForgotPassword() {
               className="w-10 h-10 rounded-lg"
             />
             <span className="font-sans text-xl font-bold tracking-tight text-foreground">
-              Apps Totum
+              Totum OS
             </span>
           </div>
         </div>

@@ -47,7 +47,7 @@ export default function PendingApproval() {
               Totum
             </span>
           </div>
-          <span className="label-mono">Apps Totum · Sistema de Agentes IA</span>
+          <span className="label-mono">Totum OS · Sistema de Agentes IA</span>
         </div>
 
         <div className="ds-panel p-8 sm:p-10 bg-surface-container space-y-6 text-left">

@@ -25,7 +25,7 @@ export default function Login() {
         localStorage.removeItem("totum_remember_me");
       }
       toast.success("Bem-vindo à Totum!");
-      navigate("/agents");
+      navigate("/dashboard");
     } catch (err: any) {
       if (err.approvalStatus === "pending" || err.approvalStatus === "rejected") {
         navigate("/pending-approval", {

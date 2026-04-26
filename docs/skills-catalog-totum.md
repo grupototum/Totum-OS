@@ -1,6 +1,6 @@
 # 📋 CATÁLOGO DE SKILLS - TOTUM
 
-> **Repositório:** Alexandria → Apps Totum  
+> **Repositório:** Alexandria → Totum OS  
 > **Versão:** 1.0  
 > **Data:** 2026-04-18  
 > **Fontes:** clawskills.sh (5.147 skills) | VoltAgent (5.400+ skills) | best/openclaw-skills

@@ -225,7 +225,7 @@ export default function AppSidebar() {
               <div className="bg-white shadow-[0_0_12px_rgba(255,255,255,0.45)]" />
             </div>
             <span className="font-sans text-lg font-semibold text-sidebar-foreground tracking-tight">
-              TOTUM
+              Totum OS
             </span>
           </div>
         )}
@@ -250,7 +250,7 @@ export default function AppSidebar() {
           <Search className="w-3.5 h-3.5 shrink-0" />
           {!collapsed && (
             <>
-              <span className="text-[12px] flex-1 text-left">Buscar ou navegar...</span>
+              <span className="text-[12px] flex-1 text-left">Buscar no Totum OS...</span>
               <kbd className="hidden sm:flex items-center gap-0.5 text-[10px] font-mono opacity-40 border border-sidebar-border px-1 py-0.5">
                 ⌘K
               </kbd>

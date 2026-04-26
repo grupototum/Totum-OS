@@ -1,12 +1,11 @@
 /**
  * Navigation Config — Single Source of Truth
  * Used by AppSidebar (desktop) and AppSidebarContent (mobile).
- * Organized into 5 PT-BR semantic pillars.
+ * Organized into Totum OS semantic workspaces.
  */
 
 import {
   type LucideIcon,
-  LayoutDashboard,
   Bot,
   KanbanSquare,
   GitBranch,
@@ -28,6 +27,10 @@ import {
   Lightbulb,
   Cloud,
   Library,
+  Home,
+  MessageSquareText,
+  WandSparkles,
+  Workflow,
 } from "lucide-react";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -58,21 +61,27 @@ export interface NavSection {
   };
 }
 
-// ─── 5 Pilares PT-BR ─────────────────────────────────────────────────────────
+// ─── Totum OS Workspaces ─────────────────────────────────────────────────────
 
 export const navigationSections: NavSection[] = [
-  // ── 1. VISÃO ──
   {
-    id: "visao",
-    label: "Visão",
+    id: "inicio",
+    label: "Início",
     items: [
-      { label: "Hub de Agentes", icon: Bot, path: "/hub" },
-      { label: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },
+      { label: "Visão Geral", icon: Home, path: "/dashboard" },
       { label: "Escritório", icon: Building2, path: "/office" },
     ],
   },
 
-  // ── 2. AGENTES ──
+  {
+    id: "command",
+    label: "AI Command",
+    items: [
+      { label: "Command Center", icon: MessageSquareText, path: "/ai-command-center" },
+      { label: "Geradores", icon: WandSparkles, path: "/ai-command-center?tab=generators" },
+    ],
+  },
+
   {
     id: "agentes",
     label: "Agentes",
@@ -82,21 +91,20 @@ export const navigationSections: NavSection[] = [
       path: "/agents",
       icon: Bot,
       subItems: [
-        { label: "Painel de Agentes", path: "/agents", emoji: null },
-        { label: "Radar", path: "/agents/radar/chat", emoji: "🔍" },
-        { label: "Gestor", path: "/agents/gestor/chat", emoji: "📊" },
-        { label: "Social", path: "/agents/social/chat", emoji: "📱" },
-        { label: "Atendente", path: "/agents/atendente/chat", emoji: "🎧" },
-        { label: "SDR", path: "/agents/sdr/chat", emoji: "🤝" },
-        { label: "Kimi", path: "/agents/kimi/chat", emoji: "🤖" },
+        { label: "Painel de Agentes", path: "/agents", icon: Bot },
+        { label: "Radar", path: "/ai-command-center?agent=radar", emoji: "🔍" },
+        { label: "Gestor", path: "/ai-command-center?agent=gestor", emoji: "📊" },
+        { label: "Social", path: "/ai-command-center?agent=social", emoji: "📱" },
+        { label: "Atendente", path: "/ai-command-center?agent=atendente", emoji: "🎧" },
+        { label: "SDR", path: "/ai-command-center?agent=sdr", emoji: "🤝" },
+        { label: "Kimi", path: "/ai-command-center?agent=kimi", emoji: "🤖" },
       ],
     },
   },
 
-  // ── 3. CONHECIMENTO ──
   {
     id: "conhecimento",
-    label: "Conhecimento",
+    label: "Alexandria",
     items: [],
     expandable: {
       label: "Alexandria",
@@ -104,40 +112,52 @@ export const navigationSections: NavSection[] = [
       icon: BookOpen,
       subItems: [
         { label: "Hermione", path: "/hermione", icon: Brain },
+        { label: "Fontes e Artefatos", path: "/alexandria", icon: Library },
         { label: "Portal POPs", path: "/alexandria/pops", icon: FileText },
-        { label: "Context HUB", path: "/alexandria/context", icon: BookOpen },
+        { label: "Contexto", path: "/alexandria/context", icon: BookOpen },
         { label: "Skills", path: "/alexandria/skills", icon: Lightbulb },
-        { label: "OpenClaw", path: "/alexandria/openclaw", icon: Cloud },
-        { label: "Biblioteca", path: "/alexandria", icon: Library },
-        { label: "Suna Agent", path: "/suna", icon: Cpu },
+        { label: "Exportadores IA", path: "/alexandria?tab=exports", icon: GitBranch },
       ],
     },
   },
 
-  // ── 4. OPERAÇÕES ──
+  {
+    id: "fluxos",
+    label: "Fluxos",
+    items: [],
+    expandable: {
+      label: "Fluxos e Infra IA",
+      path: "/alexandria/openclaw",
+      icon: Workflow,
+      subItems: [
+        { label: "OpenClaw", path: "/alexandria/openclaw", icon: Cloud },
+        { label: "Suna Agent", path: "/suna", icon: Cpu },
+        { label: "Claude Code", path: "/claude-code", icon: Terminal },
+        { label: "Cráudio Codete", path: "/craudio-codete", icon: Cpu },
+      ],
+    },
+  },
+
   {
     id: "operacoes",
-    label: "Operações",
+    label: "Operação",
     items: [
       { label: "Tarefas", icon: KanbanSquare, path: "/tasks" },
-      { label: "Pipeline Conteúdo", icon: GitBranch, path: "/content" },
+      { label: "Conteúdo", icon: GitBranch, path: "/content" },
       { label: "Plano de Ação", icon: CheckSquare, path: "/action-plan" },
-      { label: "Central de Clientes", icon: Contact, path: "/clients" },
+      { label: "Clientes", icon: Contact, path: "/clients" },
       { label: "Novo Cliente", icon: UserPlus, path: "/new-client" },
-      { label: "Checklist Deploy", icon: ShieldCheck, path: "/deployment" },
     ],
   },
 
-  // ── 5. SISTEMA ──
   {
     id: "sistema",
     label: "Sistema",
     items: [
+      { label: "Deploy", icon: ShieldCheck, path: "/deployment" },
       { label: "Documentação", icon: BookMarked, path: "/docs" },
-      { label: "Cráudio Codete", icon: Cpu, path: "/craudio-codete" },
-      { label: "Claude Code", icon: Terminal, path: "/claude-code" },
       { label: "Configurações", icon: Settings, path: "/settings" },
-      { label: "Diagrama de Sistemas", icon: LayoutTemplate, path: "/diagrama-sistemas" },
+      { label: "Mapa do Sistema", icon: LayoutTemplate, path: "/diagrama-sistemas" },
       { label: "Operadores", icon: UserCog, path: "/operadores" },
       { label: "Hosting", icon: Network, path: "/hosting" },
       { label: "Aprovações", icon: ShieldCheck, path: "/admin/approvals", badge: "approvals" },

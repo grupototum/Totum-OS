@@ -1,4 +1,4 @@
-// Tipos para Operadores (usuários humanos do Apps Totum)
+// Tipos para Operadores (usuários humanos do Totum OS)
 
 export type OperadorRole = 'admin' | 'gestor' | 'analista' | 'operador' | 'viewer';
 export type OperadorStatus = 'ativo' | 'inativo' | 'suspenso';

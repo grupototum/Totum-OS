@@ -7,23 +7,28 @@ import {
 } from "./navigation";
 
 describe("navigation config", () => {
-  it("has exactly 5 pillars", () => {
-    expect(navigationSections).toHaveLength(5);
+  it("has Totum OS workspaces", () => {
+    expect(navigationSections).toHaveLength(7);
   });
 
-  it("has correct pillar labels", () => {
+  it("has correct workspace labels", () => {
     const labels = navigationSections.map((s) => s.label);
-    expect(labels).toEqual(["Visão", "Agentes", "Conhecimento", "Operações", "Sistema"]);
+    expect(labels).toEqual(["Início", "AI Command", "Agentes", "Alexandria", "Fluxos", "Operação", "Sistema"]);
   });
 
-  it("has correct pillar ids", () => {
+  it("has correct workspace ids", () => {
     const ids = navigationSections.map((s) => s.id);
-    expect(ids).toEqual(["visao", "agentes", "conhecimento", "operacoes", "sistema"]);
+    expect(ids).toEqual(["inicio", "command", "agentes", "conhecimento", "fluxos", "operacoes", "sistema"]);
   });
 
-  it("Visão has 3 items", () => {
-    const visao = navigationSections.find((s) => s.id === "visao");
-    expect(visao?.items).toHaveLength(3);
+  it("Início has 2 items", () => {
+    const inicio = navigationSections.find((s) => s.id === "inicio");
+    expect(inicio?.items).toHaveLength(2);
+  });
+
+  it("AI Command has 2 items", () => {
+    const command = navigationSections.find((s) => s.id === "command");
+    expect(command?.items).toHaveLength(2);
   });
 
   it("Agentes has expandable with 7 sub-items", () => {
@@ -32,29 +37,35 @@ describe("navigation config", () => {
     expect(agentes?.expandable?.subItems).toHaveLength(7);
   });
 
-  it("Conhecimento has expandable with 7 sub-items", () => {
+  it("Alexandria has expandable with 6 sub-items", () => {
     const conhecimento = navigationSections.find((s) => s.id === "conhecimento");
     expect(conhecimento?.expandable).toBeDefined();
-    expect(conhecimento?.expandable?.subItems).toHaveLength(7);
+    expect(conhecimento?.expandable?.subItems).toHaveLength(6);
   });
 
-  it("Operações has 6 items", () => {
+  it("Fluxos has expandable with 4 sub-items", () => {
+    const fluxos = navigationSections.find((s) => s.id === "fluxos");
+    expect(fluxos?.expandable).toBeDefined();
+    expect(fluxos?.expandable?.subItems).toHaveLength(4);
+  });
+
+  it("Operação has 5 items", () => {
     const operacoes = navigationSections.find((s) => s.id === "operacoes");
-    expect(operacoes?.items).toHaveLength(6);
+    expect(operacoes?.items).toHaveLength(5);
   });
 
-  it("Sistema has 8 items including approvals badge", () => {
+  it("Sistema has 7 items including approvals badge", () => {
     const sistema = navigationSections.find((s) => s.id === "sistema");
-    expect(sistema?.items).toHaveLength(8);
+    expect(sistema?.items).toHaveLength(7);
     const approvals = sistema?.items.find((i) => i.path === "/admin/approvals");
     expect(approvals?.badge).toBe("approvals");
   });
 
   it("getAllNavPaths returns all paths", () => {
     const paths = getAllNavPaths();
-    expect(paths).toContain("/hub");
+    expect(paths).toContain("/ai-command-center");
     expect(paths).toContain("/agents");
-    expect(paths).toContain("/agents/radar/chat");
+    expect(paths).toContain("/ai-command-center?agent=radar");
     expect(paths).toContain("/hermione");
     expect(paths).toContain("/tasks");
     expect(paths).toContain("/docs");
@@ -62,16 +73,16 @@ describe("navigation config", () => {
   });
 
   it("getSectionForPath returns correct section", () => {
-    expect(getSectionForPath("/hub")).toBe("visao");
-    expect(getSectionForPath("/agents/radar/chat")).toBe("agentes");
+    expect(getSectionForPath("/dashboard")).toBe("inicio");
+    expect(getSectionForPath("/ai-command-center?agent=radar")).toBe("agentes");
     expect(getSectionForPath("/hermione")).toBe("conhecimento");
     expect(getSectionForPath("/tasks")).toBe("operacoes");
     expect(getSectionForPath("/docs")).toBe("sistema");
   });
 
   it("isPathInSection works correctly", () => {
-    expect(isPathInSection("/hub", "visao")).toBe(true);
-    expect(isPathInSection("/hub", "agentes")).toBe(false);
+    expect(isPathInSection("/dashboard", "inicio")).toBe(true);
+    expect(isPathInSection("/dashboard", "agentes")).toBe(false);
     expect(isPathInSection("/hermione", "conhecimento")).toBe(true);
   });
 
@@ -79,7 +90,7 @@ describe("navigation config", () => {
   describe("getCommandPaletteEntries", () => {
     it("returns entries for all top-level items", () => {
       const entries = getCommandPaletteEntries();
-      expect(entries.find((e) => e.path === "/hub")).toBeDefined();
+      expect(entries.find((e) => e.path === "/ai-command-center")).toBeDefined();
       expect(entries.find((e) => e.path === "/tasks")).toBeDefined();
       expect(entries.find((e) => e.path === "/docs")).toBeDefined();
     });
@@ -87,19 +98,19 @@ describe("navigation config", () => {
     it("includes expandable parents and subitems", () => {
       const entries = getCommandPaletteEntries();
       expect(entries.find((e) => e.path === "/agents")).toBeDefined();
-      expect(entries.find((e) => e.path === "/agents/radar/chat")).toBeDefined();
+      expect(entries.find((e) => e.path === "/ai-command-center?agent=radar")).toBeDefined();
       expect(entries.find((e) => e.path === "/hermione")).toBeDefined();
       expect(entries.find((e) => e.path === "/alexandria/pops")).toBeDefined();
     });
 
     it("groups entries by pillar label", () => {
       const entries = getCommandPaletteEntries();
-      const hub = entries.find((e) => e.path === "/hub");
-      const radar = entries.find((e) => e.path === "/agents/radar/chat");
+      const hub = entries.find((e) => e.path === "/dashboard");
+      const radar = entries.find((e) => e.path === "/ai-command-center?agent=radar");
       const hermione = entries.find((e) => e.path === "/hermione");
-      expect(hub?.group).toBe("Visão");
+      expect(hub?.group).toBe("Início");
       expect(radar?.group).toBe("Agentes");
-      expect(hermione?.group).toBe("Conhecimento");
+      expect(hermione?.group).toBe("Alexandria");
     });
 
     it("has unique ids", () => {

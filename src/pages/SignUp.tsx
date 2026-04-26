@@ -59,7 +59,7 @@ export default function SignUp() {
         navigate("/pending-approval", { replace: true });
       } else {
         toast.success("Conta criada com sucesso!");
-        navigate("/hub");
+        navigate("/dashboard");
       }
     } catch (err: any) {
       toast.error(err.message || "Erro ao criar conta.");
@@ -95,7 +95,7 @@ export default function SignUp() {
                 className="w-10 h-10 rounded-lg"
               />
               <span className="font-display text-xl font-semibold tracking-tight text-foreground">
-                Apps Totum
+                Totum OS
               </span>
             </div>
             <span className="label-mono">Central de Agentes IA</span>

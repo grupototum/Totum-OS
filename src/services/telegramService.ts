@@ -59,7 +59,7 @@ export const sendTelegramNotification = async (
   const emoji = tipoEmoji[payload.tipo] || 'ℹ️';
   const prioridade = prioridadeLabel[payload.prioridade] || payload.prioridade;
 
-  const text = `${emoji} <b>${payload.titulo}</b>\n\n${payload.mensagem}\n\n<i>Prioridade: ${prioridade}</i>\n<i>Apps Totum • ${new Date().toLocaleString('pt-BR')}</i>`;
+  const text = `${emoji} <b>${payload.titulo}</b>\n\n${payload.mensagem}\n\n<i>Prioridade: ${prioridade}</i>\n<i>Totum OS • ${new Date().toLocaleString('pt-BR')}</i>`;
 
   return sendTelegramMessage({
     chat_id: payload.destinatario,

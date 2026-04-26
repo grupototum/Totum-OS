@@ -94,7 +94,7 @@ export default function SystemDiagram() {
           <div className="p-4 border-b space-y-3">
             <div className="flex items-center gap-2">
               <LayoutTemplate className="h-5 w-5 text-accent" />
-              <h2 className="font-semibold text-lg">Diagrama de Sistemas</h2>
+              <h2 className="font-semibold text-lg">Mapa do Sistema</h2>
             </div>
             <p className="text-xs text-muted-foreground">
               Visualize a arquitetura dos projetos da Totum em tempo real.

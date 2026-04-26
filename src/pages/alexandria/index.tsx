@@ -1,18 +1,21 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import AppLayout from '@/components/layout/AppLayout';
 import { PageBreadcrumb } from '@/components/navigation/PageBreadcrumb';
 import { useAlexandria } from '@/hooks/useAlexandria';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Loader2, RefreshCw, BookOpen, FileText, Users, Zap, ExternalLink, Brain, Upload } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { PageHeader, DataPanel } from '@/components/ui/patterns';
+import { Loader2, RefreshCw, BookOpen, FileText, Users, Zap, ExternalLink, Brain, Upload, Download, GitBranch, Sparkles } from 'lucide-react';
 import Dashboard from './Dashboard';
 import ContextHub from './ContextHub';
 
 export default function AlexandriaPage() {
   const { data, isLoading, error, refetch } = useAlexandria();
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [searchParams] = useSearchParams();
+  const [activeTab, setActiveTab] = useState(searchParams.get('tab') === 'exports' ? 'exports' : 'dashboard');
   const navigate = useNavigate();
 
   if (isLoading) {
@@ -46,41 +49,42 @@ export default function AlexandriaPage() {
   return (
     <AppLayout>
       <PageBreadcrumb />
-      <div className="space-y-6 p-6">
-        {/* Cabeçalho */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold flex items-center gap-3">
-              <BookOpen className="h-8 w-8 text-primary" />
-              Alexandria
-            </h1>
-            <p className="text-muted-foreground mt-1">
-              Central de conhecimento, skills, agentes e artefatos consultivos do ecossistema Totum
-            </p>
-          </div>
-          <div className="flex flex-wrap items-center gap-2">
+      <div className="space-y-6 p-4 sm:p-6">
+        <PageHeader
+          eyebrow="Knowledge First"
+          title="Alexandria"
+          description="Second brain do Totum OS: fontes, artefatos, skills, POPs, decisões e pacotes de contexto para usar dentro ou fora do sistema."
+          icon={BookOpen}
+          actions={
+            <>
             <Button onClick={() => navigate('/hermione')} className="gap-2">
               <Brain className="h-4 w-4" />
-              Abrir Hermione
+              Consultar Hermione
             </Button>
             <Button onClick={refetch} variant="outline" size="sm">
               <RefreshCw className="h-4 w-4 mr-2" />
               Atualizar
             </Button>
-          </div>
-        </div>
+            </>
+          }
+        />
 
-        <Card className="border-primary/20 bg-primary/5">
+        <Card className="border-primary/20 bg-card">
           <CardContent className="flex flex-col gap-4 p-5 md:flex-row md:items-center md:justify-between">
             <div className="flex items-start gap-3">
-              <div className="grid h-10 w-10 shrink-0 place-items-center rounded-lg border border-primary/30 bg-primary/10 text-primary">
+              <div className="grid h-10 w-10 shrink-0 place-items-center border border-primary/30 bg-primary/10 text-primary">
                 <Upload className="h-5 w-5" />
               </div>
               <div>
-                <p className="font-semibold">Chat consultivo com upload e unificação</p>
+                <p className="font-semibold">Hermione assimila documentos e devolve artefatos utilizáveis</p>
                 <p className="mt-1 max-w-3xl text-sm text-muted-foreground">
-                  Envie MDs e textos de várias IAs para a Hermione analisar, assimilar, comparar e gerar skills, POPs, prompts ou documentos com download em Markdown/JSON.
+                  Envie MDs e textos de várias IAs para analisar, unificar, apontar lacunas e gerar skills, POPs, prompts, decisões ou pacotes de contexto com download.
                 </p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {['Claude', 'Kimi', 'ChatGPT', 'Gemini', 'MCP'].map((item) => (
+                    <Badge key={item} variant="outline">{item}</Badge>
+                  ))}
+                </div>
               </div>
             </div>
             <Button variant="outline" onClick={() => navigate('/hermione')} className="shrink-0 gap-2">
@@ -92,10 +96,10 @@ export default function AlexandriaPage() {
 
         {/* Tabs principais */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="dashboard" className="flex items-center gap-2">
               <Zap className="h-4 w-4" />
-              <span className="hidden sm:inline">Dashboard</span>
+              <span className="hidden sm:inline">Biblioteca</span>
             </TabsTrigger>
             <TabsTrigger value="pops" className="flex items-center gap-2">
               <FileText className="h-4 w-4" />
@@ -108,6 +112,10 @@ export default function AlexandriaPage() {
             <TabsTrigger value="skills" className="flex items-center gap-2">
               <BookOpen className="h-4 w-4" />
               <span className="hidden sm:inline">Skills Center</span>
+            </TabsTrigger>
+            <TabsTrigger value="exports" className="flex items-center gap-2">
+              <Download className="h-4 w-4" />
+              <span className="hidden sm:inline">Exportar</span>
             </TabsTrigger>
           </TabsList>
 
@@ -160,6 +168,43 @@ export default function AlexandriaPage() {
                   </Button>
                 </CardContent>
               </Card>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="exports" className="mt-6">
+            <div className="grid gap-4 lg:grid-cols-3">
+              {[
+                {
+                  title: 'Pacote Claude',
+                  description: 'Contexto longo, instruções, fontes e decisões em Markdown para continuar no Claude.',
+                  icon: Brain,
+                },
+                {
+                  title: 'Pacote ChatGPT/Gemini',
+                  description: 'Prompt principal, exemplos, restrições e saída esperada para execução rápida.',
+                  icon: Sparkles,
+                },
+                {
+                  title: 'Pacote MCP/local',
+                  description: 'Estrutura preparada para futuras inserções de contexto e skills em apps locais de IA.',
+                  icon: GitBranch,
+                },
+              ].map((item) => (
+                <DataPanel key={item.title}>
+                  <div className="flex items-start gap-3">
+                    <div className="grid h-10 w-10 shrink-0 place-items-center border border-border bg-muted text-muted-foreground">
+                      <item.icon className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-foreground">{item.title}</p>
+                      <p className="mt-1 text-sm text-muted-foreground">{item.description}</p>
+                      <Button className="mt-4" variant="outline" onClick={() => navigate('/ai-command-center')}>
+                        Preparar no Command Center
+                      </Button>
+                    </div>
+                  </div>
+                </DataPanel>
+              ))}
             </div>
           </TabsContent>
         </Tabs>

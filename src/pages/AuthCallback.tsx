@@ -10,7 +10,7 @@ import { notifyNewUserPending } from '@/lib/telegram';
  *   1. Check if the user already has an approval record.
  *   2. New user → create pending record, notify admin, sign out → /pending-approval
  *   3. Pending/rejected → sign out → /pending-approval
- *   4. Approved (or legacy user with no record) → /hub
+ *   4. Approved (or legacy user with no record) → /dashboard
  */
 export default function AuthCallback() {
   const navigate = useNavigate();
@@ -90,7 +90,7 @@ export default function AuthCallback() {
         }
 
         // Approved — let them in
-        navigate('/hub', { replace: true });
+        navigate('/dashboard', { replace: true });
       } catch (err: any) {
         console.error('[AuthCallback]', err);
         // Translate common Supabase/OAuth error messages

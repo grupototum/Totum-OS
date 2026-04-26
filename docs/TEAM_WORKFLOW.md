@@ -1,7 +1,7 @@
-# 🤖 EQUIPE DE DESENVOLVIMENTO - Apps Totum Skills System
+# EQUIPE DE DESENVOLVIMENTO - Totum OS Skills System
 
 **Data:** 8 de Abril de 2026  
-**Projeto:** Refatoração Apps Totum - Sistema de Skills  
+**Projeto:** Refatoração Totum OS - Sistema de Skills  
 **Timeline:** Quarta-Sábado (4 dias)
 
 ---

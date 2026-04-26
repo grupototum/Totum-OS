@@ -44,10 +44,10 @@ const STEPS: Step[] = [
     id: "agents",
     emoji: "🤖",
     icon: Bot,
-    title: "Hub de Agentes",
+    title: "AI Command Center",
     description:
       "Acesse o Hub para ver todos os agentes disponíveis — Radar, Gestor, Social, Atendente, SDR e mais. Cada agente tem um chat dedicado para você interagir diretamente.",
-    cta: { label: "Abrir Hub de Agentes", path: "/hub" },
+    cta: { label: "Abrir AI Command Center", path: "/ai-command-center" },
     color: "from-blue-500/20 to-blue-500/5",
   },
   {

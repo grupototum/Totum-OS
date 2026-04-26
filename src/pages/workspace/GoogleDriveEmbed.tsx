@@ -68,7 +68,7 @@ export default function GoogleDriveEmbed() {
           <div>
             <h3 className="font-semibold text-lg">Conectar Google Drive</h3>
             <p className="text-sm text-muted-foreground mt-1">
-              Acesse os arquivos da empresa diretamente pelo Apps Totum.
+              Acesse os arquivos da empresa diretamente pelo Totum OS.
             </p>
           </div>
           {!GOOGLE_OAUTH_CLIENT_ID && (

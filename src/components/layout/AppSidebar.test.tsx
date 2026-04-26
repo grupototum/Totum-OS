@@ -26,7 +26,7 @@ vi.mock("@/integrations/supabase/client", () => ({
 }));
 
 describe("AppSidebar", () => {
-  it("renders 5 pillar labels", () => {
+  it("renders Totum OS workspace labels", () => {
     render(
       <ThemeProvider>
         <MemoryRouter>
@@ -35,10 +35,11 @@ describe("AppSidebar", () => {
       </ThemeProvider>
     );
 
-    expect(screen.getByText("Visão")).toBeInTheDocument();
+    expect(screen.getByText("Início")).toBeInTheDocument();
+    expect(screen.getByText("AI Command")).toBeInTheDocument();
     expect(screen.getAllByText("Agentes").length).toBeGreaterThanOrEqual(1);
-    expect(screen.getByText("Conhecimento")).toBeInTheDocument();
-    expect(screen.getByText("Operações")).toBeInTheDocument();
+    expect(screen.getAllByText("Alexandria").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getByText("Operação")).toBeInTheDocument();
     expect(screen.getByText("Sistema")).toBeInTheDocument();
   });
 
@@ -51,11 +52,11 @@ describe("AppSidebar", () => {
       </ThemeProvider>
     );
 
-    expect(screen.getByText("Hub de Agentes")).toBeInTheDocument();
-    expect(screen.getByText("Dashboard")).toBeInTheDocument();
+    expect(screen.getByText("Command Center")).toBeInTheDocument();
+    expect(screen.getByText("Visão Geral")).toBeInTheDocument();
     expect(screen.getByText("Tarefas")).toBeInTheDocument();
     expect(screen.getByText("Documentação")).toBeInTheDocument();
-    expect(screen.getByText("Claude Code")).toBeInTheDocument();
+    expect(screen.getByText("Fluxos e Infra IA")).toBeInTheDocument();
   });
 
   it("renders expandable Agentes section with sub-items", () => {

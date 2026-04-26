@@ -21,6 +21,7 @@ import {
 import {
   Terminal, FileText, Brain, Server, CalendarClock, FolderOpen,
   CheckSquare, Lightbulb, Cpu,
+  MessageSquareText,
   type LucideIcon,
 } from "lucide-react";
 import { getCommandPaletteEntries, type CommandPaletteEntry } from "@/config/navigation";
@@ -37,6 +38,7 @@ interface CommandEntry {
 // Routes not present in the sidebar but still navigable
 const EXTRA_COMMANDS: CommandEntry[] = [
   { id: "extra-deployment", label: "Checklist Deploy", group: "Operações", path: "/deployment", icon: CheckSquare, keywords: "deploy checklist release" },
+  { id: "extra-command", label: "AI Command Center", group: "AI Command", path: "/ai-command-center", icon: MessageSquareText, keywords: "chat agentes llm comando" },
   { id: "extra-task-recurrence", label: "Recorrência de Tarefas", group: "Operações", path: "/task-recurrence", icon: CalendarClock, keywords: "recorrencia tarefas agendamento" },
   { id: "extra-claude-code", label: "Claude Code", group: "Sistema", path: "/claude-code", icon: Terminal, keywords: "ai code claudecode" },
   { id: "extra-craudio", label: "Cráudio Codete", group: "Sistema", path: "/craudio-codete", icon: Cpu, keywords: "audio codete ia" },

@@ -1,4 +1,4 @@
-# 🚀 Apps Totum - Skills System
+# Totum OS - Skills System
 
 ## Status: Preparação Completa para Claude Code
 
@@ -120,8 +120,8 @@ supabase db push
 
 - `BRIEF_CLAUDE_CODE_QUICK.md` - Guia rápido para Claude Code
 - `CHECKLIST_EXECUTAVEL_DIA_A_DIA.md` - Checklist hora-a-hora
-- `SPEC_APPS_TOTUM_REFACTOR_COMPLETO.md` - Especificação técnica
-- `ANALISE_APPS_TOTUM_PRONTO.md` - Inventário de código reutilizável
+- `SPEC_APPS_TOTUM_REFACTOR_COMPLETO.md` - Especificação técnica legada
+- `ANALISE_APPS_TOTUM_PRONTO.md` - Inventário de código reutilizável legado
 
 ---
 

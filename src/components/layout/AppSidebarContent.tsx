@@ -155,7 +155,7 @@ export default function AppSidebarContent({ onNavigate }: Props) {
           <div className="bg-white shadow-[0_0_12px_rgba(255,255,255,0.45)]" />
         </div>
         <span className="font-sans text-lg font-medium text-sidebar-foreground tracking-tight">
-          TOTUM
+          Totum OS
         </span>
       </div>
 
@@ -170,7 +170,7 @@ export default function AppSidebarContent({ onNavigate }: Props) {
           className="w-full flex items-center gap-2 rounded-none border border-sidebar-border bg-sidebar-accent/20 px-3 py-2 text-sidebar-foreground/45 hover:text-sidebar-foreground hover:bg-sidebar-accent/50 transition-colors"
         >
           <Search className="w-3.5 h-3.5 shrink-0" />
-          <span className="text-[12px] flex-1 text-left">Buscar ou navegar...</span>
+          <span className="text-[12px] flex-1 text-left">Buscar no Totum OS...</span>
           <kbd className="text-[10px] font-mono opacity-40 border border-sidebar-border px-1 py-0.5">⌘K</kbd>
         </button>
       </div>

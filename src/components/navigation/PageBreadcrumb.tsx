@@ -8,7 +8,7 @@ interface BreadcrumbItem {
 }
 
 const routeMappings: Record<string, BreadcrumbItem[]> = {
-  "/hub": [{ label: "Hub" }],
+  "/hub": [{ label: "Visão Geral" }],
   "/dashboard": [{ label: "Dashboard" }],
   "/agents": [{ label: "Agentes" }],
   "/tasks": [{ label: "Tarefas" }],
@@ -19,7 +19,7 @@ const routeMappings: Record<string, BreadcrumbItem[]> = {
   "/alexandria": [{ label: "Alexandria" }],
   "/hermione": [{ label: "Alexandria", path: "/alexandria" }, { label: "Hermione" }],
   "/alexandria/pops": [{ label: "Alexandria", path: "/alexandria" }, { label: "Portal POPs" }],
-  "/alexandria/context": [{ label: "Alexandria", path: "/alexandria" }, { label: "Context HUB" }],
+  "/alexandria/context": [{ label: "Alexandria", path: "/alexandria" }, { label: "Contexto" }],
   "/alexandria/skills": [{ label: "Alexandria", path: "/alexandria" }, { label: "Skills" }],
   "/alexandria/openclaw": [{ label: "Alexandria", path: "/alexandria" }, { label: "OpenClaw" }],
   "/clients": [{ label: "Clientes" }],
@@ -40,7 +40,7 @@ export function PageBreadcrumb({ className }: { className?: string }) {
   const items = routeMappings[pathname] || [{ label: getDefaultLabel(pathname) }];
 
   // Add Home as first item
-  const breadcrumbItems: BreadcrumbItem[] = [{ label: "Início", path: "/hub" }, ...items];
+  const breadcrumbItems: BreadcrumbItem[] = [{ label: "Início", path: "/dashboard" }, ...items];
 
   return (
     <nav

@@ -130,7 +130,7 @@ export default function UserApprovals() {
             <div>
               <h1 className="text-2xl font-bold">Aprovação de Usuários</h1>
               <p className="text-sm text-muted-foreground">
-                Gerenciar solicitações de acesso ao Apps Totum
+                Gerenciar solicitações de acesso ao Totum OS
               </p>
             </div>
           </div>

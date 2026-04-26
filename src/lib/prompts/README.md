@@ -256,7 +256,7 @@ Cada prompt é projetado para fornecer insights mensuráveis:
 
 ## 📚 Referências
 
-### Integração com Apps_totum_Oficial
+### Integração com Totum OS
 
 Recomendação: Criar hooks React que consumem esses prompts:
 

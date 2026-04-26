@@ -24,7 +24,7 @@ export default function TelegramNotification({
 
   const handleSend = async () => {
     if (!chatId) return;
-    await notifyTarefa(chatId, taskTitle || 'Nova Notificação', mensagem, 'Apps Totum');
+    await notifyTarefa(chatId, taskTitle || 'Nova Notificação', mensagem, 'Totum OS');
   };
 
   if (!isConfigured) {

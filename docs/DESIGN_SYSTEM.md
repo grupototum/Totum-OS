@@ -1,6 +1,6 @@
-# TOTUM DESIGN SYSTEM v4 — Dark Mode
+# TOTUM OS DESIGN SYSTEM — Light Ops / Dark Command
 
-> Dark-only brutalist design system for Apps Totum
+> Base clara e minimalista para operação diária, com dark mode reservado para chats técnicos, logs e consoles.
 > Black background + zinc scale + brand red (#ef233c) accent
 > Zero border-radius, high contrast, industrial aesthetic
 
@@ -120,7 +120,7 @@ focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focu
 
 // Heading H2
 <h2 className="text-3xl md:text-4xl font-medium tracking-tighter text-foreground">
-  Hub de Agentes
+  AI Command Center
 </h2>
 
 // Heading H3

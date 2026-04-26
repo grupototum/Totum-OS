@@ -98,7 +98,7 @@ export default function Operadores() {
           <div className="p-2 rounded-lg bg-primary/10"><Users className="h-6 w-6 text-primary" /></div>
           <div>
             <h1 className="text-2xl font-bold">Operadores</h1>
-            <p className="text-sm text-muted-foreground">Cadastro de usuários humanos do Apps Totum</p>
+            <p className="text-sm text-muted-foreground">Cadastro de usuários humanos do Totum OS</p>
           </div>
         </div>
         <Button onClick={openNew}><Plus className="h-4 w-4 mr-2" />Novo Operador</Button>

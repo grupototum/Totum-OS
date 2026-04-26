@@ -1,5 +1,5 @@
 // src/pages/Index.tsx
-// ✅ CORREÇÃO: Redirecionamento para /hub com loading state
+// Redirecionamento para /dashboard com loading state
 
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -9,9 +9,9 @@ const Index = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Redirecionar para /hub após brief loading
+    // Redirecionar para /dashboard após brief loading
     const timer = setTimeout(() => {
-      navigate('/hub', { replace: true });
+      navigate('/dashboard', { replace: true });
     }, 500);
     
     return () => clearTimeout(timer);
@@ -24,7 +24,7 @@ const Index = () => {
     >
       <div className="flex flex-col items-center gap-4">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
-        <p className="text-sm text-muted-foreground">Carregando Apps Totum...</p>
+        <p className="text-sm text-muted-foreground">Carregando Totum OS...</p>
       </div>
     </div>
   );
