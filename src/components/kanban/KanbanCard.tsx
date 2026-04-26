@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Tarefa, PRIORIDADES } from '@/hooks/useTasks';
 import { Icon } from '@iconify/react';
+import { Badge } from '@/components/ui/badge';
 
 interface KanbanCardProps {
   tarefa: Tarefa;
@@ -8,23 +9,19 @@ interface KanbanCardProps {
   onClick: () => void;
 }
 
-const TAG_COLORS: Record<string, { bg: string; text: string; border: string }> = {
-  'bug': { bg: 'bg-red-50', text: 'text-red-600', border: 'border-red-200' },
-  'feature': { bg: 'bg-blue-50', text: 'text-blue-600', border: 'border-blue-200' },
-  'design': { bg: 'bg-purple-50', text: 'text-purple-600', border: 'border-purple-200' },
-  'marketing': { bg: 'bg-pink-50', text: 'text-pink-600', border: 'border-pink-200' },
-  'urgente': { bg: 'bg-orange-50', text: 'text-orange-600', border: 'border-orange-200' },
-  'cliente': { bg: 'bg-green-50', text: 'text-green-600', border: 'border-green-200' },
-  'interno': { bg: 'bg-gray-50', text: 'text-gray-600', border: 'border-gray-200' },
+const TAG_COLORS: Record<string, { variant: 'error' | 'info' | 'accent' | 'default' | 'success' | 'secondary' }> = {
+  'bug': { variant: 'error' },
+  'feature': { variant: 'info' },
+  'design': { variant: 'accent' },
+  'marketing': { variant: 'default' },
+  'urgente': { variant: 'warning' as 'default' },
+  'cliente': { variant: 'success' },
+  'interno': { variant: 'secondary' },
 };
 
 const getTagStyle = (tag: string) => {
   const normalized = tag.toLowerCase();
-  return TAG_COLORS[normalized] || { 
-    bg: 'bg-stone-100', 
-    text: 'text-stone-600', 
-    border: 'border-stone-200' 
-  };
+  return TAG_COLORS[normalized] || { variant: 'outline' as const };
 };
 
 const getPrioridadeIcon = (prioridade: string) => {
@@ -84,107 +81,92 @@ export function KanbanCard({ tarefa, projetoNome, onClick }: KanbanCardProps) {
       onDragEnd={handleDragEnd}
       onClick={onClick}
       className={`
-        relative bg-card border border-border p-3 cursor-pointer group overflow-hidden
-        transition-all duration-500 hover:border-primary/40
-        hover:shadow-[0_0_20px_-5px_hsl(var(--primary)/0.25)]
+        relative cursor-pointer overflow-hidden rounded-xl border border-border bg-card p-4 group
+        transition-all duration-300 hover:-translate-y-px hover:border-primary/40
+        hover:shadow-[0_18px_50px_-38px_hsl(var(--primary)/0.55)]
         ${isDragging ? 'opacity-50 rotate-2' : ''}
       `}
     >
-      {/* Corner marks */}
-      <span className="absolute top-0 left-0 w-2 h-2 border-t border-l border-primary/50 transition-all duration-500 group-hover:w-3 group-hover:h-3 group-hover:border-primary pointer-events-none" />
-      <span className="absolute top-0 right-0 w-2 h-2 border-t border-r border-primary/50 transition-all duration-500 group-hover:w-3 group-hover:h-3 group-hover:border-primary pointer-events-none" />
-      <span className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-primary/50 transition-all duration-500 group-hover:w-3 group-hover:h-3 group-hover:border-primary pointer-events-none" />
-      <span className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-primary/50 transition-all duration-500 group-hover:w-3 group-hover:h-3 group-hover:border-primary pointer-events-none" />
-      {/* Header: Projeto + Prioridade */}
-      <div className="flex items-center justify-between mb-2">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary/75 via-primary/10 to-transparent opacity-70" />
+
+      <div className="mb-3 flex items-center justify-between gap-3">
         {projetoNome && (
-          <span className="text-[10px] font-mono uppercase tracking-wider text-stone-400 truncate max-w-[60%]">
+          <span className="max-w-[65%] truncate text-[10px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
             {projetoNome}
           </span>
         )}
-        <div className="flex items-center gap-1 ml-auto">
-          <Icon 
-            icon={getPrioridadeIcon(tarefa.prioridade)} 
-            className="w-3.5 h-3.5" 
-            style={{ color: getPrioridadeColor(tarefa.prioridade) }} 
+        <div className="ml-auto flex items-center gap-1">
+          <Icon
+            icon={getPrioridadeIcon(tarefa.prioridade)}
+            className="h-3.5 w-3.5"
+            style={{ color: getPrioridadeColor(tarefa.prioridade) }}
           />
         </div>
       </div>
 
-      {/* Título */}
-      <h4 className="text-sm font-medium text-stone-900 mb-2 line-clamp-2 leading-snug">
+      <h4 className="mb-2 line-clamp-2 text-sm font-medium leading-snug text-foreground">
         {tarefa.titulo}
       </h4>
 
-      {/* Description preview */}
       {tarefa.descricao && (
-        <p className="text-xs text-stone-500 mb-3 line-clamp-2">
+        <p className="mb-4 line-clamp-2 text-xs leading-relaxed text-muted-foreground">
           {tarefa.descricao}
         </p>
       )}
 
-      {/* Tags */}
       {tags.length > 0 && (
-        <div className="flex flex-wrap gap-1 mb-3">
-          {tags.slice(0, 3).map(tag => {
+        <div className="mb-4 flex flex-wrap gap-1.5">
+          {tags.slice(0, 3).map((tag) => {
             const style = getTagStyle(tag);
             return (
-              <span 
-                key={tag}
-                className={`
-                  text-[9px] font-mono uppercase tracking-wider px-1.5 py-0.5 rounded-full border
-                  ${style.bg} ${style.text} ${style.border}
-                `}
-              >
+              <Badge key={tag} variant={style.variant} className="px-2 py-1 text-[9px] tracking-[0.2em]">
                 {tag}
-              </span>
+              </Badge>
             );
           })}
           {tags.length > 3 && (
-            <span className="text-[9px] text-stone-400">+{tags.length - 3}</span>
+            <span className="text-[10px] text-muted-foreground">+{tags.length - 3}</span>
           )}
         </div>
       )}
 
-      {/* Subtarefas progress */}
       {totalSubtarefas > 0 && (
-        <div className="mb-3">
-          <div className="flex items-center justify-between mb-1">
-            <span className="text-[10px] text-stone-500">
+        <div className="mb-4">
+          <div className="mb-1 flex items-center justify-between">
+            <span className="text-[10px] text-muted-foreground">
               {subtarefasConcluidas}/{totalSubtarefas} subtarefas
             </span>
-            <span className="text-[10px] text-stone-400">{Math.round(progressoSubtarefas)}%</span>
+            <span className="text-[10px] text-muted-foreground">{Math.round(progressoSubtarefas)}%</span>
           </div>
-          <div className="h-1 bg-stone-200 rounded-full overflow-hidden">
-            <div 
-              className="h-full bg-emerald-500 rounded-full transition-all duration-300"
+          <div className="h-1.5 overflow-hidden rounded-full bg-muted">
+            <div
+              className="h-full rounded-full bg-primary transition-all duration-300"
               style={{ width: `${progressoSubtarefas}%` }}
             />
           </div>
         </div>
       )}
 
-      {/* Footer: Responsável + Data */}
-      <div className="flex items-center justify-between pt-2 border-t border-stone-100">
+      <div className="flex items-center justify-between border-t border-border/70 pt-3">
         {tarefa.responsavel ? (
           <div className="flex items-center gap-1.5">
-            <div className="w-5 h-5 rounded-full bg-stone-200 flex items-center justify-center text-[9px] font-semibold text-stone-600">
+            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-muted text-[9px] font-semibold text-foreground">
               {tarefa.responsavel.charAt(0).toUpperCase()}
             </div>
-            <span className="text-[10px] text-stone-500 truncate max-w-[80px]">
+            <span className="max-w-[88px] truncate text-[10px] text-muted-foreground">
               {tarefa.responsavel}
             </span>
           </div>
         ) : (
-          <span className="text-[10px] text-stone-400 italic">Sem responsável</span>
+          <span className="text-[10px] italic text-muted-foreground">Sem responsavel</span>
         )}
 
         {dataLimite && (
           <span className={`
             text-[10px] flex items-center gap-1
-            ${isAtrasada ? 'text-red-500 font-medium' : 'text-stone-400'}
+            ${isAtrasada ? 'font-medium text-red-600 dark:text-red-300' : 'text-muted-foreground'}
           `}>
-            <Icon icon="solar:calendar-linear" className="w-3 h-3" />
+            <Icon icon="solar:calendar-linear" className="h-3 w-3" />
             {formatarData(dataLimite)}
           </span>
         )}

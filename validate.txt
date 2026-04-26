@@ -1,0 +1,49 @@
+
+────────────────────────────────────────────────────────────
+1. Total de chunks em giles_knowledge
+────────────────────────────────────────────────────────────
+total = 657
+
+────────────────────────────────────────────────────────────
+2. Chunks por domínio
+────────────────────────────────────────────────────────────
+  agentes                  597
+  operacao                 60
+
+────────────────────────────────────────────────────────────
+3. Documentos únicos
+────────────────────────────────────────────────────────────
+documentos_unicos = 65
+
+────────────────────────────────────────────────────────────
+4. Chunks com embedding válido
+────────────────────────────────────────────────────────────
+com_embedding = 657 / 657
+
+────────────────────────────────────────────────────────────
+5. Decisões cadastradas
+────────────────────────────────────────────────────────────
+total = 12
+  2026-04-12 [Israel] governanca,agentes,pop — NUNCA criar agente/subagente sem consultar POP-001 ou POP-002 e obter aprovação …
+  2026-04-12 [Israel] governanca,processo,licao — Criar regra permanente: Processo > Velocidade. Sempre.
+  2026-04-12 [Israel] governanca,agentes,pop — NUNCA criar agente sem consultar POP-001 ou POP-002 e obter aprovação explícita …
+  2026-04-12 [Israel] governanca,processo,licao — Regra permanente: Processo > Velocidade. Sempre. Sem exceções.
+  2026-04-15 [Israel] roteamento,telegram,kimi-totum — Kimi Totum responde diretamente no Telegram. TOT NUNCA responde mensagens do Tel…
+  2026-04-15 [Israel] roteamento,telegram,kimi-totum — Kimi Totum responde no Telegram. TOT NUNCA responde mensagens Telegram diretamen…
+  2026-04-25 [Israel] alexandria,prioridade,memoria — Alexandria é fonte única de verdade. Nenhum agente opera sem contexto da Alexand…
+  2026-04-25 [Israel] organizacao,docs,arquitetura — Unificar pastas arquitetura e arquiteturas. Subscrever arquivos antigos pelos no…
+  2026-04-25 [Israel + TOT] discord,arquitetura,decisao — Discord é canal de alerta/comando, NUNCA cérebro. Apps Totum continua como inter…
+  2026-04-25 [Israel] alexandria,governanca,agentes — Alexandria é a fonte única de verdade. Nenhum agente opera sem contexto da Alexa…
+  2026-04-25 [Israel] discord,apps-totum,arquitetura — Discord = canal de alerta e comando rápido. Apps Totum = interface oficial. Alex…
+  2026-04-25 [Israel] infra,vps,arquitetura — Alibaba Cloud = TOT + StarkClaw (agentes). Hostinger KVM4 = Apps Totum + produto…
+
+────────────────────────────────────────────────────────────
+6. Teste de busca semântica: "quem é o Jarvis"
+────────────────────────────────────────────────────────────
+(usando modelo Gemini: gemini-embedding-001@768D)
+  rpc match_documents OK mas retornou 0 matches (threshold=0.5).
+  Tentando threshold=0.3...
+  Ainda 0 matches em 0.3. Embeddings antigos (text-embedding-004) e novos
+  (gemini-embedding-001@768) podem viver em espaços vetoriais diferentes.
+
+Validação completa.

@@ -3,6 +3,8 @@ import { motion } from 'framer-motion';
 import { KanbanCard } from './KanbanCard';
 import { StatusTarefa, Tarefa, Projeto } from '@/hooks/useTasks';
 import { Icon } from '@iconify/react';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
 
 interface KanbanColumnProps {
   id: StatusTarefa;
@@ -83,62 +85,62 @@ export function KanbanColumn({
   };
 
   return (
-    <div className="flex flex-col h-full min-w-[280px] w-[280px]">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-3 px-1">
-        <div className="flex items-center gap-2">
-          <div 
-            className="w-3 h-3 rounded-full" 
-            style={{ backgroundColor: cor }}
-          />
-          <h3 className="text-sm font-semibold text-stone-700 tracking-tight">
-            {titulo}
-          </h3>
-          <span className="text-xs text-stone-400 font-mono bg-stone-200/50 px-2 py-0.5 rounded-full">
-            {tarefas.length}
-          </span>
+    <Card className="flex h-full min-w-[296px] w-[296px] flex-col bg-card/90 backdrop-blur-sm">
+      <CardContent className="flex h-full flex-col gap-4 p-4">
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex min-w-0 items-center gap-3">
+            <div className="h-3 w-3 rounded-full shadow-[0_0_0_4px_rgba(255,255,255,0.05)]" style={{ backgroundColor: cor }} />
+            <div className="min-w-0">
+              <h3 className="truncate text-sm font-semibold text-foreground tracking-tight">
+                {titulo}
+              </h3>
+              <p className="text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
+                Etapa do fluxo
+              </p>
+            </div>
+          </div>
+          <Badge variant="outline">{tarefas.length}</Badge>
         </div>
-        <button className="p-1 hover:bg-stone-200/50 rounded transition-colors">
-          <Icon icon="solar:add-circle-linear" className="w-5 h-5 text-stone-400 hover:text-stone-600" />
-        </button>
-      </div>
 
-      {/* Column Body */}
-      <div
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-        onDrop={handleDrop}
-        className={`
-          flex-1 bg-stone-100/50 rounded-lg border border-stone-200/50 
-          transition-all duration-200 overflow-y-auto p-2
-          ${isOver ? 'bg-stone-200/50 border-stone-300 ring-2 ring-stone-200/50' : ''}
-        `}
-        style={{ minHeight: '400px' }}
-      >
-        <div className="space-y-2">
-          {tarefas.map((tarefa, index) => (
-            <div key={tarefa.id}>
-              {dropIndicatorIndex === index && isOver && (
-                <div className="h-1 bg-stone-900/30 rounded-full my-1" />
-              )}
-              <KanbanCard 
-                tarefa={tarefa}
-                projetoNome={getProjetoNome(tarefa.projeto_id)}
-                onClick={() => onCardClick(tarefa)}
-              />
-            </div>
-          ))}
-          {dropIndicatorIndex === tarefas.length && isOver && (
-            <div className="h-1 bg-stone-900/30 rounded-full my-1" />
-          )}
-          {tarefas.length === 0 && !isDragging && (
-            <div className="flex flex-col items-center justify-center py-8 text-stone-400">
-              <Icon icon="solar:inbox-linear" className="w-8 h-8 mb-2 opacity-50" />
-              <span className="text-xs">Sem tarefas</span>
-            </div>
-          )}
+        <div
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+          className={`
+            flex-1 rounded-2xl border border-dashed p-2 transition-all duration-200 overflow-y-auto
+            ${isOver ? 'border-primary bg-primary/6 shadow-[inset_0_0_0_1px_hsl(var(--primary)/0.1)]' : 'border-border bg-muted/28'}
+          `}
+          style={{ minHeight: '420px' }}
+        >
+          <div className="space-y-3">
+            {tarefas.map((tarefa, index) => (
+              <div key={tarefa.id}>
+                {dropIndicatorIndex === index && isOver && (
+                  <motion.div
+                    layout
+                    className="my-2 h-1.5 rounded-full bg-primary/50"
+                  />
+                )}
+                <KanbanCard
+                  tarefa={tarefa}
+                  projetoNome={getProjetoNome(tarefa.projeto_id)}
+                  onClick={() => onCardClick(tarefa)}
+                />
+              </div>
+            ))}
+            {dropIndicatorIndex === tarefas.length && isOver && (
+              <motion.div layout className="my-2 h-1.5 rounded-full bg-primary/50" />
+            )}
+            {tarefas.length === 0 && !isDragging && (
+              <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border bg-background/80 px-4 py-10 text-center">
+                <Icon icon="solar:inbox-linear" className="mb-3 h-8 w-8 text-muted-foreground/60" />
+                <p className="text-sm font-medium text-foreground">Sem tarefas nesta etapa</p>
+                <p className="mt-1 text-xs text-muted-foreground">Arraste um card para mover o fluxo.</p>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }
