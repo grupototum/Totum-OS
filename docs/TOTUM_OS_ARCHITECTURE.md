@@ -69,3 +69,42 @@ Alexandria should eventually expose exporters for:
 - Kimi context packs;
 - local MCP insertion scripts;
 - skill bundles for external tools.
+
+## Alexandria Knowledge Bridges
+
+Alexandria can receive sanitized knowledge packages from local second-brain systems without ingesting private life data.
+
+The first supported bridge is **Bulma / Logseq local**:
+
+- Bulma remains the personal/local memory layer.
+- Alexandria receives only files exported to `exports/totum-os/`.
+- The bridge records imported sources with `origin = bulma_logseq_bridge`.
+- Red-zone files are blocked before they become Hermione sources.
+
+Privacy zones:
+
+| Zone | Meaning | Action |
+|---|---|---|
+| Green | Business/operational knowledge | Import into Alexandria |
+| Yellow | Personal context allowed as a summary | Import as `personal_allowed` and keep under review |
+| Red | Sensitive personal data | Keep local; do not import |
+
+Recommended package:
+
+```text
+exports/totum-os/
+├── manifest.json
+├── contexto-sanitizado.md
+├── preferencias-permitidas.md
+├── decisoes.md
+└── tags.json
+```
+
+The future Alexandria MCP Server should use the same boundary:
+
+- `alexandria.search`
+- `alexandria.get_context_pack`
+- `alexandria.get_skill`
+- `alexandria.recommend_ai`
+- `alexandria.export_for_ai`
+- `alexandria.ingest_feedback`

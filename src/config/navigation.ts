@@ -31,6 +31,7 @@ import {
   MessageSquareText,
   WandSparkles,
   Workflow,
+  Link2,
 } from "lucide-react";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -116,6 +117,7 @@ export const navigationSections: NavSection[] = [
         { label: "Portal POPs", path: "/alexandria/pops", icon: FileText },
         { label: "Contexto", path: "/alexandria/context", icon: BookOpen },
         { label: "Skills", path: "/alexandria/skills", icon: Lightbulb },
+        { label: "Conexões", path: "/alexandria/bridges", icon: Link2 },
         { label: "Exportadores IA", path: "/alexandria?tab=exports", icon: GitBranch },
       ],
     },

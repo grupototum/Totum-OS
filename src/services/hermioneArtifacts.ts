@@ -209,7 +209,14 @@ export function consolidateSourceInputs(files: HermioneSourceInput[]): HermioneC
 
 export async function createArtifactFromSources(
   files: HermioneSourceInput[],
-  options: { sourceIds?: string[]; type?: HermioneArtifactType; status?: HermioneArtifactStatus } = {}
+  options: {
+    sourceIds?: string[];
+    type?: HermioneArtifactType;
+    status?: HermioneArtifactStatus;
+    scope?: string;
+    metadata?: Record<string, unknown>;
+    changeNote?: string;
+  } = {}
 ): Promise<HermioneArtifact> {
   const consolidation = consolidateSourceInputs(files);
   const artifactType = options.type || consolidation.artifactType;
@@ -218,7 +225,7 @@ export async function createArtifactFromSources(
     title: consolidation.title,
     artifact_type: artifactType,
     status: options.status || "draft",
-    scope: "totum",
+    scope: options.scope || "totum",
     content: artifactType === consolidation.artifactType
       ? consolidation.content
       : convertConsolidationToType(consolidation, artifactType),
@@ -229,6 +236,7 @@ export async function createArtifactFromSources(
       conflicts: consolidation.conflicts,
       gaps: consolidation.gaps,
       analyses: consolidation.analysis,
+      ...(options.metadata || {}),
     },
     version: 1,
   };
@@ -245,7 +253,7 @@ export async function createArtifactFromSources(
     artifact_id: data.id,
     version: 1,
     content: artifactPayload.content,
-    change_note: "Criação a partir do chat consultivo da Hermione",
+    change_note: options.changeNote || "Criação a partir do chat consultivo da Hermione",
     metadata: artifactPayload.metadata,
   });
 

@@ -8,14 +8,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { PageHeader, DataPanel } from '@/components/ui/patterns';
-import { Loader2, RefreshCw, BookOpen, FileText, Users, Zap, ExternalLink, Brain, Upload, Download, GitBranch, Sparkles } from 'lucide-react';
+import { Loader2, RefreshCw, BookOpen, FileText, Users, Zap, ExternalLink, Brain, Upload, Download, GitBranch, Sparkles, Link2 } from 'lucide-react';
 import Dashboard from './Dashboard';
 import ContextHub from './ContextHub';
 
 export default function AlexandriaPage() {
   const { data, isLoading, error, refetch } = useAlexandria();
   const [searchParams] = useSearchParams();
-  const [activeTab, setActiveTab] = useState(searchParams.get('tab') === 'exports' ? 'exports' : 'dashboard');
+  const initialTab = searchParams.get('tab');
+  const [activeTab, setActiveTab] = useState(initialTab === 'exports' || initialTab === 'bridges' ? initialTab : 'dashboard');
   const navigate = useNavigate();
 
   if (isLoading) {
@@ -96,7 +97,7 @@ export default function AlexandriaPage() {
 
         {/* Tabs principais */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-3 md:grid-cols-6">
             <TabsTrigger value="dashboard" className="flex items-center gap-2">
               <Zap className="h-4 w-4" />
               <span className="hidden sm:inline">Biblioteca</span>
@@ -112,6 +113,10 @@ export default function AlexandriaPage() {
             <TabsTrigger value="skills" className="flex items-center gap-2">
               <BookOpen className="h-4 w-4" />
               <span className="hidden sm:inline">Skills Center</span>
+            </TabsTrigger>
+            <TabsTrigger value="bridges" className="flex items-center gap-2">
+              <Link2 className="h-4 w-4" />
+              <span className="hidden sm:inline">Conexões</span>
             </TabsTrigger>
             <TabsTrigger value="exports" className="flex items-center gap-2">
               <Download className="h-4 w-4" />
@@ -169,6 +174,28 @@ export default function AlexandriaPage() {
                 </CardContent>
               </Card>
             </div>
+          </TabsContent>
+
+          <TabsContent value="bridges" className="mt-6">
+            <Card className="border-primary/20 bg-card">
+              <CardContent className="flex flex-col gap-4 p-5 md:flex-row md:items-center md:justify-between">
+                <div className="flex items-start gap-3">
+                  <div className="grid h-10 w-10 shrink-0 place-items-center border border-primary/30 bg-primary/10 text-primary">
+                    <Link2 className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <p className="font-semibold">Conectar Segundo Cérebro sem vazar vida pessoal</p>
+                    <p className="mt-1 max-w-3xl text-sm text-muted-foreground">
+                      Importe apenas pacotes sanitizados da Bulma/Logseq, classifique verde/amarelo/vermelho e crie uma fonte rastreável na Alexandria.
+                    </p>
+                  </div>
+                </div>
+                <Button onClick={() => navigate('/alexandria/bridges')} className="shrink-0 gap-2">
+                  <ExternalLink className="h-4 w-4" />
+                  Abrir Conexões
+                </Button>
+              </CardContent>
+            </Card>
           </TabsContent>
 
           <TabsContent value="exports" className="mt-6">

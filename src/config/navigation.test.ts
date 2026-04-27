@@ -37,10 +37,10 @@ describe("navigation config", () => {
     expect(agentes?.expandable?.subItems).toHaveLength(7);
   });
 
-  it("Alexandria has expandable with 6 sub-items", () => {
+  it("Alexandria has expandable with 7 sub-items", () => {
     const conhecimento = navigationSections.find((s) => s.id === "conhecimento");
     expect(conhecimento?.expandable).toBeDefined();
-    expect(conhecimento?.expandable?.subItems).toHaveLength(6);
+    expect(conhecimento?.expandable?.subItems).toHaveLength(7);
   });
 
   it("Fluxos has expandable with 4 sub-items", () => {
@@ -67,6 +67,7 @@ describe("navigation config", () => {
     expect(paths).toContain("/agents");
     expect(paths).toContain("/ai-command-center?agent=radar");
     expect(paths).toContain("/hermione");
+    expect(paths).toContain("/alexandria/bridges");
     expect(paths).toContain("/tasks");
     expect(paths).toContain("/docs");
     expect(paths.length).toBeGreaterThan(20);
