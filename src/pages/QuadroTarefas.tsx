@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icon } from '@iconify/react';
 import AppLayout from '@/components/layout/AppLayout';
@@ -12,7 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardContent } from '@/components/ui/card';
-import { EmptyState, PageHeader, SectionHeader, Toolbar } from '@/components/ui/patterns';
+import { DataPanel, EmptyState, MetricCard, PageHeader, SectionHeader, Toolbar } from '@/components/ui/patterns';
 
 type ViewType = 'kanban' | 'lista';
 
@@ -33,6 +33,7 @@ const PRIORIDADE_BADGE_VARIANTS: Record<string, 'error' | 'warning' | 'default'>
 export default function QuadroTarefas() {
   const { user } = useAuth();
   const pageTransition = usePageTransition();
+  const hasInitializedResponsiveView = useRef(false);
   const {
     tarefas,
     projetos,
@@ -56,6 +57,13 @@ export default function QuadroTarefas() {
   const [tarefaSelecionada, setTarefaSelecionada] = useState<Tarefa | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
+
+  useEffect(() => {
+    if (hasInitializedResponsiveView.current) return;
+
+    setViewType(window.innerWidth < 768 ? 'lista' : 'kanban');
+    hasInitializedResponsiveView.current = true;
+  }, []);
 
   const tarefasFiltradas = useMemo(() => {
     return tarefas.filter((tarefa) => {
@@ -101,8 +109,13 @@ export default function QuadroTarefas() {
     const concluidas = tarefas.filter((t) => t.status === 'concluida').length;
     const emAndamento = tarefas.filter((t) => t.status === 'em_andamento').length;
     const pendentes = tarefas.filter((t) => t.status === 'pendente').length;
+    const atrasadas = tarefas.filter((t) => {
+      const dataLimite = t.data_limite || t.deadline;
+      return Boolean(dataLimite) && new Date(dataLimite!) < new Date() && t.status !== 'concluida';
+    }).length;
+    const semProjeto = tarefas.filter((t) => !t.projeto_id).length;
     const progresso = total > 0 ? Math.round((concluidas / total) * 100) : 0;
-    return { total, concluidas, emAndamento, pendentes, progresso };
+    return { total, concluidas, emAndamento, pendentes, atrasadas, semProjeto, progresso };
   }, [tarefas]);
 
   const projetosFiltrados = useMemo(() => {
@@ -155,6 +168,21 @@ export default function QuadroTarefas() {
   const temFiltrosAtivos =
     searchQuery || filtroProjeto !== 'todos' || filtroStatus !== 'todos' || filtroPrioridade !== 'todas';
 
+  const resumoFiltros = [
+    searchQuery ? `Busca: "${searchQuery}"` : null,
+    filtroProjeto === 'sem_projeto'
+      ? 'Projeto: sem projeto'
+      : filtroProjeto !== 'todos'
+        ? `Projeto: ${projetos.find((projeto) => projeto.id === filtroProjeto)?.nome || 'selecionado'}`
+        : null,
+    filtroStatus !== 'todos'
+      ? `Status: ${COLUNAS_KANBAN.find((coluna) => coluna.id === filtroStatus)?.titulo || filtroStatus}`
+      : null,
+    filtroPrioridade !== 'todas'
+      ? `Prioridade: ${PRIORIDADES.find((prioridade) => prioridade.id === filtroPrioridade)?.label || filtroPrioridade}`
+      : null,
+  ].filter(Boolean) as string[];
+
   if (loading) {
     return (
       <AppLayout>
@@ -201,27 +229,23 @@ export default function QuadroTarefas() {
           />
 
           <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-            <Card>
-              <CardContent className="space-y-2 p-5">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-muted-foreground">Total</p>
-                <p className="text-3xl font-semibold text-foreground">{stats.total}</p>
-                <p className="text-sm text-muted-foreground">Volume geral monitorado neste board.</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="space-y-2 p-5">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-muted-foreground">Pendentes</p>
-                <p className="text-3xl font-semibold text-foreground">{stats.pendentes}</p>
-                <p className="text-sm text-muted-foreground">Itens que ainda nao entraram em execucao.</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="space-y-2 p-5">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-muted-foreground">Em andamento</p>
-                <p className="text-3xl font-semibold text-foreground">{stats.emAndamento}</p>
-                <p className="text-sm text-muted-foreground">Frente ativa que merece acompanhamento diario.</p>
-              </CardContent>
-            </Card>
+            <MetricCard
+              label="Total"
+              value={stats.total}
+              description="Volume geral monitorado neste board."
+            />
+            <MetricCard
+              label="Pendentes"
+              value={stats.pendentes}
+              description="Itens que ainda nao entraram em execucao."
+              tone="amber"
+            />
+            <MetricCard
+              label="Em andamento"
+              value={stats.emAndamento}
+              description="Frentes ativas que merecem acompanhamento diario."
+              tone="sky"
+            />
             <Card>
               <CardContent className="flex items-center justify-between gap-4 p-5">
                 <div className="space-y-2">
@@ -250,6 +274,59 @@ export default function QuadroTarefas() {
                 </div>
               </CardContent>
             </Card>
+          </section>
+
+          <section className="grid gap-4 xl:grid-cols-[minmax(0,1.4fr)_minmax(0,0.9fr)]">
+            <DataPanel title="Leitura rapida do board">
+              <div className="grid gap-3 md:grid-cols-3">
+                <div className="rounded-xl border border-border/70 bg-muted/35 p-4">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
+                    Tarefas concluidas
+                  </p>
+                  <p className="mt-2 text-2xl font-semibold text-foreground">{stats.concluidas}</p>
+                  <p className="mt-1 text-sm text-muted-foreground">Entrega acumulada nesta janela.</p>
+                </div>
+                <div className="rounded-xl border border-border/70 bg-muted/35 p-4">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
+                    Atrasadas
+                  </p>
+                  <p className="mt-2 text-2xl font-semibold text-foreground">{stats.atrasadas}</p>
+                  <p className="mt-1 text-sm text-muted-foreground">Demandas que pedem replanejamento imediato.</p>
+                </div>
+                <div className="rounded-xl border border-border/70 bg-muted/35 p-4">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
+                    Sem projeto
+                  </p>
+                  <p className="mt-2 text-2xl font-semibold text-foreground">{stats.semProjeto}</p>
+                  <p className="mt-1 text-sm text-muted-foreground">Itens sem amarracao formal no portifolio.</p>
+                </div>
+              </div>
+            </DataPanel>
+
+            <DataPanel title="Ritmo operacional">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between gap-3 rounded-xl border border-border/70 bg-muted/35 px-4 py-3">
+                  <div>
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
+                      Modo atual
+                    </p>
+                    <p className="mt-1 text-sm font-medium text-foreground">
+                      {viewType === 'kanban' ? 'Kanban para fluxo e gargalos' : 'Lista para triagem detalhada'}
+                    </p>
+                  </div>
+                  <Badge variant="glass-dark">{viewType}</Badge>
+                </div>
+                <div className="flex items-center justify-between gap-3 rounded-xl border border-border/70 bg-muted/35 px-4 py-3">
+                  <div>
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
+                      Projetos ativos no filtro
+                    </p>
+                    <p className="mt-1 text-sm font-medium text-foreground">{projetosFiltrados.length} projetos</p>
+                  </div>
+                  <Badge variant="outline">{tarefasFiltradas.length} cards</Badge>
+                </div>
+              </div>
+            </DataPanel>
           </section>
 
           <section className="space-y-4">
@@ -310,6 +387,16 @@ export default function QuadroTarefas() {
                 </div>
               </div>
             </Toolbar>
+
+            {temFiltrosAtivos && (
+              <div className="flex flex-wrap items-center gap-2">
+                {resumoFiltros.map((filtro) => (
+                  <Badge key={filtro} variant="outline">
+                    {filtro}
+                  </Badge>
+                ))}
+              </div>
+            )}
 
             <AnimatePresence initial={false}>
               {showFilters && (
@@ -410,75 +497,62 @@ export default function QuadroTarefas() {
             </section>
           ) : (
             <Card>
-              <CardContent className="p-0">
-                <div className="overflow-x-auto">
-                  <table className="min-w-full divide-y divide-border">
-                    <thead className="bg-muted/40">
-                      <tr>
-                        <th className="px-5 py-4 text-left text-[10px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
-                          Tarefa
-                        </th>
-                        <th className="px-5 py-4 text-left text-[10px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
-                          Status
-                        </th>
-                        <th className="px-5 py-4 text-left text-[10px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
-                          Prioridade
-                        </th>
-                        <th className="px-5 py-4 text-left text-[10px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
-                          Projeto
-                        </th>
-                        <th className="px-5 py-4 text-left text-[10px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
-                          Prazo
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-border/70">
-                      {tarefasFiltradas.map((tarefa) => {
-                        const status = COLUNAS_KANBAN.find((c) => c.id === tarefa.status);
-                        const prioridade = PRIORIDADES.find((p) => p.id === tarefa.prioridade);
-                        const projeto = projetos.find((p) => p.id === tarefa.projeto_id);
-                        const dataLimite = tarefa.data_limite || tarefa.deadline;
+              <CardContent className="space-y-3 p-3">
+                {tarefasFiltradas.map((tarefa) => {
+                  const status = COLUNAS_KANBAN.find((c) => c.id === tarefa.status);
+                  const prioridade = PRIORIDADES.find((p) => p.id === tarefa.prioridade);
+                  const projeto = projetos.find((p) => p.id === tarefa.projeto_id);
+                  const dataLimite = tarefa.data_limite || tarefa.deadline;
 
-                        return (
-                          <tr
-                            key={tarefa.id}
-                            onClick={() => handleCardClick(tarefa)}
-                            className="cursor-pointer transition-colors hover:bg-muted/50"
-                          >
-                            <td className="px-5 py-4 align-top">
-                              <div className="space-y-1">
-                                <p className="font-medium text-foreground">{tarefa.titulo}</p>
-                                {tarefa.descricao && (
-                                  <p className="line-clamp-2 text-sm text-muted-foreground">{tarefa.descricao}</p>
-                                )}
-                              </div>
-                            </td>
-                            <td className="px-5 py-4 align-top">
-                              {status && (
-                                <Badge variant={STATUS_BADGE_VARIANTS[tarefa.status]}>
-                                  {status.titulo}
-                                </Badge>
-                              )}
-                            </td>
-                            <td className="px-5 py-4 align-top">
-                              {prioridade && (
-                                <Badge variant={PRIORIDADE_BADGE_VARIANTS[tarefa.prioridade] || 'outline'}>
-                                  {prioridade.label}
-                                </Badge>
-                              )}
-                            </td>
-                            <td className="px-5 py-4 align-top text-sm text-muted-foreground">
-                              {projeto?.nome || 'Sem projeto'}
-                            </td>
-                            <td className="px-5 py-4 align-top text-sm text-muted-foreground">
+                  return (
+                    <button
+                      key={tarefa.id}
+                      type="button"
+                      onClick={() => handleCardClick(tarefa)}
+                      className="w-full rounded-xl border border-border/70 bg-muted/20 p-4 text-left transition-all duration-300 hover:-translate-y-px hover:border-primary/35 hover:bg-card"
+                    >
+                      <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                        <div className="min-w-0 space-y-2">
+                          <div className="flex flex-wrap items-center gap-2">
+                            {status && (
+                              <Badge variant={STATUS_BADGE_VARIANTS[tarefa.status]}>
+                                {status.titulo}
+                              </Badge>
+                            )}
+                            {prioridade && (
+                              <Badge variant={PRIORIDADE_BADGE_VARIANTS[tarefa.prioridade] || 'outline'}>
+                                {prioridade.label}
+                              </Badge>
+                            )}
+                            <Badge variant="outline">{projeto?.nome || 'Sem projeto'}</Badge>
+                          </div>
+                          <div className="space-y-1">
+                            <p className="font-medium text-foreground">{tarefa.titulo}</p>
+                            {tarefa.descricao && (
+                              <p className="line-clamp-2 text-sm text-muted-foreground">{tarefa.descricao}</p>
+                            )}
+                          </div>
+                        </div>
+                        <div className="grid gap-2 text-sm text-muted-foreground sm:grid-cols-2 lg:min-w-[260px]">
+                          <div className="rounded-lg border border-border/70 bg-background/80 px-3 py-2">
+                            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                              Prazo
+                            </p>
+                            <p className="mt-1 text-foreground">
                               {dataLimite ? new Date(dataLimite).toLocaleDateString('pt-BR') : 'Sem prazo'}
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </div>
+                            </p>
+                          </div>
+                          <div className="rounded-lg border border-border/70 bg-background/80 px-3 py-2">
+                            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                              Responsavel
+                            </p>
+                            <p className="mt-1 text-foreground">{tarefa.responsavel || 'Nao atribuido'}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </button>
+                  );
+                })}
               </CardContent>
             </Card>
           )}
