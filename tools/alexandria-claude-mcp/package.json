@@ -1,0 +1,17 @@
+{
+  "name": "@totum-os/alexandria-claude-mcp",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Local MCP bridge for Claude Desktop to consult Alexandria in Totum OS.",
+  "bin": {
+    "alexandria-claude-mcp": "./server.mjs"
+  },
+  "scripts": {
+    "start": "node server.mjs",
+    "check": "node --check server.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
