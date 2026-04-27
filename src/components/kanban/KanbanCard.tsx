@@ -40,11 +40,11 @@ const getPrioridadeColor = (prioridade: string) => {
 
 export function KanbanCard({ tarefa, projetoNome, onClick }: KanbanCardProps) {
   const [isDragging, setIsDragging] = useState(false);
-  
+
   const subtarefasConcluidas = (tarefa.subtarefas || []).filter(st => st.concluida).length;
   const totalSubtarefas = (tarefa.subtarefas || []).length;
-  const progressoSubtarefas = totalSubtarefas > 0 
-    ? (subtarefasConcluidas / totalSubtarefas) * 100 
+  const progressoSubtarefas = totalSubtarefas > 0
+    ? (subtarefasConcluidas / totalSubtarefas) * 100
     : 0;
 
   const handleDragStart = (e: React.DragEvent) => {
@@ -81,7 +81,7 @@ export function KanbanCard({ tarefa, projetoNome, onClick }: KanbanCardProps) {
       onDragEnd={handleDragEnd}
       onClick={onClick}
       className={`
-        relative cursor-pointer overflow-hidden rounded-xl border border-border bg-card p-4 group
+        group relative cursor-pointer overflow-hidden rounded-xl border border-border bg-card p-4
         transition-all duration-300 hover:-translate-y-px hover:border-primary/40
         hover:shadow-[0_18px_50px_-38px_hsl(var(--primary)/0.55)]
         ${isDragging ? 'opacity-50 rotate-2' : ''}
@@ -89,22 +89,36 @@ export function KanbanCard({ tarefa, projetoNome, onClick }: KanbanCardProps) {
     >
       <div className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary/75 via-primary/10 to-transparent opacity-70" />
 
-      <div className="mb-3 flex items-center justify-between gap-3">
-        {projetoNome && (
-          <span className="max-w-[65%] truncate text-[10px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
-            {projetoNome}
-          </span>
-        )}
-        <div className="ml-auto flex items-center gap-1">
+      <div className="mb-3 flex items-start justify-between gap-3">
+        <div className="min-w-0 space-y-2">
+          {projetoNome ? (
+            <span className="block max-w-[150px] truncate text-[10px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
+              {projetoNome}
+            </span>
+          ) : (
+            <span className="block text-[10px] font-semibold uppercase tracking-[0.24em] text-muted-foreground/70">
+              Backlog geral
+            </span>
+          )}
+          {isAtrasada && (
+            <Badge variant="error" className="px-2 py-1 text-[9px] tracking-[0.18em]">
+              Em atraso
+            </Badge>
+          )}
+        </div>
+        <div className="ml-auto flex items-center gap-1 rounded-full border border-border/70 bg-muted/35 px-2 py-1">
           <Icon
             icon={getPrioridadeIcon(tarefa.prioridade)}
             className="h-3.5 w-3.5"
             style={{ color: getPrioridadeColor(tarefa.prioridade) }}
           />
+          <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+            {tarefa.prioridade}
+          </span>
         </div>
       </div>
 
-      <h4 className="mb-2 line-clamp-2 text-sm font-medium leading-snug text-foreground">
+      <h4 className="mb-2 line-clamp-2 text-sm font-semibold leading-snug text-foreground">
         {tarefa.titulo}
       </h4>
 
@@ -132,11 +146,11 @@ export function KanbanCard({ tarefa, projetoNome, onClick }: KanbanCardProps) {
 
       {totalSubtarefas > 0 && (
         <div className="mb-4">
-          <div className="mb-1 flex items-center justify-between">
-            <span className="text-[10px] text-muted-foreground">
+          <div className="mb-1 flex items-center justify-between gap-2">
+            <span className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
               {subtarefasConcluidas}/{totalSubtarefas} subtarefas
             </span>
-            <span className="text-[10px] text-muted-foreground">{Math.round(progressoSubtarefas)}%</span>
+            <span className="text-[10px] font-medium text-muted-foreground">{Math.round(progressoSubtarefas)}%</span>
           </div>
           <div className="h-1.5 overflow-hidden rounded-full bg-muted">
             <div

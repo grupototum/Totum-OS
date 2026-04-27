@@ -29,6 +29,7 @@ export function KanbanColumn({
 }: KanbanColumnProps) {
   const [isOver, setIsOver] = useState(false);
   const [dropIndicatorIndex, setDropIndicatorIndex] = useState<number | null>(null);
+  const concluidas = tarefas.filter((tarefa) => tarefa.status === 'concluida').length;
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
@@ -95,11 +96,24 @@ export function KanbanColumn({
                 {titulo}
               </h3>
               <p className="text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
-                Etapa do fluxo
+                {tarefas.length === 0 ? 'Aguardando entrada' : `${tarefas.length} itens nesta etapa`}
               </p>
             </div>
           </div>
           <Badge variant="outline">{tarefas.length}</Badge>
+        </div>
+
+        <div className="grid grid-cols-2 gap-2">
+          <div className="rounded-lg border border-border/70 bg-muted/28 px-3 py-2">
+            <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">Volume</p>
+            <p className="mt-1 text-sm font-medium text-foreground">{tarefas.length} cards</p>
+          </div>
+          <div className="rounded-lg border border-border/70 bg-muted/28 px-3 py-2">
+            <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">Sinal</p>
+            <p className="mt-1 text-sm font-medium text-foreground">
+              {id === 'concluida' ? `${concluidas} finalizadas` : 'Arraste para reordenar'}
+            </p>
+          </div>
         </div>
 
         <div
@@ -107,7 +121,7 @@ export function KanbanColumn({
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
           className={`
-            flex-1 rounded-2xl border border-dashed p-2 transition-all duration-200 overflow-y-auto
+            flex-1 overflow-y-auto rounded-2xl border border-dashed p-2 transition-all duration-200
             ${isOver ? 'border-primary bg-primary/6 shadow-[inset_0_0_0_1px_hsl(var(--primary)/0.1)]' : 'border-border bg-muted/28'}
           `}
           style={{ minHeight: '420px' }}
