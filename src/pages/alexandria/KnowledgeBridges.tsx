@@ -23,6 +23,7 @@ import {
   CheckCircle2,
   Download,
   FileCheck2,
+  FolderOpen,
   GitBranch,
   Link2,
   Lock,
@@ -54,6 +55,7 @@ const zoneCopy: Record<BridgePrivacyZone, { title: string; description: string }
 
 export default function KnowledgeBridges() {
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const folderInputRef = useRef<HTMLInputElement | null>(null);
   const [bridgePackage, setBridgePackage] = useState<AlexandriaBridgePackage | null>(null);
   const [isImporting, setIsImporting] = useState(false);
 
@@ -84,6 +86,15 @@ export default function KnowledgeBridges() {
     const nextPackage = analyzeBridgeFiles(contents);
     setBridgePackage(nextPackage);
     toast.success("Pacote analisado pela ponte da Alexandria.");
+  }
+
+  function openFolderPicker() {
+    const input = folderInputRef.current;
+    if (!input) return;
+
+    input.setAttribute("webkitdirectory", "");
+    input.setAttribute("directory", "");
+    input.click();
   }
 
   async function handleImport() {
@@ -126,7 +137,11 @@ export default function KnowledgeBridges() {
             <>
               <Button variant="outline" onClick={() => inputRef.current?.click()} className="gap-2">
                 <Upload className="h-4 w-4" />
-                Enviar pacote
+                Enviar arquivos
+              </Button>
+              <Button variant="outline" onClick={openFolderPicker} className="gap-2">
+                <FolderOpen className="h-4 w-4" />
+                Abrir pasta
               </Button>
               <Button
                 variant="outline"
@@ -147,6 +162,13 @@ export default function KnowledgeBridges() {
           type="file"
           multiple
           accept=".md,.markdown,.txt,.json"
+          className="hidden"
+          onChange={(event) => handleFiles(event.target.files)}
+        />
+        <input
+          ref={folderInputRef}
+          type="file"
+          multiple
           className="hidden"
           onChange={(event) => handleFiles(event.target.files)}
         />
@@ -247,7 +269,7 @@ export default function KnowledgeBridges() {
                 <EmptyState
                   icon={Upload}
                   title="Nenhum pacote analisado"
-                  description="Escolha arquivos .md, .txt ou .json exportados pela Bulma. A Alexandria classifica a privacidade antes de salvar."
+                  description="Escolha arquivos ou uma pasta exportada pela Bulma. A Alexandria lê .md, .txt e .json, preserva os caminhos da pasta e classifica a privacidade antes de salvar."
                   actionLabel="Selecionar arquivos"
                   onAction={() => inputRef.current?.click()}
                 />
@@ -288,7 +310,11 @@ export default function KnowledgeBridges() {
                   <div className="flex flex-wrap justify-end gap-2 pt-2">
                     <Button variant="outline" onClick={() => inputRef.current?.click()} className="gap-2">
                       <Upload className="h-4 w-4" />
-                      Trocar pacote
+                      Trocar arquivos
+                    </Button>
+                    <Button variant="outline" onClick={openFolderPicker} className="gap-2">
+                      <FolderOpen className="h-4 w-4" />
+                      Trocar pasta
                     </Button>
                     <Button
                       onClick={handleImport}
