@@ -18,6 +18,14 @@ export interface HermioneSourceInput {
   author?: string;
 }
 
+export interface SanitizedHermioneSourceInput extends HermioneSourceInput {
+  originalContent: string;
+  contentHash: string;
+  sanitizationWarnings: string[];
+  privacyZone: "green" | "yellow" | "red";
+  privacyReason: string;
+}
+
 export interface HermioneSource {
   id: string;
   title: string;
@@ -73,6 +81,36 @@ export interface HermioneConsolidation {
   gaps: string[];
 }
 
+export interface HermioneDuplicateMatch {
+  name: string;
+  match: string;
+  reason: string;
+  severity: "exact" | "near";
+}
+
+export interface HermioneConflictReport {
+  topic: string;
+  severity: "medium" | "high";
+  sources: string[];
+  recommendation: string;
+}
+
+export interface HermioneAssimilationPreview {
+  generatedAt: string;
+  files: SanitizedHermioneSourceInput[];
+  allowedFiles: SanitizedHermioneSourceInput[];
+  blockedFiles: SanitizedHermioneSourceInput[];
+  analyses: HermioneSourceAnalysis[];
+  exactDuplicates: HermioneDuplicateMatch[];
+  nearDuplicates: HermioneDuplicateMatch[];
+  conflicts: HermioneConflictReport[];
+  gaps: string[];
+  relatedArtifacts: HermioneArtifact[];
+  recommendedStatus: HermioneArtifactStatus;
+  recommendedArtifactType: HermioneArtifactType;
+  reportMarkdown: string;
+}
+
 const STOP_WORDS = new Set([
   "para",
   "com",
@@ -98,6 +136,21 @@ const STOP_WORDS = new Set([
   "into",
 ]);
 
+const SENSITIVE_SIGNALS = [
+  "senha",
+  "password",
+  "token:",
+  "access token",
+  "bearer ",
+  "api_key",
+  "secret",
+  "service_role",
+  "cpf",
+  "cartao",
+  "cartão",
+  "dados banc",
+];
+
 export async function hashContent(content: string): Promise<string> {
   if (globalThis.crypto?.subtle) {
     const bytes = new TextEncoder().encode(content);
@@ -113,6 +166,79 @@ export async function hashContent(content: string): Promise<string> {
     hash |= 0;
   }
   return `fallback-${Math.abs(hash)}`;
+}
+
+export async function sanitizeSourceInput(file: HermioneSourceInput): Promise<SanitizedHermioneSourceInput> {
+  const normalizedLineEndings = file.content.replace(/\r\n?/g, "\n");
+  const warnings: string[] = [];
+  let content = removeUnsafeControlCharacters(normalizedLineEndings, warnings);
+
+  if (content !== file.content) warnings.push("Conteúdo normalizado antes de salvar.");
+  content = content.normalize("NFC");
+
+  const privacy = detectPrivacyZone(file.name, content);
+
+  return {
+    ...file,
+    content,
+    originalContent: file.content,
+    contentHash: await hashContent(content),
+    sanitizationWarnings: unique(warnings),
+    privacyZone: privacy.privacyZone,
+    privacyReason: privacy.reason,
+  };
+}
+
+function removeUnsafeControlCharacters(content: string, warnings: string[]): string {
+  let output = "";
+  for (const char of content) {
+    const code = char.charCodeAt(0);
+    const isUnsafeControl = (code < 32 && code !== 9 && code !== 10 && code !== 13) || code === 127;
+    if (isUnsafeControl) {
+      warnings.push(`Caractere de controle removido: U+${code.toString(16).padStart(4, "0")}`);
+      continue;
+    }
+    output += char;
+  }
+  return output;
+}
+
+export async function simulateAssimilation(files: HermioneSourceInput[]): Promise<HermioneAssimilationPreview> {
+  const sanitizedFiles = await Promise.all(files.map(sanitizeSourceInput));
+  const allowedFiles = sanitizedFiles.filter((file) => file.privacyZone !== "red");
+  const blockedFiles = sanitizedFiles.filter((file) => file.privacyZone === "red");
+  const analyses = allowedFiles.map((file) => analyzeSourceContent(file.name, file.content));
+  const existingSources = await findExistingSources(allowedFiles);
+  const relatedArtifacts = await findRelatedArtifacts(analyses);
+  const exactDuplicates = findExactDuplicates(allowedFiles, existingSources);
+  const nearDuplicates = findNearDuplicates(analyses, relatedArtifacts, allowedFiles, exactDuplicates);
+  const conflicts = findAssimilationConflicts(analyses, relatedArtifacts);
+  const gaps = unique(analyses.flatMap((analysis) => analysis.gaps)).slice(0, 12);
+  const recommendedArtifactType = chooseArtifactType(analyses.length ? analyses : [{ recommendedOutput: "document" } as HermioneSourceAnalysis]);
+  const recommendedStatus: HermioneArtifactStatus =
+    blockedFiles.length || conflicts.some((conflict) => conflict.severity === "high") || nearDuplicates.length
+      ? "review"
+      : "draft";
+
+  const previewBase = {
+    generatedAt: new Date().toISOString(),
+    files: sanitizedFiles,
+    allowedFiles,
+    blockedFiles,
+    analyses,
+    exactDuplicates,
+    nearDuplicates,
+    conflicts,
+    gaps,
+    relatedArtifacts,
+    recommendedStatus,
+    recommendedArtifactType,
+  };
+
+  return {
+    ...previewBase,
+    reportMarkdown: renderAssimilationReport(previewBase),
+  };
 }
 
 export function analyzeSourceContent(name: string, content: string): HermioneSourceAnalysis {
@@ -150,17 +276,21 @@ export function analyzeSourceContent(name: string, content: string): HermioneSou
 }
 
 export async function createSources(files: HermioneSourceInput[]): Promise<HermioneSource[]> {
-  const rows = await Promise.all(
-    files.map(async (file) => {
+  const sanitizedFiles = await Promise.all(files.map(sanitizeSourceInput));
+  const allowedFiles = sanitizedFiles.filter((file) => file.privacyZone !== "red");
+  const rowsByHash = new Map<string, Record<string, unknown>>();
+
+  for (const file of allowedFiles) {
       const analysis = analyzeSourceContent(file.name, file.content);
-      return {
+      if (rowsByHash.has(file.contentHash)) continue;
+      rowsByHash.set(file.contentHash, {
         title: analysis.title,
         file_name: file.name,
-        source_type: file.name.toLowerCase().endsWith(".md") ? "markdown" : "text",
+        source_type: file.name.toLowerCase().match(/\.(md|markdown)$/) ? "markdown" : "text",
         origin: file.origin || "upload",
         author: file.author || inferAuthor(file.name, file.content),
         content: file.content,
-        content_hash: await hashContent(file.content),
+        content_hash: file.contentHash,
         detected_type: analysis.detectedType,
         tags: analysis.tags,
         metadata: {
@@ -171,10 +301,17 @@ export async function createSources(files: HermioneSourceInput[]): Promise<Hermi
           gaps: analysis.gaps,
           conflicts: analysis.conflicts,
           recommendedOutput: analysis.recommendedOutput,
+          originalName: file.name,
+          privacyZone: file.privacyZone,
+          privacyReason: file.privacyReason,
+          sanitizationWarnings: file.sanitizationWarnings,
         },
-      };
-    })
-  );
+      });
+  }
+
+  const rows = Array.from(rowsByHash.values());
+
+  if (!rows.length) return [];
 
   const { data, error } = await (supabase as any)
     .from("hermione_sources")
@@ -183,6 +320,69 @@ export async function createSources(files: HermioneSourceInput[]): Promise<Hermi
 
   if (error) throw new Error(`Não consegui salvar as fontes da Hermione: ${error.message}`);
   return (data || []) as HermioneSource[];
+}
+
+export async function assimilatePreview(preview: HermioneAssimilationPreview): Promise<{
+  sources: HermioneSource[];
+  artifact: HermioneArtifact;
+}> {
+  if (!preview.allowedFiles.length) {
+    throw new Error("Nenhum arquivo permitido para assimilar na Alexandria.");
+  }
+
+  const files = preview.allowedFiles
+    .filter((file) => !preview.exactDuplicates.some((duplicate) => duplicate.name === file.name))
+    .map(({ name, content, origin, author }) => ({ name, content, origin, author }));
+
+  const filesToSave = files.length ? files : preview.allowedFiles.map(({ name, content, origin, author }) => ({ name, content, origin, author }));
+  const sources = await createSources(filesToSave);
+  const artifact = await createArtifactFromSources(filesToSave, {
+    sourceIds: sources.map((source) => source.id),
+    type: preview.recommendedArtifactType,
+    status: preview.recommendedStatus,
+    changeNote: "Assimilação após simulação da Hermione",
+    metadata: {
+      assimilationPreview: {
+        generatedAt: preview.generatedAt,
+        exactDuplicates: preview.exactDuplicates,
+        nearDuplicates: preview.nearDuplicates,
+        conflicts: preview.conflicts,
+        blockedFiles: preview.blockedFiles.map((file) => ({ name: file.name, reason: file.privacyReason })),
+        relatedArtifacts: preview.relatedArtifacts.map((artifact) => ({
+          id: artifact.id,
+          title: artifact.title,
+          status: artifact.status,
+          artifact_type: artifact.artifact_type,
+        })),
+      },
+      assimilationReport: preview.reportMarkdown,
+    },
+  });
+
+  await logConsultation({
+    query: `Relatório de assimilação: ${preview.allowedFiles.map((file) => file.name).join(", ")}`,
+    response: preview.reportMarkdown,
+    sourceIds: sources.map((source) => source.id),
+    artifactIds: [artifact.id],
+    metadata: {
+      exactDuplicates: preview.exactDuplicates.length,
+      nearDuplicates: preview.nearDuplicates.length,
+      conflicts: preview.conflicts.length,
+      blockedFiles: preview.blockedFiles.length,
+    },
+  });
+
+  return { sources, artifact };
+}
+
+export function downloadAssimilationReport(
+  preview: HermioneAssimilationPreview,
+  format: "markdown" | "json" = "markdown"
+) {
+  const body = format === "json" ? JSON.stringify(preview, null, 2) : preview.reportMarkdown;
+  const type = format === "json" ? "application/json" : "text/markdown";
+  const extension = format === "json" ? "json" : "md";
+  downloadBlob(body, `relatorio-assimilacao-hermione.${extension}`, type);
 }
 
 export function consolidateSourceInputs(files: HermioneSourceInput[]): HermioneConsolidation {
@@ -311,15 +511,254 @@ export function downloadArtifact(artifact: HermioneArtifact, format: "markdown" 
   const body = format === "json" ? JSON.stringify(artifact, null, 2) : artifact.content;
   const type = format === "json" ? "application/json" : "text/markdown";
   const extension = format === "json" ? "json" : "md";
+  downloadBlob(body, `${slugify(artifact.title)}.${extension}`, type);
+}
+
+function downloadBlob(body: string, name: string, type: string) {
   const blob = new Blob([body], { type });
   const url = URL.createObjectURL(blob);
   const anchor = document.createElement("a");
   anchor.href = url;
-  anchor.download = `${slugify(artifact.title)}.${extension}`;
+  anchor.download = name;
   document.body.appendChild(anchor);
   anchor.click();
   anchor.remove();
   URL.revokeObjectURL(url);
+}
+
+function detectPrivacyZone(name: string, content: string): Pick<SanitizedHermioneSourceInput, "privacyZone" | "privacyReason"> {
+  const text = `${name}\n${content}`.toLowerCase();
+  const signal = SENSITIVE_SIGNALS.find((item) => text.includes(item));
+  if (signal) {
+    return {
+      privacyZone: "red",
+      privacyReason: `Sinal sensível detectado: ${signal}.`,
+    };
+  }
+
+  if (/pessoal|rotina|prefer[eê]ncia|logseq|journal|di[aá]rio/i.test(text)) {
+    return {
+      privacyZone: "yellow",
+      privacyReason: "Contexto pessoal/operacional permitido somente com revisão.",
+    };
+  }
+
+  return {
+    privacyZone: "green",
+    privacyReason: "Nenhum sinal sensível conhecido detectado.",
+  };
+}
+
+async function findExistingSources(files: SanitizedHermioneSourceInput[]): Promise<HermioneSource[]> {
+  const hashes = unique(files.map((file) => file.contentHash));
+  if (!hashes.length) return [];
+
+  const { data, error } = await (supabase as any)
+    .from("hermione_sources")
+    .select("*")
+    .in("content_hash", hashes);
+
+  if (error) {
+    console.warn("Hermione sources unavailable for preview:", error.message);
+    return [];
+  }
+
+  return (data || []) as HermioneSource[];
+}
+
+async function findRelatedArtifacts(analyses: HermioneSourceAnalysis[]): Promise<HermioneArtifact[]> {
+  const query = unique(analyses.flatMap((analysis) => [analysis.title, ...analysis.tags])).slice(0, 6);
+  if (!query.length) return searchArtifacts("", 8);
+
+  const related = await Promise.all(query.map((item) => searchArtifacts(item, 4)));
+  const byId = new Map<string, HermioneArtifact>();
+  related.flat().forEach((artifact) => byId.set(artifact.id, artifact));
+  return Array.from(byId.values()).slice(0, 10);
+}
+
+function findExactDuplicates(
+  files: SanitizedHermioneSourceInput[],
+  existingSources: HermioneSource[]
+): HermioneDuplicateMatch[] {
+  const matches: HermioneDuplicateMatch[] = [];
+  const seen = new Map<string, string>();
+  const existingByHash = new Map(existingSources.map((source) => [source.content_hash, source]));
+
+  files.forEach((file) => {
+    const existing = existingByHash.get(file.contentHash);
+    if (existing) {
+      matches.push({
+        name: file.name,
+        match: existing.file_name,
+        severity: "exact",
+        reason: "Mesmo hash de uma fonte já catalogada na Alexandria.",
+      });
+      return;
+    }
+
+    const previous = seen.get(file.contentHash);
+    if (previous) {
+      matches.push({
+        name: file.name,
+        match: previous,
+        severity: "exact",
+        reason: "Mesmo hash de outro arquivo selecionado nesta assimilação.",
+      });
+      return;
+    }
+
+    seen.set(file.contentHash, file.name);
+  });
+
+  return matches;
+}
+
+function findNearDuplicates(
+  analyses: HermioneSourceAnalysis[],
+  relatedArtifacts: HermioneArtifact[],
+  files: SanitizedHermioneSourceInput[],
+  exactDuplicates: HermioneDuplicateMatch[]
+): HermioneDuplicateMatch[] {
+  const exactNames = new Set(exactDuplicates.map((item) => item.name));
+  const matches: HermioneDuplicateMatch[] = [];
+
+  analyses.forEach((analysis, index) => {
+    const source = files[index];
+    if (!source || exactNames.has(source.name)) return;
+
+    const candidate = relatedArtifacts.find((artifact) => {
+      const sharedTags = analysis.tags.filter((tag) => artifact.tags?.includes(tag)).length;
+      return sharedTags >= 2 || similarText(analysis.title, artifact.title) >= 0.65;
+    });
+
+    if (candidate) {
+      matches.push({
+        name: source.name,
+        match: candidate.title,
+        severity: "near",
+        reason: `Tema parecido com artefato existente (${candidate.status}/${candidate.artifact_type}).`,
+      });
+    }
+  });
+
+  return matches;
+}
+
+function findAssimilationConflicts(
+  analyses: HermioneSourceAnalysis[],
+  relatedArtifacts: HermioneArtifact[]
+): HermioneConflictReport[] {
+  const explicitConflicts = analyses
+    .filter((analysis) => analysis.conflicts.length > 0)
+    .map((analysis) => ({
+      topic: analysis.title,
+      severity: "high" as const,
+      sources: [analysis.name],
+      recommendation: "Manter em revisão humana antes de aprovar ou substituir conhecimento existente.",
+    }));
+
+  const approvedRelated = relatedArtifacts.filter((artifact) => artifact.status === "approved");
+  const updateAgainstApproved = analyses
+    .filter((analysis) => approvedRelated.some((artifact) => similarText(analysis.title, artifact.title) >= 0.65))
+    .map((analysis) => ({
+      topic: `Possível atualização de conhecimento aprovado: ${analysis.title}`,
+      severity: "medium" as const,
+      sources: [analysis.name, ...approvedRelated.map((artifact) => artifact.title).slice(0, 2)],
+      recommendation: "Não sobrescrever automaticamente. Gerar nova versão em review e pedir aprovação.",
+    }));
+
+  return uniqueBy([...explicitConflicts, ...updateAgainstApproved], (item) => `${item.topic}-${item.sources.join(",")}`).slice(0, 12);
+}
+
+function renderAssimilationReport(input: Omit<HermioneAssimilationPreview, "reportMarkdown">): string {
+  const sourceLines = input.allowedFiles
+    .map((file) => `- **${file.name}**: ${file.privacyZone}; hash \`${file.contentHash.slice(0, 12)}\`; ${file.privacyReason}`)
+    .join("\n") || "- Nenhuma fonte permitida.";
+  const blockedLines = input.blockedFiles
+    .map((file) => `- **${file.name}**: ${file.privacyReason}`)
+    .join("\n") || "- Nenhuma fonte bloqueada.";
+  const exactLines = input.exactDuplicates
+    .map((item) => `- **${item.name}** duplica **${item.match}**: ${item.reason}`)
+    .join("\n") || "- Nenhuma duplicata exata encontrada.";
+  const nearLines = input.nearDuplicates
+    .map((item) => `- **${item.name}** parece relacionado a **${item.match}**: ${item.reason}`)
+    .join("\n") || "- Nenhuma duplicata próxima relevante encontrada.";
+  const conflictLines = input.conflicts
+    .map((item) => `- **${item.topic}** (${item.severity}): ${item.recommendation} Fontes: ${item.sources.join(", ")}`)
+    .join("\n") || "- Nenhum conflito crítico detectado.";
+  const relatedLines = input.relatedArtifacts
+    .map((artifact) => `- **${artifact.title}**: ${artifact.status}/${artifact.artifact_type}`)
+    .join("\n") || "- Nenhum artefato relacionado encontrado.";
+  const gaps = input.gaps.map((gap) => `- ${gap}`).join("\n") || "- Nenhuma lacuna crítica detectada.";
+
+  return `# Relatório de Assimilação Hermione
+
+Gerado em: ${input.generatedAt}
+
+## Resumo
+
+- Arquivos analisados: ${input.files.length}
+- Fontes permitidas: ${input.allowedFiles.length}
+- Fontes bloqueadas: ${input.blockedFiles.length}
+- Duplicatas exatas: ${input.exactDuplicates.length}
+- Duplicatas próximas: ${input.nearDuplicates.length}
+- Conflitos: ${input.conflicts.length}
+- Artefato recomendado: ${input.recommendedArtifactType}
+- Status recomendado: ${input.recommendedStatus}
+
+## Fontes Permitidas
+
+${sourceLines}
+
+## Fontes Bloqueadas
+
+${blockedLines}
+
+## Conhecimento Existente Relacionado
+
+${relatedLines}
+
+## Duplicatas Exatas
+
+${exactLines}
+
+## Duplicatas Próximas
+
+${nearLines}
+
+## Conflitos
+
+${conflictLines}
+
+## Lacunas
+
+${gaps}
+
+## Recomendações da Hermione
+
+- Não sobrescrever conhecimento aprovado automaticamente.
+- Usar autoridade/status antes de data; data serve como desempate.
+- Criar ou atualizar artefato em revisão quando houver conflito, duplicata próxima ou fonte amarela.
+- Preservar todas as fontes e decisões de síntese para rastreabilidade.
+`;
+}
+
+function similarText(a: string, b: string): number {
+  const left = new Set(getTopKeywords(a).slice(0, 8));
+  const right = new Set(getTopKeywords(b).slice(0, 8));
+  if (!left.size || !right.size) return 0;
+  const intersection = Array.from(left).filter((item) => right.has(item)).length;
+  return intersection / Math.max(left.size, right.size);
+}
+
+function uniqueBy<T>(items: T[], keyFn: (item: T) => string): T[] {
+  const seen = new Set<string>();
+  return items.filter((item) => {
+    const key = keyFn(item);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 }
 
 function detectArtifactType(name: string, content: string): HermioneArtifactType {

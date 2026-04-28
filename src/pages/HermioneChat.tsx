@@ -22,12 +22,12 @@ import {
   type IngestResult,
 } from '@/services/alexandriaIngestion';
 import {
-  analyzeSourceContent,
-  createArtifactFromSources,
-  createSources,
+  assimilatePreview,
+  downloadAssimilationReport,
   downloadArtifact,
-  logConsultation,
   searchArtifacts,
+  simulateAssimilation,
+  type HermioneAssimilationPreview,
   type HermioneArtifact,
   type HermioneSource,
   type HermioneSourceAnalysis,
@@ -193,6 +193,7 @@ export default function HermioneChat() {
   const [ingestResult, setIngestResult] = useState<IngestResult | null>(null);
   const [uploadedSources, setUploadedSources] = useState<HermioneSource[]>([]);
   const [sourceAnalyses, setSourceAnalyses] = useState<HermioneSourceAnalysis[]>([]);
+  const [assimilationPreview, setAssimilationPreview] = useState<HermioneAssimilationPreview | null>(null);
   const [generatedArtifact, setGeneratedArtifact] = useState<HermioneArtifact | null>(null);
   const [recentArtifacts, setRecentArtifacts] = useState<HermioneArtifact[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -229,6 +230,7 @@ export default function HermioneChat() {
     setIngestResult(null);
     setGeneratedArtifact(null);
     setSourceAnalyses([]);
+    setAssimilationPreview(null);
 
     const parsed: HermioneSourceInput[] = await Promise.all(
       files.map(f => f.text().then(content => ({
@@ -238,32 +240,14 @@ export default function HermioneChat() {
     );
 
     try {
-      const analyses = parsed.map(file => analyzeSourceContent(file.name, file.content));
-      setSourceAnalyses(analyses);
-
-      const savedSources = await createSources(parsed);
-      setUploadedSources(savedSources);
-
-      const artifact = await createArtifactFromSources(parsed, {
-        sourceIds: savedSources.map(source => source.id),
-      });
-      setGeneratedArtifact(artifact);
-
-      const result = await ingestBatch(parsed, handleIngestProgress);
-      setIngestResult(result);
-      await logConsultation({
-        query: `Upload consultivo: ${parsed.map(file => file.name).join(', ')}`,
-        response: artifact.summary,
-        sourceIds: savedSources.map(source => source.id),
-        artifactIds: [artifact.id],
-        metadata: { analyses },
-      });
-      await refreshArtifacts();
+      const preview = await simulateAssimilation(parsed);
+      setAssimilationPreview(preview);
+      setSourceAnalyses(preview.analyses);
 
       setMessages(prev => prev.concat({
         id: (Date.now() + 3).toString(),
         role: 'assistant',
-        content: `Analisei **${parsed.length} documento${parsed.length === 1 ? '' : 's'}**, cataloguei as fontes e gerei o artefato **${artifact.title}**.\n\nTipo sugerido: **${artifact.artifact_type}**\nStatus: **${artifact.status}**\n\nVocê já pode baixar em Markdown/JSON no painel lateral ou pedir para eu transformar em skill, POP, prompt ou pacote de contexto.`,
+        content: `Simulei a assimilação de **${preview.files.length} arquivo${preview.files.length === 1 ? '' : 's'}**.\n\nPermitidos: **${preview.allowedFiles.length}**\nBloqueados: **${preview.blockedFiles.length}**\nDuplicatas exatas: **${preview.exactDuplicates.length}**\nDuplicatas próximas: **${preview.nearDuplicates.length}**\nConflitos: **${preview.conflicts.length}**\n\nStatus recomendado: **${preview.recommendedStatus}**. Revise o relatório no painel lateral e confirme para assimilar na Alexandria.`,
         timestamp: new Date(),
       }));
     } catch (err) {
@@ -272,6 +256,39 @@ export default function HermioneChat() {
     } finally {
       setIsIngesting(false);
       if (e.target) e.target.value = '';
+    }
+  };
+
+  const handleAssimilatePreview = async () => {
+    if (!assimilationPreview) return;
+    setIsIngesting(true);
+    setIngestProgress([]);
+    setIngestResult(null);
+    setGeneratedArtifact(null);
+
+    try {
+      const { sources, artifact } = await assimilatePreview(assimilationPreview);
+      setUploadedSources(sources);
+      setGeneratedArtifact(artifact);
+
+      const result = await ingestBatch(
+        assimilationPreview.allowedFiles.map(({ name, content }) => ({ name, content })),
+        handleIngestProgress
+      );
+      setIngestResult(result);
+      await refreshArtifacts();
+
+      setMessages(prev => prev.concat({
+        id: (Date.now() + 4).toString(),
+        role: 'assistant',
+        content: `Assimilei o pacote na Alexandria e gerei **${artifact.title}**.\n\nTipo: **${artifact.artifact_type}**\nStatus: **${artifact.status}**\nFontes salvas: **${sources.length}**\nChunks criados: **${result.totalChunks}**\n\nO relatório de assimilação ficou anexado ao artefato e pode ser baixado no painel.`,
+        timestamp: new Date(),
+      }));
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Erro ao assimilar os documentos';
+      setIngestResult({ succeeded: 0, failed: assimilationPreview.allowedFiles.length, totalChunks: 0, documents: [], errors: [msg] });
+    } finally {
+      setIsIngesting(false);
     }
   };
 
@@ -665,7 +682,7 @@ export default function HermioneChat() {
 
                   {/* File Upload */}
                   <div>
-                    <p className="text-[11px] text-muted-foreground mb-2">Arquivos .md</p>
+                    <p className="text-[11px] text-muted-foreground mb-2">Arquivos ou pasta</p>
                     <input
                       ref={fileInputRef}
                       type="file"
@@ -689,7 +706,7 @@ export default function HermioneChat() {
                       disabled={isIngesting}
                     >
                       <Upload className="w-3.5 h-3.5" />
-                      Enviar arquivos
+                      Simular arquivos
                     </Button>
                     <Button
                       variant="outline"
@@ -699,7 +716,7 @@ export default function HermioneChat() {
                       disabled={isIngesting}
                     >
                       <FolderInput className="w-3.5 h-3.5" />
-                      Abrir pasta
+                      Simular pasta
                     </Button>
                   </div>
 
@@ -778,6 +795,80 @@ export default function HermioneChat() {
                       {ingestResult.errors.length > 0 && (
                         <p className="text-destructive">{ingestResult.errors[0]}</p>
                       )}
+                    </div>
+                  )}
+
+                  {/* Assimilation Preview */}
+                  {assimilationPreview && !generatedArtifact && (
+                    <div className="rounded-lg border border-amber-500/20 bg-card/80 p-3 text-xs space-y-3">
+                      <div className="flex items-center gap-2">
+                        <Wand2 className="h-3.5 w-3.5 text-amber-400" />
+                        <p className="font-semibold text-foreground">Simulação de assimilação</p>
+                        <Badge variant="outline" className="ml-auto h-5 px-1.5 text-[9px]">
+                          {assimilationPreview.recommendedStatus}
+                        </Badge>
+                      </div>
+
+                      <div className="grid grid-cols-3 gap-2">
+                        <div className="rounded-md bg-secondary/40 p-2">
+                          <p className="text-[10px] text-muted-foreground">Permitidos</p>
+                          <p className="font-mono text-sm text-foreground">{assimilationPreview.allowedFiles.length}</p>
+                        </div>
+                        <div className="rounded-md bg-secondary/40 p-2">
+                          <p className="text-[10px] text-muted-foreground">Duplicatas</p>
+                          <p className="font-mono text-sm text-foreground">
+                            {assimilationPreview.exactDuplicates.length + assimilationPreview.nearDuplicates.length}
+                          </p>
+                        </div>
+                        <div className="rounded-md bg-secondary/40 p-2">
+                          <p className="text-[10px] text-muted-foreground">Conflitos</p>
+                          <p className="font-mono text-sm text-foreground">{assimilationPreview.conflicts.length}</p>
+                        </div>
+                      </div>
+
+                      {assimilationPreview.blockedFiles.length > 0 && (
+                        <div className="rounded-md border border-destructive/20 bg-destructive/10 p-2 text-destructive">
+                          {assimilationPreview.blockedFiles.length} arquivo(s) bloqueado(s) por privacidade.
+                        </div>
+                      )}
+
+                      {assimilationPreview.conflicts.slice(0, 2).map(conflict => (
+                        <div key={conflict.topic} className="rounded-md border border-yellow-500/20 bg-yellow-500/10 p-2">
+                          <p className="font-medium text-foreground">{conflict.topic}</p>
+                          <p className="mt-1 text-muted-foreground">{conflict.recommendation}</p>
+                        </div>
+                      ))}
+
+                      <div className="grid grid-cols-2 gap-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="h-8 gap-2 text-xs"
+                          onClick={() => downloadAssimilationReport(assimilationPreview, 'markdown')}
+                        >
+                          <Download className="h-3.5 w-3.5" />
+                          Relatório MD
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="h-8 gap-2 text-xs"
+                          onClick={() => downloadAssimilationReport(assimilationPreview, 'json')}
+                        >
+                          <FileJson className="h-3.5 w-3.5" />
+                          Relatório JSON
+                        </Button>
+                      </div>
+
+                      <Button
+                        size="sm"
+                        className="w-full gap-2 text-xs"
+                        onClick={handleAssimilatePreview}
+                        disabled={isIngesting || !assimilationPreview.allowedFiles.length}
+                      >
+                        {isIngesting ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <CheckCircle2 className="h-3.5 w-3.5" />}
+                        Assimilar na Alexandria
+                      </Button>
                     </div>
                   )}
 
