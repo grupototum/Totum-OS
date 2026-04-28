@@ -24,7 +24,9 @@ export interface AlexandriaBridgePackage {
   source: "bulma_logseq_bridge";
   generatedAt: string;
   files: BridgeFileAnalysis[];
+  importableFiles: BridgeFileAnalysis[];
   allowedFiles: BridgeFileAnalysis[];
+  reviewFiles: BridgeFileAnalysis[];
   blockedFiles: BridgeFileAnalysis[];
   manifest?: Record<string, unknown>;
 }
@@ -85,7 +87,9 @@ export function analyzeBridgeFiles(files: BridgeFileInput[]): AlexandriaBridgePa
     source: "bulma_logseq_bridge",
     generatedAt: new Date().toISOString(),
     files: analyses,
+    importableFiles: analyses.filter((file) => file.zone === "green"),
     allowedFiles: analyses.filter((file) => file.zone !== "red"),
+    reviewFiles: analyses.filter((file) => file.zone === "yellow"),
     blockedFiles: analyses.filter((file) => file.zone === "red"),
     manifest: manifestFile ? safeParseJson(manifestFile.content) : undefined,
   };
@@ -134,11 +138,13 @@ export function analyzeBridgeFile(file: BridgeFileInput): BridgeFileAnalysis {
 export async function importBulmaBridgePackage(
   bridgePackage: AlexandriaBridgePackage
 ): Promise<HermioneArtifact> {
-  if (!bridgePackage.allowedFiles.length) {
-    throw new Error("Nenhum arquivo permitido para importar. Gere um pacote sanitizado na Bulma antes.");
+  const importableFiles = bridgePackage.importableFiles || bridgePackage.allowedFiles.filter((file) => file.zone === "green");
+
+  if (!importableFiles.length) {
+    throw new Error("Nenhum arquivo verde para importar. Revise os amarelos na Bulma antes de assimilar.");
   }
 
-  const sourceInputs: HermioneSourceInput[] = bridgePackage.allowedFiles.map((file) => ({
+  const sourceInputs: HermioneSourceInput[] = importableFiles.map((file) => ({
     name: file.name,
     content: withBridgeHeader(file),
     origin: "bulma_logseq_bridge",
@@ -156,7 +162,8 @@ export async function importBulmaBridgePackage(
     metadata: {
       bridge: "bulma_logseq_bridge",
       privacyModel: "green-yellow-red",
-      allowedFiles: bridgePackage.allowedFiles.map(({ name, zone, tags }) => ({ name, zone, tags })),
+      importedFiles: importableFiles.map(({ name, zone, tags }) => ({ name, zone, tags })),
+      reviewFiles: bridgePackage.reviewFiles.map(({ name, reason }) => ({ name, reason })),
       blockedFiles: bridgePackage.blockedFiles.map(({ name, reason }) => ({ name, reason })),
       manifest: bridgePackage.manifest || null,
     },

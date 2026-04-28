@@ -58,10 +58,16 @@ export default function KnowledgeBridges() {
   const folderInputRef = useRef<HTMLInputElement | null>(null);
   const [bridgePackage, setBridgePackage] = useState<AlexandriaBridgePackage | null>(null);
   const [isImporting, setIsImporting] = useState(false);
+  const [importSummary, setImportSummary] = useState<{
+    imported: number;
+    review: BridgeFileAnalysis[];
+    blocked: BridgeFileAnalysis[];
+    artifactTitle: string;
+  } | null>(null);
 
   const score = useMemo(() => {
     if (!bridgePackage?.files.length) return 0;
-    return Math.round((bridgePackage.allowedFiles.length / bridgePackage.files.length) * 100);
+    return Math.round((bridgePackage.importableFiles.length / bridgePackage.files.length) * 100);
   }, [bridgePackage]);
 
   async function handleFiles(files: FileList | null) {
@@ -85,6 +91,7 @@ export default function KnowledgeBridges() {
 
     const nextPackage = analyzeBridgeFiles(contents);
     setBridgePackage(nextPackage);
+    setImportSummary(null);
     toast.success("Pacote analisado pela ponte da Alexandria.");
   }
 
@@ -103,7 +110,13 @@ export default function KnowledgeBridges() {
     setIsImporting(true);
     try {
       const artifact = await importBulmaBridgePackage(bridgePackage);
-      toast.success(`Pacote importado: ${artifact.title}`);
+      setImportSummary({
+        imported: bridgePackage.importableFiles.length,
+        review: bridgePackage.reviewFiles,
+        blocked: bridgePackage.blockedFiles,
+        artifactTitle: artifact.title,
+      });
+      toast.success(`${bridgePackage.importableFiles.length} arquivo(s) verde(s) importado(s).`);
     } catch (error) {
       const message = error instanceof Error ? error.message : "Falha ao importar pacote.";
       toast.error(message);
@@ -282,6 +295,9 @@ export default function KnowledgeBridges() {
                       <p className="mt-1 text-sm text-muted-foreground">
                         {bridgePackage.allowedFiles.length} permitido(s), {bridgePackage.blockedFiles.length} bloqueado(s)
                       </p>
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        A assimilação automática importa apenas os {bridgePackage.importableFiles.length} verde(s). {bridgePackage.reviewFiles.length} amarelo(s) ficam para revisão.
+                      </p>
                     </div>
                     <div className="min-w-40">
                       <div className="mb-2 flex justify-between text-xs text-muted-foreground">
@@ -302,6 +318,47 @@ export default function KnowledgeBridges() {
                     </Alert>
                   )}
 
+                  {bridgePackage.reviewFiles.length > 0 && (
+                    <Alert>
+                      <AlertTriangle className="h-4 w-4" />
+                      <AlertTitle>Arquivos amarelos ficarão fora da importação automática</AlertTitle>
+                      <AlertDescription>
+                        A ponte encontrou {bridgePackage.reviewFiles.length} arquivo(s) que precisam de revisão ou resumo sanitizado antes de entrar na Alexandria.
+                      </AlertDescription>
+                    </Alert>
+                  )}
+
+                  {importSummary && (
+                    <div className="space-y-3 border border-emerald-500/30 bg-emerald-500/10 p-4">
+                      <div className="flex items-start gap-3">
+                        <CheckCircle2 className="mt-0.5 h-5 w-5 text-emerald-700" />
+                        <div>
+                          <p className="font-semibold text-emerald-800">Assimilação concluída</p>
+                          <p className="mt-1 text-sm text-emerald-800">
+                            {importSummary.imported} arquivo(s) verde(s) importado(s) em {importSummary.artifactTitle}.
+                          </p>
+                          <p className="mt-1 text-sm text-muted-foreground">
+                            {importSummary.review.length} amarelo(s) e {importSummary.blocked.length} vermelho(s) não foram importados e continuam no Mac/Bulma.
+                          </p>
+                        </div>
+                      </div>
+
+                      {(importSummary.review.length > 0 || importSummary.blocked.length > 0) && (
+                        <div className="max-h-44 overflow-y-auto border border-border bg-background/70 p-3">
+                          <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                            Não importados
+                          </p>
+                          {[...importSummary.review, ...importSummary.blocked].map((file) => (
+                            <div key={`${file.name}-${file.zone}`} className="mb-2 last:mb-0">
+                              <p className="truncate text-sm font-medium">{file.name}</p>
+                              <p className="text-xs text-muted-foreground">{file.label}: {file.reason}</p>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
+
                   <div className="space-y-3">
                     {bridgePackage.files.map((file) => (
                       <BridgeFileRow key={`${file.name}-${file.zone}`} file={file} />
@@ -319,11 +376,11 @@ export default function KnowledgeBridges() {
                     </Button>
                     <Button
                       onClick={handleImport}
-                      disabled={isImporting || !bridgePackage.allowedFiles.length}
+                      disabled={isImporting || !bridgePackage.importableFiles.length}
                       className="gap-2"
                     >
                       <FileCheck2 className="h-4 w-4" />
-                      {isImporting ? "Importando..." : "Assimilar na Alexandria"}
+                      {isImporting ? "Importando..." : "Assimilar apenas o permitido"}
                     </Button>
                   </div>
                 </>

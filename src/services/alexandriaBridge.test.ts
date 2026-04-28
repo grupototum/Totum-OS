@@ -19,6 +19,7 @@ describe("alexandriaBridge", () => {
     ]);
 
     expect(bridgePackage.allowedFiles).toHaveLength(1);
+    expect(bridgePackage.importableFiles).toHaveLength(1);
     expect(bridgePackage.blockedFiles).toHaveLength(1);
     expect(bridgePackage.blockedFiles[0].zone).toBe("red");
   });
@@ -32,6 +33,8 @@ describe("alexandriaBridge", () => {
     ]);
 
     expect(bridgePackage.allowedFiles[0].zone).toBe("yellow");
+    expect(bridgePackage.importableFiles).toHaveLength(0);
+    expect(bridgePackage.reviewFiles).toHaveLength(1);
     expect(bridgePackage.allowedFiles[0].tags).toContain("privacy:yellow");
   });
 
