@@ -68,7 +68,7 @@ export default function KnowledgeBridges() {
     if (!files?.length) return;
 
     const accepted = Array.from(files).filter((file) =>
-      /\.(md|markdown|txt|json)$/i.test(file.name)
+      /\.(md|markdown|txt|json)$/i.test(file.webkitRelativePath || file.name)
     );
 
     if (!accepted.length) {
@@ -169,6 +169,7 @@ export default function KnowledgeBridges() {
           ref={folderInputRef}
           type="file"
           multiple
+          accept=".md,.markdown,.txt,.json"
           className="hidden"
           onChange={(event) => handleFiles(event.target.files)}
         />

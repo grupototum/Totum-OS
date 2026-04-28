@@ -196,6 +196,7 @@ export default function HermioneChat() {
   const [generatedArtifact, setGeneratedArtifact] = useState<HermioneArtifact | null>(null);
   const [recentArtifacts, setRecentArtifacts] = useState<HermioneArtifact[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const folderInputRef = useRef<HTMLInputElement>(null);
 
   const refreshArtifacts = useCallback(async () => {
     const artifacts = await searchArtifacts('', 6);
@@ -219,7 +220,9 @@ export default function HermioneChat() {
   }, []);
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
+    const files = Array.from(e.target.files || []).filter(file =>
+      /\.(md|markdown|txt|json)$/i.test(file.name)
+    );
     if (!files.length) return;
     setIsIngesting(true);
     setIngestProgress([]);
@@ -228,7 +231,10 @@ export default function HermioneChat() {
     setSourceAnalyses([]);
 
     const parsed: HermioneSourceInput[] = await Promise.all(
-      files.map(f => f.text().then(content => ({ name: f.name, content })))
+      files.map(f => f.text().then(content => ({
+        name: f.webkitRelativePath || f.name,
+        content,
+      })))
     );
 
     try {
@@ -267,6 +273,15 @@ export default function HermioneChat() {
       setIsIngesting(false);
       if (e.target) e.target.value = '';
     }
+  };
+
+  const openFolderPicker = () => {
+    const input = folderInputRef.current;
+    if (!input) return;
+
+    input.setAttribute('webkitdirectory', '');
+    input.setAttribute('directory', '');
+    input.click();
   };
 
   const handleGithubIngest = async () => {
@@ -654,7 +669,14 @@ export default function HermioneChat() {
                     <input
                       ref={fileInputRef}
                       type="file"
-                      accept=".md,.txt"
+                      accept=".md,.markdown,.txt,.json"
+                      multiple
+                      className="hidden"
+                      onChange={handleFileUpload}
+                    />
+                    <input
+                      ref={folderInputRef}
+                      type="file"
                       multiple
                       className="hidden"
                       onChange={handleFileUpload}
@@ -667,7 +689,17 @@ export default function HermioneChat() {
                       disabled={isIngesting}
                     >
                       <Upload className="w-3.5 h-3.5" />
-                      Enviar arquivos .md
+                      Enviar arquivos
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="mt-2 w-full border-dashed justify-start gap-2 text-xs"
+                      onClick={openFolderPicker}
+                      disabled={isIngesting}
+                    >
+                      <FolderInput className="w-3.5 h-3.5" />
+                      Abrir pasta
                     </Button>
                   </div>
 
