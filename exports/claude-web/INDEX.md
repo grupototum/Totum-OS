@@ -1,0 +1,86 @@
+# Claude Web Skills Index
+
+- Scope: all_active
+- Skills ativas exportadas: 70
+- Gerado em: 2026-04-29T15:22:10.997Z
+- Skill principal: [Skill Router](./skills/automation/skill_router.md)
+
+## Categorias
+
+- [automation](./categories/automation.md) · 7 skill(s)
+- [analytics](./categories/analytics.md) · 23 skill(s)
+- [content](./categories/content.md) · 6 skill(s)
+- [integration](./categories/integration.md) · 34 skill(s)
+
+## Skills
+
+- [Skill Router](./skills/automation/skill_router.md) · principal · `skill_router` · automation · claude
+- [Ahrefs](./skills/analytics/ahrefs.md) · `ahrefs` · analytics · groq
+- [Airtable](./skills/analytics/airtable.md) · `airtable` · analytics · groq
+- [Data Analyst](./skills/analytics/data_analyst.md) · `data_analyst` · analytics · groq
+- [Google Ads](./skills/analytics/google_ads.md) · `google_ads` · analytics · groq
+- [Google Analytics](./skills/analytics/google_analytics.md) · `google_analytics` · analytics · groq
+- [Google Sheets](./skills/analytics/google_sheets.md) · `google_sheets` · analytics · groq
+- [HubSpot](./skills/analytics/hubspot.md) · `hubspot` · analytics · groq
+- [LinkedIn Ads](./skills/analytics/linkedin_ads.md) · `linkedin_ads` · analytics · groq
+- [Mailchimp](./skills/analytics/mailchimp.md) · `mailchimp` · analytics · groq
+- [Markdown Converter](./skills/analytics/markdown_converter.md) · `markdown_converter` · analytics · groq
+- [Mercado Pago](./skills/analytics/mercado_pago.md) · `mercado_pago` · analytics · groq
+- [Meta Ads](./skills/analytics/meta_ads.md) · `meta_ads` · analytics · groq
+- [OpenClaw Usage Tracker](./skills/analytics/openclaw_usage_tracker.md) · `openclaw_usage_tracker` · analytics · groq
+- [PayPal](./skills/analytics/paypal.md) · `paypal` · analytics · groq
+- [PIX](./skills/analytics/pix.md) · `pix` · analytics · groq
+- [Salesforce](./skills/analytics/salesforce.md) · `salesforce` · analytics · groq
+- [SendGrid](./skills/analytics/sendgrid.md) · `sendgrid` · analytics · groq
+- [Shopify](./skills/analytics/shopify.md) · `shopify` · analytics · groq
+- [Stock Analysis](./skills/analytics/stock_analysis.md) · `stock_analysis` · analytics · groq
+- [Stock Watcher](./skills/analytics/stock_watcher.md) · `stock_watcher` · analytics · groq
+- [Stripe](./skills/analytics/stripe.md) · `stripe` · analytics · groq
+- [TikTok Ads](./skills/analytics/tiktok_ads.md) · `tiktok_ads` · analytics · groq
+- [Twilio](./skills/analytics/twilio.md) · `twilio` · analytics · groq
+- [Agent Browser](./skills/automation/agent_browser.md) · `agent_browser` · automation · claude
+- [API Gateway](./skills/automation/api_gateway.md) · `api_gateway` · automation · claude
+- [Automation Workflows](./skills/automation/automation_workflows.md) · `automation_workflows` · automation · claude
+- [n8n Workflow Automation](./skills/automation/n8n_workflow_automation.md) · `n8n_workflow_automation` · automation · claude
+- [Playwright MCP](./skills/automation/playwright_mcp.md) · `playwright_mcp` · automation · claude
+- [Playwright Scraper](./skills/automation/playwright_scraper_skill.md) · `playwright_scraper_skill` · automation · claude
+- [Daily Report](./skills/content/daily_report.md) · `daily_report` · content · claude
+- [DOCX Generator](./skills/content/docx_generator.md) · `docx_generator` · content · claude
+- [MD to PDF](./skills/content/md_to_pdf.md) · `md_to_pdf` · content · claude
+- [PDF Generator](./skills/content/pdf_generator.md) · `pdf_generator` · content · claude
+- [PPTX Generator](./skills/content/pptx_generator.md) · `pptx_generator` · content · claude
+- [Summarize](./skills/content/summarize.md) · `summarize` · content · claude
+- [Asana](./skills/integration/asana.md) · `asana` · integration · claude
+- [Calendly](./skills/integration/calendly.md) · `calendly` · integration · claude
+- [Channels Setup](./skills/integration/channels_setup.md) · `channels_setup` · integration · claude
+- [ClickUp](./skills/integration/clickup.md) · `clickup` · integration · claude
+- [Confluence](./skills/integration/confluence.md) · `confluence` · integration · claude
+- [Discord](./skills/integration/discord.md) · `discord` · integration · claude
+- [Dropbox](./skills/integration/dropbox.md) · `dropbox` · integration · claude
+- [Feishu Bitable](./skills/integration/feishu_bitable.md) · `feishu_bitable` · integration · claude
+- [Feishu Calendar](./skills/integration/feishu_calendar.md) · `feishu_calendar` · integration · claude
+- [Feishu Create Doc](./skills/integration/feishu_create_doc.md) · `feishu_create_doc` · integration · claude
+- [Feishu Fetch Doc](./skills/integration/feishu_fetch_doc.md) · `feishu_fetch_doc` · integration · claude
+- [Feishu IM Read](./skills/integration/feishu_im_read.md) · `feishu_im_read` · integration · claude
+- [Feishu Task](./skills/integration/feishu_task.md) · `feishu_task` · integration · claude
+- [Gmail](./skills/integration/gmail.md) · `gmail` · integration · claude
+- [Google Calendar](./skills/integration/google_calendar.md) · `google_calendar` · integration · claude
+- [Google Drive](./skills/integration/google_drive.md) · `google_drive` · integration · claude
+- [Jira](./skills/integration/jira.md) · `jira` · integration · claude
+- [Monday](./skills/integration/monday.md) · `monday` · integration · claude
+- [Notion](./skills/integration/notion.md) · `notion` · integration · claude
+- [Slack](./skills/integration/slack.md) · `slack` · integration · claude
+- [Telegram](./skills/integration/telegram.md) · `telegram` · integration · claude
+- [Trello](./skills/integration/trello.md) · `trello` · integration · claude
+- [WeCom Contact Lookup](./skills/integration/wecom_contact_lookup.md) · `wecom_contact_lookup` · integration · claude
+- [WeCom Doc Manager](./skills/integration/wecom_doc_manager.md) · `wecom_doc_manager` · integration · claude
+- [WeCom Edit Todo](./skills/integration/wecom_edit_todo.md) · `wecom_edit_todo` · integration · claude
+- [WeCom Meeting Create](./skills/integration/wecom_meeting_create.md) · `wecom_meeting_create` · integration · claude
+- [WeCom Meeting Manage](./skills/integration/wecom_meeting_manage.md) · `wecom_meeting_manage` · integration · claude
+- [WeCom Meeting Query](./skills/integration/wecom_meeting_query.md) · `wecom_meeting_query` · integration · claude
+- [WeCom Message](./skills/integration/wecom_msg.md) · `wecom_msg` · integration · claude
+- [WeCom Schedule](./skills/integration/wecom_schedule.md) · `wecom_schedule` · integration · claude
+- [WeCom Smartsheet Data](./skills/integration/wecom_smartsheet_data.md) · `wecom_smartsheet_data` · integration · claude
+- [WeCom Smartsheet Schema](./skills/integration/wecom_smartsheet_schema.md) · `wecom_smartsheet_schema` · integration · claude
+- [WhatsApp](./skills/integration/whatsapp.md) · `whatsapp` · integration · claude
+- [Zoom](./skills/integration/zoom.md) · `zoom` · integration · claude

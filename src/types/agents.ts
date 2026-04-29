@@ -41,6 +41,9 @@ export interface Skill {
   dependencies?: string[];
   status: SkillStatus;
   estimated_duration_ms?: number;
+  is_primary?: boolean;
+  routing_priority?: number;
+  tags?: string[];
   // DB fields (Alexandria)
   created_at?: string;
   updated_at?: string;

@@ -1,0 +1,38 @@
+# ChatGPT · integration
+
+- Skills nesta categoria: 34
+
+- [Asana](./skills/integration/asana.md) · `asana` · integration · claude
+- [Calendly](./skills/integration/calendly.md) · `calendly` · integration · claude
+- [Channels Setup](./skills/integration/channels_setup.md) · `channels_setup` · integration · claude
+- [ClickUp](./skills/integration/clickup.md) · `clickup` · integration · claude
+- [Confluence](./skills/integration/confluence.md) · `confluence` · integration · claude
+- [Discord](./skills/integration/discord.md) · `discord` · integration · claude
+- [Dropbox](./skills/integration/dropbox.md) · `dropbox` · integration · claude
+- [Feishu Bitable](./skills/integration/feishu_bitable.md) · `feishu_bitable` · integration · claude
+- [Feishu Calendar](./skills/integration/feishu_calendar.md) · `feishu_calendar` · integration · claude
+- [Feishu Create Doc](./skills/integration/feishu_create_doc.md) · `feishu_create_doc` · integration · claude
+- [Feishu Fetch Doc](./skills/integration/feishu_fetch_doc.md) · `feishu_fetch_doc` · integration · claude
+- [Feishu IM Read](./skills/integration/feishu_im_read.md) · `feishu_im_read` · integration · claude
+- [Feishu Task](./skills/integration/feishu_task.md) · `feishu_task` · integration · claude
+- [Gmail](./skills/integration/gmail.md) · `gmail` · integration · claude
+- [Google Calendar](./skills/integration/google_calendar.md) · `google_calendar` · integration · claude
+- [Google Drive](./skills/integration/google_drive.md) · `google_drive` · integration · claude
+- [Jira](./skills/integration/jira.md) · `jira` · integration · claude
+- [Monday](./skills/integration/monday.md) · `monday` · integration · claude
+- [Notion](./skills/integration/notion.md) · `notion` · integration · claude
+- [Slack](./skills/integration/slack.md) · `slack` · integration · claude
+- [Telegram](./skills/integration/telegram.md) · `telegram` · integration · claude
+- [Trello](./skills/integration/trello.md) · `trello` · integration · claude
+- [WeCom Contact Lookup](./skills/integration/wecom_contact_lookup.md) · `wecom_contact_lookup` · integration · claude
+- [WeCom Doc Manager](./skills/integration/wecom_doc_manager.md) · `wecom_doc_manager` · integration · claude
+- [WeCom Edit Todo](./skills/integration/wecom_edit_todo.md) · `wecom_edit_todo` · integration · claude
+- [WeCom Meeting Create](./skills/integration/wecom_meeting_create.md) · `wecom_meeting_create` · integration · claude
+- [WeCom Meeting Manage](./skills/integration/wecom_meeting_manage.md) · `wecom_meeting_manage` · integration · claude
+- [WeCom Meeting Query](./skills/integration/wecom_meeting_query.md) · `wecom_meeting_query` · integration · claude
+- [WeCom Message](./skills/integration/wecom_msg.md) · `wecom_msg` · integration · claude
+- [WeCom Schedule](./skills/integration/wecom_schedule.md) · `wecom_schedule` · integration · claude
+- [WeCom Smartsheet Data](./skills/integration/wecom_smartsheet_data.md) · `wecom_smartsheet_data` · integration · claude
+- [WeCom Smartsheet Schema](./skills/integration/wecom_smartsheet_schema.md) · `wecom_smartsheet_schema` · integration · claude
+- [WhatsApp](./skills/integration/whatsapp.md) · `whatsapp` · integration · claude
+- [Zoom](./skills/integration/zoom.md) · `zoom` · integration · claude

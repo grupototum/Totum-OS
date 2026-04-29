@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Progress } from '@/components/ui/progress';
 import {
   Zap,
   Search,
@@ -22,10 +24,17 @@ import {
   Edit,
   Trash2,
   CheckCircle2,
-  XCircle
+  XCircle,
+  RefreshCcw,
+  GitPullRequestArrow,
+  ExternalLink,
 } from 'lucide-react';
 import { listSkills, getSkillCategories } from '@/services/skillsService';
 import type { Skill } from '@/types/agents';
+import { syncSkills } from '@/services/skillsSync';
+import type { SkillSyncRun, SkillSyncTargetStatus } from '@/lib/skillsSync';
+import { useAuth } from '@/contexts/AuthContext';
+import { toast } from 'sonner';
 
 // Load real data from skills-registry.json
 const allSkills: Skill[] = listSkills();
@@ -82,10 +91,15 @@ const modelColors: Record<string, string> = {
 };
 
 export default function SkillsCentral() {
+  const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategoria, setSelectedCategoria] = useState<string | null>(null);
   const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
   const [selectedModel, setSelectedModel] = useState<string | null>(null);
+  const [syncDialogOpen, setSyncDialogOpen] = useState(false);
+  const [syncing, setSyncing] = useState(false);
+  const [syncRun, setSyncRun] = useState<SkillSyncRun | null>(null);
+  const [syncError, setSyncError] = useState<string | null>(null);
 
   // Stats: count per category from real data
   const statsByCategory = allCategories.reduce<Record<string, number>>((acc, cat) => {
@@ -101,6 +115,35 @@ export default function SkillsCentral() {
     return true;
   });
 
+  const activeSkillsCount = allSkills.filter((skill) => skill.status === 'active').length;
+  const completedTargets = syncRun?.targets.filter((target) => target.status !== 'preparing' && target.status !== 'queued').length || 0;
+  const progressValue = syncing
+    ? 35
+    : syncRun?.targets.length
+      ? Math.round((completedTargets / syncRun.targets.length) * 100)
+      : 0;
+
+  const handleSyncSkills = async () => {
+    setSyncDialogOpen(true);
+    setSyncing(true);
+    setSyncError(null);
+    setSyncRun(null);
+
+    try {
+      const result = await syncSkills({
+        triggeredBy: user?.id || null,
+      });
+      setSyncRun(result);
+      toast.success('Sincronização de skills concluída.');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Falha ao sincronizar as skills.';
+      setSyncError(message);
+      toast.error(message);
+    } finally {
+      setSyncing(false);
+    }
+  };
+
   return (
     <AppLayout>
       <PageBreadcrumb />
@@ -113,10 +156,16 @@ export default function SkillsCentral() {
               Catálogo de habilidades com recomendações inteligentes
             </p>
           </div>
-          <Button>
-            <Plus size={18} className="mr-2" />
-            Nova Skill
-          </Button>
+          <div className="flex items-center gap-3">
+            <Button variant="outline" onClick={handleSyncSkills} disabled={syncing}>
+              {syncing ? <Loader2 size={18} className="mr-2 animate-spin" /> : <RefreshCcw size={18} className="mr-2" />}
+              Sincronizar skills
+            </Button>
+            <Button>
+              <Plus size={18} className="mr-2" />
+              Nova Skill
+            </Button>
+          </div>
         </div>
 
         {/* Stats cards — one per real category */}
@@ -267,6 +316,11 @@ export default function SkillsCentral() {
                           <div className="flex items-center gap-2">
                             <span className="mr-1">{skill.emoji}</span>
                             <h4 className="font-medium text-slate-900">{skill.name}</h4>
+                            {skill.is_primary ? (
+                              <Badge className="bg-amber-500/10 text-amber-600 border-amber-500/20">
+                                Principal
+                              </Badge>
+                            ) : null}
                             {isActive ? (
                               <CheckCircle2 size={16} className="text-green-500" />
                             ) : (
@@ -281,6 +335,11 @@ export default function SkillsCentral() {
                             <Badge className={categoriaColors[skill.category] || 'bg-slate-100'}>
                               {categoriaLabels[skill.category] || skill.category}
                             </Badge>
+                            {skill.routing_priority ? (
+                              <Badge variant="outline">
+                                prioridade {skill.routing_priority}
+                              </Badge>
+                            ) : null}
                             <span className="text-xs text-slate-400">
                               v{skill.version} · ${skill.cost_per_call.toFixed(2)}/call · {Math.round(skill.success_rate * 100)}% sucesso
                             </span>
@@ -306,6 +365,114 @@ export default function SkillsCentral() {
           </CardContent>
         </Card>
       </div>
+
+      <Dialog open={syncDialogOpen} onOpenChange={setSyncDialogOpen}>
+        <DialogContent className="max-w-3xl">
+          <DialogHeader>
+            <DialogTitle>Sincronização de skills</DialogTitle>
+            <DialogDescription>
+              Publica {activeSkillsCount} skill(s) ativa(s) para Claude Web, ChatGPT e Kimi.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-5">
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-sm text-slate-600">
+                <span>{syncing ? 'Sincronizando agora...' : 'Status da última execução'}</span>
+                <span>{progressValue}%</span>
+              </div>
+              <Progress value={progressValue} />
+            </div>
+
+            {syncError ? (
+              <Card className="border-red-200 bg-red-50">
+                <CardContent className="p-4 text-sm text-red-700">
+                  {syncError}
+                </CardContent>
+              </Card>
+            ) : null}
+
+            {syncRun ? (
+              <div className="grid gap-4">
+                <Card>
+                  <CardContent className="p-4 space-y-3">
+                    <div className="flex flex-wrap items-center gap-3 text-sm text-slate-600">
+                      <Badge variant="outline">Run {syncRun.run_id.slice(0, 8)}</Badge>
+                      <Badge variant="outline" className="capitalize">{syncRun.status.replaceAll('_', ' ')}</Badge>
+                    </div>
+                    <div className="grid gap-2 text-sm text-slate-700">
+                      <p><span className="font-medium">Branch:</span> {syncRun.git_branch || 'não criada'}</p>
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium">PR:</span>
+                        {syncRun.git_pr_url ? (
+                          <a href={syncRun.git_pr_url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-blue-600 hover:underline">
+                            Abrir pull request
+                            <ExternalLink size={14} />
+                          </a>
+                        ) : (
+                          <span>não criada</span>
+                        )}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <div className="grid gap-3">
+                  {syncRun.targets.map((target) => (
+                    <TargetStatusCard key={target.provider} target={target} />
+                  ))}
+                </div>
+              </div>
+            ) : syncing ? (
+              <Card>
+                <CardContent className="p-6 flex items-center gap-3 text-sm text-slate-600">
+                  <Loader2 className="h-5 w-5 animate-spin" />
+                  Preparando manifest, exports e publicação por provider.
+                </CardContent>
+              </Card>
+            ) : (
+              <Card>
+                <CardContent className="p-6 text-sm text-slate-600">
+                  Clique em <strong>Sincronizar skills</strong> para publicar os exports no GitHub e enviar os arquivos da Kimi.
+                </CardContent>
+              </Card>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </AppLayout>
+  );
+}
+
+function TargetStatusCard({ target }: { target: SkillSyncTargetStatus }) {
+  const uploadedFiles = Array.isArray(target.external_ids?.files) ? target.external_ids.files.length : undefined;
+
+  return (
+    <Card className="border-slate-200">
+      <CardContent className="p-4 space-y-3">
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <GitPullRequestArrow size={18} className="text-slate-400" />
+            <div>
+              <p className="font-medium text-slate-900">
+                {target.provider === 'claude_web' ? 'Claude Web' : target.provider === 'chatgpt' ? 'ChatGPT' : 'Kimi'}
+              </p>
+              <p className="text-sm text-slate-500">{target.message}</p>
+            </div>
+          </div>
+          <Badge variant="outline" className="capitalize">
+            {target.status.replaceAll('_', ' ')}
+          </Badge>
+        </div>
+
+        <div className="grid gap-1 text-sm text-slate-700">
+          <p><span className="font-medium">Skills exportadas:</span> {target.exported_skills ?? 0}</p>
+          <p><span className="font-medium">Arquivos processados:</span> {target.exported_files ?? 0}</p>
+          {typeof uploadedFiles === 'number' ? (
+            <p><span className="font-medium">Uploads Kimi:</span> {uploadedFiles}</p>
+          ) : null}
+        </div>
+      </CardContent>
+    </Card>
   );
 }

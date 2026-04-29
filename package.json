@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "build:dev": "vite build --mode development",
+    "generate:skills-sync": "node scripts/generate-skills-sync.mjs",
+    "build": "npm run generate:skills-sync && vite build",
+    "build:dev": "npm run generate:skills-sync && vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest run",

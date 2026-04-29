@@ -5,6 +5,7 @@
 
 import { supabase } from '@/integrations/supabase/client';
 import skillsRegistry from '@/lib/skills-registry.json';
+import { skillOverrides } from '@/lib/skillsOverrides';
 import type { 
   Skill, 
   AgentConfig, 
@@ -17,7 +18,10 @@ import type {
 // ============================================
 
 const skillsMap = new Map<string, Skill>(
-  Object.entries(skillsRegistry as Record<string, Skill>)
+  Object.entries({
+    ...(skillsRegistry as Record<string, Skill>),
+    ...skillOverrides,
+  } as Record<string, Skill>)
 );
 
 /**
@@ -59,7 +63,12 @@ export function listSkills(filter?: SkillFilter): Skill[] {
       s.description.toLowerCase().includes(search)
     );
   }
-  
+
+  skills.sort((a, b) => {
+    if (!!a.is_primary !== !!b.is_primary) return a.is_primary ? -1 : 1;
+    return (b.routing_priority || 0) - (a.routing_priority || 0) || a.name.localeCompare(b.name);
+  });
+
   return skills;
 }
 
