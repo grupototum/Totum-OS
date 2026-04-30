@@ -9,7 +9,7 @@ routing_priority: 0
 model_preference: claude
 tags: []
 content_hash: f3e679da647ec4cc947f621ac0ba0f28868689808b856cff7f1baf260b5b0422
-updated_at: 2026-04-29T15:22:10.997Z
+updated_at: 2026-04-30T12:59:43.016Z
 prompt_template_path: prompts/monday.md
 ---
 

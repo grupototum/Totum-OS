@@ -9,7 +9,7 @@ routing_priority: 0
 model_preference: groq
 tags: []
 content_hash: eb9c65d766440718f34792bd28fcc5f5bbae8958a4a7330ebd0a1dd3a0735386
-updated_at: 2026-04-29T15:22:10.997Z
+updated_at: 2026-04-30T12:59:43.016Z
 prompt_template_path: prompts/mercado_pago.md
 ---
 

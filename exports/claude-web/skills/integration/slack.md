@@ -9,7 +9,7 @@ routing_priority: 0
 model_preference: claude
 tags: []
 content_hash: 91df50c0078de5c7ff972f762fc82575d3b4a6ffe5930e39e47f04aee457d0e9
-updated_at: 2026-04-29T15:22:10.997Z
+updated_at: 2026-04-30T12:59:43.016Z
 prompt_template_path: prompts/slack.md
 ---
 

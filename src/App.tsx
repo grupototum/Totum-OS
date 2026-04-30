@@ -44,6 +44,7 @@ const ActionPlan        = lazy(() => import("./pages/ActionPlan"));
 const NewClient         = lazy(() => import("./pages/NewClient"));
 const AdaPage           = lazy(() => import("./pages/ada"));
 const GoogleDriveEmbed  = lazy(() => import("./pages/workspace/GoogleDriveEmbed"));
+const GoogleDriveCallback = lazy(() => import("./pages/workspace/GoogleDriveCallback"));
 const TaskRecurrence    = lazy(() => import("./pages/workspace/TaskRecurrence"));
 const DeploymentChecklist = lazy(() => import("./pages/workspace/DeploymentChecklist"));
 const CraudioCodete     = lazy(() => import("./pages/iatools/CraudioCodete"));
@@ -93,6 +94,7 @@ const AppWithRouter = () => {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/auth/callback" element={<AuthCallback />} />
         <Route path="/pending-approval" element={<PendingApproval />} />
+        <Route path="/google-drive/callback" element={<Page><GoogleDriveCallback /></Page>} />
 
         {/* ============================
             ROTAS PROTEGIDAS — exigem login

@@ -33,6 +33,7 @@ import {
   type HermioneSourceAnalysis,
   type HermioneSourceInput,
 } from '@/services/hermioneArtifacts';
+import { openDirectoryPicker } from '@/lib/directoryPicker';
 
 interface Message {
   id: string;
@@ -197,7 +198,6 @@ export default function HermioneChat() {
   const [generatedArtifact, setGeneratedArtifact] = useState<HermioneArtifact | null>(null);
   const [recentArtifacts, setRecentArtifacts] = useState<HermioneArtifact[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const folderInputRef = useRef<HTMLInputElement>(null);
 
   const refreshArtifacts = useCallback(async () => {
     const artifacts = await searchArtifacts('', 6);
@@ -293,12 +293,19 @@ export default function HermioneChat() {
   };
 
   const openFolderPicker = () => {
-    const input = folderInputRef.current;
-    if (!input) return;
+    openDirectoryPicker({
+      accept: '.md,.markdown,.txt,.json',
+      onFiles: (files) => {
+        const event = {
+          target: {
+            files,
+            value: '',
+          },
+        } as React.ChangeEvent<HTMLInputElement>;
 
-    input.setAttribute('webkitdirectory', '');
-    input.setAttribute('directory', '');
-    input.click();
+        void handleFileUpload(event);
+      },
+    });
   };
 
   const handleGithubIngest = async () => {
@@ -687,13 +694,6 @@ export default function HermioneChat() {
                       ref={fileInputRef}
                       type="file"
                       accept=".md,.markdown,.txt,.json"
-                      multiple
-                      className="hidden"
-                      onChange={handleFileUpload}
-                    />
-                    <input
-                      ref={folderInputRef}
-                      type="file"
                       multiple
                       className="hidden"
                       onChange={handleFileUpload}

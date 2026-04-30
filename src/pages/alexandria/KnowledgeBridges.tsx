@@ -1,13 +1,15 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import AppLayout from "@/components/layout/AppLayout";
 import { PageBreadcrumb } from "@/components/navigation/PageBreadcrumb";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { PageHeader, DataPanel, EmptyState } from "@/components/ui/patterns";
+import { openDirectoryPicker } from "@/lib/directoryPicker";
 import {
   analyzeBridgeFiles,
   createBridgeManifestTemplate,
@@ -18,19 +20,41 @@ import {
   type BridgePrivacyZone,
 } from "@/services/alexandriaBridge";
 import {
+  buildGoogleDriveOAuthUrl,
+  buildKnowledgeSyncPreview,
+  fetchGoogleDriveSkillFiles,
+  getStoredGoogleDriveToken,
+  importKnowledgeSyncPreview,
+  normalizeGoogleDriveFolderId,
+  type KnowledgeSyncPreview,
+  type KnowledgeSyncSource,
+} from "@/services/alexandriaKnowledgeSync";
+import {
   AlertTriangle,
   Brain,
   CheckCircle2,
+  Cloud,
   Download,
   FileCheck2,
   FolderOpen,
   GitBranch,
   Link2,
   Lock,
+  RefreshCw,
   ShieldCheck,
   Upload,
+  Wand2,
 } from "lucide-react";
 import { toast } from "sonner";
+
+const GOOGLE_DRIVE_FOLDER_STORAGE_KEY = "totum.googleDriveSkillsFolderId";
+
+type SkillImportSummary = {
+  importedSkills: number;
+  review: number;
+  blocked: number;
+  artifactTitle: string;
+};
 
 const zoneStyle: Record<BridgePrivacyZone, string> = {
   green: "border-emerald-500/30 bg-emerald-500/10 text-emerald-700",
@@ -55,9 +79,16 @@ const zoneCopy: Record<BridgePrivacyZone, { title: string; description: string }
 
 export default function KnowledgeBridges() {
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const folderInputRef = useRef<HTMLInputElement | null>(null);
   const [bridgePackage, setBridgePackage] = useState<AlexandriaBridgePackage | null>(null);
   const [isImporting, setIsImporting] = useState(false);
+  const [logseqSkillPreview, setLogseqSkillPreview] = useState<KnowledgeSyncPreview | null>(null);
+  const [googleSkillPreview, setGoogleSkillPreview] = useState<KnowledgeSyncPreview | null>(null);
+  const [googleFolderId, setGoogleFolderId] = useState(() => localStorage.getItem(GOOGLE_DRIVE_FOLDER_STORAGE_KEY) || "");
+  const [googleConnected, setGoogleConnected] = useState(() => !!getStoredGoogleDriveToken());
+  const [googleSyncing, setGoogleSyncing] = useState(false);
+  const [importingSkillSource, setImportingSkillSource] = useState<KnowledgeSyncSource | null>(null);
+  const [logseqImportSummary, setLogseqImportSummary] = useState<SkillImportSummary | null>(null);
+  const [googleImportSummary, setGoogleImportSummary] = useState<SkillImportSummary | null>(null);
   const [importSummary, setImportSummary] = useState<{
     imported: number;
     review: BridgeFileAnalysis[];
@@ -69,6 +100,19 @@ export default function KnowledgeBridges() {
     if (!bridgePackage?.files.length) return 0;
     return Math.round((bridgePackage.importableFiles.length / bridgePackage.files.length) * 100);
   }, [bridgePackage]);
+
+  useEffect(() => {
+    function handleGoogleDriveAuth(event: MessageEvent) {
+      if (event.origin !== window.location.origin) return;
+      if (event.data?.type !== "totum-google-drive-auth") return;
+
+      setGoogleConnected(true);
+      toast.success("Google Drive conectado à Alexandria.");
+    }
+
+    window.addEventListener("message", handleGoogleDriveAuth);
+    return () => window.removeEventListener("message", handleGoogleDriveAuth);
+  }, []);
 
   async function handleFiles(files: FileList | null) {
     if (!files?.length) return;
@@ -95,13 +139,108 @@ export default function KnowledgeBridges() {
     toast.success("Pacote analisado pela ponte da Alexandria.");
   }
 
-  function openFolderPicker() {
-    const input = folderInputRef.current;
-    if (!input) return;
+  async function handleLogseqSkillFiles(files: FileList | null) {
+    if (!files?.length) return;
 
-    input.setAttribute("webkitdirectory", "");
-    input.setAttribute("directory", "");
-    input.click();
+    const accepted = Array.from(files).filter((file) =>
+      /\.(md|markdown|txt|json)$/i.test(file.webkitRelativePath || file.name)
+    );
+
+    if (!accepted.length) {
+      toast.error("Nenhum arquivo de skill compatível foi encontrado.");
+      return;
+    }
+
+    const contents = await Promise.all(
+      accepted.map(async (file) => ({
+        name: file.name,
+        sourcePath: file.webkitRelativePath || file.name,
+        content: await file.text(),
+      }))
+    );
+
+    const preview = buildKnowledgeSyncPreview("logseq_local", contents);
+    setLogseqSkillPreview(preview);
+    setLogseqImportSummary(null);
+    toast.success(`${preview.skillCandidates.length} skill(s) detectada(s) no Logseq local.`);
+  }
+
+  function openFolderPicker() {
+    openDirectoryPicker({
+      accept: ".md,.markdown,.txt,.json",
+      onFiles: (files) => {
+        void handleFiles(files);
+      },
+    });
+  }
+
+  function openLogseqSkillPicker() {
+    openDirectoryPicker({
+      accept: ".md,.markdown,.txt,.json",
+      onFiles: (files) => {
+        void handleLogseqSkillFiles(files);
+      },
+    });
+  }
+
+  function handleConnectGoogleDrive() {
+    try {
+      const popup = window.open(
+        buildGoogleDriveOAuthUrl(),
+        "totum-google-drive-auth",
+        "width=540,height=720"
+      );
+
+      if (!popup) {
+        toast.error("O navegador bloqueou o popup do Google Drive.");
+      }
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Não foi possível iniciar a conexão com o Google Drive.");
+    }
+  }
+
+  async function handleGoogleDriveSkillSync() {
+    try {
+      setGoogleSyncing(true);
+      const normalizedFolderId = normalizeGoogleDriveFolderId(googleFolderId);
+      localStorage.setItem(GOOGLE_DRIVE_FOLDER_STORAGE_KEY, normalizedFolderId);
+      setGoogleFolderId(normalizedFolderId);
+
+      const files = await fetchGoogleDriveSkillFiles(normalizedFolderId);
+      const preview = buildKnowledgeSyncPreview("google_drive", files);
+      setGoogleSkillPreview(preview);
+      setGoogleImportSummary(null);
+      toast.success(`${preview.skillCandidates.length} skill(s) detectada(s) no Google Drive.`);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Não foi possível sincronizar skills do Google Drive.";
+      if (/conecte o google drive/i.test(message)) {
+        setGoogleConnected(false);
+      }
+      toast.error(message);
+    } finally {
+      setGoogleSyncing(false);
+    }
+  }
+
+  async function handleImportSkills(
+    preview: KnowledgeSyncPreview,
+    setSummary: (summary: SkillImportSummary | null) => void
+  ) {
+    try {
+      setImportingSkillSource(preview.source);
+      const result = await importKnowledgeSyncPreview(preview);
+      setSummary({
+        importedSkills: result.importedSkills,
+        review: preview.reviewFiles.length,
+        blocked: preview.blockedFiles.length,
+        artifactTitle: result.artifact.title,
+      });
+      toast.success(`${result.importedSkills} skill(s) importada(s) para a Alexandria.`);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Não foi possível importar as skills.");
+    } finally {
+      setImportingSkillSource(null);
+    }
   }
 
   async function handleImport() {
@@ -178,15 +317,6 @@ export default function KnowledgeBridges() {
           className="hidden"
           onChange={(event) => handleFiles(event.target.files)}
         />
-        <input
-          ref={folderInputRef}
-          type="file"
-          multiple
-          accept=".md,.markdown,.txt,.json"
-          className="hidden"
-          onChange={(event) => handleFiles(event.target.files)}
-        />
-
         <div className="grid gap-4 lg:grid-cols-3">
           <DataPanel>
             <div className="flex items-start gap-3">
@@ -229,6 +359,118 @@ export default function KnowledgeBridges() {
               </div>
             </div>
           </DataPanel>
+        </div>
+
+        <div className="grid gap-4 xl:grid-cols-2">
+          <Card>
+            <CardHeader>
+              <CardTitle>Sync de skills · Logseq local</CardTitle>
+              <CardDescription>
+                Escolha uma pasta do vault ou export local. A Alexandria detecta apenas arquivos que parecem skill e importa só os verdes.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {!logseqSkillPreview ? (
+                <EmptyState
+                  icon={FolderOpen}
+                  title="Nenhuma pasta do Logseq analisada"
+                  description="Use este fluxo para começar com skills antes de sincronizar prompts, POPs e contexto geral."
+                  actionLabel="Escolher pasta do Logseq"
+                  onAction={openLogseqSkillPicker}
+                />
+              ) : (
+                <>
+                  <SkillSyncOverview preview={logseqSkillPreview} />
+                  {logseqImportSummary ? (
+                    <SyncSummaryCard summary={logseqImportSummary} />
+                  ) : null}
+                  <div className="space-y-3">
+                    {logseqSkillPreview.skillCandidates.slice(0, 8).map((file) => (
+                      <SkillSyncFileRow key={`${file.name}-${file.sourcePath || ""}`} file={file} />
+                    ))}
+                  </div>
+                  <div className="flex flex-wrap justify-end gap-2">
+                    <Button variant="outline" onClick={openLogseqSkillPicker} className="gap-2">
+                      <FolderOpen className="h-4 w-4" />
+                      Trocar pasta
+                    </Button>
+                    <Button
+                      onClick={() => handleImportSkills(logseqSkillPreview, setLogseqImportSummary)}
+                      disabled={!logseqSkillPreview.importableSkills.length || importingSkillSource === "logseq_local"}
+                      className="gap-2"
+                    >
+                      <Wand2 className="h-4 w-4" />
+                      {importingSkillSource === "logseq_local" ? "Importando..." : "Sincronizar skills"}
+                    </Button>
+                  </div>
+                </>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Sync de skills · Google Drive</CardTitle>
+              <CardDescription>
+                Conecte uma pasta canônica do Drive e sincronize somente os arquivos de skill na primeira fase.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge variant="outline" className={googleConnected ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-700" : ""}>
+                  {googleConnected ? "Conectado" : "Desconectado"}
+                </Badge>
+                <Button variant="outline" onClick={handleConnectGoogleDrive} className="gap-2">
+                  <Cloud className="h-4 w-4" />
+                  {googleConnected ? "Reconectar Drive" : "Conectar Drive"}
+                </Button>
+              </div>
+
+              <div className="grid gap-3 sm:grid-cols-[1fr_auto]">
+                <Input
+                  value={googleFolderId}
+                  onChange={(event) => setGoogleFolderId(event.target.value)}
+                  placeholder="Cole o link ou ID da pasta de skills no Google Drive"
+                />
+                <Button onClick={handleGoogleDriveSkillSync} disabled={googleSyncing} className="gap-2">
+                  <RefreshCw className={`h-4 w-4 ${googleSyncing ? "animate-spin" : ""}`} />
+                  {googleSyncing ? "Lendo Drive..." : "Ler pasta"}
+                </Button>
+              </div>
+
+              {!googleSkillPreview ? (
+                <Alert>
+                  <Cloud className="h-4 w-4" />
+                  <AlertTitle>Drive pronto para skills</AlertTitle>
+                  <AlertDescription>
+                    Comece apontando a pasta da empresa onde ficam apenas skills ou documentos equivalentes.
+                  </AlertDescription>
+                </Alert>
+              ) : (
+                <>
+                  <SkillSyncOverview preview={googleSkillPreview} />
+                  {googleImportSummary ? (
+                    <SyncSummaryCard summary={googleImportSummary} />
+                  ) : null}
+                  <div className="space-y-3">
+                    {googleSkillPreview.skillCandidates.slice(0, 8).map((file) => (
+                      <SkillSyncFileRow key={`${file.name}-${file.externalId || ""}`} file={file} />
+                    ))}
+                  </div>
+                  <div className="flex flex-wrap justify-end gap-2">
+                    <Button
+                      onClick={() => handleImportSkills(googleSkillPreview, setGoogleImportSummary)}
+                      disabled={!googleSkillPreview.importableSkills.length || importingSkillSource === "google_drive"}
+                      className="gap-2"
+                    >
+                      <Wand2 className="h-4 w-4" />
+                      {importingSkillSource === "google_drive" ? "Importando..." : "Sincronizar skills"}
+                    </Button>
+                  </div>
+                </>
+              )}
+            </CardContent>
+          </Card>
         </div>
 
         <div className="grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
@@ -412,6 +654,79 @@ function BridgeFileRow({ file }: { file: BridgeFileAnalysis }) {
         <Badge variant="outline" className={zoneStyle[file.zone]}>
           {file.label}
         </Badge>
+      </div>
+    </div>
+  );
+}
+
+function SkillSyncOverview({ preview }: { preview: KnowledgeSyncPreview }) {
+  return (
+    <div className="grid gap-3 sm:grid-cols-4">
+      <DataPanel>
+        <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">Arquivos lidos</p>
+        <p className="mt-2 text-2xl font-semibold">{preview.files.length}</p>
+      </DataPanel>
+      <DataPanel>
+        <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">Skills detectadas</p>
+        <p className="mt-2 text-2xl font-semibold">{preview.skillCandidates.length}</p>
+      </DataPanel>
+      <DataPanel>
+        <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">Verdes</p>
+        <p className="mt-2 text-2xl font-semibold text-emerald-700">{preview.importableSkills.length}</p>
+      </DataPanel>
+      <DataPanel>
+        <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">Revisão/Bloqueio</p>
+        <p className="mt-2 text-2xl font-semibold text-amber-700">
+          {preview.reviewFiles.length + preview.blockedFiles.length}
+        </p>
+      </DataPanel>
+    </div>
+  );
+}
+
+function SyncSummaryCard({ summary }: { summary: SkillImportSummary }) {
+  return (
+    <div className="space-y-3 border border-emerald-500/30 bg-emerald-500/10 p-4">
+      <div className="flex items-start gap-3">
+        <CheckCircle2 className="mt-0.5 h-5 w-5 text-emerald-700" />
+        <div>
+          <p className="font-semibold text-emerald-800">Sincronização concluída</p>
+          <p className="mt-1 text-sm text-emerald-800">
+            {summary.importedSkills} skill(s) importada(s) em {summary.artifactTitle}.
+          </p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {summary.review} em revisão e {summary.blocked} bloqueada(s) ficaram fora desta rodada.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SkillSyncFileRow({ file }: { file: KnowledgeSyncPreview["files"][number] }) {
+  const Icon = file.zone === "red" ? Lock : file.zone === "yellow" ? AlertTriangle : CheckCircle2;
+
+  return (
+    <div className="border border-border p-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <div className="flex min-w-0 items-start gap-3">
+          <div className={`grid h-9 w-9 shrink-0 place-items-center border ${zoneStyle[file.zone]}`}>
+            <Icon className="h-4 w-4" />
+          </div>
+          <div className="min-w-0">
+            <p className="truncate font-medium">{file.sourcePath || file.name}</p>
+            <p className="mt-1 text-sm text-muted-foreground">{file.skillReason}</p>
+            <p className="mt-1 text-xs text-muted-foreground">{file.zoneReason}</p>
+          </div>
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <Badge variant="outline" className={zoneStyle[file.zone]}>
+            {file.zoneLabel}
+          </Badge>
+          <Badge variant={file.isSkillCandidate ? "default" : "outline"}>
+            {file.isSkillCandidate ? "Skill" : "Fora do escopo"}
+          </Badge>
+        </div>
       </div>
     </div>
   );

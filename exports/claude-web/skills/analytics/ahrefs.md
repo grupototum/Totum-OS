@@ -9,7 +9,7 @@ routing_priority: 0
 model_preference: groq
 tags: []
 content_hash: 27846d10e5a4bd52b1da9268253b5c5fb7f6be31a8f3158d0c4f6519ae38e44d
-updated_at: 2026-04-29T15:22:10.997Z
+updated_at: 2026-04-30T12:59:43.016Z
 prompt_template_path: prompts/ahrefs.md
 ---
 

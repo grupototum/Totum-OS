@@ -9,7 +9,7 @@ routing_priority: 0
 model_preference: claude
 tags: []
 content_hash: fc0e5acdc43ae47dc6c2ebf34d755d8ed0f75b1858eef50a9777d87bdaa3d5f1
-updated_at: 2026-04-29T15:22:10.997Z
+updated_at: 2026-04-30T12:59:43.016Z
 prompt_template_path: prompts/wecom_contact_lookup.md
 ---
 

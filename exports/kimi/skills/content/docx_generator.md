@@ -9,7 +9,7 @@ routing_priority: 0
 model_preference: claude
 tags: []
 content_hash: 56eda3b69c8edd49b9bf6ffb252289aa8a4ca787f3ee655984d11e7f970f7c79
-updated_at: 2026-04-29T15:22:10.997Z
+updated_at: 2026-04-30T12:59:43.016Z
 prompt_template_path: prompts/docx_generator.md
 ---
 

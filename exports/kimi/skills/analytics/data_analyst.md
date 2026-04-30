@@ -9,7 +9,7 @@ routing_priority: 0
 model_preference: groq
 tags: []
 content_hash: 20b3bd664c8881ea9b28bf9ea06c20a35af650765ae1e84412095660b430e5f1
-updated_at: 2026-04-29T15:22:10.997Z
+updated_at: 2026-04-30T12:59:43.016Z
 prompt_template_path: prompts/data_analyst.md
 ---
 

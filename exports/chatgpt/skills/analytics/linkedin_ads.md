@@ -9,7 +9,7 @@ routing_priority: 0
 model_preference: groq
 tags: []
 content_hash: b68f91add5ce8151fb8c9324554b528a245ede169eff6890d55c7c6e03da2acd
-updated_at: 2026-04-29T15:22:10.997Z
+updated_at: 2026-04-30T12:59:43.016Z
 prompt_template_path: prompts/linkedin_ads.md
 ---
 

@@ -9,7 +9,7 @@ routing_priority: 0
 model_preference: groq
 tags: []
 content_hash: 7fcb4429a480c25b35a6de486b6ee8b4d398f611b12c318e8c7d37de5f7c3a6e
-updated_at: 2026-04-29T15:22:10.997Z
+updated_at: 2026-04-30T12:59:43.016Z
 prompt_template_path: prompts/stock_watcher.md
 ---
 
