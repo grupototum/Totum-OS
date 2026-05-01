@@ -35,10 +35,10 @@ function AppLayoutInner({ children }: AppLayoutProps) {
   if (loading || !isReady) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="flex gap-[3px] items-end animate-industrial-pulse">
-          <div className="w-[5px] h-6 bg-primary rounded-full" />
-          <div className="w-[5px] h-4 bg-primary/60 rounded-full" />
-          <div className="w-[5px] h-6 bg-primary rounded-full" />
+        <div className="flex gap-2">
+          <div className="h-3 w-3 animate-bounce rounded-full bg-primary [animation-delay:-0.2s]" />
+          <div className="h-3 w-3 animate-bounce rounded-full bg-primary/65 [animation-delay:-0.1s]" />
+          <div className="h-3 w-3 animate-bounce rounded-full bg-primary" />
         </div>
       </div>
     );

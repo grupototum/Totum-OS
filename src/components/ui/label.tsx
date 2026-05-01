@@ -1,8 +1,3 @@
-/**
- * TOTUM LABEL COMPONENT
- * font-mono, uppercase, tracking-widest, text-xs
- */
-
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
@@ -19,11 +14,11 @@ const Label = React.forwardRef<HTMLElement, LabelProps>(
     const elementProps: React.HTMLAttributes<HTMLElement> & { htmlFor?: string } = {
       ...props,
       className: cn(
-        "font-mono text-xs font-medium uppercase tracking-widest",
-        variant === "default" && "text-stone-500",
-        variant === "muted" && "text-stone-400",
-        variant === "dark" && "text-stone-900",
-        variant === "light" && "text-stone-200",
+        "font-['SF_Pro_Text','SF_Pro_Icons','Helvetica_Neue',Helvetica,Arial,sans-serif] text-[12px] font-normal tracking-[-0.01em]",
+        variant === "default" && "text-muted-foreground",
+        variant === "muted" && "text-muted-foreground/80",
+        variant === "dark" && "text-foreground",
+        variant === "light" && "text-background",
         className
       ),
     };
@@ -70,10 +65,10 @@ const MetaLabel = React.forwardRef<HTMLDivElement, MetaLabelProps>(
       className={cn("flex items-center gap-3", className)}
       {...props}
     >
-      {date && <span className="font-mono text-xs text-stone-500">{date}</span>}
-      {date && category && <div className="h-px w-8 bg-stone-300" />}
+      {date && <span className="text-[12px] tracking-[-0.01em] text-muted-foreground">{date}</span>}
+      {date && category && <div className="h-px w-8 bg-border" />}
       {category && (
-        <span className="text-xs font-bold uppercase tracking-wider text-stone-900">
+        <span className="text-[12px] tracking-[-0.01em] text-foreground">
           {category}
         </span>
       )}

@@ -1,59 +1,33 @@
-/**
- * TOTUM BUTTON — Editorial DS v6
- *
- * Editorial pill-first button set. Primary is an inverted-ink pill,
- * outline is a bordered pill, secondary/ghost/link pick up softer
- * neutral treatments. All variants respect the current theme through
- * `--primary`, `--foreground`, `--border`, etc.
- *
- * `GlowButton`, `BeamButton`, `OutlineButton` are preserved as
- * re-exports so legacy call sites keep working — they now render the
- * same editorial pill instead of the previous red rotating-border.
- */
-
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium transition-all duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full font-normal tracking-[-0.022em] transition-all duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
-        // Primary: inverted-ink pill, soft shadow, micro lift on hover
         primary:
-          "rounded-none bg-primary text-primary-foreground shadow-[0_0_24px_-10px_hsl(var(--primary)/0.8)] hover:-translate-y-px hover:bg-primary/90 active:translate-y-0",
-
-        // Accent: blue accent pill (editorial highlight)
+          "bg-primary text-primary-foreground shadow-[0_18px_34px_-24px_rgba(0,113,227,0.85)] hover:-translate-y-px hover:bg-[#0077ed] active:translate-y-0 active:bg-[#006edb]",
         accent:
-          "rounded-none bg-accent text-accent-foreground shadow-[0_0_24px_-10px_hsl(var(--accent)/0.8)] hover:-translate-y-px hover:bg-accent/90 active:translate-y-0",
-
-        // Secondary: neutral pill (surface container)
+          "bg-[#1d1d1f] text-white shadow-[0_18px_34px_-24px_rgba(29,29,31,0.7)] hover:-translate-y-px hover:bg-[#2a2a2d] active:translate-y-0",
         secondary:
-          "rounded-none bg-secondary text-secondary-foreground border border-border/70 hover:bg-secondary/70",
-
-        // Outline: bordered pill
+          "border border-border/80 bg-card text-foreground hover:border-border hover:bg-secondary/85",
         outline:
-          "rounded-none bg-transparent border border-border text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary",
-
-        // Ghost: text-only, pill on hover
+          "border border-transparent bg-transparent px-0 text-[#0066cc] shadow-none hover:bg-secondary/70 hover:px-5",
         ghost:
-          "rounded-none bg-transparent text-foreground hover:bg-muted",
-
-        // Link: underline on hover, no pill
-        link: "bg-transparent text-foreground underline-offset-4 hover:underline",
-
-        // Destructive: red pill (kept for destructive CTAs)
+          "bg-transparent text-foreground shadow-none hover:bg-secondary/80",
+        link: "bg-transparent px-0 text-[#0066cc] shadow-none hover:underline hover:underline-offset-4",
         destructive:
-          "rounded-none bg-destructive text-destructive-foreground hover:bg-destructive/90",
+          "bg-destructive text-destructive-foreground shadow-[0_18px_34px_-24px_rgba(182,68,0,0.8)] hover:-translate-y-px hover:bg-destructive/90",
       },
       size: {
-        default: "h-11 px-6 text-sm",
-        sm: "h-9 px-4 text-xs",
-        lg: "h-12 px-8 text-sm tracking-wide",
-        xl: "h-14 px-10 text-base",
-        icon: "h-11 w-11 rounded-none",
+        default: "h-11 px-[22px] text-[17px] leading-[1.1764805882]",
+        sm: "h-8 px-4 text-[12px] leading-[1.3333733333] tracking-[-0.01em]",
+        lg: "h-12 px-[31px] text-[17px] leading-[1.1764805882]",
+        xl: "h-14 px-10 text-[17px] leading-[1.1764805882]",
+        icon: "h-11 w-11 rounded-full",
       },
     },
     defaultVariants: {
@@ -83,12 +57,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 );
 Button.displayName = "Button";
 
-/* ------------------------------------------------------------------
-   Legacy aliases — kept so existing call sites compile unchanged.
-   Previously these rendered elaborate rotating-border / red-beam
-   markup; in the editorial DS they collapse to clean pill buttons.
-   ------------------------------------------------------------------ */
-
 interface CompatButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
 }
@@ -99,7 +67,7 @@ const GlowButton = React.forwardRef<HTMLButtonElement, CompatButtonProps>(
       ref={ref}
       variant="primary"
       size="lg"
-      className={cn("uppercase tracking-[0.18em] text-xs", className)}
+      className={cn(className)}
       {...props}
     >
       {children}
@@ -114,7 +82,7 @@ const BeamButton = React.forwardRef<HTMLButtonElement, CompatButtonProps>(
       ref={ref}
       variant="outline"
       size="lg"
-      className={cn("uppercase tracking-[0.18em] text-xs", className)}
+      className={cn(className)}
       {...props}
     >
       {children}
@@ -129,7 +97,7 @@ const OutlineButton = React.forwardRef<HTMLButtonElement, CompatButtonProps>(
       ref={ref}
       variant="outline"
       size="default"
-      className={cn("uppercase tracking-[0.22em] text-[11px] font-semibold", className)}
+      className={cn(className)}
       {...props}
     >
       {children}

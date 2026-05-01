@@ -71,7 +71,7 @@ export default function AppSidebar() {
 
   const SectionLabel = ({ title }: { title: string }) =>
     !collapsed ? (
-      <p className="font-mono text-[10px] uppercase tracking-widest text-sidebar-foreground/35 mb-2 px-2">
+      <p className="mb-2 px-3 text-[12px] tracking-[-0.01em] text-sidebar-foreground/45">
         {title}
       </p>
     ) : null;
@@ -84,15 +84,15 @@ export default function AppSidebar() {
         <button
           onClick={() => handleNav(item.path)}
           className={cn(
-            "w-full flex items-center gap-3 rounded-none border border-transparent transition-all duration-200 relative",
+            "relative flex w-full items-center gap-3 rounded-2xl border border-transparent transition-all duration-200",
             collapsed ? "justify-center px-2 py-2.5" : "px-3 py-2.5",
             active
-              ? "border-primary/40 bg-primary/10 text-primary"
-              : "text-sidebar-foreground/60 hover:border-sidebar-border hover:text-sidebar-foreground hover:bg-sidebar-accent/50"
+              ? "border-primary/20 bg-primary/10 text-primary shadow-[0_12px_24px_-22px_rgba(0,113,227,0.9)]"
+              : "text-sidebar-foreground/65 hover:border-sidebar-border hover:bg-sidebar-accent/60 hover:text-sidebar-foreground"
           )}
         >
           {active && !collapsed && (
-            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 bg-primary rounded-r-full" />
+            <div className="absolute left-2 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-primary" />
           )}
           <div className="relative shrink-0">
             <item.icon className={cn("w-[18px] h-[18px]", active && "text-primary")} />
@@ -139,10 +139,10 @@ export default function AppSidebar() {
           <button
             onClick={() => handleNav(path)}
             className={cn(
-              "w-full flex justify-center items-center px-2 py-2.5 rounded-none border border-transparent transition-all duration-200",
+              "flex w-full items-center justify-center rounded-2xl border border-transparent px-2 py-2.5 transition-all duration-200",
               sectionActive
-                ? "border-primary/40 bg-primary/10 text-primary"
-                : "text-sidebar-foreground/60 hover:border-sidebar-border hover:text-sidebar-foreground hover:bg-sidebar-accent/50"
+                ? "border-primary/20 bg-primary/10 text-primary"
+                : "text-sidebar-foreground/60 hover:border-sidebar-border hover:bg-sidebar-accent/60 hover:text-sidebar-foreground"
             )}
           >
             <Icon className="w-[18px] h-[18px]" />
@@ -161,10 +161,10 @@ export default function AppSidebar() {
               <button
                 onClick={() => handleNav(path)}
                 className={cn(
-                  "flex-1 flex items-center gap-2.5 px-2 py-2.5 rounded-none border border-transparent transition-all duration-200 relative",
+                  "relative flex flex-1 items-center gap-2.5 rounded-2xl border border-transparent px-3 py-2.5 transition-all duration-200",
                   sectionActive
-                    ? "border-primary/40 bg-primary/10 text-primary"
-                    : "text-sidebar-foreground/60 hover:border-sidebar-border hover:text-sidebar-foreground hover:bg-sidebar-accent/50"
+                    ? "border-primary/20 bg-primary/10 text-primary"
+                    : "text-sidebar-foreground/60 hover:border-sidebar-border hover:bg-sidebar-accent/60 hover:text-sidebar-foreground"
                 )}
               >
                 <Icon className={cn("w-[18px] h-[18px] shrink-0", sectionActive && "text-primary")} />
@@ -173,7 +173,7 @@ export default function AppSidebar() {
             </div>
 
             {expanded && (
-              <ul className="ml-5 pl-3 border-l border-sidebar-border/40 space-y-0.5 mt-0.5">
+              <ul className="mt-1 ml-5 space-y-1 border-l border-sidebar-border/50 pl-4">
                 {subItems.map((sub) => {
                   const subActive = isActive(sub.path);
                   return (
@@ -181,10 +181,10 @@ export default function AppSidebar() {
                       <button
                         onClick={() => handleNav(sub.path)}
                         className={cn(
-                          "w-full flex items-center gap-2 px-2 py-1.5 rounded-none transition-all duration-200 text-[12px]",
+                          "flex w-full items-center gap-2 rounded-xl px-3 py-2 text-[12px] transition-all duration-200",
                           subActive
-                            ? "bg-primary/10 text-primary font-medium"
-                            : "text-sidebar-foreground/45 hover:text-sidebar-foreground hover:bg-sidebar-accent/30"
+                            ? "bg-primary/10 text-primary"
+                            : "text-sidebar-foreground/50 hover:bg-sidebar-accent/40 hover:text-sidebar-foreground"
                         )}
                       >
                         {sub.emoji ? (
@@ -210,21 +210,18 @@ export default function AppSidebar() {
   return (
     <aside
       className={cn(
-        "fixed left-0 top-0 h-full z-40 flex flex-col border-r border-sidebar-border bg-sidebar/95 backdrop-blur-md transition-all duration-300 ease-in-out",
+        "fixed left-0 top-0 z-40 flex h-full flex-col border-r border-sidebar-border/80 bg-sidebar/90 backdrop-blur-2xl transition-all duration-300 ease-in-out",
         collapsed ? "w-[72px]" : "w-[260px]"
       )}
     >
       {/* Logo */}
-      <div className="flex items-center justify-between px-5 h-16 border-b border-sidebar-border shrink-0">
+      <div className="flex h-16 shrink-0 items-center justify-between border-b border-sidebar-border/70 px-5">
         {!collapsed && (
           <div className="flex items-center gap-2.5">
-            <div className="grid h-7 w-7 grid-cols-2 gap-0.5">
-              <div className="bg-primary" />
-              <div className="bg-zinc-700" />
-              <div className="bg-zinc-800" />
-              <div className="bg-white shadow-[0_0_12px_rgba(255,255,255,0.45)]" />
+            <div className="grid h-9 w-9 place-items-center rounded-full bg-primary text-white shadow-[0_18px_36px_-28px_rgba(0,113,227,0.9)]">
+              <span className="text-sm font-semibold">T</span>
             </div>
-            <span className="font-sans text-lg font-semibold text-sidebar-foreground tracking-tight">
+            <span className="font-['SF_Pro_Display','SF_Pro_Icons','Helvetica_Neue',Helvetica,Arial,sans-serif] text-lg font-semibold tracking-[-0.02em] text-sidebar-foreground">
               Totum OS
             </span>
           </div>
@@ -243,7 +240,7 @@ export default function AppSidebar() {
         <button
           onClick={openCommandPalette}
           className={cn(
-            "w-full flex items-center gap-2 rounded-none border border-sidebar-border bg-sidebar-accent/20 text-sidebar-foreground/45 hover:text-sidebar-foreground hover:bg-sidebar-accent/50 transition-colors",
+            "flex w-full items-center gap-2 rounded-full border border-sidebar-border/80 bg-sidebar-accent/50 text-sidebar-foreground/45 transition-colors hover:bg-sidebar-accent hover:text-sidebar-foreground",
             collapsed ? "justify-center p-2" : "px-3 py-2"
           )}
         >
@@ -251,7 +248,7 @@ export default function AppSidebar() {
           {!collapsed && (
             <>
               <span className="text-[12px] flex-1 text-left">Buscar no Totum OS...</span>
-              <kbd className="hidden sm:flex items-center gap-0.5 text-[10px] font-mono opacity-40 border border-sidebar-border px-1 py-0.5">
+              <kbd className="hidden sm:flex items-center gap-0.5 rounded-full border border-sidebar-border px-2 py-0.5 text-[10px] opacity-40">
                 ⌘K
               </kbd>
             </>
@@ -260,7 +257,7 @@ export default function AppSidebar() {
       </div>
 
       {/* Navigation */}
-      <nav aria-label="Navegação principal" className="flex-1 overflow-y-auto py-3 px-3 space-y-5">
+      <nav aria-label="Navegação principal" className="flex-1 space-y-5 overflow-y-auto px-3 py-4">
         {navigationSections.map((section) => (
           <div key={section.id}>
             <SectionLabel title={section.label} />
@@ -283,10 +280,10 @@ export default function AppSidebar() {
       </nav>
 
       {/* Footer / User */}
-      <div className="border-t border-sidebar-border p-3 shrink-0 space-y-3">
+      <div className="shrink-0 space-y-3 border-t border-sidebar-border/70 p-3">
         {collapsed ? (
           <div className="flex flex-col items-center gap-2">
-            <div className="w-9 h-9 bg-primary/15 text-primary border border-primary/30 flex items-center justify-center text-xs font-semibold uppercase">
+            <div className="flex h-9 w-9 items-center justify-center rounded-full border border-primary/20 bg-primary/10 text-xs font-semibold uppercase text-primary">
               {user?.email?.[0] || "U"}
             </div>
             <ThemeToggle compact />
@@ -301,7 +298,7 @@ export default function AppSidebar() {
         ) : (
           <>
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 bg-primary/15 text-primary border border-primary/30 flex items-center justify-center text-sm font-semibold uppercase shrink-0">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-primary/20 bg-primary/10 text-sm font-semibold uppercase text-primary">
                 {user?.email?.[0] || "U"}
               </div>
               <div className="flex-1 min-w-0">

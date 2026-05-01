@@ -1,0 +1,141 @@
+┌─────────────────────────────────────────────────────────────┐
+│  FASE 0 PRÉ-FLIGHT CHECK — TOTUM 3.0                        │
+│  Data: 2026-04-29                                           │
+│  Status: ⚠️  PRONTO COM AVISOS                              │
+└─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────┬──────────────────────────┐
+│ SEÇÃO                           │ STATUS                   │
+├─────────────────────────────────┼──────────────────────────┤
+│ Máquina Local                   │ ✅ OK                    │
+│ GitHub & Repos                  │ ✅ OK                    │
+│ Supabase                        │ ✅ OK                    │
+│ Totum-OS repo                   │ ⚠️  AVISOS               │
+│ VPS Alibaba (187.127.4.140)     │ ❌ BLOQUEADOR            │
+│ Credenciais externas            │ ℹ️  MANUAL (ver nota)    │
+└─────────────────────────────────┴──────────────────────────┘
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ MÁQUINA LOCAL
+  ✅ Node.js  v25.8.2
+  ✅ npm      v11.11.1
+  ✅ Git      v2.50.1 (Apple Git-155)
+  ✅ SSH      OpenSSH_10.2p1, LibreSSL 3.3.6
+  ✅ Disco /  228 GB total | 42 GB livres (22% usado)
+             → 42 GB disponíveis (mínimo: ~50 GB recomendado; ⚠️ limite apertado)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ GITHUB & REPOS
+  ✅ Organização grupototum acessível (pública)
+  ✅ grupototum/Alexandria → NÃO existe (pronto para criar)
+  ✅ grupototum/Totum-Chat → NÃO existe (pronto para criar)
+  ℹ️  Criação de repos privados exige GITHUB_TOKEN com escopo "repo"
+     (não testado sem token — confirme antes de Fase 0 Step 1)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ SUPABASE (cgpkfhrqprqptvehatad)
+  ✅ Projeto acessível via MCP
+  ✅ Tabela agents            existe
+  ✅ Tabela agents_config     existe
+  ✅ Tabela agent_channels    existe
+  ✅ Tabela agent_knowledge_access existe
+  ✅ Tabela rag_documents     existe
+  ✅ Tabela skills            existe
+  → Todas as tabelas críticas já existem. Nenhuma migration necessária antes de Fase 0.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️  TOTUM-OS REPO (main)
+  ✅ Repositório local existe
+  ✅ Em git, branch main, up to date com origin/main
+  ✅ Último commit: e0cc19ca feat(alexandria): add skill router sync workflow
+  ⚠️  Há arquivos staged (não commitados):
+       new file:  src/lib/directoryPicker.ts
+       modified:  src/pages/HermioneChat.tsx
+       modified:  src/pages/alexandria/KnowledgeBridges.tsx
+  → AÇÃO: Fazer commit ou stash dessas mudanças antes de iniciar Fase 0
+           para manter branch limpo.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+❌ VPS ALIBABA (187.127.4.140) — BLOQUEADOR
+  ❌ SSH negado: "Permission denied (publickey,password)"
+     → O cliente SSH local NÃO tem chave autorizada no servidor,
+       OU o usuário correto não é "root".
+
+  NÃO VERIFICADO (dependente do SSH):
+     ⬜ Docker instalado?
+     ⬜ RAM disponível? (necessário ≥ 4 GB livres)
+     ⬜ Disco / disponível? (necessário ≥ 20 GB)
+     ⬜ Nginx rodando?
+     ⬜ Portas 3210 e 11434 livres?
+
+  SOLUÇÕES:
+  1. Verificar usuário correto:
+       ssh ubuntu@187.127.4.140 "echo OK"
+       ssh totum@187.127.4.140 "echo OK"
+       ssh admin@187.127.4.140 "echo OK"
+
+  2. Adicionar chave pública ao servidor (via painel Alibaba Cloud):
+       cat ~/.ssh/id_ed25519.pub   (ou id_rsa.pub)
+       → Cole em: Alibaba ECS Console > Security Groups > Key Pairs
+          ou use senha via: ssh -o PreferredAuthentications=password user@187.127.4.140
+
+  3. Verificar se IP 187.127.4.140 ainda é o IP correto do ECS.
+
+  URGÊNCIA: CRÍTICA — bloqueia Fase 1 (deploy LobeHub + Ollama no VPS)
+  Fase 0 Steps 1–3 (repos + creds) podem ser feitos sem o VPS.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ℹ️  CREDENCIAIS EXTERNAS (verificação manual necessária)
+  Estas não são testáveis automaticamente sem os tokens:
+  [ ] Groq API key  → https://console.groq.com/keys
+  [ ] Google AI Studio key → https://aistudio.google.com/apikey
+  [ ] GitHub Personal Access Token (escopo: repo, org)
+  [ ] Supabase service_role key (já em uso no projeto)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📊 RESUMO EXECUTIVO
+  ✅  4 / 5 seções verificadas: OK ou OK com aviso
+  ⚠️  1 aviso não-bloqueador: changes staged no repo main
+  ⚠️  1 aviso de disco: 42 GB livres (recomendado 50 GB+)
+  ❌  1 BLOQUEADOR: SSH no VPS inacessível
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎯 PLANO DE AÇÃO ANTES DE FASE 0
+
+  PASSO 1 (5 min) — Resolver staged changes no repo:
+    cd ~/Documents/Pixel\ Systems/Totum-OS
+    git add src/lib/directoryPicker.ts src/pages/HermioneChat.tsx \
+            src/pages/alexandria/KnowledgeBridges.tsx
+    git commit -m "chore: save WIP before Fase 0 migration"
+    git push
+
+  PASSO 2 (10–30 min) — Resolver SSH no VPS:
+    a) Testar usuário alternativo (ubuntu, admin, totum)
+    b) Se necessário: Alibaba Cloud Console > ECS > Reset Password
+    c) Após acesso: verificar Docker, RAM, disco, Nginx, portas
+
+  PASSO 3 (2 min) — Confirmar GITHUB_TOKEN:
+    export GITHUB_TOKEN=ghp_...
+    curl -H "Authorization: token $GITHUB_TOKEN" \
+         https://api.github.com/user | grep login
+
+  PASSO 4 (2 min) — Confirmar Groq + Google AI Studio keys disponíveis.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🚀 PRÓXIMO PASSO
+  → Resolver bloqueador SSH (Passo 2 acima) — ~20 min
+  → Após resolver: execute FASE_0_CHECKLIST
+  → Tempo estimado Fase 0 (após pre-flight OK): 2 horas
+  → Resultado: 2 repos criados + todas as credenciais configuradas
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Gerado por: Claude Code (claude-sonnet-4-6) em 2026-04-29

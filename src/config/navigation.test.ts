@@ -37,10 +37,10 @@ describe("navigation config", () => {
     expect(agentes?.expandable?.subItems).toHaveLength(7);
   });
 
-  it("Alexandria has expandable with 7 sub-items", () => {
+  it("Alexandria has expandable with 8 sub-items", () => {
     const conhecimento = navigationSections.find((s) => s.id === "conhecimento");
     expect(conhecimento?.expandable).toBeDefined();
-    expect(conhecimento?.expandable?.subItems).toHaveLength(7);
+    expect(conhecimento?.expandable?.subItems).toHaveLength(8);
   });
 
   it("Fluxos has expandable with 4 sub-items", () => {

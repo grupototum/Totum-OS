@@ -1,65 +1,38 @@
-/**
- * TOTUM BADGE — Editorial DS v6
- *
- * Pill-forward badge set tuned to the editorial palette. Uses the
- * semantic color tokens (`foreground`, `accent`, `muted`…) so every
- * variant adapts between light and dark themes automatically.
- */
-
 import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const badgeVariants = cva(
-  "inline-flex items-center gap-1.5 font-sans text-[11px] font-medium uppercase tracking-[0.18em] rounded-full transition-colors",
+  "inline-flex items-center gap-1.5 rounded-full border px-3 py-1 font-['SF_Pro_Text','SF_Pro_Icons','Helvetica_Neue',Helvetica,Arial,sans-serif] text-[12px] font-normal tracking-[-0.01em] transition-colors",
   {
     variants: {
       variant: {
-        // Default: soft neutral pill
         default:
-          "bg-muted text-foreground border border-border px-2.5 py-0.5",
-
-        // Primary: inverted-ink pill (like the reference "BOLD" red label, but in editorial ink)
+          "border-border bg-secondary text-foreground",
         primary:
-          "bg-foreground text-background border-transparent px-2.5 py-0.5",
-
-        // Bold: signature rotated pill used on hero sections
+          "border-transparent bg-foreground text-background",
         bold:
-          "bg-foreground text-background border-transparent px-3 py-1 -rotate-2 text-[10px] tracking-[0.25em] font-semibold",
-
-        // Accent: editorial blue pill
+          "border-transparent bg-[#1d1d1f] px-3.5 py-1.5 text-white shadow-[0_16px_34px_-28px_rgba(29,29,31,0.75)]",
         accent:
-          "bg-accent text-accent-foreground border-transparent px-2.5 py-0.5",
-
-        // Glass: translucent on colored backgrounds
+          "border-transparent bg-primary text-primary-foreground",
         glass:
-          "bg-white/10 text-current border border-white/25 backdrop-blur-md px-3 py-1",
-
-        // Glass-dark: translucent on light backgrounds
+          "border-white/35 bg-white/15 text-current backdrop-blur-md",
         "glass-dark":
-          "bg-foreground/[0.04] text-foreground border border-border backdrop-blur-md px-3 py-1",
-
-        // Semantic states
+          "border-border bg-white/80 text-foreground backdrop-blur-md",
         success:
-          "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-transparent px-2.5 py-0.5",
+          "border-transparent bg-[#0066cc]/10 text-[#0066cc]",
         warning:
-          "bg-amber-500/15 text-amber-700 dark:text-amber-300 border-transparent px-2.5 py-0.5",
+          "border-transparent bg-[#ff791b]/12 text-[#b64400]",
         error:
-          "bg-red-500/15 text-red-700 dark:text-red-300 border-transparent px-2.5 py-0.5",
+          "border-transparent bg-[#b64400]/12 text-[#b64400]",
         info:
-          "bg-blue-500/15 text-blue-700 dark:text-blue-300 border-transparent px-2.5 py-0.5",
-
-        // Outline: bordered pill
+          "border-transparent bg-primary/10 text-primary",
         outline:
-          "bg-transparent border border-border text-muted-foreground px-2.5 py-0.5",
-
-        // Subtle: surface-muted pill
+          "border-border bg-transparent text-[#0066cc]",
         subtle:
-          "bg-muted text-muted-foreground border-transparent px-2.5 py-0.5",
-
-        // Secondary: alias for subtle (kept for call-site compatibility)
+          "border-transparent bg-muted text-muted-foreground",
         secondary:
-          "bg-secondary text-secondary-foreground border-transparent px-2.5 py-0.5",
+          "border-transparent bg-secondary text-secondary-foreground",
       },
     },
     defaultVariants: {
@@ -83,9 +56,6 @@ function Badge({ className, variant, icon, children, ...props }: BadgeProps) {
   );
 }
 
-// ───────────────────────────────────────────────────────────────
-// StatusBadge — online / offline / away / busy with a dot
-// ───────────────────────────────────────────────────────────────
 interface StatusBadgeProps extends React.HTMLAttributes<HTMLDivElement> {
   status: "online" | "offline" | "away" | "busy";
   label?: string;
@@ -105,7 +75,7 @@ function StatusBadge({ className, status, label, ...props }: StatusBadgeProps) {
   return (
     <div
       className={cn(
-        "inline-flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.22em] text-muted-foreground",
+        "inline-flex items-center gap-2 text-[12px] tracking-[-0.01em] text-muted-foreground",
         className
       )}
       {...props}
@@ -116,9 +86,6 @@ function StatusBadge({ className, status, label, ...props }: StatusBadgeProps) {
   );
 }
 
-// ───────────────────────────────────────────────────────────────
-// CountBadge — compact numeric badge (notifications, counters)
-// ───────────────────────────────────────────────────────────────
 interface CountBadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   count: number;
   max?: number;
@@ -132,8 +99,8 @@ function CountBadge({ className, count, max = 99, ...props }: CountBadgeProps) {
       className={cn(
         "inline-flex items-center justify-center",
         "min-w-[1.25rem] h-5 px-1.5",
-        "bg-foreground text-background",
-        "text-[10px] font-semibold tabular-nums",
+        "bg-primary text-primary-foreground",
+        "text-[10px] font-medium tabular-nums",
         "rounded-full",
         className
       )}

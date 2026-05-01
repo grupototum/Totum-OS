@@ -30,6 +30,7 @@ import {
   Home,
   MessageSquareText,
   WandSparkles,
+  Sparkles,
   Workflow,
   Link2,
 } from "lucide-react";
@@ -118,6 +119,7 @@ export const navigationSections: NavSection[] = [
         { label: "Contexto", path: "/alexandria/context", icon: BookOpen },
         { label: "Skills", path: "/alexandria/skills", icon: Lightbulb },
         { label: "Conexões", path: "/alexandria/bridges", icon: Link2 },
+        { label: "Tutorial", path: "/alexandria/tutorial", icon: Sparkles },
         { label: "Exportadores IA", path: "/alexandria?tab=exports", icon: GitBranch },
       ],
     },

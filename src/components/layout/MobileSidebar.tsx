@@ -11,7 +11,7 @@ interface MobileSidebarProps {
 export default function MobileSidebar({ open, onOpenChange }: MobileSidebarProps) {
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="left" className="p-0 w-[280px] bg-sidebar border-sidebar-border">
+      <SheetContent side="left" className="w-[300px] border-sidebar-border/80 bg-sidebar/95 p-0 backdrop-blur-2xl">
         {/* SheetTitle required by Radix for aria-labelledby — visually hidden */}
         <VisuallyHidden>
           <SheetTitle>Menu de Navegação</SheetTitle>
@@ -26,7 +26,7 @@ export function MobileTrigger({ onClick }: { onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      className="md:hidden fixed top-4 left-4 z-50 p-2.5 bg-card border border-border shadow-lg"
+      className="fixed left-4 top-4 z-50 rounded-full border border-border/80 bg-card p-2.5 shadow-[0_24px_44px_-28px_rgba(29,29,31,0.4)] md:hidden"
     >
       <Menu className="w-5 h-5 text-foreground" />
     </button>

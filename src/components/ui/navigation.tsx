@@ -1,15 +1,3 @@
-/**
- * TOTUM NAVIGATION COMPONENT
- * Replica exata do design system
- * 
- * Características:
- * - sticky top-0
- * - border-b border-stone-300
- * - bg-[#EAEAE5]
- * - nav-load animation
- * - Brand no centro com ícone
- */
-
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
@@ -22,10 +10,10 @@ const NavLink = React.forwardRef<HTMLAnchorElement, NavLinkProps>(
     <a
       ref={ref}
       className={cn(
-        "text-xs font-medium uppercase tracking-widest",
-        "text-stone-900 hover:text-stone-500",
+        "text-[12px] tracking-[-0.01em]",
+        "text-foreground hover:text-[#0066cc]",
         "transition-colors duration-150",
-        active && "text-stone-500",
+        active && "text-[#0066cc]",
         className
       )}
       {...props}
@@ -49,7 +37,7 @@ const Navigation = React.forwardRef<HTMLElement, NavigationProps>(
     <header
       ref={ref}
       className={cn(
-        "relative z-50 border-b border-stone-300 sticky top-0 bg-[#EAEAE5]",
+        "sticky top-0 z-50 border-b border-border/70 bg-white/85 backdrop-blur-2xl",
         "nav-load",
         loaded && "loaded",
         className
@@ -77,11 +65,11 @@ const Navigation = React.forwardRef<HTMLElement, NavigationProps>(
             className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2 group cursor-pointer"
           >
             {brand.icon && (
-              <span className="text-xl group-hover:rotate-180 transition-transform duration-700">
+              <span className="text-xl transition-transform duration-700 group-hover:rotate-180">
                 {brand.icon}
               </span>
             )}
-            <span className="font-bold tracking-tighter text-lg text-stone-900">
+            <span className="font-['SF_Pro_Display','SF_Pro_Icons','Helvetica_Neue',Helvetica,Arial,sans-serif] text-lg font-semibold tracking-[-0.03em] text-foreground">
               {brand.name}
             </span>
           </a>
@@ -117,17 +105,17 @@ const SectionHeader = React.forwardRef<HTMLDivElement, SectionHeaderProps>(
     <div
       ref={ref}
       className={cn(
-        "p-8 md:p-12 border-b border-stone-300 bg-stone-100/50",
+        "border-b border-border/70 bg-secondary/50 p-8 md:p-12",
         className
       )}
       {...props}
     >
       {number && (
-        <span className="font-mono text-xs uppercase text-stone-500 block mb-2">{number}</span>
+        <span className="mb-2 block text-[12px] tracking-[-0.01em] text-[#0066cc]">{number}</span>
       )}
-      <h2 className="text-4xl font-medium tracking-tight text-stone-900">{title}</h2>
+      <h2 className="font-['SF_Pro_Display','SF_Pro_Icons','Helvetica_Neue',Helvetica,Arial,sans-serif] text-4xl font-semibold tracking-[-0.03em] text-foreground">{title}</h2>
       {subtitle && (
-        <p className="mt-2 text-stone-500 text-lg">{subtitle}</p>
+        <p className="mt-2 text-lg text-muted-foreground">{subtitle}</p>
       )}
     </div>
   )

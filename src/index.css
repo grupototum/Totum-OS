@@ -1,125 +1,100 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* ============================================================
-   TOTUM OS DESIGN SYSTEM v8 — Light Ops / Dark Command
-   -----------------------------------------------------------
-   Single font: Inter (display + body + labels).
-   Two themes: light (default) mirrors the reference design
-   system; dark is a first-class inverse for the same layout.
-
-   Core palette:
-     page       #F6F6F3
-     panel      #FFFFFF
-     border     #D7D3CA
-     text       #181715
-     muted      #6F6A61
-     primary    #EF233C
-   ============================================================ */
-
 @layer base {
   :root {
-    /* Surface / foreground */
-    --background: 45 14% 96%;
-    --foreground: 40 7% 9%;
-    --surface: 45 14% 96%;
-    --surface-container: 0 0% 100%;
-    --surface-container-high: 42 17% 91%;
-    --surface-inverted: 40 7% 9%;
+    --background: 0 0% 100%;
+    --foreground: 240 6% 12%;
+    --surface: 0 0% 100%;
+    --surface-container: 240 14% 97%;
+    --surface-container-high: 240 16% 99%;
+    --surface-inverted: 240 6% 12%;
 
-    /* Cards / popovers */
-    --card: 0 0% 100%;
-    --card-foreground: 40 7% 9%;
+    --card: 240 14% 97%;
+    --card-foreground: 240 6% 12%;
     --popover: 0 0% 100%;
-    --popover-foreground: 40 7% 9%;
+    --popover-foreground: 240 6% 12%;
 
-    /* Primary: Totum red */
-    --primary: 353 86% 54%;             /* #EF233C */
+    --primary: 210 100% 44%;
+    --sidebar-primary-foreground: 0 0% 100%;
     --primary-foreground: 0 0% 100%;
 
-    /* Secondary: soft neutral */
-    --secondary: 42 17% 91%;
-    --secondary-foreground: 40 7% 9%;
+    --secondary: 240 14% 97%;
+    --secondary-foreground: 240 6% 12%;
 
-    --muted: 42 17% 91%;
-    --muted-foreground: 35 6% 41%;
+    --muted: 240 14% 97%;
+    --muted-foreground: 240 4% 45%;
 
-    /* Accent: electric blue for secondary highlights */
-    --accent: 217 91% 60%;
+    --accent: 210 100% 44%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 72% 51%;           /* red-600 */
+    --destructive: 22 100% 36%;
     --destructive-foreground: 0 0% 100%;
 
-    /* Borders / inputs / focus ring */
-    --border: 38 14% 82%;
-    --input: 38 14% 82%;
-    --ring: 353 86% 54%;
+    --border: 240 11% 85%;
+    --input: 240 11% 85%;
+    --ring: 210 100% 44%;
 
-    --radius: 0rem;
-    --radius-card: 0rem;
-    --radius-panel: 0rem;
+    --radius: 0.75rem;
+    --radius-card: 1.125rem;
+    --radius-panel: 1.5rem;
 
-    /* Sidebar */
-    --sidebar-background: 42 18% 93%;
-    --sidebar-foreground: 40 7% 11%;
-    --sidebar-primary: 353 86% 54%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 240 6% 12%;
+    --sidebar-primary: 210 100% 44%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 0 0% 100%;
-    --sidebar-accent-foreground: 40 7% 11%;
-    --sidebar-border: 38 14% 82%;
-    --sidebar-ring: 353 86% 54%;
+    --sidebar-accent: 240 14% 97%;
+    --sidebar-accent-foreground: 240 6% 12%;
+    --sidebar-border: 240 11% 90%;
+    --sidebar-ring: 210 100% 44%;
 
-    /* Pillars — muted editorial variants */
-    --pillar-agents: linear-gradient(135deg, #2563eb, #1d4ed8);
-    --pillar-knowledge: linear-gradient(135deg, #7c3aed, #6d28d9);
-    --pillar-content: linear-gradient(135deg, #059669, #047857);
-    --pillar-operations: linear-gradient(135deg, #ea580c, #c2410c);
+    --pillar-agents: linear-gradient(135deg, #0071e3, #0077ed);
+    --pillar-knowledge: linear-gradient(135deg, #1d1d1f, #424245);
+    --pillar-content: linear-gradient(135deg, #f5f5f7, #e8e8ed);
+    --pillar-operations: linear-gradient(135deg, #0066cc, #0071e3);
   }
 
   .dark {
-    --background: 240 10% 3%;
-    --foreground: 60 7% 95%;
-    --surface: 210 11% 4%;
-    --surface-container: 220 6% 10%;    /* #18181B */
-    --surface-container-high: 220 6% 14%;
-    --surface-inverted: 60 7% 95%;
+    --background: 240 10% 6%;
+    --foreground: 0 0% 96%;
+    --surface: 240 10% 6%;
+    --surface-container: 240 6% 13%;
+    --surface-container-high: 240 5% 17%;
+    --surface-inverted: 0 0% 96%;
 
-    --card: 220 6% 10%;
-    --card-foreground: 60 7% 95%;
-    --popover: 220 6% 10%;
-    --popover-foreground: 60 7% 95%;
+    --card: 240 6% 13%;
+    --card-foreground: 0 0% 96%;
+    --popover: 240 6% 13%;
+    --popover-foreground: 0 0% 96%;
 
-    --primary: 353 86% 54%;
+    --primary: 210 100% 44%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 6% 14%;
-    --secondary-foreground: 60 7% 95%;
+    --secondary: 240 5% 17%;
+    --secondary-foreground: 0 0% 96%;
 
-    --muted: 220 6% 14%;
-    --muted-foreground: 30 6% 70%;
+    --muted: 240 5% 17%;
+    --muted-foreground: 240 6% 75%;
 
-    --accent: 217 91% 60%;
+    --accent: 210 100% 44%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 72% 51%;
+    --destructive: 22 100% 36%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 6% 18%;
-    --input: 220 6% 18%;
-    --ring: 213 94% 68%;
+    --border: 240 6% 22%;
+    --input: 240 6% 22%;
+    --ring: 210 100% 44%;
 
-    --sidebar-background: 220 6% 7%;
-    --sidebar-foreground: 60 7% 95%;
-    --sidebar-primary: 60 7% 95%;
-    --sidebar-primary-foreground: 0 0% 10%;
-    --sidebar-accent: 220 6% 12%;
-    --sidebar-accent-foreground: 60 7% 95%;
-    --sidebar-border: 220 6% 16%;
-    --sidebar-ring: 213 94% 68%;
+    --sidebar-background: 240 10% 8%;
+    --sidebar-foreground: 0 0% 96%;
+    --sidebar-primary: 210 100% 44%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 5% 17%;
+    --sidebar-accent-foreground: 0 0% 96%;
+    --sidebar-border: 240 6% 19%;
+    --sidebar-ring: 210 100% 44%;
   }
 
   * {
@@ -128,7 +103,7 @@
   }
 
   html {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     scroll-behavior: smooth;
@@ -137,102 +112,99 @@
 
   body {
     background:
-      linear-gradient(180deg, hsl(var(--background)), hsl(42 17% 92%));
+      radial-gradient(circle at top, hsl(210 100% 44% / 0.05), transparent 28%),
+      linear-gradient(180deg, hsl(var(--background)), hsl(var(--surface-container-high)));
     color: hsl(var(--foreground));
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    font-feature-settings: "ss01", "cv11";
-    font-size: 15px;
-    line-height: 1.6;
+    font-family: "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.4285914286;
+    letter-spacing: -0.016em;
     overflow-x: hidden;
   }
 
-  /* Editorial heading scale — Inter at tight tracking mimics the
-     reference design's Manrope/Space Grotesk-style hero. */
   h1, .h1 {
-    font-family: 'Inter', sans-serif;
-    font-size: clamp(3rem, 6vw, 6rem);
-    line-height: 0.95;
-    letter-spacing: 0;
+    font-family: "SF Pro Display", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: clamp(3rem, 5vw, 4.5rem);
+    line-height: 1.0834933333;
+    letter-spacing: -0.003em;
     font-weight: 600;
     color: hsl(var(--foreground));
   }
 
   h2, .h2 {
-    font-family: 'Inter', sans-serif;
-    font-size: clamp(2rem, 4vw, 3rem);
-    line-height: 1.05;
+    font-family: "SF Pro Display", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: clamp(2.25rem, 4vw, 3.25rem);
+    line-height: 1.1;
     letter-spacing: 0;
     font-weight: 600;
     color: hsl(var(--foreground));
   }
 
   h3, .h3 {
-    font-family: 'Inter', sans-serif;
-    font-size: 1.5rem;
-    line-height: 1.2;
-    letter-spacing: 0;
+    font-family: "SF Pro Display", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: clamp(1.875rem, 3vw, 2.4rem);
+    line-height: 1.125;
+    letter-spacing: 0.004em;
     font-weight: 600;
     color: hsl(var(--foreground));
   }
 
   h4, .h4 {
-    font-family: 'Inter', sans-serif;
-    font-size: 1.125rem;
-    line-height: 1.3;
-    letter-spacing: 0;
+    font-family: "SF Pro Display", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 24px;
+    line-height: 1.1666666667;
+    letter-spacing: 0.009em;
     font-weight: 600;
     color: hsl(var(--foreground));
   }
 
   .paragraph-lg {
-    font-family: 'Inter', sans-serif;
-    font-size: 1.125rem;
-    line-height: 1.65;
+    font-family: "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 17px;
+    line-height: 1.1764805882;
+    letter-spacing: -0.022em;
     font-weight: 400;
     color: hsl(var(--muted-foreground));
   }
 
   .paragraph {
-    font-family: 'Inter', sans-serif;
-    font-size: 0.9375rem;
-    line-height: 1.6;
+    font-family: "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.4285914286;
+    letter-spacing: -0.016em;
     color: hsl(var(--muted-foreground));
   }
 
   /* Label helpers (kept as class names used across the app) */
   .label-bold-lg {
-    font-family: 'Inter', sans-serif;
-    font-size: 0.9375rem;
+    font-family: "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 17px;
     font-weight: 600;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.022em;
     color: hsl(var(--foreground));
   }
 
   .label-bold-md {
-    font-family: 'Inter', sans-serif;
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
+    font-family: "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
     color: hsl(var(--foreground));
   }
 
   .label-bold-sm {
-    font-family: 'Inter', sans-serif;
-    font-size: 0.6875rem;
-    font-weight: 700;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
+    font-family: "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
     color: hsl(var(--foreground));
   }
 
-  /* Signature micro-label: Inter at 0.65rem / 0.25em tracking,
-     matching the reference DS's `label-mono` slots. */
   .label-mono {
-    font-family: 'Inter', sans-serif;
-    font-size: 0.65rem;
-    font-weight: 500;
-    letter-spacing: 0.25em;
+    font-family: "SF Mono", Menlo, Monaco, Consolas, monospace;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0;
     text-transform: uppercase;
     color: hsl(var(--muted-foreground));
   }
@@ -279,31 +251,29 @@
     @apply transition-all duration-150 ease-in-out;
   }
 
-  /* ==========================================================
-     CONTAINER — 1400px hard cap to match the editorial frame
-     ========================================================== */
   .ds-container {
     width: 100%;
-    max-width: 1400px;
+    max-width: 1320px;
     margin-left: auto;
     margin-right: auto;
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
   }
 
-  /* Rounded "panel" wrapper used on public pages (Login / Signup) */
   .ds-panel {
-    @apply shadow-editorial-lg bg-surface-container ring-1 ring-border overflow-hidden;
+    @apply bg-surface-container ring-1 ring-border/80 overflow-hidden;
+    border-radius: var(--radius-panel);
+    box-shadow: 0 18px 50px -32px rgba(29, 29, 31, 0.22);
   }
 
   /* ==========================================================
      NAVIGATION — translucent editorial bar
      ========================================================== */
   .nav-glass {
-    background-color: hsl(var(--surface-container) / 0.86);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-    border: 1px solid hsl(var(--border));
+    background-color: hsl(var(--surface) / 0.82);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid hsl(var(--border) / 0.7);
   }
 
   /* ==========================================================
@@ -320,26 +290,27 @@
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    padding: 0.75rem 1.5rem;
-    border-radius: 0;
-    background-color: hsl(var(--primary));
+    padding: 9px 22px;
+    border-radius: 9999px;
+    background-color: #0071e3;
     color: hsl(var(--primary-foreground));
-    font-family: 'Inter', sans-serif;
-    font-size: 0.8125rem;
-    font-weight: 500;
-    letter-spacing: 0.02em;
+    font-family: "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 17px;
+    font-weight: 400;
+    letter-spacing: -0.022em;
     line-height: 1;
     transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1), background-color 300ms ease, box-shadow 300ms ease;
-    box-shadow: 0 1px 0 0 rgb(10 10 10 / 0.04), 0 10px 30px -12px rgb(10 10 10 / 0.25);
+    box-shadow: none;
   }
 
   .btn-primary:hover {
     transform: translateY(-1px);
-    background-color: hsl(var(--primary) / 0.92);
+    background-color: #0077ed;
   }
 
   .btn-primary:active {
     transform: translateY(0);
+    background-color: #006edb;
   }
 
   /* Outline pill — editorial border */
@@ -348,22 +319,22 @@
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    padding: 0.7rem 1.4rem;
-    border-radius: 0;
+    padding: 9px 0;
+    border-radius: 9999px;
     background-color: transparent;
-    color: hsl(var(--foreground));
-    border: 1px solid hsl(var(--border));
-    font-family: 'Inter', sans-serif;
-    font-size: 0.8125rem;
-    font-weight: 500;
-    letter-spacing: 0.02em;
+    color: #0066cc;
+    border: 1px solid transparent;
+    font-family: "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 17px;
+    font-weight: 400;
+    letter-spacing: -0.022em;
     transition: all 300ms ease;
   }
 
   .btn-outline:hover {
-    background-color: hsl(var(--foreground));
-    color: hsl(var(--background));
-    border-color: hsl(var(--foreground));
+    background-color: hsl(var(--secondary));
+    color: #0066cc;
+    border-color: transparent;
   }
 
   /* Legacy aliases — keep existing markup working visually. */
@@ -380,16 +351,17 @@
      CARDS — Editorial
      ========================================================== */
   .card-editorial {
-    background-color: hsl(var(--card));
+    background-color: #f5f5f7;
     color: hsl(var(--card-foreground));
-    border: 1px solid hsl(var(--border));
+    border: 1px solid hsl(var(--border) / 0.75);
     border-radius: var(--radius-card);
     transition: transform 500ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 500ms ease, border-color 500ms ease;
+    box-shadow: 0 18px 44px -34px rgba(29, 29, 31, 0.18);
   }
 
   .card-editorial:hover {
     transform: translateY(-2px);
-    box-shadow: 0 24px 60px -30px rgb(10 10 10 / 0.2);
+    box-shadow: 0 24px 60px -30px rgba(29, 29, 31, 0.22);
   }
 
   /* Legacy alias — the sharp black-on-red card becomes the soft
@@ -454,14 +426,14 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.35rem 0.85rem;
-    border-radius: 0;
+    border-radius: 9999px;
     background-color: hsl(var(--surface-container));
     color: hsl(var(--foreground));
     border: 1px solid hsl(var(--border));
-    font-family: 'Inter', sans-serif;
-    font-size: 0.75rem;
-    font-weight: 500;
-    letter-spacing: 0.02em;
+    font-family: "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
   }
 
   .badge-bold {
@@ -469,14 +441,13 @@
     align-items: center;
     gap: 0.35rem;
     padding: 0.25rem 0.65rem;
-    border-radius: 0;
+    border-radius: 9999px;
     background-color: hsl(var(--foreground));
     color: hsl(var(--background));
-    font-family: 'Inter', sans-serif;
-    font-size: 0.625rem;
+    font-family: "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 12px;
     font-weight: 600;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
+    letter-spacing: -0.01em;
   }
 
   /* Legacy aliases */
@@ -487,15 +458,14 @@
   .badge-tag {
     display: inline-flex;
     padding: 0.35rem 0.85rem;
-    border-radius: 0;
+    border-radius: 9999px;
     background-color: transparent;
     border: 1px solid hsl(var(--border));
-    color: hsl(var(--muted-foreground));
-    font-family: 'Inter', sans-serif;
-    font-size: 0.6875rem;
-    font-weight: 500;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
+    color: #0066cc;
+    font-family: "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
     transition: all 300ms ease;
   }
 
@@ -509,19 +479,18 @@
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
-    font-family: 'Inter', sans-serif;
-    font-size: 0.625rem;
-    font-weight: 600;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: hsl(var(--accent));
+    font-family: "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    color: #0066cc;
   }
 
   .badge-status .indicator {
     width: 6px;
     height: 6px;
-    background-color: hsl(var(--accent));
-    border-radius: 0;
+    background-color: #0066cc;
+    border-radius: 9999px;
     animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
 
@@ -531,12 +500,13 @@
   .input-ds {
     width: 100%;
     padding: 0.75rem 1rem;
-    background-color: hsl(var(--surface-container));
+    background-color: #ffffff;
     border: 1px solid hsl(var(--border));
-    border-radius: 9999px;
+    border-radius: 12px;
     color: hsl(var(--foreground));
-    font-size: 0.9375rem;
-    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-family: "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    letter-spacing: -0.016em;
     outline: none;
     transition: border-color 200ms ease, box-shadow 200ms ease, background-color 200ms ease;
   }
@@ -551,11 +521,10 @@
   }
 
   .input-label {
-    font-family: 'Inter', sans-serif;
-    font-size: 0.65rem;
-    font-weight: 500;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
+    font-family: "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
     color: hsl(var(--muted-foreground));
   }
 

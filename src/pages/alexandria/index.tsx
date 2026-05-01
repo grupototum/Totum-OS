@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { PageHeader, DataPanel } from '@/components/ui/patterns';
-import { Loader2, RefreshCw, BookOpen, FileText, Users, Zap, ExternalLink, Brain, Upload, Download, GitBranch, Sparkles, Link2 } from 'lucide-react';
+import { Loader2, RefreshCw, BookOpen, FileText, Users, Zap, ExternalLink, Brain, Upload, Download, GitBranch, Sparkles, Link2, ArrowRight } from 'lucide-react';
 import Dashboard from './Dashboard';
 import ContextHub from './ContextHub';
 
@@ -91,6 +91,26 @@ export default function AlexandriaPage() {
             <Button variant="outline" onClick={() => navigate('/hermione')} className="shrink-0 gap-2">
               <ExternalLink className="h-4 w-4" />
               Criar artefato
+            </Button>
+          </CardContent>
+        </Card>
+
+        <Card className="border-border/80 bg-white">
+          <CardContent className="flex flex-col gap-4 p-5 lg:flex-row lg:items-center lg:justify-between">
+            <div className="flex items-start gap-3">
+              <div className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-border bg-secondary text-primary">
+                <Sparkles className="h-5 w-5" />
+              </div>
+              <div>
+                <p className="font-semibold text-foreground">Tutorial interativo da Alexandria</p>
+                <p className="mt-1 max-w-3xl text-sm text-muted-foreground">
+                  Um tour guiado para entender o papel de cada página, como elas se conectam e qual resultado esperar no uso do dia a dia.
+                </p>
+              </div>
+            </div>
+            <Button onClick={() => navigate('/alexandria/tutorial')} className="shrink-0 gap-2">
+              Abrir tutorial
+              <ArrowRight className="h-4 w-4" />
             </Button>
           </CardContent>
         </Card>

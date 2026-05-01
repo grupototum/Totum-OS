@@ -1,16 +1,3 @@
-/**
- * TOTUM CARD — Editorial DS v6
- *
- * Editorial, rounded, light-first cards that adapt to dark mode via
- * semantic tokens. Preserves the original component surface:
- *   Card, CardHeader, CardTitle, CardDescription, CardContent,
- *   CardFooter, ListItemCard, TechCard, StatCard.
- *
- * The `cornerAccents` prop is kept for call-site compatibility but
- * is no longer rendered — the editorial style uses soft ink borders
- * plus hover elevation instead of hard red corners.
- */
-
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
@@ -34,11 +21,10 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
     <div
       ref={ref}
       className={cn(
-        "relative bg-card text-card-foreground border border-border/80 rounded-xl overflow-hidden shadow-[0_0_0_1px_rgba(255,255,255,0.02)]",
+        "relative overflow-hidden rounded-[18px] border border-border/80 bg-card text-card-foreground shadow-[0_18px_50px_-36px_rgba(29,29,31,0.24)]",
         hoverGlow && [
-          "transition-all duration-300 ease-out",
-          "hover:-translate-y-px",
-          "hover:border-primary/40 hover:shadow-[0_18px_60px_-35px_hsl(var(--primary)/0.55)]",
+          "transition-all duration-300 ease-out hover:-translate-y-px",
+          "hover:border-primary/25 hover:shadow-[0_28px_60px_-38px_rgba(29,29,31,0.28)]",
         ],
         className
       )}
@@ -69,7 +55,7 @@ const CardTitle = React.forwardRef<
   <Component
     ref={ref}
     className={cn(
-      "font-display text-lg font-semibold tracking-tight text-foreground",
+      "font-['SF_Pro_Display','SF_Pro_Icons','Helvetica_Neue',Helvetica,Arial,sans-serif] text-[24px] font-semibold leading-[1.1666666667] tracking-[0.009em] text-foreground",
       className
     )}
     {...props}
@@ -83,7 +69,7 @@ const CardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn("text-sm text-muted-foreground leading-relaxed", className)}
+    className={cn("text-sm leading-relaxed tracking-[-0.016em] text-muted-foreground", className)}
     {...props}
   />
 ));
@@ -109,9 +95,6 @@ const CardFooter = React.forwardRef<
 ));
 CardFooter.displayName = "CardFooter";
 
-// ────────────────────────────────────────────────────────────────
-// ListItemCard — row-style hover card with accent bar
-// ────────────────────────────────────────────────────────────────
 interface ListItemCardProps extends React.HTMLAttributes<HTMLDivElement> {
   number?: string;
   title: string;
@@ -124,9 +107,9 @@ const ListItemCard = React.forwardRef<HTMLDivElement, ListItemCardProps>(
       ref={ref}
       className={cn(
         "relative flex items-center justify-between",
-        "p-6 bg-transparent border-b border-border",
+        "rounded-[18px] border border-border/70 bg-card p-6",
         "overflow-hidden transition-colors duration-300",
-        "hover:bg-muted/60 cursor-pointer group",
+        "cursor-pointer group hover:bg-secondary/80",
         className
       )}
       {...props}
@@ -136,11 +119,11 @@ const ListItemCard = React.forwardRef<HTMLDivElement, ListItemCardProps>(
       )}
       <div className="transition-transform duration-300 group-hover:translate-x-2">
         {number && (
-          <span className="block text-[10px] text-muted-foreground font-medium tracking-[0.25em] mb-1 group-hover:text-accent transition-colors uppercase">
+          <span className="mb-1 block text-[12px] tracking-[-0.01em] text-muted-foreground transition-colors group-hover:text-[#0066cc]">
             {number}
           </span>
         )}
-        <h4 className="text-lg text-foreground font-display font-semibold tracking-tight">
+        <h4 className="font-['SF_Pro_Display','SF_Pro_Icons','Helvetica_Neue',Helvetica,Arial,sans-serif] text-[24px] font-semibold leading-[1.1666666667] tracking-[0.009em] text-foreground">
           {title}
         </h4>
         {children}
@@ -150,9 +133,6 @@ const ListItemCard = React.forwardRef<HTMLDivElement, ListItemCardProps>(
 );
 ListItemCard.displayName = "ListItemCard";
 
-// ────────────────────────────────────────────────────────────────
-// TechCard — headline label + status pips, rounded editorial style
-// ────────────────────────────────────────────────────────────────
 interface TechCardProps extends React.HTMLAttributes<HTMLDivElement> {
   label?: string;
   status?: string;
@@ -165,13 +145,13 @@ const TechCard = React.forwardRef<HTMLDivElement, TechCardProps>(
       className={cn("p-6 flex flex-col justify-between min-h-[200px]", className)}
       {...props}
     >
-      <div className="flex items-center justify-between border-b border-border border-dashed pb-4 mb-4">
-        <span className="text-[10px] text-accent tracking-[0.25em] uppercase font-semibold">
-          [ {label} ]
+      <div className="mb-4 flex items-center justify-between border-b border-border/70 pb-4">
+        <span className="text-[12px] tracking-[-0.01em] text-[#0066cc]">
+          {label}
         </span>
         <div className="flex gap-1.5">
-          <div className="w-1.5 h-1.5 bg-accent animate-pulse rounded-full" />
-          <div className="w-1.5 h-1.5 bg-border rounded-full" />
+          <div className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#0066cc]" />
+          <div className="h-1.5 w-1.5 rounded-full bg-border" />
         </div>
       </div>
       {children}
@@ -180,9 +160,6 @@ const TechCard = React.forwardRef<HTMLDivElement, TechCardProps>(
 );
 TechCard.displayName = "TechCard";
 
-// ────────────────────────────────────────────────────────────────
-// StatCard — large numeric value with mono label
-// ────────────────────────────────────────────────────────────────
 interface StatCardProps extends React.HTMLAttributes<HTMLDivElement> {
   value: string;
   label: string;
@@ -195,8 +172,8 @@ const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
       ref={ref}
       className={cn(
         "p-6 flex flex-col justify-between",
-        "border-b border-border/70 last:border-b-0",
-        "group hover:bg-muted/60 transition-colors duration-200",
+        "rounded-[18px] border border-border/70 bg-card last:border-b",
+        "group transition-colors duration-200 hover:bg-secondary/85",
         className
       )}
       {...props}
@@ -205,10 +182,10 @@ const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
         {icon}
       </div>
       <div>
-        <div className="text-5xl font-display font-semibold tracking-tighter text-foreground">
+        <div className="font-['SF_Pro_Display','SF_Pro_Icons','Helvetica_Neue',Helvetica,Arial,sans-serif] text-5xl font-semibold tracking-[-0.03em] text-foreground">
           {value}
         </div>
-        <span className="text-[10px] text-muted-foreground mt-2 block uppercase tracking-[0.25em] font-medium">
+        <span className="mt-2 block text-[12px] tracking-[-0.01em] text-muted-foreground">
           {label}
         </span>
       </div>
