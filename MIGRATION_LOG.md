@@ -11,9 +11,9 @@
 
 ## Credenciais Geradas
 
-- Groq API key: ✓ (salvo em .env.local)
-- Google Gemini API key: ✓ (salvo em .env.local)
-- Supabase URL/Key: ✓ (projeto cgpkfhrqprqptvehatad)
+- Groq API key: ✓ `gsk_gC6iNM...` (key "Totum OS Geral", salvo em .env.local)
+- Google Gemini API key: ✓ `AIzaSyDS...` (salvo em .env.local)
+- Supabase URL/Key: ✓ (projeto cgpkfhrqprqptvehatad, salvo em .env.local)
 
 ## Repos Criados
 
@@ -22,7 +22,7 @@
 
 ## Backups Feitos
 
-- Supabase pre-migration: [ ] pendente — acessar Settings > Database > Backups em https://app.supabase.com
+- Supabase pre-migration: ✓ (já existia)
 - Totum-OS tag v1.0-pre-migration: ✓ (commit cdcc7632)
 
 ## Próximas Fases
