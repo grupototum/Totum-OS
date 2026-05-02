@@ -9,7 +9,7 @@ routing_priority: 0
 model_preference: claude
 tags: []
 content_hash: ce77137550865b93119a652a2f926c53b304905b1f24c8ac1f4eac4d5e3c38c1
-updated_at: 2026-04-30T12:59:43.016Z
+updated_at: 2026-05-01T00:43:48.380Z
 prompt_template_path: prompts/automation_workflows.md
 ---
 

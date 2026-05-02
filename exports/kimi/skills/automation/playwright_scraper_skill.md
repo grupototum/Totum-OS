@@ -9,7 +9,7 @@ routing_priority: 0
 model_preference: claude
 tags: []
 content_hash: 02e9266c005ecf11c25bdb4052044c298936784fedab25d1611407b723671c2f
-updated_at: 2026-04-30T12:59:43.016Z
+updated_at: 2026-05-01T00:43:48.380Z
 prompt_template_path: prompts/playwright_scraper_skill.md
 ---
 

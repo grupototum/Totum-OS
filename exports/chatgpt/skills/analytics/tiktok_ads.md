@@ -9,7 +9,7 @@ routing_priority: 0
 model_preference: groq
 tags: []
 content_hash: 66b19443a16eab7a6734fd73fdfa26601bacb66f82cc17a25cca2018b8a1e76d
-updated_at: 2026-04-30T12:59:43.016Z
+updated_at: 2026-05-01T00:43:48.380Z
 prompt_template_path: prompts/tiktok_ads.md
 ---
 

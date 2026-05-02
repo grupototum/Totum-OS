@@ -9,7 +9,7 @@ routing_priority: 0
 model_preference: claude
 tags: []
 content_hash: 32b9bea2d868bcbc6768901ef51b43ecf6657c5d4446504810eacf6e65202b9c
-updated_at: 2026-04-30T12:59:43.016Z
+updated_at: 2026-05-01T00:43:48.380Z
 prompt_template_path: prompts/agent_browser.md
 ---
 

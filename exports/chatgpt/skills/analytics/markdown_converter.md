@@ -9,7 +9,7 @@ routing_priority: 0
 model_preference: groq
 tags: []
 content_hash: b41ae02d33c51c4b01837f86deda7c3d609b06848c63fe27b1b6c4aa436c1682
-updated_at: 2026-04-30T12:59:43.016Z
+updated_at: 2026-05-01T00:43:48.380Z
 prompt_template_path: prompts/markdown_converter.md
 ---
 

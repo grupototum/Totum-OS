@@ -9,7 +9,7 @@ routing_priority: 0
 model_preference: claude
 tags: []
 content_hash: 87489591817a2df35fd27e0f47c0275d7e840a239d741191a01b57aad393fff6
-updated_at: 2026-04-30T12:59:43.016Z
+updated_at: 2026-05-01T00:43:48.380Z
 prompt_template_path: prompts/trello.md
 ---
 

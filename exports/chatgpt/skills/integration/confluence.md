@@ -9,7 +9,7 @@ routing_priority: 0
 model_preference: claude
 tags: []
 content_hash: 097459871c880d7d989380e900d058c5409ddcb8fac4801736096e2e4599c60a
-updated_at: 2026-04-30T12:59:43.016Z
+updated_at: 2026-05-01T00:43:48.380Z
 prompt_template_path: prompts/confluence.md
 ---
 

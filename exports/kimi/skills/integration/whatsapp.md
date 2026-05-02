@@ -9,7 +9,7 @@ routing_priority: 0
 model_preference: claude
 tags: []
 content_hash: bd470916d2f2a4e4fc3b4e32410b5c6fbd3ff8250f79650e1e4feb92d707652f
-updated_at: 2026-04-30T12:59:43.016Z
+updated_at: 2026-05-01T00:43:48.380Z
 prompt_template_path: prompts/whatsapp.md
 ---
 

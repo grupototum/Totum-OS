@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-30T12:59:43.016Z",
+  "generated_at": "2026-05-01T00:43:48.380Z",
   "scope": "all_active",
   "total_skills": 70,
   "entries": [
@@ -21,7 +21,7 @@
       "skill_markdown": "# 🚦 Skill Router\n\n> **ID:** `skill_router`  \n> **Categoria:** automation  \n> **Prioridade:** P0  \n> **Status:** active  \n> **Papel:** principal\n\n## Descrição\n\nEscolhe quais skills da Totum devem ser usadas para cada objetivo antes da execução.\n\n## Uso na Totum\n\n- Primeira skill consultada quando a IA precisa decidir o melhor caminho\n- Roteamento entre skills por objetivo, contexto e categoria\n- Planejamento de ordem de execução antes de chamar outras skills\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| objective | string | sim | Pedido, meta ou problema que precisa de roteamento |\n| context | object | não | Contexto adicional de cliente, canal, projeto, etapa ou restrições |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| recommended_skills | array | Lista priorizada de skills recomendadas |\n| execution_plan | object | Plano sugerido de execução, ordem e justificativa |\n\n## Regras de Roteamento\n\n- Sempre considere a intenção principal antes do provider preferido\n- Prefira o menor conjunto de skills capaz de resolver o objetivo\n- Priorize skills ativas e com melhor aderência de categoria\n- Explique por que cada skill foi escolhida\n- Se faltar confiança, devolva 2 a 3 opções com ordem sugerida\n\n## Configuração\n\n- **Modelo preferido:** `claude`\n- **Custo estimado:** R$ 0.03/chamada\n- **Taxa de sucesso:** ~98%\n- **Duração estimada:** ~1200ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/skill_router.md\n```\n\n---\n\n*Skill principal da Alexandria para descoberta e priorização de skills*",
       "prompt_template_path": "prompts/skill_router.md",
       "content_hash": "f996d9c619b4f188a54b4bd538faee2d6c61a6a1687ae34412c3a63f51d4569f",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "ahrefs",
@@ -35,7 +35,7 @@
       "skill_markdown": "# 📊 Ahrefs\n\n> **ID:** `ahrefs`  \n> **Categoria:** analytics  \n> **Prioridade:** P1  \n> **Status:** active\n\n## Descrição\n\nSEO e backlinks\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `groq`\n- **Custo estimado:** R$ 0.04/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/ahrefs.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/ahrefs.md",
       "content_hash": "27846d10e5a4bd52b1da9268253b5c5fb7f6be31a8f3158d0c4f6519ae38e44d",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "airtable",
@@ -49,7 +49,7 @@
       "skill_markdown": "# 📊 Airtable\n\n> **ID:** `airtable`  \n> **Categoria:** analytics  \n> **Prioridade:** P0  \n> **Status:** active\n\n## Descrição\n\nBases Airtable\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `groq`\n- **Custo estimado:** R$ 0.04/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/airtable.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/airtable.md",
       "content_hash": "43e48d16d4747fd12d27c450e5210d391304c37afbadc68c00a0c62906e227bd",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "data_analyst",
@@ -63,7 +63,7 @@
       "skill_markdown": "# 📊 Data Analyst\n\n> **ID:** `data_analyst`  \n> **Categoria:** analytics  \n> **Prioridade:** P0  \n> **Status:** active\n\n## Descrição\n\nVisualização, SQL, reports\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `groq`\n- **Custo estimado:** R$ 0.04/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/data_analyst.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/data_analyst.md",
       "content_hash": "20b3bd664c8881ea9b28bf9ea06c20a35af650765ae1e84412095660b430e5f1",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "google_ads",
@@ -77,7 +77,7 @@
       "skill_markdown": "# 📊 Google Ads\n\n> **ID:** `google_ads`  \n> **Categoria:** analytics  \n> **Prioridade:** P1  \n> **Status:** active\n\n## Descrição\n\nGoogle Ads\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `groq`\n- **Custo estimado:** R$ 0.04/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/google_ads.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/google_ads.md",
       "content_hash": "e0bfb314665804111d643e06c905bdebb57aa65ea51c13c715cca9a1ede0675b",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "google_analytics",
@@ -91,7 +91,7 @@
       "skill_markdown": "# 📊 Google Analytics\n\n> **ID:** `google_analytics`  \n> **Categoria:** analytics  \n> **Prioridade:** P1  \n> **Status:** active\n\n## Descrição\n\nMétricas GA4\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `groq`\n- **Custo estimado:** R$ 0.04/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/google_analytics.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/google_analytics.md",
       "content_hash": "a4ce1e2cb04f932aa4d80a88a6db11991218e374a917618321b683cff56cc3df",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "google_sheets",
@@ -105,7 +105,7 @@
       "skill_markdown": "# 📊 Google Sheets\n\n> **ID:** `google_sheets`  \n> **Categoria:** analytics  \n> **Prioridade:** P0  \n> **Status:** active\n\n## Descrição\n\nPlanilhas Google\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `groq`\n- **Custo estimado:** R$ 0.04/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/google_sheets.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/google_sheets.md",
       "content_hash": "57c78d975a1d4d2f32983349a78e45b4d4fa4d9706967106e930af8c5190cd6b",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "hubspot",
@@ -119,7 +119,7 @@
       "skill_markdown": "# 📊 HubSpot\n\n> **ID:** `hubspot`  \n> **Categoria:** analytics  \n> **Prioridade:** P1  \n> **Status:** active\n\n## Descrição\n\nCRM HubSpot\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `groq`\n- **Custo estimado:** R$ 0.04/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/hubspot.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/hubspot.md",
       "content_hash": "566ee9d0f6da141a788dbe67115a0e7ef6421c0d89811d8ad7ce2861b8ffba50",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "linkedin_ads",
@@ -133,7 +133,7 @@
       "skill_markdown": "# 📊 LinkedIn Ads\n\n> **ID:** `linkedin_ads`  \n> **Categoria:** analytics  \n> **Prioridade:** P1  \n> **Status:** active\n\n## Descrição\n\nLinkedIn Ads\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `groq`\n- **Custo estimado:** R$ 0.04/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/linkedin_ads.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/linkedin_ads.md",
       "content_hash": "b68f91add5ce8151fb8c9324554b528a245ede169eff6890d55c7c6e03da2acd",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "mailchimp",
@@ -147,7 +147,7 @@
       "skill_markdown": "# 📊 Mailchimp\n\n> **ID:** `mailchimp`  \n> **Categoria:** analytics  \n> **Prioridade:** P1  \n> **Status:** active\n\n## Descrição\n\nEmail marketing\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `groq`\n- **Custo estimado:** R$ 0.04/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/mailchimp.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/mailchimp.md",
       "content_hash": "d6420591207db1615592cccc0453bc921b29338ca22f8b3e3ad05084f55d29b3",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "markdown_converter",
@@ -161,7 +161,7 @@
       "skill_markdown": "# 📊 Markdown Converter\n\n> **ID:** `markdown_converter`  \n> **Categoria:** analytics  \n> **Prioridade:** P0  \n> **Status:** active\n\n## Descrição\n\nConverter para Markdown\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `groq`\n- **Custo estimado:** R$ 0.04/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/markdown_converter.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/markdown_converter.md",
       "content_hash": "b41ae02d33c51c4b01837f86deda7c3d609b06848c63fe27b1b6c4aa436c1682",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "mercado_pago",
@@ -175,7 +175,7 @@
       "skill_markdown": "# 📊 Mercado Pago\n\n> **ID:** `mercado_pago`  \n> **Categoria:** analytics  \n> **Prioridade:** P1  \n> **Status:** active\n\n## Descrição\n\nMercado Pago\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `groq`\n- **Custo estimado:** R$ 0.04/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/mercado_pago.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/mercado_pago.md",
       "content_hash": "eb9c65d766440718f34792bd28fcc5f5bbae8958a4a7330ebd0a1dd3a0735386",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "meta_ads",
@@ -189,7 +189,7 @@
       "skill_markdown": "# 📊 Meta Ads\n\n> **ID:** `meta_ads`  \n> **Categoria:** analytics  \n> **Prioridade:** P1  \n> **Status:** active\n\n## Descrição\n\nFacebook/Instagram Ads\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `groq`\n- **Custo estimado:** R$ 0.04/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/meta_ads.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/meta_ads.md",
       "content_hash": "f8247973ab4ed30381162785dd44834f5e4150ecf8461e0b483136de0e4851fa",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "openclaw_usage_tracker",
@@ -203,7 +203,7 @@
       "skill_markdown": "# 📊 OpenClaw Usage Tracker\n\n> **ID:** `openclaw_usage_tracker`  \n> **Categoria:** analytics  \n> **Prioridade:** P1  \n> **Status:** active\n\n## Descrição\n\nTracking custos\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `groq`\n- **Custo estimado:** R$ 0.04/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/openclaw_usage_tracker.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/openclaw_usage_tracker.md",
       "content_hash": "4fcc3e4c3e8547c53c6b782d130d320dfce34f83c9b9efb33e3c88cbc84b9cbe",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "paypal",
@@ -217,7 +217,7 @@
       "skill_markdown": "# 📊 PayPal\n\n> **ID:** `paypal`  \n> **Categoria:** analytics  \n> **Prioridade:** P1  \n> **Status:** active\n\n## Descrição\n\nPagamentos PayPal\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `groq`\n- **Custo estimado:** R$ 0.04/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/paypal.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/paypal.md",
       "content_hash": "508e4ef6eb3fccd52d355c42086f7eaaa2d6130c11d7d7574fc98a8b1d30f4f1",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "pix",
@@ -231,7 +231,7 @@
       "skill_markdown": "# 📊 PIX\n\n> **ID:** `pix`  \n> **Categoria:** analytics  \n> **Prioridade:** P1  \n> **Status:** active\n\n## Descrição\n\nPIX Brazil\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `groq`\n- **Custo estimado:** R$ 0.04/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/pix.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/pix.md",
       "content_hash": "b27d78e1bf2b7ac363fa0df420a8575c44c24593fb5bda55120f1b83cf3c3401",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "salesforce",
@@ -245,7 +245,7 @@
       "skill_markdown": "# 📊 Salesforce\n\n> **ID:** `salesforce`  \n> **Categoria:** analytics  \n> **Prioridade:** P1  \n> **Status:** active\n\n## Descrição\n\nCRM Salesforce\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `groq`\n- **Custo estimado:** R$ 0.04/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/salesforce.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/salesforce.md",
       "content_hash": "7e47f23612243240c6c02c7f93dfc965f6ed9f84a6a69b67663d71f43bb438f6",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "sendgrid",
@@ -259,7 +259,7 @@
       "skill_markdown": "# 📊 SendGrid\n\n> **ID:** `sendgrid`  \n> **Categoria:** analytics  \n> **Prioridade:** P1  \n> **Status:** active\n\n## Descrição\n\nEmail transacional\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `groq`\n- **Custo estimado:** R$ 0.04/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/sendgrid.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/sendgrid.md",
       "content_hash": "d4e5457a580c2ffa10b7dc454b8d75b2ebfc7ae11f56ed39502efd7ef83677b1",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "shopify",
@@ -273,7 +273,7 @@
       "skill_markdown": "# 📊 Shopify\n\n> **ID:** `shopify`  \n> **Categoria:** analytics  \n> **Prioridade:** P1  \n> **Status:** active\n\n## Descrição\n\nE-commerce Shopify\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `groq`\n- **Custo estimado:** R$ 0.04/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/shopify.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/shopify.md",
       "content_hash": "9b91a827fa197f87974d4e4c54a5be8e08037cdd9cedb42ceb197e97b22c9b4b",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "stock_analysis",
@@ -287,7 +287,7 @@
       "skill_markdown": "# 📊 Stock Analysis\n\n> **ID:** `stock_analysis`  \n> **Categoria:** analytics  \n> **Prioridade:** P1  \n> **Status:** active\n\n## Descrição\n\nAnálise ações\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `groq`\n- **Custo estimado:** R$ 0.04/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/stock_analysis.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/stock_analysis.md",
       "content_hash": "d52c9bd20ee7df44100a0ebe0203867ea7acff78a74887f01371f74508d83576",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "stock_watcher",
@@ -301,7 +301,7 @@
       "skill_markdown": "# 📊 Stock Watcher\n\n> **ID:** `stock_watcher`  \n> **Categoria:** analytics  \n> **Prioridade:** P1  \n> **Status:** active\n\n## Descrição\n\nMonitor ações\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `groq`\n- **Custo estimado:** R$ 0.04/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/stock_watcher.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/stock_watcher.md",
       "content_hash": "7fcb4429a480c25b35a6de486b6ee8b4d398f611b12c318e8c7d37de5f7c3a6e",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "stripe",
@@ -315,7 +315,7 @@
       "skill_markdown": "# 📊 Stripe\n\n> **ID:** `stripe`  \n> **Categoria:** analytics  \n> **Prioridade:** P1  \n> **Status:** active\n\n## Descrição\n\nPagamentos Stripe\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `groq`\n- **Custo estimado:** R$ 0.04/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/stripe.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/stripe.md",
       "content_hash": "8faaac1587b706800eafac6f5e7f4bc8b985dfbee97ec7be714910f4d456c321",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "tiktok_ads",
@@ -329,7 +329,7 @@
       "skill_markdown": "# 📊 TikTok Ads\n\n> **ID:** `tiktok_ads`  \n> **Categoria:** analytics  \n> **Prioridade:** P1  \n> **Status:** active\n\n## Descrição\n\nTikTok Ads\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `groq`\n- **Custo estimado:** R$ 0.04/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/tiktok_ads.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/tiktok_ads.md",
       "content_hash": "66b19443a16eab7a6734fd73fdfa26601bacb66f82cc17a25cca2018b8a1e76d",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "twilio",
@@ -343,7 +343,7 @@
       "skill_markdown": "# 📊 Twilio\n\n> **ID:** `twilio`  \n> **Categoria:** analytics  \n> **Prioridade:** P1  \n> **Status:** active\n\n## Descrição\n\nSMS/WhatsApp API\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `groq`\n- **Custo estimado:** R$ 0.04/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/twilio.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/twilio.md",
       "content_hash": "eedf60e08ce1e40db221c28fd3c2f687c1fcaf6971d6d63af5e29ad17aa71049",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "agent_browser",
@@ -357,7 +357,7 @@
       "skill_markdown": "# ⚙️ Agent Browser\n\n> **ID:** `agent_browser`  \n> **Categoria:** automation  \n> **Prioridade:** P0  \n> **Status:** active\n\n## Descrição\n\nBrowser headless\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `claude`\n- **Custo estimado:** R$ 0.08/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/agent_browser.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/agent_browser.md",
       "content_hash": "32b9bea2d868bcbc6768901ef51b43ecf6657c5d4446504810eacf6e65202b9c",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "api_gateway",
@@ -371,7 +371,7 @@
       "skill_markdown": "# ⚙️ API Gateway\n\n> **ID:** `api_gateway`  \n> **Categoria:** automation  \n> **Prioridade:** P0  \n> **Status:** active\n\n## Descrição\n\nGateway APIs gerenciado\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `claude`\n- **Custo estimado:** R$ 0.08/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/api_gateway.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/api_gateway.md",
       "content_hash": "6261c022908b35ee5acda6f0df4e192b029281118e21c1b27014bd7ee3a93ab1",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "automation_workflows",
@@ -385,7 +385,7 @@
       "skill_markdown": "# ⚙️ Automation Workflows\n\n> **ID:** `automation_workflows`  \n> **Categoria:** automation  \n> **Prioridade:** P0  \n> **Status:** active\n\n## Descrição\n\nDesign de automações\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `claude`\n- **Custo estimado:** R$ 0.08/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/automation_workflows.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/automation_workflows.md",
       "content_hash": "ce77137550865b93119a652a2f926c53b304905b1f24c8ac1f4eac4d5e3c38c1",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "n8n_workflow_automation",
@@ -399,7 +399,7 @@
       "skill_markdown": "# ⚙️ n8n Workflow Automation\n\n> **ID:** `n8n_workflow_automation`  \n> **Categoria:** automation  \n> **Prioridade:** P0  \n> **Status:** active\n\n## Descrição\n\nDesign workflows n8n\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `claude`\n- **Custo estimado:** R$ 0.08/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/n8n_workflow_automation.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/n8n_workflow_automation.md",
       "content_hash": "dde54522044a558df28d5c927030de65d13acf5943b64c3d8391b3f7dbab38bb",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "playwright_mcp",
@@ -413,7 +413,7 @@
       "skill_markdown": "# ⚙️ Playwright MCP\n\n> **ID:** `playwright_mcp`  \n> **Categoria:** automation  \n> **Prioridade:** P0  \n> **Status:** active\n\n## Descrição\n\nBrowser Playwright\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `claude`\n- **Custo estimado:** R$ 0.08/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/playwright_mcp.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/playwright_mcp.md",
       "content_hash": "e28a3b3affe89c150fc320f8df92084e3d6d41ab84e977cf6534d92f03f4f9c0",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "playwright_scraper_skill",
@@ -427,7 +427,7 @@
       "skill_markdown": "# ⚙️ Playwright Scraper\n\n> **ID:** `playwright_scraper_skill`  \n> **Categoria:** automation  \n> **Prioridade:** P0  \n> **Status:** active\n\n## Descrição\n\nWeb scraping\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `claude`\n- **Custo estimado:** R$ 0.08/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/playwright_scraper_skill.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/playwright_scraper_skill.md",
       "content_hash": "02e9266c005ecf11c25bdb4052044c298936784fedab25d1611407b723671c2f",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "daily_report",
@@ -441,7 +441,7 @@
       "skill_markdown": "# 📝 Daily Report\n\n> **ID:** `daily_report`  \n> **Categoria:** content  \n> **Prioridade:** P1  \n> **Status:** active\n\n## Descrição\n\nRelatórios diários\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `claude`\n- **Custo estimado:** R$ 0.06/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/daily_report.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/daily_report.md",
       "content_hash": "f4cf22cf9b1eb00ff92d17a9ef10a0b0e27369287f8cf581590e3dae856693c5",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "docx_generator",
@@ -455,7 +455,7 @@
       "skill_markdown": "# 📝 DOCX Generator\n\n> **ID:** `docx_generator`  \n> **Categoria:** content  \n> **Prioridade:** P1  \n> **Status:** active\n\n## Descrição\n\nGerar Word\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `claude`\n- **Custo estimado:** R$ 0.06/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/docx_generator.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/docx_generator.md",
       "content_hash": "56eda3b69c8edd49b9bf6ffb252289aa8a4ca787f3ee655984d11e7f970f7c79",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "md_to_pdf",
@@ -469,7 +469,7 @@
       "skill_markdown": "# 📝 MD to PDF\n\n> **ID:** `md_to_pdf`  \n> **Categoria:** content  \n> **Prioridade:** P1  \n> **Status:** active\n\n## Descrição\n\nMarkdown → PDF\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `claude`\n- **Custo estimado:** R$ 0.06/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/md_to_pdf.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/md_to_pdf.md",
       "content_hash": "7f842f18c756894eb0b19edcfd01c9ab69752941c6725f2c95c124c336779ea8",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "pdf_generator",
@@ -483,7 +483,7 @@
       "skill_markdown": "# 📝 PDF Generator\n\n> **ID:** `pdf_generator`  \n> **Categoria:** content  \n> **Prioridade:** P1  \n> **Status:** active\n\n## Descrição\n\nGerar PDFs\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `claude`\n- **Custo estimado:** R$ 0.06/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/pdf_generator.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/pdf_generator.md",
       "content_hash": "442e22f0e1aa8e8b8896938b51a4959f679527be3ac9a5081c5f1a89b0a565f8",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "pptx_generator",
@@ -497,7 +497,7 @@
       "skill_markdown": "# 📝 PPTX Generator\n\n> **ID:** `pptx_generator`  \n> **Categoria:** content  \n> **Prioridade:** P1  \n> **Status:** active\n\n## Descrição\n\nGerar PowerPoint\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `claude`\n- **Custo estimado:** R$ 0.06/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/pptx_generator.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/pptx_generator.md",
       "content_hash": "ec8cd73710216002060722b02914f6aa2501775b841ad59cf41952dd3ea01e76",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "summarize",
@@ -511,7 +511,7 @@
       "skill_markdown": "# 📝 Summarize\n\n> **ID:** `summarize`  \n> **Categoria:** content  \n> **Prioridade:** P1  \n> **Status:** active\n\n## Descrição\n\nResumir conteúdo\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `claude`\n- **Custo estimado:** R$ 0.06/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/summarize.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/summarize.md",
       "content_hash": "5e6752d55bd44b9a91e5a3cb07116dbb6b2597efc91604f849f30bcf83f4879f",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "asana",
@@ -525,7 +525,7 @@
       "skill_markdown": "# 🔌 Asana\n\n> **ID:** `asana`  \n> **Categoria:** integration  \n> **Prioridade:** P1  \n> **Status:** active\n\n## Descrição\n\nGestão Asana\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `claude`\n- **Custo estimado:** R$ 0.05/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/asana.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/asana.md",
       "content_hash": "d42bd05ef2277e27481beec80e2cb7ccbcb28f004e591fccbb71a48af7e09df0",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "calendly",
@@ -539,7 +539,7 @@
       "skill_markdown": "# 🔌 Calendly\n\n> **ID:** `calendly`  \n> **Categoria:** integration  \n> **Prioridade:** P1  \n> **Status:** active\n\n## Descrição\n\nAgendamento Calendly\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `claude`\n- **Custo estimado:** R$ 0.05/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/calendly.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/calendly.md",
       "content_hash": "fe27c86b071e31a19034ef2cfc10fee3673a635f6454950c72b7e37d3fe708dd",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "channels_setup",
@@ -553,7 +553,7 @@
       "skill_markdown": "# 🔌 Channels Setup\n\n> **ID:** `channels_setup`  \n> **Categoria:** integration  \n> **Prioridade:** P0  \n> **Status:** active\n\n## Descrição\n\nConfiguração canais\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `claude`\n- **Custo estimado:** R$ 0.05/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/channels_setup.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/channels_setup.md",
       "content_hash": "120731cb8ae5804afcb7c7463d44610ea37cd0c9189287edcb093f5dfba0641c",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "clickup",
@@ -567,7 +567,7 @@
       "skill_markdown": "# 🔌 ClickUp\n\n> **ID:** `clickup`  \n> **Categoria:** integration  \n> **Prioridade:** P1  \n> **Status:** active\n\n## Descrição\n\nAll-in-one workspace\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `claude`\n- **Custo estimado:** R$ 0.05/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/clickup.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/clickup.md",
       "content_hash": "3e8ad94423c9b6d8962e95450c9970e42d882343aafd8f9e41e43f026d52468f",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "confluence",
@@ -581,7 +581,7 @@
       "skill_markdown": "# 🔌 Confluence\n\n> **ID:** `confluence`  \n> **Categoria:** integration  \n> **Prioridade:** P1  \n> **Status:** active\n\n## Descrição\n\nWiki Confluence\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `claude`\n- **Custo estimado:** R$ 0.05/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/confluence.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/confluence.md",
       "content_hash": "097459871c880d7d989380e900d058c5409ddcb8fac4801736096e2e4599c60a",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "discord",
@@ -595,7 +595,7 @@
       "skill_markdown": "# 🔌 Discord\n\n> **ID:** `discord`  \n> **Categoria:** integration  \n> **Prioridade:** P1  \n> **Status:** active\n\n## Descrição\n\nGestão Discord\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `claude`\n- **Custo estimado:** R$ 0.05/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/discord.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/discord.md",
       "content_hash": "69b93d10cf0eca1290532e5c501d76239ea8e142bdd57d8d8697bf77258aaa35",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "dropbox",
@@ -609,7 +609,7 @@
       "skill_markdown": "# 🔌 Dropbox\n\n> **ID:** `dropbox`  \n> **Categoria:** integration  \n> **Prioridade:** P1  \n> **Status:** active\n\n## Descrição\n\nStorage\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `claude`\n- **Custo estimado:** R$ 0.05/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/dropbox.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/dropbox.md",
       "content_hash": "ba9da090de1741a85aefe8c5ca6a2cb712ae44c394bb664c863fb93063a49e3a",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "feishu_bitable",
@@ -623,7 +623,7 @@
       "skill_markdown": "# 🔌 Feishu Bitable\n\n> **ID:** `feishu_bitable`  \n> **Categoria:** integration  \n> **Prioridade:** P0  \n> **Status:** active\n\n## Descrição\n\nGestão de dados em tabelas\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `claude`\n- **Custo estimado:** R$ 0.05/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/feishu_bitable.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/feishu_bitable.md",
       "content_hash": "978845d02a4336a95b8783eadd8c3f5c03bc301cdf23f03127d06c9ef80443f3",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "feishu_calendar",
@@ -637,7 +637,7 @@
       "skill_markdown": "# 🔌 Feishu Calendar\n\n> **ID:** `feishu_calendar`  \n> **Categoria:** integration  \n> **Prioridade:** P0  \n> **Status:** active\n\n## Descrição\n\nCalendário e agendamento\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `claude`\n- **Custo estimado:** R$ 0.05/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/feishu_calendar.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/feishu_calendar.md",
       "content_hash": "dc20607f3af007e6bc01f6c4493ecb68fed29b04e0fa960c4e1ec8668c122045",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "feishu_create_doc",
@@ -651,7 +651,7 @@
       "skill_markdown": "# 🔌 Feishu Create Doc\n\n> **ID:** `feishu_create_doc`  \n> **Categoria:** integration  \n> **Prioridade:** P0  \n> **Status:** active\n\n## Descrição\n\nCriação de documentos\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `claude`\n- **Custo estimado:** R$ 0.05/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/feishu_create_doc.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/feishu_create_doc.md",
       "content_hash": "749d4964229995c50e60e5944feaf5340869ba2b309fc37a48aefcd4c0c069b9",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "feishu_fetch_doc",
@@ -665,7 +665,7 @@
       "skill_markdown": "# 🔌 Feishu Fetch Doc\n\n> **ID:** `feishu_fetch_doc`  \n> **Categoria:** integration  \n> **Prioridade:** P0  \n> **Status:** active\n\n## Descrição\n\nLeitura de documentos\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `claude`\n- **Custo estimado:** R$ 0.05/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/feishu_fetch_doc.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/feishu_fetch_doc.md",
       "content_hash": "3629172aec7db0c0cc8e97efacd4df0c66d71c2ebd3f3633df8f37a1fd6c3550",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "feishu_im_read",
@@ -679,7 +679,7 @@
       "skill_markdown": "# 🔌 Feishu IM Read\n\n> **ID:** `feishu_im_read`  \n> **Categoria:** integration  \n> **Prioridade:** P0  \n> **Status:** active\n\n## Descrição\n\nLeitura de mensagens\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `claude`\n- **Custo estimado:** R$ 0.05/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/feishu_im_read.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/feishu_im_read.md",
       "content_hash": "f76af3ded8f350373eeceef30cbba37654893323662ff7075dcb6b4fc2e8ebe1",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "feishu_task",
@@ -693,7 +693,7 @@
       "skill_markdown": "# 🔌 Feishu Task\n\n> **ID:** `feishu_task`  \n> **Categoria:** integration  \n> **Prioridade:** P0  \n> **Status:** active\n\n## Descrição\n\nTarefas e to-dos\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `claude`\n- **Custo estimado:** R$ 0.05/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/feishu_task.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/feishu_task.md",
       "content_hash": "c18b712f346a9b5c155cf3bfd07d1df53a14092c761d40b298289b729a32affb",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "gmail",
@@ -707,7 +707,7 @@
       "skill_markdown": "# 🔌 Gmail\n\n> **ID:** `gmail`  \n> **Categoria:** integration  \n> **Prioridade:** P1  \n> **Status:** active\n\n## Descrição\n\nGmail integrado\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `claude`\n- **Custo estimado:** R$ 0.05/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/gmail.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/gmail.md",
       "content_hash": "359703302b915c508ae878df7bae3158c63cd075476abcc3cc88effd645d1850",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "google_calendar",
@@ -721,7 +721,7 @@
       "skill_markdown": "# 🔌 Google Calendar\n\n> **ID:** `google_calendar`  \n> **Categoria:** integration  \n> **Prioridade:** P1  \n> **Status:** active\n\n## Descrição\n\nCalendário Google\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `claude`\n- **Custo estimado:** R$ 0.05/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/google_calendar.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/google_calendar.md",
       "content_hash": "d75d1a6e83a86bb25a3214ba5df284fddf270f78ce140e387d54c1258e20f3eb",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "google_drive",
@@ -735,7 +735,7 @@
       "skill_markdown": "# 🔌 Google Drive\n\n> **ID:** `google_drive`  \n> **Categoria:** integration  \n> **Prioridade:** P1  \n> **Status:** active\n\n## Descrição\n\nDrive Google\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `claude`\n- **Custo estimado:** R$ 0.05/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/google_drive.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/google_drive.md",
       "content_hash": "f2a1832901446b86c9dfb018e7a5f97439ae83a673ceafeeab7ba98784070841",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "jira",
@@ -749,7 +749,7 @@
       "skill_markdown": "# 🔌 Jira\n\n> **ID:** `jira`  \n> **Categoria:** integration  \n> **Prioridade:** P1  \n> **Status:** active\n\n## Descrição\n\nGestão Jira\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `claude`\n- **Custo estimado:** R$ 0.05/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/jira.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/jira.md",
       "content_hash": "0c998a0783fe44faf526346d1065a1de6067771955e70163a0905209a187285a",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "monday",
@@ -763,7 +763,7 @@
       "skill_markdown": "# 🔌 Monday\n\n> **ID:** `monday`  \n> **Categoria:** integration  \n> **Prioridade:** P1  \n> **Status:** active\n\n## Descrição\n\nMonday.com\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `claude`\n- **Custo estimado:** R$ 0.05/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/monday.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/monday.md",
       "content_hash": "f3e679da647ec4cc947f621ac0ba0f28868689808b856cff7f1baf260b5b0422",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "notion",
@@ -777,7 +777,7 @@
       "skill_markdown": "# 🔌 Notion\n\n> **ID:** `notion`  \n> **Categoria:** integration  \n> **Prioridade:** P0  \n> **Status:** active\n\n## Descrição\n\nIntegração Notion\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `claude`\n- **Custo estimado:** R$ 0.05/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/notion.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/notion.md",
       "content_hash": "d863afb7b65847011d4a748867746a73cafd1a915dbb42c715ada0688087aa62",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "slack",
@@ -791,7 +791,7 @@
       "skill_markdown": "# 🔌 Slack\n\n> **ID:** `slack`  \n> **Categoria:** integration  \n> **Prioridade:** P1  \n> **Status:** active\n\n## Descrição\n\nIntegração Slack\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `claude`\n- **Custo estimado:** R$ 0.05/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/slack.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/slack.md",
       "content_hash": "91df50c0078de5c7ff972f762fc82575d3b4a6ffe5930e39e47f04aee457d0e9",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "telegram",
@@ -805,7 +805,7 @@
       "skill_markdown": "# 🔌 Telegram\n\n> **ID:** `telegram`  \n> **Categoria:** integration  \n> **Prioridade:** P1  \n> **Status:** active\n\n## Descrição\n\nBot Telegram\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `claude`\n- **Custo estimado:** R$ 0.05/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/telegram.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/telegram.md",
       "content_hash": "8c4bc9be1b4e98da92ae422a8ea49e1cb88973d5773dc30de329a2b0b7c80afd",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "trello",
@@ -819,7 +819,7 @@
       "skill_markdown": "# 🔌 Trello\n\n> **ID:** `trello`  \n> **Categoria:** integration  \n> **Prioridade:** P1  \n> **Status:** active\n\n## Descrição\n\nGestão Trello\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `claude`\n- **Custo estimado:** R$ 0.05/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/trello.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/trello.md",
       "content_hash": "87489591817a2df35fd27e0f47c0275d7e840a239d741191a01b57aad393fff6",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "wecom_contact_lookup",
@@ -833,7 +833,7 @@
       "skill_markdown": "# 🔌 WeCom Contact Lookup\n\n> **ID:** `wecom_contact_lookup`  \n> **Categoria:** integration  \n> **Prioridade:** P0  \n> **Status:** active\n\n## Descrição\n\nBusca de contatos\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `claude`\n- **Custo estimado:** R$ 0.05/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/wecom_contact_lookup.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/wecom_contact_lookup.md",
       "content_hash": "fc0e5acdc43ae47dc6c2ebf34d755d8ed0f75b1858eef50a9777d87bdaa3d5f1",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "wecom_doc_manager",
@@ -847,7 +847,7 @@
       "skill_markdown": "# 🔌 WeCom Doc Manager\n\n> **ID:** `wecom_doc_manager`  \n> **Categoria:** integration  \n> **Prioridade:** P0  \n> **Status:** active\n\n## Descrição\n\nDocs e smart sheets\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `claude`\n- **Custo estimado:** R$ 0.05/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/wecom_doc_manager.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/wecom_doc_manager.md",
       "content_hash": "41f64d772e302a8c71d75404fb0b578dac7a4d1c8a0f62ff1124d2ab1c8d65ac",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "wecom_edit_todo",
@@ -861,7 +861,7 @@
       "skill_markdown": "# 🔌 WeCom Edit Todo\n\n> **ID:** `wecom_edit_todo`  \n> **Categoria:** integration  \n> **Prioridade:** P0  \n> **Status:** active\n\n## Descrição\n\nTarefas WeCom\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `claude`\n- **Custo estimado:** R$ 0.05/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/wecom_edit_todo.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/wecom_edit_todo.md",
       "content_hash": "45c856866b75617b82df891a4cd831709228a1422d56189d8138b8216c72bc48",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "wecom_meeting_create",
@@ -875,7 +875,7 @@
       "skill_markdown": "# 🔌 WeCom Meeting Create\n\n> **ID:** `wecom_meeting_create`  \n> **Categoria:** integration  \n> **Prioridade:** P0  \n> **Status:** active\n\n## Descrição\n\nCriar reuniões\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `claude`\n- **Custo estimado:** R$ 0.05/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/wecom_meeting_create.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/wecom_meeting_create.md",
       "content_hash": "ddca19b68753dd2caea69b7f9743d86ac260501b67debdf3bc92509ad76ae01e",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "wecom_meeting_manage",
@@ -889,7 +889,7 @@
       "skill_markdown": "# 🔌 WeCom Meeting Manage\n\n> **ID:** `wecom_meeting_manage`  \n> **Categoria:** integration  \n> **Prioridade:** P0  \n> **Status:** active\n\n## Descrição\n\nGerenciar reuniões\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `claude`\n- **Custo estimado:** R$ 0.05/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/wecom_meeting_manage.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/wecom_meeting_manage.md",
       "content_hash": "c3f5e5bb484d0802394c7c15aafea1f80881071d68ededf6cf26dec374a0998d",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "wecom_meeting_query",
@@ -903,7 +903,7 @@
       "skill_markdown": "# 🔌 WeCom Meeting Query\n\n> **ID:** `wecom_meeting_query`  \n> **Categoria:** integration  \n> **Prioridade:** P0  \n> **Status:** active\n\n## Descrição\n\nConsultar reuniões\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `claude`\n- **Custo estimado:** R$ 0.05/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/wecom_meeting_query.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/wecom_meeting_query.md",
       "content_hash": "d3454cb2f36a901f54e497db956cbfe7e610a65597c80ef974bffbba00082156",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "wecom_msg",
@@ -917,7 +917,7 @@
       "skill_markdown": "# 🔌 WeCom Message\n\n> **ID:** `wecom_msg`  \n> **Categoria:** integration  \n> **Prioridade:** P0  \n> **Status:** active\n\n## Descrição\n\nMensagens WeCom\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `claude`\n- **Custo estimado:** R$ 0.05/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/wecom_msg.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/wecom_msg.md",
       "content_hash": "594ffdcb5687f139ca1ab6107ff6068ded806c9d14b1ccc055abb0c89d004692",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "wecom_schedule",
@@ -931,7 +931,7 @@
       "skill_markdown": "# 🔌 WeCom Schedule\n\n> **ID:** `wecom_schedule`  \n> **Categoria:** integration  \n> **Prioridade:** P0  \n> **Status:** active\n\n## Descrição\n\nAgendas WeCom\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `claude`\n- **Custo estimado:** R$ 0.05/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/wecom_schedule.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/wecom_schedule.md",
       "content_hash": "9805dad40ea0ec1b2ab6bd68f8f1db12cd69f7f24117cc81e4cf77760e4ea8bb",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "wecom_smartsheet_data",
@@ -945,7 +945,7 @@
       "skill_markdown": "# 🔌 WeCom Smartsheet Data\n\n> **ID:** `wecom_smartsheet_data`  \n> **Categoria:** integration  \n> **Prioridade:** P0  \n> **Status:** active\n\n## Descrição\n\nDados smart tables\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `claude`\n- **Custo estimado:** R$ 0.05/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/wecom_smartsheet_data.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/wecom_smartsheet_data.md",
       "content_hash": "d1b2dde11bd2d0b7aeb4df5021eef5d97858bc21be727fc930c958985c804c8e",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "wecom_smartsheet_schema",
@@ -959,7 +959,7 @@
       "skill_markdown": "# 🔌 WeCom Smartsheet Schema\n\n> **ID:** `wecom_smartsheet_schema`  \n> **Categoria:** integration  \n> **Prioridade:** P0  \n> **Status:** active\n\n## Descrição\n\nEstrutura tabelas\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `claude`\n- **Custo estimado:** R$ 0.05/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/wecom_smartsheet_schema.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/wecom_smartsheet_schema.md",
       "content_hash": "44529f03ebb47163300f4fe32df79c38a1405634a8c168d5d8f8a9640217bd2a",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "whatsapp",
@@ -973,7 +973,7 @@
       "skill_markdown": "# 🔌 WhatsApp\n\n> **ID:** `whatsapp`  \n> **Categoria:** integration  \n> **Prioridade:** P1  \n> **Status:** active\n\n## Descrição\n\nWhatsApp Business\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `claude`\n- **Custo estimado:** R$ 0.05/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/whatsapp.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/whatsapp.md",
       "content_hash": "bd470916d2f2a4e4fc3b4e32410b5c6fbd3ff8250f79650e1e4feb92d707652f",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     },
     {
       "id": "zoom",
@@ -987,7 +987,7 @@
       "skill_markdown": "# 🔌 Zoom\n\n> **ID:** `zoom`  \n> **Categoria:** integration  \n> **Prioridade:** P1  \n> **Status:** active\n\n## Descrição\n\nZoom meetings\n\n## Uso na Totum\n\n- Integração com fluxos de trabalho Alexandria\n- Automação de processos B2B/B2C\n- Orquestração via agentes\n\n## Entradas\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n|-----------|------|-------------|-----------|\n| input | string | sim | Entrada principal da skill |\n| context | object | não | Contexto adicional de execução |\n\n## Saídas\n\n| Campo | Tipo | Descrição |\n|-------|------|-----------|\n| result | object | Resultado da execução |\n| logs | array | Logs de execução |\n\n## Configuração\n\n- **Modelo preferido:** `claude`\n- **Custo estimado:** R$ 0.05/chamada\n- **Taxa de sucesso:** ~95%\n- **Duração estimada:** ~2000ms\n\n## Dependências\n\n```json\n{\"dependencies\": []}\n```\n\n## Prompt Template\n\n```\nprompts/zoom.md\n```\n\n---\n\n*Skill gerada automaticamente a partir do Catálogo Totum*",
       "prompt_template_path": "prompts/zoom.md",
       "content_hash": "9dc8b22ef571c73e3ab783237b9408521782bcdd634b1ff4625adf25427ae35f",
-      "updated_at": "2026-04-30T12:59:43.016Z"
+      "updated_at": "2026-05-01T00:43:48.380Z"
     }
   ]
 }
