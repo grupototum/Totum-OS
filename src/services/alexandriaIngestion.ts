@@ -1,6 +1,6 @@
 /**
  * Alexandria Ingestion Service
- * Hermione's ability to read, parse and catalog documents into giles_knowledge
+ * Hermione's ability to read, parse and catalog documents into giles_knowledge (table kept legacy-named; service is Hermione)
  */
 
 import { supabase } from '@/integrations/supabase/client';
@@ -204,7 +204,7 @@ function getTopKeywords(text: string): string[] {
 // ─── Core Ingestion ───────────────────────────────────────────────────────────
 
 /**
- * Ingest a single markdown file into giles_knowledge.
+ * Ingest a single markdown file into giles_knowledge (table kept legacy-named; service is Hermione).
  * Returns number of chunks created.
  */
 export async function ingestMarkdownFile(

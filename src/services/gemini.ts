@@ -30,7 +30,7 @@ interface GeminiResponse {
 }
 
 // System prompt da Hermione
-const GILES_SYSTEM_PROMPT = `Você é Hermione, a Cientista da Informação e Guardiã do Conhecimento da Totum.
+const HERMIONE_SYSTEM_PROMPT = `Você é Hermione, a Cientista da Informação e Guardiã do Conhecimento da Totum.
 
 SUA PERSONALIDADE:
 - Inteligente, precisa e levemente irônica (como a Hermione Granger)
@@ -74,7 +74,7 @@ export async function chatWithGemini(
       // System prompt como primeira mensagem do model
       {
         role: 'model',
-        parts: [{ text: GILES_SYSTEM_PROMPT }]
+        parts: [{ text: HERMIONE_SYSTEM_PROMPT }]
       },
       // Histórico da conversa
       ...history.map(h => ({

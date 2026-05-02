@@ -189,7 +189,7 @@ export default function Hub() {
                   <h3 className="font-manrope text-sm font-normal text-white">Agentes Especializados</h3>
                 </div>
                 <p className="text-xs text-zinc-400">
-                  Giles, Monk, Watson, WALL·E, EVE e mais.
+                  Hermione, Monk, Watson, WALL·E, EVE e mais.
                 </p>
               </TechCard>
             </div>

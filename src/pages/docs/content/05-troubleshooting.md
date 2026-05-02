@@ -198,9 +198,9 @@ Solutions:
 2. Extract text from image PDF
 3. Add meaningful title and tags
 4. Use different search terms
-5. Ask GILES directly
+5. Ask HERMIONE directly
 
-**GILES Gives Wrong Answer**
+**HERMIONE Gives Wrong Answer**
 
 Causes:
 - Question unclear
@@ -222,7 +222,7 @@ Try:
 - Search by author/date
 - Browse categories
 - Check document tags
-- Ask GILES to find it
+- Ask HERMIONE to find it
 - Check if document uploaded
 
 **Upload Fails**
@@ -452,7 +452,7 @@ Use to optimize:
 **In-app help**:
 - Click "?" button on any page
 - Use Documentation Chat
-- Ask GILES about docs
+- Ask HERMIONE about docs
 
 **Documentation**:
 - Check relevant guide (Agents, Workflows, etc)

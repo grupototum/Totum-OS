@@ -6,7 +6,7 @@ Alexandria is your intelligent knowledge management system. It stores, organizes
 
 Unlike traditional file storage, Alexandria uses AI to understand content, making it searchable by meaning (not just keywords) and queryable through natural language.
 
-Think of Alexandria as a library where the librarian (GILES) understands every book and can answer any question about them.
+Think of Alexandria as a library where the librarian (HERMIONE) understands every book and can answer any question about them.
 
 ## Key Features
 
@@ -23,7 +23,7 @@ Think of Alexandria as a library where the librarian (GILES) understands every b
 - Version history tracking
 - Full-text search
 
-### Chat with GILES
+### Chat with HERMIONE
 - Ask questions about your documents
 - Get cited answers with sources
 - Conversational search
@@ -142,34 +142,34 @@ Examples:
 - Search "onboarding process" finds policies, guides, templates
 ```
 
-## Chat with GILES
+## Chat with HERMIONE
 
-GILES is your AI librarian. Ask questions about your documents.
+HERMIONE is your AI librarian. Ask questions about your documents.
 
 ### Basic Questions
 
 ```
 "What is our refund policy?"
-→ GILES finds policy document, extracts relevant section, answers
+→ HERMIONE finds policy document, extracts relevant section, answers
 
 "Who is the lead for the Q3 project?"
-→ GILES searches project docs, identifies project lead
+→ HERMIONE searches project docs, identifies project lead
 
 "Summarize Q4 performance"
-→ GILES finds relevant reports, synthesizes summary
+→ HERMIONE finds relevant reports, synthesizes summary
 ```
 
 ### Complex Questions
 
 ```
 "What are our key product differentiation points vs competitor X?"
-→ GILES searches strategy docs, competitive analysis, messaging docs
+→ HERMIONE searches strategy docs, competitive analysis, messaging docs
 
 "List all action items from 2024 board meetings"
-→ GILES searches meeting notes, extracts action items, lists them
+→ HERMIONE searches meeting notes, extracts action items, lists them
 
 "What are our top customer pain points and how do we address them?"
-→ GILES searches feedback, support tickets, case studies, solutions
+→ HERMIONE searches feedback, support tickets, case studies, solutions
 ```
 
 ### Tips for Better Results
@@ -184,7 +184,7 @@ GILES is your AI librarian. Ask questions about your documents.
 ✓ Provide context: "For new hires, what's our onboarding timeline?"
 ✗ No context: "Onboarding timeline?"
 
-✓ Ask follow-ups: GILES remembers previous questions
+✓ Ask follow-ups: HERMIONE remembers previous questions
 ✗ Ask unrelated questions (start new chat)
 ```
 
@@ -349,7 +349,7 @@ Example: Competitive Analysis
 4. Link related documents
 5. Maintain clean metadata
 
-### GILES Queries
+### HERMIONE Queries
 1. Ask specific questions
 2. Provide relevant context
 3. Use natural language
@@ -407,14 +407,14 @@ Control:
    - Verify searchability
 
 4. Test
-   - Ask GILES common questions
+   - Ask HERMIONE common questions
    - Verify answers are accurate
    - Add missing documents
 
 5. Share
    - Give team access
    - Train on how to use
-   - Encourage GILES usage
+   - Encourage HERMIONE usage
 ```
 
 ### Task 2: Enable AI-Powered Support
@@ -468,13 +468,13 @@ Control:
 - Sufficient metadata for search?
 - Try searching by filename?
 
-### GILES Gives Wrong Answer
+### HERMIONE Gives Wrong Answer
 **Solutions**:
 - Ask more specific question
 - Provide more context
 - Check if document actually contains info
 - Upload clarifying document
-- Manually correct for GILES learning
+- Manually correct for HERMIONE learning
 
 ### Can't Find Document
 **Try**:
@@ -482,7 +482,7 @@ Control:
 - Search by different aspect (author, date)
 - Browse by category
 - Check document tags
-- Ask GILES to find it
+- Ask HERMIONE to find it
 
 ### Upload Fails
 **Check**:
@@ -494,10 +494,10 @@ Control:
 ## Next Steps
 
 - **Upload Your Documents**: Start building knowledge base
-- **Ask GILES Questions**: Test intelligent search
+- **Ask HERMIONE Questions**: Test intelligent search
 - **Create Workflows**: Automate document processing
 - **Share with Team**: Get feedback and usage patterns
 
 ---
 
-**Need help?** Ask GILES or use the documentation chat.
+**Need help?** Ask HERMIONE or use the documentation chat.
