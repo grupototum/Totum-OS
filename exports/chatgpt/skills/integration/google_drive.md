@@ -9,7 +9,7 @@ routing_priority: 0
 model_preference: claude
 tags: []
 content_hash: f2a1832901446b86c9dfb018e7a5f97439ae83a673ceafeeab7ba98784070841
-updated_at: 2026-04-30T12:59:43.016Z
+updated_at: 2026-05-03T14:12:50.113Z
 prompt_template_path: prompts/google_drive.md
 ---
 

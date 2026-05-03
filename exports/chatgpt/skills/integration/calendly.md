@@ -9,7 +9,7 @@ routing_priority: 0
 model_preference: claude
 tags: []
 content_hash: fe27c86b071e31a19034ef2cfc10fee3673a635f6454950c72b7e37d3fe708dd
-updated_at: 2026-04-30T12:59:43.016Z
+updated_at: 2026-05-03T14:12:50.113Z
 prompt_template_path: prompts/calendly.md
 ---
 

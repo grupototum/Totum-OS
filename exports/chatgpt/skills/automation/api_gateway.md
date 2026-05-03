@@ -9,7 +9,7 @@ routing_priority: 0
 model_preference: claude
 tags: []
 content_hash: 6261c022908b35ee5acda6f0df4e192b029281118e21c1b27014bd7ee3a93ab1
-updated_at: 2026-04-30T12:59:43.016Z
+updated_at: 2026-05-03T14:12:50.113Z
 prompt_template_path: prompts/api_gateway.md
 ---
 

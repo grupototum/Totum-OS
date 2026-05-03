@@ -57,6 +57,9 @@ const SkillsCentral     = lazy(() => import("./pages/alexandria/SkillsCentral"))
 const OpenClawDashboard = lazy(() => import("./pages/alexandria/OpenClawDashboard"));
 const KnowledgeBridges  = lazy(() => import("./pages/alexandria/KnowledgeBridges"));
 const AlexandriaTutorial = lazy(() => import("./pages/alexandria/AlexandriaTutorial"));
+const RAGManager        = lazy(() => import("./pages/alexandria/RAGManager"));
+const SyncLogseq        = lazy(() => import("./pages/alexandria/SyncLogseq"));
+const SyncGoogleDrive   = lazy(() => import("./pages/alexandria/SyncGoogleDrive"));
 const SunaPage          = lazy(() => import("./pages/suna"));
 const UserApprovals     = lazy(() => import("./pages/admin/UserApprovals"));
 
@@ -173,6 +176,9 @@ const AppWithRouter = () => {
           <Route path="/alexandria/openclaw" element={<Page><OpenClawDashboard /></Page>} />
           <Route path="/alexandria/bridges" element={<Page><KnowledgeBridges /></Page>} />
           <Route path="/alexandria/tutorial" element={<Page><AlexandriaTutorial /></Page>} />
+          <Route path="/alexandria/rag" element={<Page><RAGManager /></Page>} />
+          <Route path="/alexandria/sync-logseq" element={<Page><SyncLogseq /></Page>} />
+          <Route path="/alexandria/sync-google-drive" element={<Page><SyncGoogleDrive /></Page>} />
           <Route path="/hermione" element={<Page><HermioneChat /></Page>} />
           <Route path="/suna"    element={<Page><SunaPage /></Page>} />
           <Route path="/wiki" element={<Navigate to="/alexandria" replace />} />

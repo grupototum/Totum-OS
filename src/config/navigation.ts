@@ -33,6 +33,8 @@ import {
   Sparkles,
   Workflow,
   Link2,
+  Database,
+  RefreshCw,
 } from "lucide-react";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -121,6 +123,9 @@ export const navigationSections: NavSection[] = [
         { label: "Conexões", path: "/alexandria/bridges", icon: Link2 },
         { label: "Tutorial", path: "/alexandria/tutorial", icon: Sparkles },
         { label: "Exportadores IA", path: "/alexandria?tab=exports", icon: GitBranch },
+        { label: "Base RAG", path: "/alexandria/rag", icon: Database },
+        { label: "Sync Logseq", path: "/alexandria/sync-logseq", icon: RefreshCw },
+        { label: "Sync Drive", path: "/alexandria/sync-google-drive", icon: RefreshCw },
       ],
     },
   },

@@ -9,7 +9,7 @@ routing_priority: 0
 model_preference: claude
 tags: []
 content_hash: d42bd05ef2277e27481beec80e2cb7ccbcb28f004e591fccbb71a48af7e09df0
-updated_at: 2026-04-30T12:59:43.016Z
+updated_at: 2026-05-03T14:12:50.113Z
 prompt_template_path: prompts/asana.md
 ---
 

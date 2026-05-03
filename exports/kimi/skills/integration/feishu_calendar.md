@@ -9,7 +9,7 @@ routing_priority: 0
 model_preference: claude
 tags: []
 content_hash: dc20607f3af007e6bc01f6c4493ecb68fed29b04e0fa960c4e1ec8668c122045
-updated_at: 2026-04-30T12:59:43.016Z
+updated_at: 2026-05-03T14:12:50.113Z
 prompt_template_path: prompts/feishu_calendar.md
 ---
 

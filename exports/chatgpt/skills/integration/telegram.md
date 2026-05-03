@@ -9,7 +9,7 @@ routing_priority: 0
 model_preference: claude
 tags: []
 content_hash: 8c4bc9be1b4e98da92ae422a8ea49e1cb88973d5773dc30de329a2b0b7c80afd
-updated_at: 2026-04-30T12:59:43.016Z
+updated_at: 2026-05-03T14:12:50.113Z
 prompt_template_path: prompts/telegram.md
 ---
 

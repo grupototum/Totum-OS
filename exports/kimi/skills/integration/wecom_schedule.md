@@ -9,7 +9,7 @@ routing_priority: 0
 model_preference: claude
 tags: []
 content_hash: 9805dad40ea0ec1b2ab6bd68f8f1db12cd69f7f24117cc81e4cf77760e4ea8bb
-updated_at: 2026-04-30T12:59:43.016Z
+updated_at: 2026-05-03T14:12:50.113Z
 prompt_template_path: prompts/wecom_schedule.md
 ---
 

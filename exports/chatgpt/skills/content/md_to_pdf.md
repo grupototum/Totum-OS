@@ -9,7 +9,7 @@ routing_priority: 0
 model_preference: claude
 tags: []
 content_hash: 7f842f18c756894eb0b19edcfd01c9ab69752941c6725f2c95c124c336779ea8
-updated_at: 2026-04-30T12:59:43.016Z
+updated_at: 2026-05-03T14:12:50.113Z
 prompt_template_path: prompts/md_to_pdf.md
 ---
 

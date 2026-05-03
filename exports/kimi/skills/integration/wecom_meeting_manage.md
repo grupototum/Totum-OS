@@ -9,7 +9,7 @@ routing_priority: 0
 model_preference: claude
 tags: []
 content_hash: c3f5e5bb484d0802394c7c15aafea1f80881071d68ededf6cf26dec374a0998d
-updated_at: 2026-04-30T12:59:43.016Z
+updated_at: 2026-05-03T14:12:50.113Z
 prompt_template_path: prompts/wecom_meeting_manage.md
 ---
 

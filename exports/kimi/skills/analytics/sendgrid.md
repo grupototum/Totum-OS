@@ -9,7 +9,7 @@ routing_priority: 0
 model_preference: groq
 tags: []
 content_hash: d4e5457a580c2ffa10b7dc454b8d75b2ebfc7ae11f56ed39502efd7ef83677b1
-updated_at: 2026-04-30T12:59:43.016Z
+updated_at: 2026-05-03T14:12:50.113Z
 prompt_template_path: prompts/sendgrid.md
 ---
 
