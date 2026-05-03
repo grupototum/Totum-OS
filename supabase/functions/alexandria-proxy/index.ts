@@ -47,10 +47,37 @@ const MANIFEST = {
   "homepage": "https://alexandria.grupototum.com"
 }
 
+// Normalize text: remove accents, lowercase
+function normalize(text: string): string {
+  return text
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/[,%]/g, "")
+    .trim()
+}
+
+// Build multi-word OR filter for PostgREST
+function buildOrFilter(query: string): string {
+  const words = normalize(query)
+    .split(/\s+/)
+    .filter(w => w.length >= 3)
+    .slice(0, 5)
+
+  if (words.length === 0) return ""
+
+  const conditions = words.flatMap(w => [
+    `title.ilike.*${w}*`,
+    `summary.ilike.*${w}*`,
+    `content.ilike.*${w}*`,
+  ])
+
+  return conditions.join(",")
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: CORS })
 
-  // GET: serve plugin manifest for LobeChat
   if (req.method === "GET") {
     return new Response(JSON.stringify(MANIFEST), {
       headers: { ...CORS, "Content-Type": "application/json" },
@@ -72,7 +99,7 @@ Deno.serve(async (req) => {
   }
 
   const safeLimit = Math.min(Math.max(Number(limit) || 8, 1), 20)
-  const safeQuery = query.trim().replace(/[,%]/g, "")
+  const orFilter = buildOrFilter(query)
 
   const params = new URLSearchParams({
     select: "id,title,artifact_type,status,scope,summary,tags,updated_at",
@@ -80,11 +107,8 @@ Deno.serve(async (req) => {
     limit: String(safeLimit),
   })
 
-  if (safeQuery) {
-    params.set(
-      "or",
-      `(title.ilike.*${safeQuery}*,summary.ilike.*${safeQuery}*)`
-    )
+  if (orFilter) {
+    params.set("or", `(${orFilter})`)
   }
 
   const resp = await fetch(
